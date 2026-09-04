@@ -227,7 +227,7 @@
 
 - `comfyui-controller/docs_cli/EXPERIENCE.md` — 24 章迭代经验与问题排查记录
 
-- `comfyui-controller/docs_cli/dpmpp_ddpm_samplers_guide.md` — DPM++/DDPM 采样器参考手册
+- `comfyui-controller/SKILL.md §4.19` — K 采样器完全参考手册（ComfyUI 全家族，独立章节）
 
 - `comfyui-controller/docs_cli/wan22_dual_instance_tuning_guide.md` — Wan2.2 双实例视频生成调参手册
 

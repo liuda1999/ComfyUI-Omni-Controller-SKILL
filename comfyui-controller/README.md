@@ -629,7 +629,7 @@ pytest tests/uv_compile/ -v
 | `README.md` | 项目 README（本文件） |
 | `docs_cli/INDEX.md` | **全量经验/技术文档快速索引**（主题速查 + 章节行号导航） |
 | `docs_cli/EXPERIENCE.md` | 24 章迭代经验与问题排查记录 |
-| `docs_cli/dpmpp_ddpm_samplers_guide.md` | DPM++/DDPM 采样器参考手册 |
+| `SKILL.md §4.19` | K 采样器完全参考手册（ComfyUI 全家族，独立章节） |
 | `docs_cli/wan22_dual_instance_tuning_guide.md` | Wan2.2 双实例视频生成调参手册 |
 | `docs_cli/long_video_svi_pro_wan22_report.md` | 长视频完整任务报告 |
 | `docs_cli/DESIGN-uv-compile.md` | uv 编译架构设计 |

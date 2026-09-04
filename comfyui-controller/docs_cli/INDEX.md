@@ -20,7 +20,6 @@
 | [INDEX.md](INDEX.md)                                                           | 索引     | 现行     | **本文件**：全量经验/技术文档的检索入口                             |
 | [EXPERIENCE.md](EXPERIENCE.md)                                                 | 经验/排查  | 现行     | 24 章迭代经验 + 问题根因 + 参数梯度 + 节点详解 + 提示词工程（4367 行）      |
 | [wan22\_dual\_instance\_tuning\_guide.md](wan22_dual_instance_tuning_guide.md) | 技术参考   | 新增     | Wan2.2 双实例(双卡)视频生成节点调参手册：架构/标定数据/编排器（116 行）        |
-| [dpmpp\_ddpm\_samplers\_guide.md](dpmpp_ddpm_samplers_guide.md)                | 技术参考   | 新增     | DPM++ 全系列 + DDPM 采样器完全参考手册：13 个采样器 + 快速选择（266 行）   |
 | [long\_video\_svi\_pro\_wan22\_report.md](long_video_svi_pro_wan22_report.md)  | 任务报告   | 现行     | C8/长视频完整任务报告：问题盘点 + 最终参数 + 性能对比                    |
 | [json-output.md](json-output.md)                                               | CLI 文档 | 现行     | `comfy run --json` NDJSON 输出格式、事件流、错误对象            |
 | [DESIGN-uv-compile.md](DESIGN-uv-compile.md)                                   | 设计文档   | 现行     | `--uv-compile` 统一依赖解析实现设计                          |
@@ -103,12 +102,12 @@
 
 ### 2.6 采样器与调度器
 
-| 你想解决...               | 位置                                                                                             |
-| --------------------- | ---------------------------------------------------------------------------------------------- |
-| DPM++ 全系 / DDPM 选型与机制 | [dpmpp\_ddpm\_samplers\_guide.md](dpmpp_ddpm_samplers_guide.md) 2.x 各采样器(L33-215) / 快速选择(L229) |
-| K 采样器按提示词选哪个（全部家族） | SKILL.md 4.6.4 节（收敛vs随机 + 决策表 + Euler/Heun/DPM/DDIM/UniPC/LCM 详解 + 调度器协同） |
-| 采样器卡死 / 进度不动          | EXPERIENCE.md 23.6.3(L3026) / 23.9.3(L3165)                                                    |
-| scheduler 场景化选择       | EXPERIENCE.md 21.8(L2220)                                                                      |
+| 你想解决...               | 位置                                                                                                      |
+| --------------------- | ------------------------------------------------------------------------------------------------------- |
+| DPM++ 全系 / DDPM 选型与机制 | SKILL.md 4.19.4 节（DPM/DPM++ 全系列详解，含 ddpm）                                                               |
+| K 采样器按提示词选哪个（全部家族）    | SKILL.md 4.19 节（独立章节：收敛vs随机 + 决策表 + Euler/Heun/DPM++/经典专业/res\_multistep/LCM/DDPM 全家族 + 调度器协同 + 模型系列参考） |
+| 采样器卡死 / 进度不动          | EXPERIENCE.md 23.6.3(L3026) / 23.9.3(L3165)                                                             |
+| scheduler 场景化选择       | EXPERIENCE.md 21.8(L2220)                                                                               |
 
 ### 2.7 节点详解（多图 / 长视频）
 
@@ -252,20 +251,23 @@
 | 2 | 三档标定数据（6/12/30 步耗时 + 画面主体落地必读）                     | 67 |
 | 3 | 编排器与关键文件（pipeline\_tier / launch\_gpu1 / web 查看视频） | 96 |
 
-### 4.2 [dpmpp\_ddpm\_samplers\_guide.md](dpmpp_ddpm_samplers_guide.md)（采样器参考）
+### 4.2 SKILL.md 4.19 节「K 采样器完全参考手册」（ComfyUI 全家族）
 
-| 章 | 内容                                          | 行号  |
-| - | ------------------------------------------- | --- |
-| 1 | DPM++ 命名规则解读（2s/2m/3m/sde/gpu/heun/cfg\_pp） | 12  |
-| 2 | 13 个采样器逐一详解（机制/性能/场景/推荐步数）                  | 31  |
-| 3 | 快速选择指南（按场景 / 按优先级 / GPU 版本原则）               | 229 |
-| 4 | 总结（5 条核心建议）                                 | 258 |
+> DPM++/DDPM 参考已整合进 SKILL.md 4.19 独立章节，不再单独成文档。
+
+| 子节            | 内容                                          |
+| ------------- | ------------------------------------------- |
+| 4.19.1        | 预备知识（收敛vs随机 + 命名规则）                         |
+| 4.19.2        | 按提示词快速选型（决策表）                               |
+| 4.19.3-4.19.5 | 全家族详解（Euler/Heun / DPM/DPM++ / 经典专业/特殊/LCM） |
+| 4.19.6        | 模型系列参考（Wan2.2 仅作参考，非强制）                     |
+| 4.19.7-4.19.8 | 调度器协同 + 按优先级选择                              |
 
 ***
 
 ## 5. 维护说明
 
-- 行号基准：`EXPERIENCE.md` 共 4367 行、`wan22_dual_instance_tuning_guide.md` 116 行、`dpmpp_ddpm_samplers_guide.md` 266 行（2026-09-04）。
+- 行号基准：`EXPERIENCE.md` 共 4367 行、`wan22_dual_instance_tuning_guide.md` 116 行（2026-09-04）。
 
 - 若被索引文件发生增删改，请同步更新本文档对应行号。
 
