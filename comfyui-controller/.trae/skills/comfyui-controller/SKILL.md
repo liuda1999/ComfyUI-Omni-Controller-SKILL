@@ -59,7 +59,7 @@ python scripts/check_status.py   # 环境检查
 | 主文档 | [comfyui-controller/SKILL.md](../../../SKILL.md) | 完整功能映射 + 工作流知识库（图片/视频/参数/禁忌/排错） |
 | 快速索引 | [docs_cli/INDEX.md](../../../docs_cli/INDEX.md) | 全量经验/技术文档统一检索入口 |
 | 迭代经验 | [docs_cli/EXPERIENCE.md](../../../docs_cli/EXPERIENCE.md) | 24 章问题排查 + 参数梯度分析 + 提示词工程 |
-| 采样器手册 | [docs_cli/dpmpp_ddpm_samplers_guide.md](../../../docs_cli/dpmpp_ddpm_samplers_guide.md) | DPM++/DDPM 采样器参考 |
+| 采样器手册 | [SKILL.md §4.19](../../../SKILL.md) | K 采样器完全参考手册（ComfyUI 全家族，独立章节） |
 | 双实例调参 | [docs_cli/wan22_dual_instance_tuning_guide.md](../../../docs_cli/wan22_dual_instance_tuning_guide.md) | Wan2.2 双卡视频生成调参 |
 | 图片预检 | [.trae/skills/image-task-execution-guide/SKILL.md](../../../../.trae/skills/image-task-execution-guide/SKILL.md) | 图片任务 5 项强制预检 |
 | 视频预检 | [.trae/skills/video-task-execution-guide/SKILL.md](../../../../.trae/skills/video-task-execution-guide/SKILL.md) | 视频任务 6 项强制预检 |
