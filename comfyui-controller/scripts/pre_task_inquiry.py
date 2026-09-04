@@ -341,11 +341,84 @@ def _read_int(prompt_text, default=None, valid_choices=None):
     return val
 
 
+def select_k_sampler(positive_prompt="", is_video=False):
+    """K 采样器选择（强制，根据提示词内容与目标效果推荐）。
+
+    依据 SKILL.md 4.6.4 节：先判定收敛型 vs 随机型，再按提示词关键词推荐采样器。
+    返回 {sampler_name, scheduler}，失败返回 None。
+
+    视频任务：按模型系列约定优先（Wan2.2 用 dpmpp_sde），由调用方在模型选择后传入 is_video=True。
+    图片任务：根据提示词内容判断画面目标。
+    """
+    prompt = (positive_prompt or "").lower()
+
+    # 视频任务：按模型系列约定选择（见 SKILL.md 4.6.4 模型系列特殊约定）
+    if is_video:
+        print("\n[视频任务] K 采样器按模型系列约定选择（Wan2.2: scheduler=dpm++_sde，见 SKILL.md 4.6.4，已验证不可改）")
+        return {"sampler_name": "dpmpp_sde", "scheduler": "dpm++_sde"}
+
+    # 判定画面目标：写实/产品/建筑 → 收敛型；创意/艺术/插画 → 随机型
+    creative_kw = ["art", "style", "stylized", "illustration", "anime", "creative",
+                   "concept", "painting", "watercolor", "impression", "sketch",
+                   "插画", "动漫", "艺术", "风格化", "创意", "概念", "手绘", "水彩", "素描"]
+    realistic_kw = ["photoreal", "realistic", "portrait", "product", "photo",
+                    "architect", "commercial", "still", "jewel", "interior",
+                    "写实", "人像", "产品", "摄影", "建筑", "商业", "静物", "珠宝"]
+
+    is_creative = any(k in prompt for k in creative_kw)
+    is_realistic = any(k in prompt for k in realistic_kw)
+
+    # 推荐决策（对应 SKILL.md 4.6.4 决策表）
+    if is_realistic and not is_creative:
+        rec = {"sampler_name": "dpmpp_2m_sde", "scheduler": "karras", "steps_hint": "25-35",
+               "why": "写实/产品/摄影 → 收敛型 dpmpp_2m_sde（平滑自然）"}
+    elif is_creative and not is_realistic:
+        rec = {"sampler_name": "euler_ancestral", "scheduler": "karras", "steps_hint": "20-30",
+               "why": "创意/艺术/插画 → 随机型 euler_ancestral（纹理丰富）"}
+    else:
+        # 无明确倾向或同时包含 → 通用默认
+        rec = {"sampler_name": "dpmpp_2m", "scheduler": "karras", "steps_hint": "15-25",
+               "why": "日常通用 → dpmpp_2m（行业黄金标准）"}
+
+    print("\n步骤 2.5: K 采样器选择（强制，根据提示词内容）")
+    print("-" * 40)
+    print(f"[推荐] {rec['why']} → sampler={rec['sampler_name']}, scheduler={rec['scheduler']}, steps={rec['steps_hint']}")
+    print("  1. 采用推荐")
+    print("  2. euler_ancestral (随机/艺术)")
+    print("  3. dpmpp_2m (收敛/通用)")
+    print("  4. dpmpp_2m_sde (收敛/平滑写实)")
+    print("  5. ddim (收敛/绝对稳定)")
+    print("  6. dpmpp_2m_cfg_pp (收敛/复杂提示词高控制)")
+    print("  7. 自定义输入")
+    choice = _read_int("请输入 (1-7，默认 1): ", default=1, valid_choices=[1, 2, 3, 4, 5, 6, 7])
+    if choice is None:
+        return None
+    preset = {
+        1: (rec["sampler_name"], "karras"),
+        2: ("euler_ancestral", "karras"),
+        3: ("dpmpp_2m", "karras"),
+        4: ("dpmpp_2m_sde", "karras"),
+        5: ("ddim", "ddim_uniform"),
+        6: ("dpmpp_2m_cfg_pp", "beta"),
+    }
+    if choice in preset:
+        sampler_name, scheduler = preset[choice]
+    else:
+        sampler_name = input("请输入 sampler_name: ").strip()
+        if not sampler_name:
+            print("[错误] 采样器不能为空，终止任务。")
+            return None
+        scheduler = input("请输入 scheduler (默认 karras): ").strip() or "karras"
+    print(f"已选择: sampler={sampler_name}, scheduler={scheduler}")
+    return {"sampler_name": sampler_name, "scheduler": scheduler}
+
+
 def collect_generation_params():
     """收集生成参数：画面比例、分辨率、步数、提示词，并计算目标尺寸。
 
     返回 {ratio, resolution, steps, positive_prompt, negative_prompt,
-          target_width, target_height}，失败返回 None。
+          target_width, target_height, adaptive_params, sampler_name, scheduler}，
+    失败返回 None。
     """
     print("\n" + "-" * 40)
     print("步骤 2: 生成参数收集")
@@ -399,6 +472,11 @@ def collect_generation_params():
     print("\n请输入负面提示词 (直接回车可留空):")
     negative = input("> ").strip()
 
+    # K 采样器选择（视频任务按模型系列约定，见 SKILL.md 4.6.4）
+    sampler = select_k_sampler(positive, is_video=True)
+    if sampler is None:
+        return None
+
     # 计算目标尺寸
     size_key = (ratio, resolution)
     width, height = SIZE_TABLE.get(size_key, (None, None))
@@ -422,6 +500,8 @@ def collect_generation_params():
         "target_width": width,
         "target_height": height,
         "adaptive_params": adaptive,
+        "sampler_name": sampler["sampler_name"],
+        "scheduler": sampler["scheduler"],
     }
 
 
@@ -630,6 +710,7 @@ def print_summary(models, params, hw, architecture_scheme="single"):
     print(f"分辨率:      {res_names.get(params.get('resolution'), params.get('resolution'))}")
     print(f"目标尺寸:    {params.get('target_width')}×{params.get('target_height')}")
     print(f"优化步数:    {params.get('steps')}")
+    print(f"采样器:      {params.get('sampler_name')} / {params.get('scheduler')}")
     print(f"正面提示词:  {params.get('positive_prompt')}")
     print(f"负面提示词:  {params.get('negative_prompt')}")
     print(f"GPU 显存:    {hw.get('vram_mb')} MB (需要 {hw.get('model_vram_required_mb')} MB)")
