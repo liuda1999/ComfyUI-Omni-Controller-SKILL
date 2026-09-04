@@ -624,7 +624,8 @@ pytest tests/uv_compile/ -v
 
 | 文档 | 说明 |
 |------|------|
-| `SKILL.md` | 技能模式完整文档（AI Agent 使用） |
+| `.trae/skills/comfyui-controller/SKILL.md` | **技能入口**（安装为 Trae/Agent 技能时加载，含快速导航与路径） |
+| `SKILL.md` | 技能模式完整文档（AI Agent 使用，主文档） |
 | `README.md` | 项目 README（本文件） |
 | `docs_cli/INDEX.md` | **全量经验/技术文档快速索引**（主题速查 + 章节行号导航） |
 | `docs_cli/EXPERIENCE.md` | 24 章迭代经验与问题排查记录 |
