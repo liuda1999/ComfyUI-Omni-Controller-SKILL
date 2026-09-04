@@ -80,7 +80,8 @@ SKILL.md (本文件) — 主入口
   └── 关联技能文件:
       ├── .trae/skills/video-task-execution-guide/SKILL.md  —— 视频任务6项强制预检
       ├── .trae/skills/image-task-execution-guide/SKILL.md  —— 图片任务5项强制预检+LoRA选择
-      └── c:\Users\15910\.trae-cn\memory\projects\-e-comfyui-cli\project_memory.md —— 硬约束+工程约定
+      └── .trae/skills/comfyui-controller/SKILL.md —— 本技能包入口（快速导航 + 安装为技能）
+      （本机 Agent 硬约束另存于 IDE 记忆/项目 memory 中，不随仓库分发）
 
 docs_cli/ 技术文档（统一入口 → docs_cli/INDEX.md 快速索引）:
       ├── EXPERIENCE.md —— 24章迭代经验/排查（INDEX.md 含全章节行号导航）
@@ -121,7 +122,7 @@ docs_cli/ 技术文档（统一入口 → docs_cli/INDEX.md 快速索引）:
 | ComfyUI启动命令？ | video-task-execution-guide | 检查1 标准启动命令 |
 | 视频预检流程？ | video-task-execution-guide | 6项强制检查 |
 | 图片预检流程？ | image-task-execution-guide | 5项强制检查+LoRA选择 |
-| 显存硬约束？ | project_memory.md | Hard Constraints |
+| 显存硬约束？ | SKILL.md §4.5.3 显存管理硬约束 + video-task-execution-guide | 4.5.3节 + 6项强制检查 |
 
 ## 1. 项目概述
 
@@ -210,10 +211,14 @@ comfyui-controller/
 │   ├── env_checker.py                # 环境检查
 │   └── cuda_detect.py                # CUDA 检测
 ├── docs_cli/                         # 文档目录
+│   ├── INDEX.md                      # **全量经验/技术文档快速索引**（主题速查 + 章节行号导航）
+│   ├── EXPERIENCE.md                 # 迭代经验与问题排查（24 章：导入/依赖/HTTP/工作流/参数梯度/节点详解/任务复盘/长视频修复）
+│   ├── dpmpp_ddpm_samplers_guide.md  # DPM++/DDPM 采样器参考手册
+│   ├── wan22_dual_instance_tuning_guide.md # Wan2.2 双实例视频生成调参手册
+│   ├── long_video_svi_pro_wan22_report.md  # C8/长视频完整任务报告
 │   ├── DESIGN-uv-compile.md          # uv 编译设计文档
 │   ├── PRD-uv-compile.md             # uv 编译产品需求
 │   ├── TESTING-e2e.md                # E2E 测试指南
-│   ├── EXPERIENCE.md                 # CLI 运行经验与问题排查（20 章迭代经验）
 │   └── json-output.md                # NDJSON 输出规范
 └── (无 tests/ 目录，测试通过脚本内联验证)
 ```
@@ -2063,5 +2068,5 @@ ComfyUI 资源（整合包、模型、自定义节点、工作流模板）请通
 - `comfyui-controller` 相关代码遵循其原始许可证
 - 融合后的架构文档和 README 为原创内容
 
-**作者**：liuhongxiang
+**作者**：liuda1999
 **QQ 群**：336439290
