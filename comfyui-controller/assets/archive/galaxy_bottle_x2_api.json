@@ -1,0 +1,28 @@
+{
+  "1": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "galaxy_bottle_flux2_00001_.png"
+    }
+  },
+  "2": {
+    "class_type": "UpscaleModelLoader",
+    "inputs": {
+      "model_name": "2x_StarSample_V2.0.safetensors"
+    }
+  },
+  "3": {
+    "class_type": "ImageUpscaleWithModel",
+    "inputs": {
+      "upscale_model": ["2", 0],
+      "image": ["1", 0]
+    }
+  },
+  "4": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "filename_prefix": "galaxy_bottle_flux2_x2",
+      "images": ["3", 0]
+    }
+  }
+}

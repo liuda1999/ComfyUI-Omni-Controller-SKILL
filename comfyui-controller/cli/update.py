@@ -1,0 +1,57 @@
+import logging
+import sys
+from importlib.metadata import metadata
+
+import requests
+from packaging import version
+from rich.console import Console
+from rich.panel import Panel
+
+logger = logging.getLogger(__name__)
+console = Console()
+
+
+def check_for_newer_pypi_version(package_name, current_version):
+    url = f"https://pypi.org/pypi/{package_name}/json"
+    try:
+        response = requests.get(url, timeout=5)
+        response.raise_for_status()
+        latest_version = response.json()["info"]["version"]
+
+        if version.parse(latest_version) > version.parse(current_version):
+            return True, latest_version
+
+        return False, current_version
+    except requests.RequestException as e:
+        logger.warning(f"Failed to check for updates: {e}")
+        return False, current_version
+
+
+def check_for_updates():
+    current_version = get_version_from_pyproject()
+    has_newer, newer_version = check_for_newer_pypi_version("comfy-cli", current_version)
+
+    if has_newer:
+        notify_update(current_version, newer_version)
+
+
+def get_version_from_pyproject():
+    try:
+        package_metadata = metadata("comfy-cli")
+        return package_metadata["Version"]
+    except Exception:
+        return "0.0.0"
+
+
+def notify_update(current_version: str, newer_version: str):
+    message = (
+        f":sparkles: Newer version of [bold magenta]comfy-cli[/bold magenta] is available: [bold green]{newer_version}[/bold green].\n"
+        f"Current version: [bold cyan]{current_version}[/bold cyan]\n"
+        f"Update by running: [bold yellow]'pip install --upgrade comfy-cli'[/bold yellow] :arrow_up:"
+    )
+
+    if sys.platform == "win32":
+        message = message.replace(":sparkles:", "")
+        message = message.replace(":arrow_up:", "")
+
+    console.print(Panel(message, title="Update Available", border_style="green"))

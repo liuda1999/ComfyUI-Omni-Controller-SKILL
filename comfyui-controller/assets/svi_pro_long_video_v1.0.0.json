@@ -1,0 +1,895 @@
+{
+  "g_loadimage": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "c7_1.png"
+    }
+  },
+  "g_resize": {
+    "class_type": "ImageResizeKJv2",
+    "inputs": {
+      "image": [
+        "g_loadimage",
+        0
+      ],
+      "width": 480,
+      "height": 848,
+      "upscale_method": "lanczos",
+      "keep_proportion": "crop",
+      "pad_color": "0, 0, 0",
+      "crop_position": "center",
+      "divisible_by": 16,
+      "device": "cpu"
+    }
+  },
+  "g_vae_wan": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "comfy-wan_2.1_vae.safetensors"
+    }
+  },
+  "g_vaeencode_wan": {
+    "class_type": "VAEEncode",
+    "inputs": {
+      "pixels": [
+        "g_resize",
+        0
+      ],
+      "vae": [
+        "g_vae_wan",
+        0
+      ]
+    }
+  },
+  "g_clip_wan": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+      "type": "wan"
+    }
+  },
+  "g_unet_high": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "Wan2.2_Remix_NSFW_i2v_14b_high_lighting_v2.0.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "g_lora_high": {
+    "class_type": "LoraLoaderModelOnly",
+    "inputs": {
+      "model": [
+        "g_unet_high",
+        0
+      ],
+      "lora_name": "SVI_v2_PRO_Wan2.2-I2V-A14B_HIGH_lora_rank_128_fp16.safetensors",
+      "strength_model": 1.0
+    }
+  },
+  "g_sage_high": {
+    "class_type": "PathchSageAttentionKJ",
+    "inputs": {
+      "model": [
+        "g_lora_high",
+        0
+      ],
+      "sage_attention": "auto",
+      "allow_compile": false
+    }
+  },
+  "g_torch_high": {
+    "class_type": "ModelPatchTorchSettings",
+    "inputs": {
+      "model": [
+        "g_sage_high",
+        0
+      ],
+      "enable_fp16_accumulation": true
+    }
+  },
+  "g_unet_low": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "Wan2_2-I2V-A14B-LOW_fp8_e4m3fn_scaled_KJ.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "g_lora_low": {
+    "class_type": "LoraLoaderModelOnly",
+    "inputs": {
+      "model": [
+        "g_unet_low",
+        0
+      ],
+      "lora_name": "SVI_v2_PRO_Wan2.2-I2V-A14B_LOW_lora_rank_128_fp16.safetensors",
+      "strength_model": 1.0
+    }
+  },
+  "g_sage_low": {
+    "class_type": "PathchSageAttentionKJ",
+    "inputs": {
+      "model": [
+        "g_lora_low",
+        0
+      ],
+      "sage_attention": "auto",
+      "allow_compile": false
+    }
+  },
+  "g_torch_low": {
+    "class_type": "ModelPatchTorchSettings",
+    "inputs": {
+      "model": [
+        "g_sage_low",
+        0
+      ],
+      "enable_fp16_accumulation": true
+    }
+  },
+  "seg1_clip_pos": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": [
+        "g_clip_wan",
+        0
+      ],
+      "text": "缓慢转身360度，然后面向前方伸出双手做比心手势，微笑表情，自然流畅的动作"
+    }
+  },
+  "seg1_clip_neg": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": [
+        "g_clip_wan",
+        0
+      ],
+      "text": "静态，静止不动，画面模糊，细节缺失，多余的手指，手指融合，畸形肢体，色彩偏移，红色皮肤"
+    }
+  },
+  "seg1_svi": {
+    "class_type": "WanImageToVideoSVIPro",
+    "inputs": {
+      "positive": [
+        "seg1_clip_pos",
+        0
+      ],
+      "negative": [
+        "seg1_clip_neg",
+        0
+      ],
+      "anchor_samples": [
+        "g_vaeencode_wan",
+        0
+      ],
+      "length": 81,
+      "motion_latent_count": 0
+    }
+  },
+  "seg1_ks_high": {
+    "class_type": "KSamplerAdvanced",
+    "inputs": {
+      "model": [
+        "g_torch_high",
+        0
+      ],
+      "positive": [
+        "seg1_svi",
+        0
+      ],
+      "negative": [
+        "seg1_svi",
+        1
+      ],
+      "latent_image": [
+        "seg1_svi",
+        2
+      ],
+      "add_noise": "enable",
+      "noise_seed": 214,
+      "steps": 6,
+      "cfg": 2.0,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "start_at_step": 0,
+      "end_at_step": 2,
+      "return_with_leftover_noise": "enable"
+    }
+  },
+  "seg1_ks_low": {
+    "class_type": "KSamplerAdvanced",
+    "inputs": {
+      "model": [
+        "g_torch_low",
+        0
+      ],
+      "positive": [
+        "seg1_svi",
+        0
+      ],
+      "negative": [
+        "seg1_svi",
+        1
+      ],
+      "latent_image": [
+        "seg1_ks_high",
+        0
+      ],
+      "add_noise": "disable",
+      "noise_seed": 214,
+      "steps": 6,
+      "cfg": 1.0,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "start_at_step": 2,
+      "end_at_step": 10000,
+      "return_with_leftover_noise": "disable"
+    }
+  },
+  "seg1_vaedecode": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "seg1_ks_low",
+        0
+      ],
+      "vae": [
+        "g_vae_wan",
+        0
+      ]
+    }
+  },
+  "seg1_lastframe": {
+    "class_type": "ImageFromBatch",
+    "inputs": {
+      "image": [
+        "seg1_vaedecode",
+        0
+      ],
+      "batch_index": -1,
+      "length": 1
+    }
+  },
+  "seg2_clip_pos": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": [
+        "g_clip_wan",
+        0
+      ],
+      "text": "保持比心手势姿态，微笑着看向镜头，身体轻微晃动，呼吸自然"
+    }
+  },
+  "seg2_clip_neg": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": [
+        "g_clip_wan",
+        0
+      ],
+      "text": "静态，静止不动，画面模糊，细节缺失，多余的手指，手指融合，畸形肢体，色彩偏移，红色皮肤"
+    }
+  },
+  "seg2_svi": {
+    "class_type": "WanImageToVideoSVIPro",
+    "inputs": {
+      "positive": [
+        "seg2_clip_pos",
+        0
+      ],
+      "negative": [
+        "seg2_clip_neg",
+        0
+      ],
+      "anchor_samples": [
+        "g_vaeencode_wan",
+        0
+      ],
+      "length": 81,
+      "motion_latent_count": 1,
+      "prev_samples": [
+        "seg2_lastframe_encode",
+        0
+      ]
+    }
+  },
+  "seg2_ks_high": {
+    "class_type": "KSamplerAdvanced",
+    "inputs": {
+      "model": [
+        "g_torch_high",
+        0
+      ],
+      "positive": [
+        "seg2_svi",
+        0
+      ],
+      "negative": [
+        "seg2_svi",
+        1
+      ],
+      "latent_image": [
+        "seg2_svi",
+        2
+      ],
+      "add_noise": "enable",
+      "noise_seed": 214,
+      "steps": 6,
+      "cfg": 2.0,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "start_at_step": 0,
+      "end_at_step": 2,
+      "return_with_leftover_noise": "enable"
+    }
+  },
+  "seg2_ks_low": {
+    "class_type": "KSamplerAdvanced",
+    "inputs": {
+      "model": [
+        "g_torch_low",
+        0
+      ],
+      "positive": [
+        "seg2_svi",
+        0
+      ],
+      "negative": [
+        "seg2_svi",
+        1
+      ],
+      "latent_image": [
+        "seg2_ks_high",
+        0
+      ],
+      "add_noise": "disable",
+      "noise_seed": 214,
+      "steps": 6,
+      "cfg": 1.0,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "start_at_step": 2,
+      "end_at_step": 10000,
+      "return_with_leftover_noise": "disable"
+    }
+  },
+  "seg2_vaedecode": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "seg2_ks_low",
+        0
+      ],
+      "vae": [
+        "g_vae_wan",
+        0
+      ]
+    }
+  },
+  "seg2_lastframe": {
+    "class_type": "ImageFromBatch",
+    "inputs": {
+      "image": [
+        "seg1_vaedecode",
+        0
+      ],
+      "batch_index": -1,
+      "length": 1
+    }
+  },
+  "seg3_clip_pos": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": [
+        "g_clip_wan",
+        0
+      ],
+      "text": "收回比心手势，双手缓慢抬起按摩上身胸部区域，动作轻柔自然，表情放松"
+    }
+  },
+  "seg3_clip_neg": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": [
+        "g_clip_wan",
+        0
+      ],
+      "text": "静态，静止不动，画面模糊，细节缺失，多余的手指，手指融合，畸形肢体，色彩偏移，红色皮肤"
+    }
+  },
+  "seg3_svi": {
+    "class_type": "WanImageToVideoSVIPro",
+    "inputs": {
+      "positive": [
+        "seg3_clip_pos",
+        0
+      ],
+      "negative": [
+        "seg3_clip_neg",
+        0
+      ],
+      "anchor_samples": [
+        "g_vaeencode_wan",
+        0
+      ],
+      "length": 81,
+      "motion_latent_count": 1,
+      "prev_samples": [
+        "seg3_lastframe_encode",
+        0
+      ]
+    }
+  },
+  "seg3_ks_high": {
+    "class_type": "KSamplerAdvanced",
+    "inputs": {
+      "model": [
+        "g_torch_high",
+        0
+      ],
+      "positive": [
+        "seg3_svi",
+        0
+      ],
+      "negative": [
+        "seg3_svi",
+        1
+      ],
+      "latent_image": [
+        "seg3_svi",
+        2
+      ],
+      "add_noise": "enable",
+      "noise_seed": 214,
+      "steps": 6,
+      "cfg": 2.0,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "start_at_step": 0,
+      "end_at_step": 2,
+      "return_with_leftover_noise": "enable"
+    }
+  },
+  "seg3_ks_low": {
+    "class_type": "KSamplerAdvanced",
+    "inputs": {
+      "model": [
+        "g_torch_low",
+        0
+      ],
+      "positive": [
+        "seg3_svi",
+        0
+      ],
+      "negative": [
+        "seg3_svi",
+        1
+      ],
+      "latent_image": [
+        "seg3_ks_high",
+        0
+      ],
+      "add_noise": "disable",
+      "noise_seed": 214,
+      "steps": 6,
+      "cfg": 1.0,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "start_at_step": 2,
+      "end_at_step": 10000,
+      "return_with_leftover_noise": "disable"
+    }
+  },
+  "seg3_vaedecode": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "seg3_ks_low",
+        0
+      ],
+      "vae": [
+        "g_vae_wan",
+        0
+      ]
+    }
+  },
+  "seg3_lastframe": {
+    "class_type": "ImageFromBatch",
+    "inputs": {
+      "image": [
+        "seg2_vaedecode",
+        0
+      ],
+      "batch_index": -1,
+      "length": 1
+    }
+  },
+  "seg4_clip_pos": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": [
+        "g_clip_wan",
+        0
+      ],
+      "text": "双手举过头顶，然后轻轻跳跃2次，动作轻盈，表情愉悦"
+    }
+  },
+  "seg4_clip_neg": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": [
+        "g_clip_wan",
+        0
+      ],
+      "text": "静态，静止不动，画面模糊，细节缺失，多余的手指，手指融合，畸形肢体，色彩偏移，红色皮肤，红手掌"
+    }
+  },
+  "seg4_svi": {
+    "class_type": "WanImageToVideoSVIPro",
+    "inputs": {
+      "positive": [
+        "seg4_clip_pos",
+        0
+      ],
+      "negative": [
+        "seg4_clip_neg",
+        0
+      ],
+      "anchor_samples": [
+        "g_vaeencode_wan",
+        0
+      ],
+      "length": 81,
+      "motion_latent_count": 1,
+      "prev_samples": [
+        "seg4_lastframe_encode",
+        0
+      ]
+    }
+  },
+  "seg4_ks_high": {
+    "class_type": "KSamplerAdvanced",
+    "inputs": {
+      "model": [
+        "g_torch_high",
+        0
+      ],
+      "positive": [
+        "seg4_svi",
+        0
+      ],
+      "negative": [
+        "seg4_svi",
+        1
+      ],
+      "latent_image": [
+        "seg4_svi",
+        2
+      ],
+      "add_noise": "enable",
+      "noise_seed": 214,
+      "steps": 6,
+      "cfg": 2.5,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "start_at_step": 0,
+      "end_at_step": 2,
+      "return_with_leftover_noise": "enable"
+    }
+  },
+  "seg4_ks_low": {
+    "class_type": "KSamplerAdvanced",
+    "inputs": {
+      "model": [
+        "g_torch_low",
+        0
+      ],
+      "positive": [
+        "seg4_svi",
+        0
+      ],
+      "negative": [
+        "seg4_svi",
+        1
+      ],
+      "latent_image": [
+        "seg4_ks_high",
+        0
+      ],
+      "add_noise": "disable",
+      "noise_seed": 214,
+      "steps": 6,
+      "cfg": 1.0,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "start_at_step": 2,
+      "end_at_step": 10000,
+      "return_with_leftover_noise": "disable"
+    }
+  },
+  "seg4_vaedecode": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "seg4_ks_low",
+        0
+      ],
+      "vae": [
+        "g_vae_wan",
+        0
+      ]
+    }
+  },
+  "seg4_lastframe": {
+    "class_type": "ImageFromBatch",
+    "inputs": {
+      "image": [
+        "seg3_vaedecode",
+        0
+      ],
+      "batch_index": -1,
+      "length": 1
+    }
+  },
+  "seg5_clip_pos": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": [
+        "g_clip_wan",
+        0
+      ],
+      "text": "自然摇摆身体，然后优雅的抬起左腿，动作优美流畅，表情自信"
+    }
+  },
+  "seg5_clip_neg": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": [
+        "g_clip_wan",
+        0
+      ],
+      "text": "静态，静止不动，画面模糊，细节缺失，多余的手指，手指融合，畸形肢体，色彩偏移，红色皮肤"
+    }
+  },
+  "seg5_svi": {
+    "class_type": "WanImageToVideoSVIPro",
+    "inputs": {
+      "positive": [
+        "seg5_clip_pos",
+        0
+      ],
+      "negative": [
+        "seg5_clip_neg",
+        0
+      ],
+      "anchor_samples": [
+        "g_vaeencode_wan",
+        0
+      ],
+      "length": 81,
+      "motion_latent_count": 1,
+      "prev_samples": [
+        "seg5_lastframe_encode",
+        0
+      ]
+    }
+  },
+  "seg5_ks_high": {
+    "class_type": "KSamplerAdvanced",
+    "inputs": {
+      "model": [
+        "g_torch_high",
+        0
+      ],
+      "positive": [
+        "seg5_svi",
+        0
+      ],
+      "negative": [
+        "seg5_svi",
+        1
+      ],
+      "latent_image": [
+        "seg5_svi",
+        2
+      ],
+      "add_noise": "enable",
+      "noise_seed": 214,
+      "steps": 6,
+      "cfg": 2.5,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "start_at_step": 0,
+      "end_at_step": 2,
+      "return_with_leftover_noise": "enable"
+    }
+  },
+  "seg5_ks_low": {
+    "class_type": "KSamplerAdvanced",
+    "inputs": {
+      "model": [
+        "g_torch_low",
+        0
+      ],
+      "positive": [
+        "seg5_svi",
+        0
+      ],
+      "negative": [
+        "seg5_svi",
+        1
+      ],
+      "latent_image": [
+        "seg5_ks_high",
+        0
+      ],
+      "add_noise": "disable",
+      "noise_seed": 214,
+      "steps": 6,
+      "cfg": 1.0,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "start_at_step": 2,
+      "end_at_step": 10000,
+      "return_with_leftover_noise": "disable"
+    }
+  },
+  "seg5_vaedecode": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "seg5_ks_low",
+        0
+      ],
+      "vae": [
+        "g_vae_wan",
+        0
+      ]
+    }
+  },
+  "merge1": {
+    "class_type": "ImageBatchExtendWithOverlap",
+    "inputs": {
+      "source_images": [
+        "seg1_vaedecode",
+        0
+      ],
+      "new_images": [
+        "seg2_vaedecode",
+        0
+      ],
+      "overlap": 5,
+      "overlap_side": "source",
+      "overlap_mode": "cut"
+    }
+  },
+  "merge2": {
+    "class_type": "ImageBatchExtendWithOverlap",
+    "inputs": {
+      "source_images": [
+        "merge1",
+        2
+      ],
+      "new_images": [
+        "seg3_vaedecode",
+        0
+      ],
+      "overlap": 5,
+      "overlap_side": "source",
+      "overlap_mode": "cut"
+    }
+  },
+  "merge3": {
+    "class_type": "ImageBatchExtendWithOverlap",
+    "inputs": {
+      "source_images": [
+        "merge2",
+        2
+      ],
+      "new_images": [
+        "seg4_vaedecode",
+        0
+      ],
+      "overlap": 5,
+      "overlap_side": "source",
+      "overlap_mode": "cut"
+    }
+  },
+  "final_merge": {
+    "class_type": "ImageBatchExtendWithOverlap",
+    "inputs": {
+      "source_images": [
+        "merge3",
+        2
+      ],
+      "new_images": [
+        "seg5_vaedecode",
+        0
+      ],
+      "overlap": 5,
+      "overlap_side": "source",
+      "overlap_mode": "cut"
+    }
+  },
+  "final_video": {
+    "class_type": "VHS_VideoCombine",
+    "inputs": {
+      "images": [
+        "final_merge",
+        2
+      ],
+      "frame_rate": 20,
+      "loop_count": 0,
+      "filename_prefix": "v13_c7_svi_final_20s",
+      "format": "video/h264-mp4",
+      "pix_fmt": "yuv420p",
+      "crf": 20,
+      "save_metadata": true,
+      "trim_to_audio": false,
+      "pingpong": false,
+      "save_output": true
+    }
+  },
+  "seg2_lastframe_encode": {
+    "class_type": "VAEEncode",
+    "inputs": {
+      "pixels": [
+        "seg2_lastframe",
+        0
+      ],
+      "vae": [
+        "g_vae_wan",
+        0
+      ]
+    }
+  },
+  "seg3_lastframe_encode": {
+    "class_type": "VAEEncode",
+    "inputs": {
+      "pixels": [
+        "seg3_lastframe",
+        0
+      ],
+      "vae": [
+        "g_vae_wan",
+        0
+      ]
+    }
+  },
+  "seg4_lastframe_encode": {
+    "class_type": "VAEEncode",
+    "inputs": {
+      "pixels": [
+        "seg4_lastframe",
+        0
+      ],
+      "vae": [
+        "g_vae_wan",
+        0
+      ]
+    }
+  },
+  "seg5_lastframe": {
+    "class_type": "ImageFromBatch",
+    "inputs": {
+      "image": [
+        "seg4_vaedecode",
+        0
+      ],
+      "batch_index": -1,
+      "length": 1
+    }
+  },
+  "seg5_lastframe_encode": {
+    "class_type": "VAEEncode",
+    "inputs": {
+      "pixels": [
+        "seg5_lastframe",
+        0
+      ],
+      "vae": [
+        "g_vae_wan",
+        0
+      ]
+    }
+  }
+}

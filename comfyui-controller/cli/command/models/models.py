@@ -1,0 +1,544 @@
+import contextlib
+import os
+import pathlib
+import time
+from typing import Annotated
+from urllib.parse import parse_qs, unquote, urlparse
+
+import requests
+import typer
+from rich import print
+from rich.markup import escape
+
+from cli import constants, tracking, ui
+from cli.config_manager import ConfigManager
+from cli.constants import DEFAULT_COMFY_MODEL_PATH
+from cli.file_utils import DownloadException, check_unauthorized, download_file
+from cli.workspace_manager import WorkspaceManager
+
+app = typer.Typer()
+
+workspace_manager = WorkspaceManager()
+config_manager = ConfigManager()
+
+_CIVITAI_SUBDOMAIN_SUFFIXES = tuple(f".{h}" for h in constants.CIVITAI_ALLOWED_HOSTS)
+
+
+model_path_map = {
+    "lora": "loras",
+    "hypernetwork": "hypernetworks",
+    "checkpoint": "checkpoints",
+    "textualinversion": "embeddings",
+    "controlnet": "controlnet",
+}
+
+
+def get_workspace() -> pathlib.Path:
+    return pathlib.Path(workspace_manager.workspace_path)
+
+
+def _format_elapsed(seconds: float) -> str:
+    """Format elapsed seconds into a human-readable string."""
+    rounded = round(seconds, 1)
+    if rounded < 60:
+        return f"{rounded:.1f}s"
+    minutes, secs = divmod(int(rounded), 60)
+    if minutes < 60:
+        return f"{minutes}m {secs}s"
+    hours, minutes = divmod(minutes, 60)
+    return f"{hours}h {minutes}m {secs}s"
+
+
+def potentially_strip_param_url(path_name: str) -> str:
+    return path_name.split("?")[0]
+
+
+def check_huggingface_url(url: str) -> tuple[bool, str | None, str | None, str | None, str | None]:
+    """
+    Check if the given URL is a Hugging Face URL and extract relevant information.
+
+    Args:
+        url (str): The URL to check.
+
+    Returns:
+        Tuple[bool, Optional[str], Optional[str], Optional[str], Optional[str]]:
+            - is_huggingface_url (bool): True if it's a Hugging Face URL, False otherwise.
+            - repo_id (Optional[str]): The repository ID if it's a Hugging Face URL, None otherwise.
+            - filename (Optional[str]): The filename if present, None otherwise.
+            - folder_name (Optional[str]): The folder name if present, None otherwise.
+            - branch_name (Optional[str]): The git branch name if present, None otherwise.
+    """
+    parsed_url = urlparse(url)
+
+    if parsed_url.netloc != "huggingface.co" and parsed_url.netloc != "huggingface.com":
+        return False, None, None, None, None
+
+    path_parts = [p for p in parsed_url.path.split("/") if p]
+
+    if len(path_parts) < 5 or (path_parts[2] != "resolve" and path_parts[2] != "blob"):
+        return False, None, None, None, None
+    repo_id = f"{path_parts[0]}/{path_parts[1]}"
+    branch_name = path_parts[3]
+
+    remaining_path = "/".join(path_parts[4:])
+    folder_name = os.path.dirname(remaining_path) if "/" in remaining_path else None
+    filename = os.path.basename(remaining_path)
+
+    # URL decode the filename
+    filename = unquote(filename)
+
+    return True, repo_id, filename, folder_name, branch_name
+
+
+def check_civitai_url(url: str) -> tuple[bool, bool, int | None, int | None]:
+    """
+    Returns:
+        is_civitai_model_url: True if the url is a civitai *web* model url (e.g. /models/12345)
+        is_civitai_api_url: True if the url is a civitai *api* url useful for resolving downloads
+        model_id: The model id (for /models/*), else None
+        version_id: The version id (for /api/download/models/* or ?modelVersionId=), else None
+    """
+    try:
+        parsed = urlparse(url)
+        host = (parsed.hostname or "").lower()
+        if host not in constants.CIVITAI_ALLOWED_HOSTS and not host.endswith(_CIVITAI_SUBDOMAIN_SUFFIXES):
+            return False, False, None, None
+        p_parts = [p for p in parsed.path.split("/") if p]
+        query = parse_qs(parsed.query)
+
+        if len(p_parts) >= 4 and p_parts[0] == "api":
+            # Case 1: /api/download/models/<version_id>
+            # e.g. https://civitai.com/api/download/models/1617665?type=Model&format=SafeTensor
+            if p_parts[1] == "download" and p_parts[2] == "models":
+                try:
+                    version_id = int(p_parts[3])
+                    return False, True, None, version_id
+                except ValueError:
+                    return False, True, None, None
+
+            # Case 2: /api/v1/model-versions/<version_id>
+            if p_parts[1] == "v1" and p_parts[2] in ("model-versions", "modelVersions"):
+                try:
+                    version_id = int(p_parts[3])
+                    return False, True, None, version_id
+                except ValueError:
+                    return False, True, None, None
+
+        # Case 3: /models/<model_id>[/*] with optional ?modelVersionId=<id>
+        # e.g. https://civitai.com/models/43331
+        #      https://civitai.com/models/43331/majicmix-realistic?modelVersionId=485088
+        if len(p_parts) >= 2 and p_parts[0] == "models":
+            try:
+                model_id = int(p_parts[1])
+            except ValueError:
+                return False, False, None, None
+            version_id = None
+            mv = query.get("modelVersionId")
+            if mv and len(mv) > 0:
+                with contextlib.suppress(ValueError):
+                    version_id = int(mv[0])
+            if version_id is None:
+                mv = query.get("version")
+                if mv and len(mv) > 0:
+                    with contextlib.suppress(ValueError):
+                        version_id = int(mv[0])
+            return True, False, model_id, version_id
+
+        return False, False, None, None
+
+    except Exception:
+        print("Error parsing CivitAI model URL")
+        return False, False, None, None
+
+
+def request_civitai_model_version_api(version_id: int, headers: dict | None = None):
+    # Make a request to the CivitAI API to get the model information
+    response = requests.get(
+        f"https://civitai.com/api/v1/model-versions/{version_id}",
+        headers=headers,
+        timeout=10,
+    )
+    response.raise_for_status()  # Raise an error for bad status codes
+
+    model_data = response.json()
+    for file in model_data["files"]:
+        if file.get("primary", False):  # Assuming we want the primary file
+            model_name = file["name"]
+            download_url = file["downloadUrl"]
+            model_type = model_data["model"]["type"].lower()
+            basemodel = model_data["baseModel"].replace(" ", "")
+            return model_name, download_url, model_type, basemodel
+
+
+def request_civitai_model_api(model_id: int, version_id: int = None, headers: dict | None = None):
+    # Make a request to the CivitAI API to get the model information
+    response = requests.get(f"https://civitai.com/api/v1/models/{model_id}", headers=headers, timeout=10)
+    response.raise_for_status()  # Raise an error for bad status codes
+
+    model_data = response.json()
+
+    # If version_id is None, use the first version
+    if version_id is None:
+        version_id = model_data["modelVersions"][0]["id"]
+
+    # Find the version with the specified version_id
+    for version in model_data["modelVersions"]:
+        if version["id"] == version_id:
+            # Get the model name and download URL from the files array
+            for file in version["files"]:
+                if file.get("primary", False):  # Assuming we want the primary file
+                    model_name = file["name"]
+                    download_url = file["downloadUrl"]
+                    model_type = model_data["type"].lower()
+                    basemodel = version["baseModel"].replace(" ", "")
+                    return model_name, download_url, model_type, basemodel
+
+    # If the specified version_id is not found, raise an error
+    raise ValueError(f"Version ID {version_id} not found for model ID {model_id}")
+
+
+@app.command(help="Download model file from url")
+@tracking.track_command("model")
+def download(
+    _ctx: typer.Context,
+    url: Annotated[
+        str,
+        typer.Option(help="The URL from which to download the model.", show_default=False),
+    ],
+    relative_path: Annotated[
+        str | None,
+        typer.Option(
+            help="The relative path from the current workspace to install the model.",
+            show_default=True,
+        ),
+    ] = None,
+    filename: Annotated[
+        str | None,
+        typer.Option(
+            help="The filename to save the model.",
+            show_default=True,
+        ),
+    ] = None,
+    set_civitai_api_token: Annotated[
+        str | None,
+        typer.Option(
+            "--set-civitai-api-token",
+            help="Set the CivitAI API token to use for model downloading.",
+            show_default=False,
+        ),
+    ] = None,
+    set_hf_api_token: Annotated[
+        str | None,
+        typer.Option(
+            "--set-hf-api-token",
+            help="Set the Hugging Face API token to use for model downloading.",
+            show_default=False,
+        ),
+    ] = None,
+    downloader: Annotated[
+        str | None,
+        typer.Option(
+            "--downloader",
+            help="Download backend: 'httpx' (default) or 'aria2' (requires aria2 RPC server).",
+            show_default=False,
+        ),
+    ] = None,
+):
+    if relative_path is not None:
+        relative_path = os.path.expanduser(relative_path)
+
+    local_filename = None
+    headers = None
+
+    civitai_api_token = config_manager.get_or_override(
+        constants.CIVITAI_API_TOKEN_ENV_KEY, constants.CIVITAI_API_TOKEN_KEY, set_civitai_api_token
+    )
+    hf_api_token = config_manager.get_or_override(
+        constants.HF_API_TOKEN_ENV_KEY, constants.HF_API_TOKEN_KEY, set_hf_api_token
+    )
+
+    resolved_downloader = downloader or config_manager.get(constants.CONFIG_KEY_DEFAULT_DOWNLOADER) or "httpx"
+
+    is_civitai_model_url, is_civitai_api_url, model_id, version_id = check_civitai_url(url)
+    is_huggingface_url, repo_id, hf_filename, hf_folder_name, hf_branch_name = check_huggingface_url(url)
+
+    if is_civitai_model_url or is_civitai_api_url:
+        headers = {
+            "Content-Type": "application/json",
+        }
+        if civitai_api_token is not None:
+            headers["Authorization"] = f"Bearer {civitai_api_token}"
+
+    if is_civitai_model_url:
+        try:
+            local_filename, url, model_type, basemodel = request_civitai_model_api(model_id, version_id, headers)
+        except requests.RequestException as e:
+            print(f"[bold red]CivitAI API request failed: {escape(str(e))}[/bold red]")
+            raise typer.Exit(code=1) from None
+        except (KeyError, ValueError) as e:
+            print(f"[bold red]CivitAI API returned unexpected data: {escape(str(e))}[/bold red]")
+            raise typer.Exit(code=1) from None
+
+        model_path = model_path_map.get(model_type)
+
+        if relative_path is None:
+            if model_path is None:
+                model_path = ui.prompt_input("Enter model type path (e.g. loras, checkpoints, ...)", default="")
+
+            relative_path = os.path.join(DEFAULT_COMFY_MODEL_PATH, model_path, basemodel)
+    elif is_civitai_api_url:
+        try:
+            local_filename, url, model_type, basemodel = request_civitai_model_version_api(version_id, headers)
+        except requests.RequestException as e:
+            print(f"[bold red]CivitAI API request failed: {escape(str(e))}[/bold red]")
+            raise typer.Exit(code=1) from None
+        except (KeyError, ValueError) as e:
+            print(f"[bold red]CivitAI API returned unexpected data: {escape(str(e))}[/bold red]")
+            raise typer.Exit(code=1) from None
+
+        model_path = model_path_map.get(model_type)
+
+        if relative_path is None:
+            if model_path is None:
+                model_path = ui.prompt_input("Enter model type path (e.g. loras, checkpoints, ...)", default="")
+
+            relative_path = os.path.join(DEFAULT_COMFY_MODEL_PATH, model_path, basemodel)
+    elif is_huggingface_url:
+        model_id = "/".join(url.split("/")[-2:])
+
+        local_filename = potentially_strip_param_url(url.split("/")[-1])
+
+        if relative_path is None:
+            model_path = ui.prompt_input("Enter model type path (e.g. loras, checkpoints, ...)", default="")
+            basemodel = ui.prompt_input("Enter base model (e.g. SD1.5, SDXL, ...)", default="")
+            relative_path = os.path.join(DEFAULT_COMFY_MODEL_PATH, model_path, basemodel)
+    else:
+        print("[bold red]Model source is unknown. Supported sources: CivitAI, Hugging Face.[/bold red]")
+        print("[dim]If this is a direct download URL, please use a CivitAI or Hugging Face URL instead.[/dim]")
+        raise typer.Exit(code=1)
+
+    if filename is None:
+        if local_filename is None:
+            local_filename = ui.prompt_input("Enter filename to save model as")
+        else:
+            local_filename = ui.prompt_input("Enter filename to save model as", default=local_filename)
+    else:
+        local_filename = filename
+
+    if relative_path is None:
+        relative_path = DEFAULT_COMFY_MODEL_PATH
+
+    if local_filename is None:
+        raise typer.Exit(code=1)
+    if local_filename == "":
+        raise DownloadException("Filename cannot be empty")
+
+    local_filepath = get_workspace() / relative_path / local_filename
+
+    if local_filepath.exists():
+        print(f"[bold red]File already exists: {local_filepath}[/bold red]")
+        return
+
+    start_time = time.monotonic()
+
+    if is_huggingface_url and check_unauthorized(url, headers):
+        if hf_api_token is None:
+            print(
+                f"Unauthorized access to Hugging Face model. Please set the Hugging Face API token using `comfy model download --set-hf-api-token` or via the `{constants.HF_API_TOKEN_ENV_KEY}` environment variable"
+            )
+            return
+        else:
+            try:
+                import huggingface_hub
+            except ImportError:
+                print("huggingface_hub not found. Installing...")
+                import subprocess
+
+                from cli.resolve_python import resolve_workspace_python
+
+                python = resolve_workspace_python(str(get_workspace()))
+                subprocess.check_call([python, "-m", "pip", "install", "huggingface_hub"])
+                import huggingface_hub
+
+            print(f"Downloading model {model_id} from Hugging Face...")
+            # Do NOT set cache_dir to the model directory — that pollutes
+            # the model folder with .cache/huggingface/ metadata that then
+            # shows up in `comfy model list`. Let hf_hub_download use its
+            # default cache (~/.cache/huggingface) so only the final file
+            # lands in the model directory via local_dir.
+            output_path = huggingface_hub.hf_hub_download(
+                repo_id=repo_id,
+                filename=hf_filename,
+                subfolder=hf_folder_name,
+                revision=hf_branch_name,
+                token=hf_api_token,
+                local_dir=get_workspace() / relative_path,
+            )
+            print(f"Model downloaded successfully to: {output_path}")
+    else:
+        print(f"Start downloading URL: {url} into {local_filepath}")
+        try:
+            download_file(url, local_filepath, headers, downloader=resolved_downloader)
+        except DownloadException as e:
+            # escape() so a dynamic error message containing "[/]" or similar
+            # rich-markup syntax doesn't trigger MarkupError or get mis-rendered.
+            print(f"[bold red]{escape(str(e))}[/bold red]")
+            raise typer.Exit(code=1) from None
+
+    elapsed = time.monotonic() - start_time
+    print(f"Done in {_format_elapsed(elapsed)}")
+
+
+@app.command()
+@tracking.track_command("model")
+def remove(
+    ctx: typer.Context,
+    relative_path: str = typer.Option(
+        DEFAULT_COMFY_MODEL_PATH,
+        help="The relative path from the current workspace where the models are stored.",
+        show_default=True,
+    ),
+    model_names: list[str] | None = typer.Option(
+        None,
+        help="List of model filenames to delete, separated by spaces",
+        show_default=False,
+    ),
+    confirm: bool = typer.Option(
+        False,
+        help="Confirm for deletion and skip the prompt",
+        show_default=False,
+    ),
+):
+    """Remove one or more downloaded models, either by specifying them directly or through an interactive selection."""
+    model_dir = get_workspace() / relative_path
+    available_models = list_models(model_dir)
+
+    if not available_models:
+        typer.echo("No models found to remove.")
+        return
+
+    model_dir_resolved = model_dir.resolve()
+
+    to_delete = []
+    # Scenario #1: User provided model names to delete
+    if model_names:
+        # Validate and filter models to delete based on provided names
+        missing_models = []
+        for name in model_names:
+            model_path = (model_dir / name).resolve()
+            if not model_path.is_relative_to(model_dir_resolved):
+                typer.echo(f"Invalid model path: {name}")
+                continue
+            if model_path.is_file():
+                to_delete.append(model_path)
+            else:
+                missing_models.append(name)
+
+        if missing_models:
+            typer.echo("The following models were not found and cannot be removed: " + ", ".join(missing_models))
+            if not to_delete:
+                return  # Exit if no valid models were found
+
+    # Scenario #2: User did not provide model names, prompt for selection
+    else:
+        rel_names = [str(model.relative_to(model_dir)) for model in available_models]
+        selections = ui.prompt_multi_select("Select models to delete:", rel_names)
+        if not selections:
+            typer.echo("No models selected for deletion.")
+            return
+        to_delete = [model_dir / selection for selection in selections]
+
+    # Confirm deletion
+    if to_delete and (
+        confirm or ui.prompt_confirm_action("Are you sure you want to delete the selected files?", False)
+    ):
+        for model_path in to_delete:
+            model_path.unlink()
+            typer.echo(f"Deleted: {model_path}")
+    else:
+        typer.echo("Deletion canceled.")
+
+
+# Directories that should never appear in model listings — they are
+# download/cache artifacts, not user-facing model files.
+_SKIP_DIRS = {".cache", "__pycache__", ".git"}
+
+# Placeholder files ComfyUI ships in empty model directories (e.g.
+# "put_checkpoints_here"). They are 0-byte markers, not real models.
+_PLACEHOLDER_PREFIX = "put_"
+_PLACEHOLDER_SUFFIX = "_here"
+
+# File extensions that are actual model weights or model-adjacent config.
+# .gitignore / config.json / README etc. are excluded.
+_MODEL_EXTENSIONS = {
+    ".safetensors", ".ckpt", ".pt", ".pth", ".bin", ".gguf",
+    ".onnx", ".safetensors.json", ".yaml", ".yml",
+}
+
+
+def _is_model_file(path: pathlib.Path) -> bool:
+    """Return True if ``path`` looks like an actual model file (not a
+    placeholder, not a .gitignore, not a cache artifact)."""
+    name = path.name
+    # Filter out placeholder markers like "put_checkpoints_here"
+    if name.startswith(_PLACEHOLDER_PREFIX) and name.endswith(_PLACEHOLDER_SUFFIX):
+        return False
+    # Filter out dotfiles (.gitignore, .cache entries, etc.)
+    if name.startswith("."):
+        return False
+    # Filter out non-model files by extension. YAML configs are allowed
+    # (e.g. v1-inference.yaml for VAE/sampler configs).
+    ext = path.suffix.lower()
+    if ext not in _MODEL_EXTENSIONS:
+        return False
+    return True
+
+
+def list_models(path: pathlib.Path) -> list[pathlib.Path]:
+    """List all model files recursively in the specified directory.
+
+    Excludes .cache/__pycache__/.git directories and placeholder files
+    (e.g. "put_checkpoints_here") so the listing reflects real models only.
+    """
+    if not path.is_dir():
+        return []
+    results: list[pathlib.Path] = []
+    for f in path.rglob("*"):
+        if not f.is_file():
+            continue
+        # Skip files inside cache/metadata directories — rglob descends into
+        # them by default, producing noise like vae/.cache/huggingface/...
+        if any(part in _SKIP_DIRS for part in f.parts):
+            continue
+        if not _is_model_file(f):
+            continue
+        results.append(f)
+    return sorted(results)
+
+
+@app.command("list")
+@tracking.track_command("model")
+def list_command(
+    ctx: typer.Context,
+    relative_path: str = typer.Option(
+        DEFAULT_COMFY_MODEL_PATH,
+        help="The relative path from the current workspace where the models are stored.",
+        show_default=True,
+    ),
+):
+    """Display a list of all models currently downloaded in a table format."""
+    model_dir = get_workspace() / relative_path
+    models = list_models(model_dir)
+
+    if not models:
+        typer.echo("No models found.")
+        return
+
+    # Prepare data for table display
+    data = []
+    for model in models:
+        rel = model.relative_to(model_dir)
+        model_type = str(rel.parent) if len(rel.parts) > 1 else ""
+        data.append((model.name, model_type, f"{model.stat().st_size // 1024} KB"))
+    column_names = ["Model Name", "Type", "Size"]
+    ui.display_table(data, column_names)

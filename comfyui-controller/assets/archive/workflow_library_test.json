@@ -1,0 +1,5962 @@
+{
+  "metadata": {
+    "source_dir": "assets",
+    "total_workflows": 44,
+    "build_time": "1780524980.1680467"
+  },
+  "workflows": {
+    "api-workflow": {
+      "path": "api-workflow.json",
+      "category": "其他",
+      "node_count": 0,
+      "link_count": 0,
+      "node_types": {},
+      "models": {
+        "checkpoints": [],
+        "unet": [],
+        "vae": [],
+        "clip": [],
+        "lora": [],
+        "controlnet": [],
+        "upscale": [],
+        "other": []
+      },
+      "parameters": {
+        "prompts": {},
+        "sampler": {},
+        "resolution": {},
+        "models": {},
+        "other": {}
+      },
+      "connections": [],
+      "custom_nodes": [],
+      "template": {
+        "name": "api-workflow",
+        "structure": {
+          "node_types": [],
+          "data_flow": []
+        },
+        "configurable": {}
+      }
+    },
+    "default-workflow": {
+      "path": "default-workflow.json",
+      "category": "基础",
+      "node_count": 0,
+      "link_count": 0,
+      "node_types": {},
+      "models": {
+        "checkpoints": [],
+        "unet": [],
+        "vae": [],
+        "clip": [],
+        "lora": [],
+        "controlnet": [],
+        "upscale": [],
+        "other": []
+      },
+      "parameters": {
+        "prompts": {},
+        "sampler": {},
+        "resolution": {},
+        "models": {},
+        "other": {}
+      },
+      "connections": [],
+      "custom_nodes": [],
+      "template": {
+        "name": "default-workflow",
+        "structure": {
+          "node_types": [],
+          "data_flow": []
+        },
+        "configurable": {}
+      }
+    },
+    "flux2_api_workflow": {
+      "path": "flux2_api_workflow.json",
+      "category": "其他",
+      "node_count": 0,
+      "link_count": 0,
+      "node_types": {},
+      "models": {
+        "checkpoints": [],
+        "unet": [],
+        "vae": [],
+        "clip": [],
+        "lora": [],
+        "controlnet": [],
+        "upscale": [],
+        "other": []
+      },
+      "parameters": {
+        "prompts": {},
+        "sampler": {},
+        "resolution": {},
+        "models": {},
+        "other": {}
+      },
+      "connections": [],
+      "custom_nodes": [],
+      "template": {
+        "name": "flux2_api_workflow",
+        "structure": {
+          "node_types": [],
+          "data_flow": []
+        },
+        "configurable": {}
+      }
+    },
+    "generated_complex_workflow": {
+      "path": "generated_complex_workflow.json",
+      "category": "其他",
+      "node_count": 18,
+      "link_count": 29,
+      "node_types": {
+        "CheckpointLoaderSimple": {
+          "count": 1,
+          "instances": [
+            "1"
+          ],
+          "inputs": [
+            "MODEL"
+          ],
+          "outputs": [
+            "MODEL",
+            "CLIP",
+            "VAE"
+          ]
+        },
+        "EmptyLatentImage": {
+          "count": 1,
+          "instances": [
+            "4"
+          ],
+          "inputs": [
+            "INT"
+          ],
+          "outputs": [
+            "LATENT"
+          ]
+        },
+        "ControlNetLoader": {
+          "count": 1,
+          "instances": [
+            "9"
+          ],
+          "inputs": [
+            "COMBO"
+          ],
+          "outputs": [
+            "CONTROL_NET"
+          ]
+        },
+        "LoadImage": {
+          "count": 1,
+          "instances": [
+            "10"
+          ],
+          "inputs": [
+            "COMBO"
+          ],
+          "outputs": [
+            "MASK",
+            "IMAGE"
+          ]
+        },
+        "UpscaleModelLoader": {
+          "count": 2,
+          "instances": [
+            "12",
+            "17"
+          ],
+          "inputs": [
+            "COMBO"
+          ],
+          "outputs": [
+            "UPSCALE_MODEL"
+          ]
+        },
+        "CLIPTextEncode": {
+          "count": 2,
+          "instances": [
+            "2",
+            "3"
+          ],
+          "inputs": [
+            "CLIP",
+            "STRING"
+          ],
+          "outputs": [
+            "CONDITIONING"
+          ]
+        },
+        "LoraLoader": {
+          "count": 1,
+          "instances": [
+            "8"
+          ],
+          "inputs": [
+            "MODEL",
+            "CLIP",
+            "FLOAT",
+            "COMBO"
+          ],
+          "outputs": [
+            "MODEL",
+            "CLIP"
+          ]
+        },
+        "ControlNetApplyAdvanced": {
+          "count": 1,
+          "instances": [
+            "11"
+          ],
+          "inputs": [
+            "CONDITIONING",
+            "FLOAT",
+            "CONTROL_NET",
+            "IMAGE"
+          ],
+          "outputs": [
+            "CONDITIONING"
+          ]
+        },
+        "KSampler": {
+          "count": 3,
+          "instances": [
+            "5",
+            "15",
+            "16"
+          ],
+          "inputs": [
+            "CONDITIONING",
+            "FLOAT",
+            "MODEL",
+            "INT",
+            "STRING",
+            "LATENT"
+          ],
+          "outputs": [
+            "LATENT"
+          ]
+        },
+        "LatentUpscale": {
+          "count": 1,
+          "instances": [
+            "14"
+          ],
+          "inputs": [
+            "LATENT",
+            "INT",
+            "COMBO"
+          ],
+          "outputs": [
+            "LATENT"
+          ]
+        },
+        "VAEDecode": {
+          "count": 1,
+          "instances": [
+            "6"
+          ],
+          "inputs": [
+            "LATENT",
+            "VAE"
+          ],
+          "outputs": [
+            "IMAGE"
+          ]
+        },
+        "ImageUpscaleWithModel": {
+          "count": 2,
+          "instances": [
+            "13",
+            "18"
+          ],
+          "inputs": [
+            "UPSCALE_MODEL",
+            "IMAGE"
+          ],
+          "outputs": [
+            "IMAGE"
+          ]
+        },
+        "SaveImage": {
+          "count": 1,
+          "instances": [
+            "7"
+          ],
+          "inputs": [
+            "STRING",
+            "IMAGE"
+          ],
+          "outputs": []
+        }
+      },
+      "models": {
+        "checkpoints": [
+          "sam3.1_multiplex_fp16.safetensors"
+        ],
+        "unet": [],
+        "vae": [],
+        "clip": [],
+        "lora": [
+          "FLUX-小红书极致真实V2.safetensors"
+        ],
+        "controlnet": [
+          "control_v11p_sd15_openpose.pth"
+        ],
+        "upscale": [
+          "2x_StarSample_V2.0.safetensors"
+        ],
+        "other": []
+      },
+      "parameters": {
+        "prompts": {
+          "positive_2": {
+            "text": "生成一个文生图工作流，使用ControlNet控制姿势，添加LoRA风格，最后放大2倍",
+            "node_id": "2",
+            "title": ""
+          },
+          "positive_3": {
+            "text": "worst quality, low quality, bad anatomy",
+            "node_id": "3",
+            "title": ""
+          }
+        },
+        "sampler": {
+          "5": {
+            "seed": 2387437219,
+            "steps": 20,
+            "cfg": 8.0,
+            "sampler_name": "euler",
+            "scheduler": "normal",
+            "denoise": 1.0
+          },
+          "15": {
+            "seed": 2097507267,
+            "steps": 20,
+            "cfg": 8.0,
+            "sampler_name": "euler",
+            "scheduler": "normal",
+            "denoise": 0.5
+          },
+          "16": {
+            "seed": 4195665094,
+            "steps": 20,
+            "cfg": 8.0,
+            "sampler_name": "euler",
+            "scheduler": "normal",
+            "denoise": 0.6
+          }
+        },
+        "resolution": {
+          "width": 512,
+          "height": 512,
+          "batch_size": 1
+        },
+        "models": {
+          "1": {
+            "node_type": "CheckpointLoaderSimple",
+            "params": {
+              "ckpt_name": "sam3.1_multiplex_fp16.safetensors"
+            }
+          }
+        },
+        "other": {}
+      },
+      "connections": [
+        {
+          "link_id": 1,
+          "source_node": 1,
+          "source_slot": 1,
+          "target_node": 2,
+          "target_slot": 1
+        },
+        {
+          "link_id": 2,
+          "source_node": 1,
+          "source_slot": 1,
+          "target_node": 3,
+          "target_slot": 1
+        },
+        {
+          "link_id": 6,
+          "source_node": 4,
+          "source_slot": 0,
+          "target_node": 5,
+          "target_slot": 8
+        },
+        {
+          "link_id": 8,
+          "source_node": 1,
+          "source_slot": 2,
+          "target_node": 6,
+          "target_slot": 1
+        },
+        {
+          "link_id": 10,
+          "source_node": 8,
+          "source_slot": 0,
+          "target_node": 5,
+          "target_slot": 0
+        },
+        {
+          "link_id": 11,
+          "source_node": 1,
+          "source_slot": 0,
+          "target_node": 8,
+          "target_slot": 0
+        },
+        {
+          "link_id": 12,
+          "source_node": 1,
+          "source_slot": 1,
+          "target_node": 8,
+          "target_slot": 1
+        },
+        {
+          "link_id": 13,
+          "source_node": 11,
+          "source_slot": 0,
+          "target_node": 5,
+          "target_slot": 6
+        },
+        {
+          "link_id": 14,
+          "source_node": 11,
+          "source_slot": 1,
+          "target_node": 5,
+          "target_slot": 7
+        },
+        {
+          "link_id": 15,
+          "source_node": 2,
+          "source_slot": 0,
+          "target_node": 11,
+          "target_slot": 0
+        },
+        {
+          "link_id": 16,
+          "source_node": 3,
+          "source_slot": 0,
+          "target_node": 11,
+          "target_slot": 1
+        },
+        {
+          "link_id": 17,
+          "source_node": 9,
+          "source_slot": 0,
+          "target_node": 11,
+          "target_slot": 2
+        },
+        {
+          "link_id": 18,
+          "source_node": 10,
+          "source_slot": 0,
+          "target_node": 11,
+          "target_slot": 3
+        },
+        {
+          "link_id": 19,
+          "source_node": 6,
+          "source_slot": 0,
+          "target_node": 13,
+          "target_slot": 1
+        },
+        {
+          "link_id": 20,
+          "source_node": 12,
+          "source_slot": 0,
+          "target_node": 13,
+          "target_slot": 0
+        },
+        {
+          "link_id": 21,
+          "source_node": 13,
+          "source_slot": 0,
+          "target_node": 7,
+          "target_slot": 1
+        },
+        {
+          "link_id": 22,
+          "source_node": 8,
+          "source_slot": 0,
+          "target_node": 15,
+          "target_slot": 0
+        },
+        {
+          "link_id": 23,
+          "source_node": 11,
+          "source_slot": 0,
+          "target_node": 15,
+          "target_slot": 6
+        },
+        {
+          "link_id": 24,
+          "source_node": 11,
+          "source_slot": 1,
+          "target_node": 15,
+          "target_slot": 7
+        },
+        {
+          "link_id": 25,
+          "source_node": 5,
+          "source_slot": 0,
+          "target_node": 14,
+          "target_slot": 0
+        },
+        {
+          "link_id": 26,
+          "source_node": 14,
+          "source_slot": 0,
+          "target_node": 15,
+          "target_slot": 8
+        },
+        {
+          "link_id": 28,
+          "source_node": 8,
+          "source_slot": 0,
+          "target_node": 16,
+          "target_slot": 0
+        },
+        {
+          "link_id": 29,
+          "source_node": 11,
+          "source_slot": 0,
+          "target_node": 16,
+          "target_slot": 6
+        },
+        {
+          "link_id": 30,
+          "source_node": 11,
+          "source_slot": 1,
+          "target_node": 16,
+          "target_slot": 7
+        },
+        {
+          "link_id": 31,
+          "source_node": 15,
+          "source_slot": 0,
+          "target_node": 16,
+          "target_slot": 8
+        },
+        {
+          "link_id": 32,
+          "source_node": 16,
+          "source_slot": 0,
+          "target_node": 6,
+          "target_slot": 0
+        },
+        {
+          "link_id": 33,
+          "source_node": 6,
+          "source_slot": 0,
+          "target_node": 18,
+          "target_slot": 1
+        },
+        {
+          "link_id": 34,
+          "source_node": 17,
+          "source_slot": 0,
+          "target_node": 18,
+          "target_slot": 0
+        },
+        {
+          "link_id": 35,
+          "source_node": 18,
+          "source_slot": 0,
+          "target_node": 7,
+          "target_slot": 1
+        }
+      ],
+      "custom_nodes": [],
+      "template": {
+        "name": "generated_complex_workflow",
+        "structure": {
+          "node_types": [
+            {
+              "type": "CheckpointLoaderSimple",
+              "category": "loader"
+            },
+            {
+              "type": "EmptyLatentImage",
+              "category": "processor"
+            },
+            {
+              "type": "ControlNetLoader",
+              "category": "loader"
+            },
+            {
+              "type": "LoadImage",
+              "category": "processor"
+            },
+            {
+              "type": "UpscaleModelLoader",
+              "category": "loader"
+            },
+            {
+              "type": "CLIPTextEncode",
+              "category": "encoder"
+            },
+            {
+              "type": "LoraLoader",
+              "category": "loader"
+            },
+            {
+              "type": "ControlNetApplyAdvanced",
+              "category": "processor"
+            },
+            {
+              "type": "KSampler",
+              "category": "sampler"
+            },
+            {
+              "type": "LatentUpscale",
+              "category": "processor"
+            },
+            {
+              "type": "VAEDecode",
+              "category": "decoder"
+            },
+            {
+              "type": "ImageUpscaleWithModel",
+              "category": "processor"
+            },
+            {
+              "type": "SaveImage",
+              "category": "processor"
+            }
+          ],
+          "data_flow": []
+        },
+        "configurable": {
+          "CheckpointLoaderSimple.ckpt_name": {
+            "node_type": "CheckpointLoaderSimple",
+            "param": "ckpt_name",
+            "param_type": "model",
+            "default_value": "sam3.1_multiplex_fp16.safetensors",
+            "input_type": "MODEL",
+            "description": "ckpt_name"
+          },
+          "EmptyLatentImage.width": {
+            "node_type": "EmptyLatentImage",
+            "param": "width",
+            "param_type": "resolution",
+            "default_value": 512,
+            "input_type": "INT",
+            "description": "width"
+          },
+          "EmptyLatentImage.height": {
+            "node_type": "EmptyLatentImage",
+            "param": "height",
+            "param_type": "resolution",
+            "default_value": 512,
+            "input_type": "INT",
+            "description": "height"
+          },
+          "EmptyLatentImage.batch_size": {
+            "node_type": "EmptyLatentImage",
+            "param": "batch_size",
+            "param_type": "resolution",
+            "default_value": 1,
+            "input_type": "INT",
+            "description": "batch_size"
+          },
+          "ControlNetLoader.control_net_name": {
+            "node_type": "ControlNetLoader",
+            "param": "control_net_name",
+            "param_type": "model",
+            "default_value": "control_v11p_sd15_openpose.pth",
+            "input_type": "COMBO",
+            "description": "control_net_name"
+          },
+          "UpscaleModelLoader.model_name": {
+            "node_type": "UpscaleModelLoader",
+            "param": "model_name",
+            "param_type": "model",
+            "default_value": "2x_StarSample_V2.0.safetensors",
+            "input_type": "COMBO",
+            "description": "model_name"
+          },
+          "CLIPTextEncode.text": {
+            "node_type": "CLIPTextEncode",
+            "param": "text",
+            "param_type": "prompt",
+            "default_value": "生成一个文生图工作流，使用ControlNet控制姿势，添加LoRA风格，最后放大2倍",
+            "input_type": "STRING",
+            "description": "text"
+          },
+          "LoraLoader.lora_name": {
+            "node_type": "LoraLoader",
+            "param": "lora_name",
+            "param_type": "model",
+            "default_value": "FLUX-小红书极致真实V2.safetensors",
+            "input_type": "COMBO",
+            "description": "lora_name"
+          },
+          "KSampler.seed": {
+            "node_type": "KSampler",
+            "param": "seed",
+            "param_type": "sampler",
+            "default_value": 2387437219,
+            "input_type": "INT",
+            "description": "seed"
+          },
+          "KSampler.steps": {
+            "node_type": "KSampler",
+            "param": "steps",
+            "param_type": "sampler",
+            "default_value": 20,
+            "input_type": "INT",
+            "description": "steps"
+          },
+          "KSampler.cfg": {
+            "node_type": "KSampler",
+            "param": "cfg",
+            "param_type": "sampler",
+            "default_value": 8.0,
+            "input_type": "FLOAT",
+            "description": "cfg"
+          },
+          "KSampler.sampler_name": {
+            "node_type": "KSampler",
+            "param": "sampler_name",
+            "param_type": "model",
+            "default_value": "euler",
+            "input_type": "STRING",
+            "description": "sampler_name"
+          },
+          "KSampler.scheduler": {
+            "node_type": "KSampler",
+            "param": "scheduler",
+            "param_type": "sampler_config",
+            "default_value": "normal",
+            "input_type": "STRING",
+            "description": "scheduler"
+          },
+          "KSampler.denoise": {
+            "node_type": "KSampler",
+            "param": "denoise",
+            "param_type": "sampler",
+            "default_value": 1.0,
+            "input_type": "FLOAT",
+            "description": "denoise"
+          },
+          "LatentUpscale.width": {
+            "node_type": "LatentUpscale",
+            "param": "width",
+            "param_type": "resolution",
+            "default_value": 1024,
+            "input_type": "INT",
+            "description": "width"
+          },
+          "LatentUpscale.height": {
+            "node_type": "LatentUpscale",
+            "param": "height",
+            "param_type": "resolution",
+            "default_value": 1024,
+            "input_type": "INT",
+            "description": "height"
+          }
+        }
+      }
+    },
+    "object_info": {
+      "path": "object_info.json",
+      "category": "其他",
+      "node_count": 0,
+      "link_count": 0,
+      "node_types": {},
+      "models": {
+        "checkpoints": [],
+        "unet": [],
+        "vae": [],
+        "clip": [],
+        "lora": [],
+        "controlnet": [],
+        "upscale": [],
+        "other": []
+      },
+      "parameters": {
+        "prompts": {},
+        "sampler": {},
+        "resolution": {},
+        "models": {},
+        "other": {}
+      },
+      "connections": [],
+      "custom_nodes": [],
+      "template": {
+        "name": "object_info",
+        "structure": {
+          "node_types": [],
+          "data_flow": []
+        },
+        "configurable": {}
+      }
+    },
+    "task1_api_workflow": {
+      "path": "task1_api_workflow.json",
+      "category": "其他",
+      "node_count": 0,
+      "link_count": 0,
+      "node_types": {},
+      "models": {
+        "checkpoints": [],
+        "unet": [],
+        "vae": [],
+        "clip": [],
+        "lora": [],
+        "controlnet": [],
+        "upscale": [],
+        "other": []
+      },
+      "parameters": {
+        "prompts": {},
+        "sampler": {},
+        "resolution": {},
+        "models": {},
+        "other": {}
+      },
+      "connections": [],
+      "custom_nodes": [],
+      "template": {
+        "name": "task1_api_workflow",
+        "structure": {
+          "node_types": [],
+          "data_flow": []
+        },
+        "configurable": {}
+      }
+    },
+    "task1_final": {
+      "path": "task1_final.json",
+      "category": "其他",
+      "node_count": 0,
+      "link_count": 0,
+      "node_types": {},
+      "models": {
+        "checkpoints": [],
+        "unet": [],
+        "vae": [],
+        "clip": [],
+        "lora": [],
+        "controlnet": [],
+        "upscale": [],
+        "other": []
+      },
+      "parameters": {
+        "prompts": {},
+        "sampler": {},
+        "resolution": {},
+        "models": {},
+        "other": {}
+      },
+      "connections": [],
+      "custom_nodes": [],
+      "template": {
+        "name": "task1_final",
+        "structure": {
+          "node_types": [],
+          "data_flow": []
+        },
+        "configurable": {}
+      }
+    },
+    "task1_flux_workflow": {
+      "path": "task1_flux_workflow.json",
+      "category": "其他",
+      "node_count": 0,
+      "link_count": 0,
+      "node_types": {},
+      "models": {
+        "checkpoints": [],
+        "unet": [],
+        "vae": [],
+        "clip": [],
+        "lora": [],
+        "controlnet": [],
+        "upscale": [],
+        "other": []
+      },
+      "parameters": {
+        "prompts": {},
+        "sampler": {},
+        "resolution": {},
+        "models": {},
+        "other": {}
+      },
+      "connections": [],
+      "custom_nodes": [],
+      "template": {
+        "name": "task1_flux_workflow",
+        "structure": {
+          "node_types": [],
+          "data_flow": []
+        },
+        "configurable": {}
+      }
+    },
+    "task1_img_workflow": {
+      "path": "task1_img_workflow.json",
+      "category": "其他",
+      "node_count": 0,
+      "link_count": 0,
+      "node_types": {},
+      "models": {
+        "checkpoints": [],
+        "unet": [],
+        "vae": [],
+        "clip": [],
+        "lora": [],
+        "controlnet": [],
+        "upscale": [],
+        "other": []
+      },
+      "parameters": {
+        "prompts": {},
+        "sampler": {},
+        "resolution": {},
+        "models": {},
+        "other": {}
+      },
+      "connections": [],
+      "custom_nodes": [],
+      "template": {
+        "name": "task1_img_workflow",
+        "structure": {
+          "node_types": [],
+          "data_flow": []
+        },
+        "configurable": {}
+      }
+    },
+    "task1_v2_final": {
+      "path": "task1_v2_final.json",
+      "category": "其他",
+      "node_count": 0,
+      "link_count": 0,
+      "node_types": {},
+      "models": {
+        "checkpoints": [],
+        "unet": [],
+        "vae": [],
+        "clip": [],
+        "lora": [],
+        "controlnet": [],
+        "upscale": [],
+        "other": []
+      },
+      "parameters": {
+        "prompts": {},
+        "sampler": {},
+        "resolution": {},
+        "models": {},
+        "other": {}
+      },
+      "connections": [],
+      "custom_nodes": [],
+      "template": {
+        "name": "task1_v2_final",
+        "structure": {
+          "node_types": [],
+          "data_flow": []
+        },
+        "configurable": {}
+      }
+    },
+    "task1_v3_final": {
+      "path": "task1_v3_final.json",
+      "category": "其他",
+      "node_count": 0,
+      "link_count": 0,
+      "node_types": {},
+      "models": {
+        "checkpoints": [],
+        "unet": [],
+        "vae": [],
+        "clip": [],
+        "lora": [],
+        "controlnet": [],
+        "upscale": [],
+        "other": []
+      },
+      "parameters": {
+        "prompts": {},
+        "sampler": {},
+        "resolution": {},
+        "models": {},
+        "other": {}
+      },
+      "connections": [],
+      "custom_nodes": [],
+      "template": {
+        "name": "task1_v3_final",
+        "structure": {
+          "node_types": [],
+          "data_flow": []
+        },
+        "configurable": {}
+      }
+    },
+    "task1_wan22_img_workflow": {
+      "path": "task1_wan22_img_workflow.json",
+      "category": "其他",
+      "node_count": 0,
+      "link_count": 0,
+      "node_types": {},
+      "models": {
+        "checkpoints": [],
+        "unet": [],
+        "vae": [],
+        "clip": [],
+        "lora": [],
+        "controlnet": [],
+        "upscale": [],
+        "other": []
+      },
+      "parameters": {
+        "prompts": {},
+        "sampler": {},
+        "resolution": {},
+        "models": {},
+        "other": {}
+      },
+      "connections": [],
+      "custom_nodes": [],
+      "template": {
+        "name": "task1_wan22_img_workflow",
+        "structure": {
+          "node_types": [],
+          "data_flow": []
+        },
+        "configurable": {}
+      }
+    },
+    "task1_wan22_native": {
+      "path": "task1_wan22_native.json",
+      "category": "其他",
+      "node_count": 0,
+      "link_count": 0,
+      "node_types": {},
+      "models": {
+        "checkpoints": [],
+        "unet": [],
+        "vae": [],
+        "clip": [],
+        "lora": [],
+        "controlnet": [],
+        "upscale": [],
+        "other": []
+      },
+      "parameters": {
+        "prompts": {},
+        "sampler": {},
+        "resolution": {},
+        "models": {},
+        "other": {}
+      },
+      "connections": [],
+      "custom_nodes": [],
+      "template": {
+        "name": "task1_wan22_native",
+        "structure": {
+          "node_types": [],
+          "data_flow": []
+        },
+        "configurable": {}
+      }
+    },
+    "task1_wan22_workflow": {
+      "path": "task1_wan22_workflow.json",
+      "category": "其他",
+      "node_count": 0,
+      "link_count": 0,
+      "node_types": {},
+      "models": {
+        "checkpoints": [],
+        "unet": [],
+        "vae": [],
+        "clip": [],
+        "lora": [],
+        "controlnet": [],
+        "upscale": [],
+        "other": []
+      },
+      "parameters": {
+        "prompts": {},
+        "sampler": {},
+        "resolution": {},
+        "models": {},
+        "other": {}
+      },
+      "connections": [],
+      "custom_nodes": [],
+      "template": {
+        "name": "task1_wan22_workflow",
+        "structure": {
+          "node_types": [],
+          "data_flow": []
+        },
+        "configurable": {}
+      }
+    },
+    "task2_api": {
+      "path": "task2_api.json",
+      "category": "其他",
+      "node_count": 0,
+      "link_count": 0,
+      "node_types": {},
+      "models": {
+        "checkpoints": [],
+        "unet": [],
+        "vae": [],
+        "clip": [],
+        "lora": [],
+        "controlnet": [],
+        "upscale": [],
+        "other": []
+      },
+      "parameters": {
+        "prompts": {},
+        "sampler": {},
+        "resolution": {},
+        "models": {},
+        "other": {}
+      },
+      "connections": [],
+      "custom_nodes": [],
+      "template": {
+        "name": "task2_api",
+        "structure": {
+          "node_types": [],
+          "data_flow": []
+        },
+        "configurable": {}
+      }
+    },
+    "task2_fast": {
+      "path": "task2_fast.json",
+      "category": "其他",
+      "node_count": 0,
+      "link_count": 0,
+      "node_types": {},
+      "models": {
+        "checkpoints": [],
+        "unet": [],
+        "vae": [],
+        "clip": [],
+        "lora": [],
+        "controlnet": [],
+        "upscale": [],
+        "other": []
+      },
+      "parameters": {
+        "prompts": {},
+        "sampler": {},
+        "resolution": {},
+        "models": {},
+        "other": {}
+      },
+      "connections": [],
+      "custom_nodes": [],
+      "template": {
+        "name": "task2_fast",
+        "structure": {
+          "node_types": [],
+          "data_flow": []
+        },
+        "configurable": {}
+      }
+    },
+    "task2_final": {
+      "path": "task2_final.json",
+      "category": "其他",
+      "node_count": 0,
+      "link_count": 0,
+      "node_types": {},
+      "models": {
+        "checkpoints": [],
+        "unet": [],
+        "vae": [],
+        "clip": [],
+        "lora": [],
+        "controlnet": [],
+        "upscale": [],
+        "other": []
+      },
+      "parameters": {
+        "prompts": {},
+        "sampler": {},
+        "resolution": {},
+        "models": {},
+        "other": {}
+      },
+      "connections": [],
+      "custom_nodes": [],
+      "template": {
+        "name": "task2_final",
+        "structure": {
+          "node_types": [],
+          "data_flow": []
+        },
+        "configurable": {}
+      }
+    },
+    "task2_i2v_480x660_highquality": {
+      "path": "task2_i2v_480x660_highquality.json",
+      "category": "其他",
+      "node_count": 0,
+      "link_count": 0,
+      "node_types": {},
+      "models": {
+        "checkpoints": [],
+        "unet": [],
+        "vae": [],
+        "clip": [],
+        "lora": [],
+        "controlnet": [],
+        "upscale": [],
+        "other": []
+      },
+      "parameters": {
+        "prompts": {},
+        "sampler": {},
+        "resolution": {},
+        "models": {},
+        "other": {}
+      },
+      "connections": [],
+      "custom_nodes": [],
+      "template": {
+        "name": "task2_i2v_480x660_highquality",
+        "structure": {
+          "node_types": [],
+          "data_flow": []
+        },
+        "configurable": {}
+      }
+    },
+    "task2_i2v_480x660_video": {
+      "path": "task2_i2v_480x660_video.json",
+      "category": "其他",
+      "node_count": 0,
+      "link_count": 0,
+      "node_types": {},
+      "models": {
+        "checkpoints": [],
+        "unet": [],
+        "vae": [],
+        "clip": [],
+        "lora": [],
+        "controlnet": [],
+        "upscale": [],
+        "other": []
+      },
+      "parameters": {
+        "prompts": {},
+        "sampler": {},
+        "resolution": {},
+        "models": {},
+        "other": {}
+      },
+      "connections": [],
+      "custom_nodes": [],
+      "template": {
+        "name": "task2_i2v_480x660_video",
+        "structure": {
+          "node_types": [],
+          "data_flow": []
+        },
+        "configurable": {}
+      }
+    },
+    "task2_input_image": {
+      "path": "task2_input_image.json",
+      "category": "其他",
+      "node_count": 0,
+      "link_count": 0,
+      "node_types": {},
+      "models": {
+        "checkpoints": [],
+        "unet": [],
+        "vae": [],
+        "clip": [],
+        "lora": [],
+        "controlnet": [],
+        "upscale": [],
+        "other": []
+      },
+      "parameters": {
+        "prompts": {},
+        "sampler": {},
+        "resolution": {},
+        "models": {},
+        "other": {}
+      },
+      "connections": [],
+      "custom_nodes": [],
+      "template": {
+        "name": "task2_input_image",
+        "structure": {
+          "node_types": [],
+          "data_flow": []
+        },
+        "configurable": {}
+      }
+    },
+    "task2_light": {
+      "path": "task2_light.json",
+      "category": "其他",
+      "node_count": 0,
+      "link_count": 0,
+      "node_types": {},
+      "models": {
+        "checkpoints": [],
+        "unet": [],
+        "vae": [],
+        "clip": [],
+        "lora": [],
+        "controlnet": [],
+        "upscale": [],
+        "other": []
+      },
+      "parameters": {
+        "prompts": {},
+        "sampler": {},
+        "resolution": {},
+        "models": {},
+        "other": {}
+      },
+      "connections": [],
+      "custom_nodes": [],
+      "template": {
+        "name": "task2_light",
+        "structure": {
+          "node_types": [],
+          "data_flow": []
+        },
+        "configurable": {}
+      }
+    },
+    "task2_optimized": {
+      "path": "task2_optimized.json",
+      "category": "其他",
+      "node_count": 0,
+      "link_count": 0,
+      "node_types": {},
+      "models": {
+        "checkpoints": [],
+        "unet": [],
+        "vae": [],
+        "clip": [],
+        "lora": [],
+        "controlnet": [],
+        "upscale": [],
+        "other": []
+      },
+      "parameters": {
+        "prompts": {},
+        "sampler": {},
+        "resolution": {},
+        "models": {},
+        "other": {}
+      },
+      "connections": [],
+      "custom_nodes": [],
+      "template": {
+        "name": "task2_optimized",
+        "structure": {
+          "node_types": [],
+          "data_flow": []
+        },
+        "configurable": {}
+      }
+    },
+    "task2_t2v_final": {
+      "path": "task2_t2v_final.json",
+      "category": "其他",
+      "node_count": 0,
+      "link_count": 0,
+      "node_types": {},
+      "models": {
+        "checkpoints": [],
+        "unet": [],
+        "vae": [],
+        "clip": [],
+        "lora": [],
+        "controlnet": [],
+        "upscale": [],
+        "other": []
+      },
+      "parameters": {
+        "prompts": {},
+        "sampler": {},
+        "resolution": {},
+        "models": {},
+        "other": {}
+      },
+      "connections": [],
+      "custom_nodes": [],
+      "template": {
+        "name": "task2_t2v_final",
+        "structure": {
+          "node_types": [],
+          "data_flow": []
+        },
+        "configurable": {}
+      }
+    },
+    "task2_v2_final": {
+      "path": "task2_v2_final.json",
+      "category": "其他",
+      "node_count": 0,
+      "link_count": 0,
+      "node_types": {},
+      "models": {
+        "checkpoints": [],
+        "unet": [],
+        "vae": [],
+        "clip": [],
+        "lora": [],
+        "controlnet": [],
+        "upscale": [],
+        "other": []
+      },
+      "parameters": {
+        "prompts": {},
+        "sampler": {},
+        "resolution": {},
+        "models": {},
+        "other": {}
+      },
+      "connections": [],
+      "custom_nodes": [],
+      "template": {
+        "name": "task2_v2_final",
+        "structure": {
+          "node_types": [],
+          "data_flow": []
+        },
+        "configurable": {}
+      }
+    },
+    "task2_v3_final": {
+      "path": "task2_v3_final.json",
+      "category": "其他",
+      "node_count": 0,
+      "link_count": 0,
+      "node_types": {},
+      "models": {
+        "checkpoints": [],
+        "unet": [],
+        "vae": [],
+        "clip": [],
+        "lora": [],
+        "controlnet": [],
+        "upscale": [],
+        "other": []
+      },
+      "parameters": {
+        "prompts": {},
+        "sampler": {},
+        "resolution": {},
+        "models": {},
+        "other": {}
+      },
+      "connections": [],
+      "custom_nodes": [],
+      "template": {
+        "name": "task2_v3_final",
+        "structure": {
+          "node_types": [],
+          "data_flow": []
+        },
+        "configurable": {}
+      }
+    },
+    "task2_v4_final": {
+      "path": "task2_v4_final.json",
+      "category": "其他",
+      "node_count": 0,
+      "link_count": 0,
+      "node_types": {},
+      "models": {
+        "checkpoints": [],
+        "unet": [],
+        "vae": [],
+        "clip": [],
+        "lora": [],
+        "controlnet": [],
+        "upscale": [],
+        "other": []
+      },
+      "parameters": {
+        "prompts": {},
+        "sampler": {},
+        "resolution": {},
+        "models": {},
+        "other": {}
+      },
+      "connections": [],
+      "custom_nodes": [],
+      "template": {
+        "name": "task2_v4_final",
+        "structure": {
+          "node_types": [],
+          "data_flow": []
+        },
+        "configurable": {}
+      }
+    },
+    "task2_workflow_webui": {
+      "path": "task2_workflow_webui.json",
+      "category": "其他",
+      "node_count": 35,
+      "link_count": 43,
+      "node_types": {
+        "ModelSamplingSD3": {
+          "count": 2,
+          "instances": [
+            "1",
+            "4"
+          ],
+          "inputs": [
+            "MODEL",
+            "FLOAT"
+          ],
+          "outputs": [
+            "MODEL"
+          ]
+        },
+        "LoraLoaderModelOnly": {
+          "count": 4,
+          "instances": [
+            "2",
+            "21",
+            "22",
+            "8"
+          ],
+          "inputs": [
+            "MODEL",
+            "FLOAT",
+            "COMBO"
+          ],
+          "outputs": [
+            "MODEL"
+          ]
+        },
+        "PathchSageAttentionKJ": {
+          "count": 2,
+          "instances": [
+            "3",
+            "6"
+          ],
+          "inputs": [
+            "BOOLEAN",
+            "MODEL",
+            "COMBO"
+          ],
+          "outputs": [
+            "MODEL"
+          ]
+        },
+        "ModelPatchTorchSettings": {
+          "count": 2,
+          "instances": [
+            "5",
+            "7"
+          ],
+          "inputs": [
+            "MODEL",
+            "BOOLEAN"
+          ],
+          "outputs": [
+            "MODEL"
+          ]
+        },
+        "KSamplerAdvanced": {
+          "count": 2,
+          "instances": [
+            "9",
+            "25"
+          ],
+          "inputs": [
+            "CONDITIONING",
+            "COMBO",
+            "FLOAT",
+            "MODEL",
+            "INT",
+            "LATENT"
+          ],
+          "outputs": [
+            "LATENT"
+          ]
+        },
+        "VAELoader": {
+          "count": 1,
+          "instances": [
+            "10"
+          ],
+          "inputs": [
+            "COMBO"
+          ],
+          "outputs": [
+            "VAE"
+          ]
+        },
+        "CLIPLoader": {
+          "count": 1,
+          "instances": [
+            "23"
+          ],
+          "inputs": [
+            "COMBO"
+          ],
+          "outputs": [
+            "CLIP"
+          ]
+        },
+        "CLIPTextEncode": {
+          "count": 2,
+          "instances": [
+            "24",
+            "11"
+          ],
+          "inputs": [
+            "CLIP",
+            "STRING"
+          ],
+          "outputs": [
+            "CONDITIONING"
+          ]
+        },
+        "CLIPVisionLoader": {
+          "count": 1,
+          "instances": [
+            "27"
+          ],
+          "inputs": [
+            "COMBO"
+          ],
+          "outputs": [
+            "CLIP_VISION"
+          ]
+        },
+        "VAEDecode": {
+          "count": 1,
+          "instances": [
+            "14"
+          ],
+          "inputs": [
+            "LATENT",
+            "VAE"
+          ],
+          "outputs": [
+            "IMAGE"
+          ]
+        },
+        "CLIPVisionEncode": {
+          "count": 1,
+          "instances": [
+            "30"
+          ],
+          "inputs": [
+            "CLIP_VISION",
+            "IMAGE",
+            "COMBO"
+          ],
+          "outputs": [
+            "CLIP_VISION_OUTPUT"
+          ]
+        },
+        "WanImageToVideo": {
+          "count": 1,
+          "instances": [
+            "34"
+          ],
+          "inputs": [
+            "CONDITIONING",
+            "VAE",
+            "CLIP_VISION_OUTPUT",
+            "INT",
+            "IMAGE"
+          ],
+          "outputs": [
+            "CONDITIONING",
+            "LATENT"
+          ]
+        },
+        "Wan22PromptSelector": {
+          "count": 1,
+          "instances": [
+            "37"
+          ],
+          "inputs": [
+            "COMBO"
+          ],
+          "outputs": [
+            "STRING"
+          ]
+        },
+        "LayerUtility: ImageScaleByAspectRatio V2": {
+          "count": 1,
+          "instances": [
+            "42"
+          ],
+          "inputs": [
+            "COMBO",
+            "MASK",
+            "INT",
+            "STRING",
+            "IMAGE"
+          ],
+          "outputs": [
+            "MASK",
+            "BOX",
+            "INT",
+            "IMAGE"
+          ]
+        },
+        "SimpleMath+": {
+          "count": 1,
+          "instances": [
+            "12"
+          ],
+          "inputs": [
+            "*",
+            "STRING"
+          ],
+          "outputs": [
+            "FLOAT",
+            "INT"
+          ]
+        },
+        "INTConstant": {
+          "count": 2,
+          "instances": [
+            "16",
+            "15"
+          ],
+          "inputs": [
+            "INT"
+          ],
+          "outputs": [
+            "INT"
+          ]
+        },
+        "ImageScaleBy": {
+          "count": 1,
+          "instances": [
+            "41"
+          ],
+          "inputs": [
+            "FLOAT",
+            "IMAGE",
+            "COMBO"
+          ],
+          "outputs": [
+            "IMAGE"
+          ]
+        },
+        "easy cleanGpuUsed": {
+          "count": 1,
+          "instances": [
+            "40"
+          ],
+          "inputs": [
+            "*"
+          ],
+          "outputs": [
+            "*"
+          ]
+        },
+        "RIFE VFI": {
+          "count": 1,
+          "instances": [
+            "38"
+          ],
+          "inputs": [
+            "BOOLEAN",
+            "COMBO",
+            "INTERPOLATION_STATES",
+            "INT",
+            "IMAGE"
+          ],
+          "outputs": [
+            "IMAGE"
+          ]
+        },
+        "UNETLoader": {
+          "count": 2,
+          "instances": [
+            "28",
+            "29"
+          ],
+          "inputs": [
+            "COMBO"
+          ],
+          "outputs": [
+            "MODEL"
+          ]
+        },
+        "Text Concatenate": {
+          "count": 1,
+          "instances": [
+            "35"
+          ],
+          "inputs": [
+            "STRING",
+            "COMBO"
+          ],
+          "outputs": [
+            "STRING"
+          ]
+        },
+        "CR Text": {
+          "count": 1,
+          "instances": [
+            "36"
+          ],
+          "inputs": [
+            "STRING"
+          ],
+          "outputs": [
+            "*",
+            "STRING"
+          ]
+        },
+        "VHS_VideoCombine": {
+          "count": 2,
+          "instances": [
+            "32",
+            "39"
+          ],
+          "inputs": [
+            "VAE",
+            "COMBO",
+            "BOOLEAN",
+            "FLOAT",
+            "VHS_BatchManager",
+            "AUDIO",
+            "INT",
+            "STRING",
+            "IMAGE"
+          ],
+          "outputs": [
+            "VHS_FILENAMES"
+          ]
+        },
+        "LoadImage": {
+          "count": 1,
+          "instances": [
+            "13"
+          ],
+          "inputs": [
+            "IMAGEUPLOAD",
+            "COMBO"
+          ],
+          "outputs": [
+            "MASK",
+            "IMAGE"
+          ]
+        }
+      },
+      "models": {
+        "checkpoints": [],
+        "unet": [
+          "Wan2.2_Remix_NSFW_i2v_14b_low_lighting_fp8_e4m3fn_v3.0.safetensors",
+          "Wan2.2_Remix_NSFW_i2v_14b_high_lighting_fp8_e4m3fn_v3.0.safetensors"
+        ],
+        "vae": [
+          "wan_2.1_vae.safetensors"
+        ],
+        "clip": [
+          "umt5_xxl_fp8_e4m3fn_scaled.safetensors"
+        ],
+        "lora": [
+          "Wan2.2-Fun-A14B-InP-low-noise-HPS2.1.safetensors",
+          "lightx2v_I2V_14B_480p_cfg_step_distill_rank64_bf16.safetensors",
+          "Wan2.2-Fun-A14B-InP-high-noise-MPS.safetensors"
+        ],
+        "controlnet": [],
+        "upscale": [],
+        "other": [
+          {
+            "node_type": "CLIPVisionLoader",
+            "value": "clip_vision_h_Comfy-Org.safetensors"
+          },
+          {
+            "node_type": "RIFE VFI",
+            "value": "rife49.pth"
+          }
+        ]
+      },
+      "parameters": {
+        "prompts": {
+          "positive_24": {
+            "text": "未来城市夜景，霓虹灯光闪烁，车流穿梭，镜头缓慢推进，电影质感",
+            "node_id": "24",
+            "title": ""
+          },
+          "positive_11": {
+            "text": "未来城市夜景，霓虹灯光闪烁，车流穿梭，镜头缓慢推进，电影质感",
+            "node_id": "11",
+            "title": ""
+          }
+        },
+        "sampler": {},
+        "resolution": {},
+        "models": {
+          "10": {
+            "node_type": "VAELoader",
+            "params": {
+              "vae_name": "wan_2.1_vae.safetensors"
+            }
+          },
+          "23": {
+            "node_type": "CLIPLoader",
+            "params": {
+              "clip_name": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+              "type": "wan",
+              "device": "default"
+            }
+          },
+          "28": {
+            "node_type": "UNETLoader",
+            "params": {
+              "unet_name": "Wan2.2_Remix_NSFW_i2v_14b_low_lighting_fp8_e4m3fn_v3.0.safetensors",
+              "weight_dtype": "default"
+            }
+          },
+          "29": {
+            "node_type": "UNETLoader",
+            "params": {
+              "unet_name": "Wan2.2_Remix_NSFW_i2v_14b_high_lighting_fp8_e4m3fn_v3.0.safetensors",
+              "weight_dtype": "default"
+            }
+          }
+        },
+        "other": {}
+      },
+      "connections": [
+        {
+          "link_id": 1,
+          "source_node": 7,
+          "source_slot": 0,
+          "target_node": 1,
+          "target_slot": 0
+        },
+        {
+          "link_id": 2,
+          "source_node": 8,
+          "source_slot": 0,
+          "target_node": 2,
+          "target_slot": 0
+        },
+        {
+          "link_id": 3,
+          "source_node": 21,
+          "source_slot": 0,
+          "target_node": 3,
+          "target_slot": 0
+        },
+        {
+          "link_id": 4,
+          "source_node": 5,
+          "source_slot": 0,
+          "target_node": 4,
+          "target_slot": 0
+        },
+        {
+          "link_id": 5,
+          "source_node": 3,
+          "source_slot": 0,
+          "target_node": 5,
+          "target_slot": 0
+        },
+        {
+          "link_id": 6,
+          "source_node": 2,
+          "source_slot": 0,
+          "target_node": 6,
+          "target_slot": 0
+        },
+        {
+          "link_id": 7,
+          "source_node": 6,
+          "source_slot": 0,
+          "target_node": 7,
+          "target_slot": 0
+        },
+        {
+          "link_id": 8,
+          "source_node": 28,
+          "source_slot": 0,
+          "target_node": 8,
+          "target_slot": 0
+        },
+        {
+          "link_id": 9,
+          "source_node": 1,
+          "source_slot": 0,
+          "target_node": 9,
+          "target_slot": 0
+        },
+        {
+          "link_id": 12,
+          "source_node": 25,
+          "source_slot": 0,
+          "target_node": 9,
+          "target_slot": 3
+        },
+        {
+          "link_id": 13,
+          "source_node": 23,
+          "source_slot": 0,
+          "target_node": 11,
+          "target_slot": 0
+        },
+        {
+          "link_id": 14,
+          "source_node": 15,
+          "source_slot": 0,
+          "target_node": 12,
+          "target_slot": 0
+        },
+        {
+          "link_id": 15,
+          "source_node": 9,
+          "source_slot": 0,
+          "target_node": 14,
+          "target_slot": 0
+        },
+        {
+          "link_id": 16,
+          "source_node": 10,
+          "source_slot": 0,
+          "target_node": 14,
+          "target_slot": 1
+        },
+        {
+          "link_id": 23,
+          "source_node": 22,
+          "source_slot": 0,
+          "target_node": 21,
+          "target_slot": 0
+        },
+        {
+          "link_id": 24,
+          "source_node": 29,
+          "source_slot": 0,
+          "target_node": 22,
+          "target_slot": 0
+        },
+        {
+          "link_id": 25,
+          "source_node": 23,
+          "source_slot": 0,
+          "target_node": 24,
+          "target_slot": 0
+        },
+        {
+          "link_id": 26,
+          "source_node": 4,
+          "source_slot": 0,
+          "target_node": 25,
+          "target_slot": 0
+        },
+        {
+          "link_id": 40,
+          "source_node": 27,
+          "source_slot": 0,
+          "target_node": 30,
+          "target_slot": 0
+        },
+        {
+          "link_id": 44,
+          "source_node": 14,
+          "source_slot": 0,
+          "target_node": 32,
+          "target_slot": 0
+        },
+        {
+          "link_id": 45,
+          "source_node": 34,
+          "source_slot": 0,
+          "target_node": 9,
+          "target_slot": 1
+        },
+        {
+          "link_id": 46,
+          "source_node": 34,
+          "source_slot": 0,
+          "target_node": 25,
+          "target_slot": 1
+        },
+        {
+          "link_id": 47,
+          "source_node": 34,
+          "source_slot": 1,
+          "target_node": 9,
+          "target_slot": 2
+        },
+        {
+          "link_id": 48,
+          "source_node": 34,
+          "source_slot": 1,
+          "target_node": 25,
+          "target_slot": 2
+        },
+        {
+          "link_id": 49,
+          "source_node": 34,
+          "source_slot": 2,
+          "target_node": 25,
+          "target_slot": 3
+        },
+        {
+          "link_id": 50,
+          "source_node": 11,
+          "source_slot": 0,
+          "target_node": 34,
+          "target_slot": 0
+        },
+        {
+          "link_id": 51,
+          "source_node": 24,
+          "source_slot": 0,
+          "target_node": 34,
+          "target_slot": 1
+        },
+        {
+          "link_id": 52,
+          "source_node": 30,
+          "source_slot": 0,
+          "target_node": 34,
+          "target_slot": 3
+        },
+        {
+          "link_id": 53,
+          "source_node": 10,
+          "source_slot": 0,
+          "target_node": 34,
+          "target_slot": 2
+        },
+        {
+          "link_id": 58,
+          "source_node": 12,
+          "source_slot": 0,
+          "target_node": 34,
+          "target_slot": 7
+        },
+        {
+          "link_id": 59,
+          "source_node": 36,
+          "source_slot": 0,
+          "target_node": 35,
+          "target_slot": 1
+        },
+        {
+          "link_id": 60,
+          "source_node": 37,
+          "source_slot": 0,
+          "target_node": 35,
+          "target_slot": 0
+        },
+        {
+          "link_id": 61,
+          "source_node": 35,
+          "source_slot": 0,
+          "target_node": 11,
+          "target_slot": 1
+        },
+        {
+          "link_id": 62,
+          "source_node": 38,
+          "source_slot": 0,
+          "target_node": 39,
+          "target_slot": 0
+        },
+        {
+          "link_id": 63,
+          "source_node": 40,
+          "source_slot": 0,
+          "target_node": 38,
+          "target_slot": 0
+        },
+        {
+          "link_id": 64,
+          "source_node": 41,
+          "source_slot": 0,
+          "target_node": 40,
+          "target_slot": 0
+        },
+        {
+          "link_id": 65,
+          "source_node": 14,
+          "source_slot": 0,
+          "target_node": 41,
+          "target_slot": 0
+        },
+        {
+          "link_id": 66,
+          "source_node": 13,
+          "source_slot": 0,
+          "target_node": 42,
+          "target_slot": 0
+        },
+        {
+          "link_id": 67,
+          "source_node": 42,
+          "source_slot": 0,
+          "target_node": 30,
+          "target_slot": 1
+        },
+        {
+          "link_id": 68,
+          "source_node": 42,
+          "source_slot": 0,
+          "target_node": 34,
+          "target_slot": 4
+        },
+        {
+          "link_id": 69,
+          "source_node": 42,
+          "source_slot": 3,
+          "target_node": 34,
+          "target_slot": 5
+        },
+        {
+          "link_id": 70,
+          "source_node": 42,
+          "source_slot": 4,
+          "target_node": 34,
+          "target_slot": 6
+        },
+        {
+          "link_id": 71,
+          "source_node": 16,
+          "source_slot": 0,
+          "target_node": 42,
+          "target_slot": 9
+        }
+      ],
+      "custom_nodes": [
+        "SimpleMath+",
+        "ImageScaleBy",
+        "WanImageToVideo",
+        "CLIPVisionLoader",
+        "easy cleanGpuUsed",
+        "VHS_VideoCombine",
+        "LayerUtility: ImageScaleByAspectRatio V2",
+        "ModelSamplingSD3",
+        "RIFE VFI",
+        "Text Concatenate",
+        "ModelPatchTorchSettings",
+        "Wan22PromptSelector",
+        "INTConstant",
+        "CLIPVisionEncode",
+        "PathchSageAttentionKJ",
+        "CR Text",
+        "KSamplerAdvanced"
+      ],
+      "template": {
+        "name": "task2_workflow_webui",
+        "structure": {
+          "node_types": [
+            {
+              "type": "VAELoader",
+              "category": "loader"
+            },
+            {
+              "type": "CLIPLoader",
+              "category": "loader"
+            },
+            {
+              "type": "CLIPVisionLoader",
+              "category": "loader"
+            },
+            {
+              "type": "Wan22PromptSelector",
+              "category": "processor"
+            },
+            {
+              "type": "INTConstant",
+              "category": "processor"
+            },
+            {
+              "type": "UNETLoader",
+              "category": "loader"
+            },
+            {
+              "type": "CR Text",
+              "category": "processor"
+            },
+            {
+              "type": "LoadImage",
+              "category": "processor"
+            },
+            {
+              "type": "CLIPTextEncode",
+              "category": "encoder"
+            },
+            {
+              "type": "LoraLoaderModelOnly",
+              "category": "loader"
+            },
+            {
+              "type": "Text Concatenate",
+              "category": "processor"
+            },
+            {
+              "type": "SimpleMath+",
+              "category": "processor"
+            },
+            {
+              "type": "LayerUtility: ImageScaleByAspectRatio V2",
+              "category": "processor"
+            },
+            {
+              "type": "CLIPVisionEncode",
+              "category": "encoder"
+            },
+            {
+              "type": "PathchSageAttentionKJ",
+              "category": "processor"
+            },
+            {
+              "type": "WanImageToVideo",
+              "category": "processor"
+            },
+            {
+              "type": "ModelPatchTorchSettings",
+              "category": "processor"
+            },
+            {
+              "type": "ModelSamplingSD3",
+              "category": "processor"
+            },
+            {
+              "type": "KSamplerAdvanced",
+              "category": "sampler"
+            },
+            {
+              "type": "VAEDecode",
+              "category": "decoder"
+            },
+            {
+              "type": "VHS_VideoCombine",
+              "category": "processor"
+            },
+            {
+              "type": "ImageScaleBy",
+              "category": "processor"
+            },
+            {
+              "type": "easy cleanGpuUsed",
+              "category": "processor"
+            },
+            {
+              "type": "RIFE VFI",
+              "category": "processor"
+            }
+          ],
+          "data_flow": []
+        },
+        "configurable": {
+          "LoraLoaderModelOnly.lora_name": {
+            "node_type": "LoraLoaderModelOnly",
+            "param": "lora_name",
+            "param_type": "model",
+            "default_value": "lightx2v_I2V_14B_480p_cfg_step_distill_rank64_bf16.safetensors",
+            "input_type": "COMBO",
+            "description": "LoRA名称"
+          },
+          "KSamplerAdvanced.steps": {
+            "node_type": "KSamplerAdvanced",
+            "param": "steps",
+            "param_type": "sampler",
+            "default_value": "randomize",
+            "input_type": "INT",
+            "description": "步数"
+          },
+          "KSamplerAdvanced.cfg": {
+            "node_type": "KSamplerAdvanced",
+            "param": "cfg",
+            "param_type": "sampler",
+            "default_value": 6,
+            "input_type": "FLOAT",
+            "description": "CFG"
+          },
+          "KSamplerAdvanced.sampler_name": {
+            "node_type": "KSamplerAdvanced",
+            "param": "sampler_name",
+            "param_type": "model",
+            "default_value": 1,
+            "input_type": "COMBO",
+            "description": "采样器"
+          },
+          "KSamplerAdvanced.scheduler": {
+            "node_type": "KSamplerAdvanced",
+            "param": "scheduler",
+            "param_type": "sampler_config",
+            "default_value": "euler",
+            "input_type": "COMBO",
+            "description": "调度器"
+          },
+          "VAELoader.vae_name": {
+            "node_type": "VAELoader",
+            "param": "vae_name",
+            "param_type": "model",
+            "default_value": "wan_2.1_vae.safetensors",
+            "input_type": "COMBO",
+            "description": "vae名称"
+          },
+          "CLIPLoader.clip_name": {
+            "node_type": "CLIPLoader",
+            "param": "clip_name",
+            "param_type": "model",
+            "default_value": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+            "input_type": "COMBO",
+            "description": "CLIP名称"
+          },
+          "CLIPTextEncode.text": {
+            "node_type": "CLIPTextEncode",
+            "param": "text",
+            "param_type": "prompt",
+            "default_value": "未来城市夜景，霓虹灯光闪烁，车流穿梭，镜头缓慢推进，电影质感",
+            "input_type": "STRING",
+            "description": "文本"
+          },
+          "CLIPVisionLoader.clip_name": {
+            "node_type": "CLIPVisionLoader",
+            "param": "clip_name",
+            "param_type": "model",
+            "default_value": "clip_vision_h_Comfy-Org.safetensors",
+            "input_type": "COMBO",
+            "description": "CLIP名称"
+          },
+          "WanImageToVideo.batch_size": {
+            "node_type": "WanImageToVideo",
+            "param": "batch_size",
+            "param_type": "resolution",
+            "default_value": 832,
+            "input_type": "INT",
+            "description": "批量大小"
+          },
+          "RIFE VFI.rife_name": {
+            "node_type": "RIFE VFI",
+            "param": "rife_name",
+            "param_type": "model",
+            "default_value": "rife49.pth",
+            "input_type": "COMBO",
+            "description": "rife_name"
+          },
+          "UNETLoader.unet_name": {
+            "node_type": "UNETLoader",
+            "param": "unet_name",
+            "param_type": "model",
+            "default_value": "Wan2.2_Remix_NSFW_i2v_14b_low_lighting_fp8_e4m3fn_v3.0.safetensors",
+            "input_type": "COMBO",
+            "description": "UNET名称"
+          },
+          "CR Text.text": {
+            "node_type": "CR Text",
+            "param": "text",
+            "param_type": "prompt",
+            "default_value": "女孩原地转圈后对着镜头温柔的微笑，用双手比心",
+            "input_type": "STRING",
+            "description": "文本"
+          }
+        }
+      }
+    },
+    "task3_api_raw": {
+      "path": "task3_api_raw.json",
+      "category": "其他",
+      "node_count": 0,
+      "link_count": 0,
+      "node_types": {},
+      "models": {
+        "checkpoints": [],
+        "unet": [],
+        "vae": [],
+        "clip": [],
+        "lora": [],
+        "controlnet": [],
+        "upscale": [],
+        "other": []
+      },
+      "parameters": {
+        "prompts": {},
+        "sampler": {},
+        "resolution": {},
+        "models": {},
+        "other": {}
+      },
+      "connections": [],
+      "custom_nodes": [],
+      "template": {
+        "name": "task3_api_raw",
+        "structure": {
+          "node_types": [],
+          "data_flow": []
+        },
+        "configurable": {}
+      }
+    },
+    "task3_api_workflow": {
+      "path": "task3_api_workflow.json",
+      "category": "其他",
+      "node_count": 0,
+      "link_count": 0,
+      "node_types": {},
+      "models": {
+        "checkpoints": [],
+        "unet": [],
+        "vae": [],
+        "clip": [],
+        "lora": [],
+        "controlnet": [],
+        "upscale": [],
+        "other": []
+      },
+      "parameters": {
+        "prompts": {},
+        "sampler": {},
+        "resolution": {},
+        "models": {},
+        "other": {}
+      },
+      "connections": [],
+      "custom_nodes": [],
+      "template": {
+        "name": "task3_api_workflow",
+        "structure": {
+          "node_types": [],
+          "data_flow": []
+        },
+        "configurable": {}
+      }
+    },
+    "task3_final": {
+      "path": "task3_final.json",
+      "category": "其他",
+      "node_count": 0,
+      "link_count": 0,
+      "node_types": {},
+      "models": {
+        "checkpoints": [],
+        "unet": [],
+        "vae": [],
+        "clip": [],
+        "lora": [],
+        "controlnet": [],
+        "upscale": [],
+        "other": []
+      },
+      "parameters": {
+        "prompts": {},
+        "sampler": {},
+        "resolution": {},
+        "models": {},
+        "other": {}
+      },
+      "connections": [],
+      "custom_nodes": [],
+      "template": {
+        "name": "task3_final",
+        "structure": {
+          "node_types": [],
+          "data_flow": []
+        },
+        "configurable": {}
+      }
+    },
+    "task3_t2v_480x960": {
+      "path": "task3_t2v_480x960.json",
+      "category": "其他",
+      "node_count": 0,
+      "link_count": 0,
+      "node_types": {},
+      "models": {
+        "checkpoints": [],
+        "unet": [],
+        "vae": [],
+        "clip": [],
+        "lora": [],
+        "controlnet": [],
+        "upscale": [],
+        "other": []
+      },
+      "parameters": {
+        "prompts": {},
+        "sampler": {},
+        "resolution": {},
+        "models": {},
+        "other": {}
+      },
+      "connections": [],
+      "custom_nodes": [],
+      "template": {
+        "name": "task3_t2v_480x960",
+        "structure": {
+          "node_types": [],
+          "data_flow": []
+        },
+        "configurable": {}
+      }
+    },
+    "task3_t2v_720x1440": {
+      "path": "task3_t2v_720x1440.json",
+      "category": "其他",
+      "node_count": 0,
+      "link_count": 0,
+      "node_types": {},
+      "models": {
+        "checkpoints": [],
+        "unet": [],
+        "vae": [],
+        "clip": [],
+        "lora": [],
+        "controlnet": [],
+        "upscale": [],
+        "other": []
+      },
+      "parameters": {
+        "prompts": {},
+        "sampler": {},
+        "resolution": {},
+        "models": {},
+        "other": {}
+      },
+      "connections": [],
+      "custom_nodes": [],
+      "template": {
+        "name": "task3_t2v_720x1440",
+        "structure": {
+          "node_types": [],
+          "data_flow": []
+        },
+        "configurable": {}
+      }
+    },
+    "task3_v2_final": {
+      "path": "task3_v2_final.json",
+      "category": "其他",
+      "node_count": 0,
+      "link_count": 0,
+      "node_types": {},
+      "models": {
+        "checkpoints": [],
+        "unet": [],
+        "vae": [],
+        "clip": [],
+        "lora": [],
+        "controlnet": [],
+        "upscale": [],
+        "other": []
+      },
+      "parameters": {
+        "prompts": {},
+        "sampler": {},
+        "resolution": {},
+        "models": {},
+        "other": {}
+      },
+      "connections": [],
+      "custom_nodes": [],
+      "template": {
+        "name": "task3_v2_final",
+        "structure": {
+          "node_types": [],
+          "data_flow": []
+        },
+        "configurable": {}
+      }
+    },
+    "task3_v3_final": {
+      "path": "task3_v3_final.json",
+      "category": "其他",
+      "node_count": 0,
+      "link_count": 0,
+      "node_types": {},
+      "models": {
+        "checkpoints": [],
+        "unet": [],
+        "vae": [],
+        "clip": [],
+        "lora": [],
+        "controlnet": [],
+        "upscale": [],
+        "other": []
+      },
+      "parameters": {
+        "prompts": {},
+        "sampler": {},
+        "resolution": {},
+        "models": {},
+        "other": {}
+      },
+      "connections": [],
+      "custom_nodes": [],
+      "template": {
+        "name": "task3_v3_final",
+        "structure": {
+          "node_types": [],
+          "data_flow": []
+        },
+        "configurable": {}
+      }
+    },
+    "task3_v4_final": {
+      "path": "task3_v4_final.json",
+      "category": "其他",
+      "node_count": 0,
+      "link_count": 0,
+      "node_types": {},
+      "models": {
+        "checkpoints": [],
+        "unet": [],
+        "vae": [],
+        "clip": [],
+        "lora": [],
+        "controlnet": [],
+        "upscale": [],
+        "other": []
+      },
+      "parameters": {
+        "prompts": {},
+        "sampler": {},
+        "resolution": {},
+        "models": {},
+        "other": {}
+      },
+      "connections": [],
+      "custom_nodes": [],
+      "template": {
+        "name": "task3_v4_final",
+        "structure": {
+          "node_types": [],
+          "data_flow": []
+        },
+        "configurable": {}
+      }
+    },
+    "tmp-workflow": {
+      "path": "tmp-workflow.json",
+      "category": "其他",
+      "node_count": 11,
+      "link_count": 11,
+      "node_types": {
+        "CLIPTextEncode": {
+          "count": 2,
+          "instances": [
+            "6",
+            "7"
+          ],
+          "inputs": [
+            "CLIP",
+            "STRING"
+          ],
+          "outputs": [
+            "CONDITIONING"
+          ]
+        },
+        "KSampler": {
+          "count": 1,
+          "instances": [
+            "3"
+          ],
+          "inputs": [
+            "CONDITIONING",
+            "COMBO",
+            "FLOAT",
+            "MODEL",
+            "INT",
+            "LATENT"
+          ],
+          "outputs": [
+            "LATENT"
+          ]
+        },
+        "EmptyLatentImage": {
+          "count": 1,
+          "instances": [
+            "5"
+          ],
+          "inputs": [
+            "INT"
+          ],
+          "outputs": [
+            "LATENT"
+          ]
+        },
+        "UNETLoader": {
+          "count": 1,
+          "instances": [
+            "10"
+          ],
+          "inputs": [
+            "COMBO"
+          ],
+          "outputs": [
+            "MODEL"
+          ]
+        },
+        "CLIPLoader": {
+          "count": 1,
+          "instances": [
+            "12"
+          ],
+          "inputs": [
+            "COMBO"
+          ],
+          "outputs": [
+            "CLIP"
+          ]
+        },
+        "VAELoader": {
+          "count": 1,
+          "instances": [
+            "13"
+          ],
+          "inputs": [
+            "COMBO"
+          ],
+          "outputs": [
+            "VAE"
+          ]
+        },
+        "VAEDecode": {
+          "count": 1,
+          "instances": [
+            "8"
+          ],
+          "inputs": [
+            "LATENT",
+            "VAE"
+          ],
+          "outputs": [
+            "IMAGE"
+          ]
+        },
+        "SaveImage": {
+          "count": 1,
+          "instances": [
+            "9"
+          ],
+          "inputs": [
+            "STRING",
+            "IMAGE"
+          ],
+          "outputs": []
+        },
+        "UpscaleModelLoader": {
+          "count": 1,
+          "instances": [
+            "17"
+          ],
+          "inputs": [
+            "COMBO"
+          ],
+          "outputs": [
+            "UPSCALE_MODEL"
+          ]
+        },
+        "ImageUpscaleWithModel": {
+          "count": 1,
+          "instances": [
+            "15"
+          ],
+          "inputs": [
+            "UPSCALE_MODEL",
+            "IMAGE"
+          ],
+          "outputs": [
+            "IMAGE"
+          ]
+        }
+      },
+      "models": {
+        "checkpoints": [],
+        "unet": [
+          "wan2.2_t2v_high_noise_14B_fp8_scaled.safetensors"
+        ],
+        "vae": [
+          "Wan2_1_VAE_bf16-fp8-e5m2.safetensors"
+        ],
+        "clip": [
+          "umt5_xxl_fp8_e4m3fn_scaled.safetensors"
+        ],
+        "lora": [],
+        "controlnet": [],
+        "upscale": [
+          "2x_StarSample_V2.0.safetensors"
+        ],
+        "other": []
+      },
+      "parameters": {
+        "prompts": {
+          "positive_6": {
+            "text": "beautiful scenery nature glass bottle landscape, , purple galaxy bottle,",
+            "node_id": "6",
+            "title": ""
+          },
+          "positive_7": {
+            "text": "text, watermark",
+            "node_id": "7",
+            "title": ""
+          }
+        },
+        "sampler": {
+          "3": {
+            "seed": 81028957092542,
+            "steps": "randomize",
+            "cfg": 20,
+            "sampler_name": 8,
+            "scheduler": "euler",
+            "denoise": "normal"
+          }
+        },
+        "resolution": {
+          "width": 512,
+          "height": 512,
+          "batch_size": 1
+        },
+        "models": {
+          "10": {
+            "node_type": "UNETLoader",
+            "params": {
+              "unet_name": "wan2.2_t2v_high_noise_14B_fp8_scaled.safetensors",
+              "weight_dtype": "default"
+            }
+          },
+          "12": {
+            "node_type": "CLIPLoader",
+            "params": {
+              "clip_name": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+              "type": "wan",
+              "device": "default"
+            }
+          },
+          "13": {
+            "node_type": "VAELoader",
+            "params": {
+              "vae_name": "Wan2_1_VAE_bf16-fp8-e5m2.safetensors"
+            }
+          }
+        },
+        "other": {}
+      },
+      "connections": [
+        {
+          "link_id": 2,
+          "source_node": 5,
+          "source_slot": 0,
+          "target_node": 3,
+          "target_slot": 3
+        },
+        {
+          "link_id": 4,
+          "source_node": 6,
+          "source_slot": 0,
+          "target_node": 3,
+          "target_slot": 1
+        },
+        {
+          "link_id": 6,
+          "source_node": 7,
+          "source_slot": 0,
+          "target_node": 3,
+          "target_slot": 2
+        },
+        {
+          "link_id": 7,
+          "source_node": 3,
+          "source_slot": 0,
+          "target_node": 8,
+          "target_slot": 0
+        },
+        {
+          "link_id": 10,
+          "source_node": 13,
+          "source_slot": 0,
+          "target_node": 8,
+          "target_slot": 1
+        },
+        {
+          "link_id": 11,
+          "source_node": 12,
+          "source_slot": 0,
+          "target_node": 6,
+          "target_slot": 0
+        },
+        {
+          "link_id": 12,
+          "source_node": 12,
+          "source_slot": 0,
+          "target_node": 7,
+          "target_slot": 0
+        },
+        {
+          "link_id": 13,
+          "source_node": 10,
+          "source_slot": 0,
+          "target_node": 3,
+          "target_slot": 0
+        },
+        {
+          "link_id": 15,
+          "source_node": 8,
+          "source_slot": 0,
+          "target_node": 15,
+          "target_slot": 1
+        },
+        {
+          "link_id": 16,
+          "source_node": 15,
+          "source_slot": 0,
+          "target_node": 9,
+          "target_slot": 0
+        },
+        {
+          "link_id": 18,
+          "source_node": 17,
+          "source_slot": 0,
+          "target_node": 15,
+          "target_slot": 0
+        }
+      ],
+      "custom_nodes": [],
+      "template": {
+        "name": "tmp-workflow",
+        "structure": {
+          "node_types": [
+            {
+              "type": "EmptyLatentImage",
+              "category": "processor"
+            },
+            {
+              "type": "UNETLoader",
+              "category": "loader"
+            },
+            {
+              "type": "CLIPLoader",
+              "category": "loader"
+            },
+            {
+              "type": "VAELoader",
+              "category": "loader"
+            },
+            {
+              "type": "UpscaleModelLoader",
+              "category": "loader"
+            },
+            {
+              "type": "CLIPTextEncode",
+              "category": "encoder"
+            },
+            {
+              "type": "KSampler",
+              "category": "sampler"
+            },
+            {
+              "type": "VAEDecode",
+              "category": "decoder"
+            },
+            {
+              "type": "ImageUpscaleWithModel",
+              "category": "processor"
+            },
+            {
+              "type": "SaveImage",
+              "category": "processor"
+            }
+          ],
+          "data_flow": []
+        },
+        "configurable": {
+          "CLIPTextEncode.text": {
+            "node_type": "CLIPTextEncode",
+            "param": "text",
+            "param_type": "prompt",
+            "default_value": "beautiful scenery nature glass bottle landscape, , purple galaxy bottle,",
+            "input_type": "STRING",
+            "description": "文本"
+          },
+          "KSampler.seed": {
+            "node_type": "KSampler",
+            "param": "seed",
+            "param_type": "sampler",
+            "default_value": 81028957092542,
+            "input_type": "INT",
+            "description": "种子"
+          },
+          "KSampler.steps": {
+            "node_type": "KSampler",
+            "param": "steps",
+            "param_type": "sampler",
+            "default_value": "randomize",
+            "input_type": "INT",
+            "description": "步数"
+          },
+          "KSampler.cfg": {
+            "node_type": "KSampler",
+            "param": "cfg",
+            "param_type": "sampler",
+            "default_value": 20,
+            "input_type": "FLOAT",
+            "description": "cfg"
+          },
+          "KSampler.sampler_name": {
+            "node_type": "KSampler",
+            "param": "sampler_name",
+            "param_type": "model",
+            "default_value": 8,
+            "input_type": "COMBO",
+            "description": "采样器名称"
+          },
+          "KSampler.scheduler": {
+            "node_type": "KSampler",
+            "param": "scheduler",
+            "param_type": "sampler_config",
+            "default_value": "euler",
+            "input_type": "COMBO",
+            "description": "调度器"
+          },
+          "KSampler.denoise": {
+            "node_type": "KSampler",
+            "param": "denoise",
+            "param_type": "sampler",
+            "default_value": "normal",
+            "input_type": "FLOAT",
+            "description": "降噪"
+          },
+          "EmptyLatentImage.width": {
+            "node_type": "EmptyLatentImage",
+            "param": "width",
+            "param_type": "resolution",
+            "default_value": 512,
+            "input_type": "INT",
+            "description": "宽度"
+          },
+          "EmptyLatentImage.height": {
+            "node_type": "EmptyLatentImage",
+            "param": "height",
+            "param_type": "resolution",
+            "default_value": 512,
+            "input_type": "INT",
+            "description": "高度"
+          },
+          "EmptyLatentImage.batch_size": {
+            "node_type": "EmptyLatentImage",
+            "param": "batch_size",
+            "param_type": "resolution",
+            "default_value": 1,
+            "input_type": "INT",
+            "description": "批量大小"
+          },
+          "UNETLoader.unet_name": {
+            "node_type": "UNETLoader",
+            "param": "unet_name",
+            "param_type": "model",
+            "default_value": "wan2.2_t2v_high_noise_14B_fp8_scaled.safetensors",
+            "input_type": "COMBO",
+            "description": "UNet名称"
+          },
+          "CLIPLoader.clip_name": {
+            "node_type": "CLIPLoader",
+            "param": "clip_name",
+            "param_type": "model",
+            "default_value": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+            "input_type": "COMBO",
+            "description": "CLIP名称"
+          },
+          "VAELoader.vae_name": {
+            "node_type": "VAELoader",
+            "param": "vae_name",
+            "param_type": "model",
+            "default_value": "Wan2_1_VAE_bf16-fp8-e5m2.safetensors",
+            "input_type": "COMBO",
+            "description": "vae名称"
+          },
+          "UpscaleModelLoader.model_name": {
+            "node_type": "UpscaleModelLoader",
+            "param": "model_name",
+            "param_type": "model",
+            "default_value": "2x_StarSample_V2.0.safetensors",
+            "input_type": "COMBO",
+            "description": "模型名称"
+          }
+        }
+      }
+    },
+    "wan22_i2v_workflow": {
+      "path": "wan22_i2v_workflow.json",
+      "category": "其他",
+      "node_count": 0,
+      "link_count": 0,
+      "node_types": {},
+      "models": {
+        "checkpoints": [],
+        "unet": [],
+        "vae": [],
+        "clip": [],
+        "lora": [],
+        "controlnet": [],
+        "upscale": [],
+        "other": []
+      },
+      "parameters": {
+        "prompts": {},
+        "sampler": {},
+        "resolution": {},
+        "models": {},
+        "other": {}
+      },
+      "connections": [],
+      "custom_nodes": [],
+      "template": {
+        "name": "wan22_i2v_workflow",
+        "structure": {
+          "node_types": [],
+          "data_flow": []
+        },
+        "configurable": {}
+      }
+    },
+    "wan22_simple_t2i": {
+      "path": "wan22_simple_t2i.json",
+      "category": "其他",
+      "node_count": 0,
+      "link_count": 0,
+      "node_types": {},
+      "models": {
+        "checkpoints": [],
+        "unet": [],
+        "vae": [],
+        "clip": [],
+        "lora": [],
+        "controlnet": [],
+        "upscale": [],
+        "other": []
+      },
+      "parameters": {
+        "prompts": {},
+        "sampler": {},
+        "resolution": {},
+        "models": {},
+        "other": {}
+      },
+      "connections": [],
+      "custom_nodes": [],
+      "template": {
+        "name": "wan22_simple_t2i",
+        "structure": {
+          "node_types": [],
+          "data_flow": []
+        },
+        "configurable": {}
+      }
+    },
+    "wan22_t2v_workflow": {
+      "path": "wan22_t2v_workflow.json",
+      "category": "其他",
+      "node_count": 0,
+      "link_count": 0,
+      "node_types": {},
+      "models": {
+        "checkpoints": [],
+        "unet": [],
+        "vae": [],
+        "clip": [],
+        "lora": [],
+        "controlnet": [],
+        "upscale": [],
+        "other": []
+      },
+      "parameters": {
+        "prompts": {},
+        "sampler": {},
+        "resolution": {},
+        "models": {},
+        "other": {}
+      },
+      "connections": [],
+      "custom_nodes": [],
+      "template": {
+        "name": "wan22_t2v_workflow",
+        "structure": {
+          "node_types": [],
+          "data_flow": []
+        },
+        "configurable": {}
+      }
+    },
+    "wan22_txt2vid_analysis": {
+      "path": "wan22_txt2vid_analysis.json",
+      "category": "文生视频",
+      "node_count": 30,
+      "link_count": 0,
+      "node_types": {
+        "": {
+          "count": 30,
+          "instances": [
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          "inputs": [],
+          "outputs": [
+            "UPSCALE_MODEL",
+            "WANVIDLORA",
+            "BLOCKSWAPARGS",
+            "VHS_FILENAMES",
+            "WANVIDEOTEXTEMBEDS",
+            "CACHEARGS",
+            "BOOLEAN",
+            "FLOAT",
+            "INT",
+            "WANTEXTENCODER",
+            "WANVAE",
+            "WANVIDEOMODEL",
+            "STRING",
+            "*",
+            "LATENT",
+            "WANVIDIMAGE_EMBEDS",
+            "IMAGE"
+          ]
+        }
+      },
+      "models": {
+        "checkpoints": [],
+        "unet": [],
+        "vae": [],
+        "clip": [],
+        "lora": [],
+        "controlnet": [],
+        "upscale": [],
+        "other": []
+      },
+      "parameters": {
+        "prompts": {},
+        "sampler": {},
+        "resolution": {},
+        "models": {},
+        "other": {}
+      },
+      "connections": [],
+      "custom_nodes": [
+        ""
+      ],
+      "template": {
+        "name": "wan22_txt2vid_analysis",
+        "structure": {
+          "node_types": [
+            {
+              "type": "",
+              "category": "processor"
+            }
+          ],
+          "data_flow": []
+        },
+        "configurable": {}
+      }
+    },
+    "wan2_2_5B_ti2v": {
+      "path": "wan2_2_5B_ti2v.json",
+      "category": "其他",
+      "node_count": 14,
+      "link_count": 14,
+      "node_types": {
+        "CLIPLoader": {
+          "count": 1,
+          "instances": [
+            "38"
+          ],
+          "inputs": [
+            "COMBO"
+          ],
+          "outputs": [
+            "CLIP"
+          ]
+        },
+        "VAELoader": {
+          "count": 1,
+          "instances": [
+            "39"
+          ],
+          "inputs": [
+            "COMBO"
+          ],
+          "outputs": [
+            "VAE"
+          ]
+        },
+        "CLIPTextEncode": {
+          "count": 2,
+          "instances": [
+            "7",
+            "6"
+          ],
+          "inputs": [
+            "CLIP",
+            "STRING"
+          ],
+          "outputs": [
+            "CONDITIONING"
+          ]
+        },
+        "MarkdownNote": {
+          "count": 1,
+          "instances": [
+            "59"
+          ],
+          "inputs": [],
+          "outputs": []
+        },
+        "KSampler": {
+          "count": 1,
+          "instances": [
+            "3"
+          ],
+          "inputs": [
+            "CONDITIONING",
+            "COMBO",
+            "FLOAT",
+            "MODEL",
+            "INT",
+            "LATENT"
+          ],
+          "outputs": [
+            "LATENT"
+          ]
+        },
+        "ModelSamplingSD3": {
+          "count": 1,
+          "instances": [
+            "48"
+          ],
+          "inputs": [
+            "MODEL",
+            "FLOAT"
+          ],
+          "outputs": [
+            "MODEL"
+          ]
+        },
+        "CreateVideo": {
+          "count": 1,
+          "instances": [
+            "57"
+          ],
+          "inputs": [
+            "AUDIO",
+            "IMAGE",
+            "FLOAT"
+          ],
+          "outputs": [
+            "VIDEO"
+          ]
+        },
+        "VAEDecode": {
+          "count": 1,
+          "instances": [
+            "8"
+          ],
+          "inputs": [
+            "LATENT",
+            "VAE"
+          ],
+          "outputs": [
+            "IMAGE"
+          ]
+        },
+        "Wan22ImageToVideoLatent": {
+          "count": 1,
+          "instances": [
+            "55"
+          ],
+          "inputs": [
+            "INT",
+            "VAE",
+            "IMAGE"
+          ],
+          "outputs": [
+            "LATENT"
+          ]
+        },
+        "UNETLoader": {
+          "count": 1,
+          "instances": [
+            "37"
+          ],
+          "inputs": [
+            "COMBO"
+          ],
+          "outputs": [
+            "MODEL"
+          ]
+        },
+        "SaveAnimatedWEBP": {
+          "count": 1,
+          "instances": [
+            "61"
+          ],
+          "inputs": [
+            "BOOLEAN",
+            "COMBO",
+            "FLOAT",
+            "INT",
+            "STRING",
+            "IMAGE"
+          ],
+          "outputs": []
+        },
+        "SaveVideo": {
+          "count": 1,
+          "instances": [
+            "58"
+          ],
+          "inputs": [
+            "VIDEO",
+            "STRING",
+            "COMBO"
+          ],
+          "outputs": []
+        },
+        "LoadImage": {
+          "count": 1,
+          "instances": [
+            "56"
+          ],
+          "inputs": [
+            "IMAGEUPLOAD",
+            "COMBO"
+          ],
+          "outputs": [
+            "MASK",
+            "IMAGE"
+          ]
+        }
+      },
+      "models": {
+        "checkpoints": [],
+        "unet": [
+          "wan2.2_ti2v_5B_fp16.safetensors"
+        ],
+        "vae": [
+          "wan2.2_vae.safetensors"
+        ],
+        "clip": [
+          "umt5_xxl_fp8_e4m3fn_scaled.safetensors"
+        ],
+        "lora": [],
+        "controlnet": [],
+        "upscale": [],
+        "other": []
+      },
+      "parameters": {
+        "prompts": {
+          "positive_7": {
+            "text": "色调艳丽，过曝，静态，细节模糊不清，字幕，风格，作品，画作，画面，静止，整体发灰，最差质量，低质量，JPEG压缩残留，丑陋的，残缺的，多余的手指，画得不好的手部，画得不好的脸部，畸形的，毁容的，形态畸形的肢体，手指融合，静止不动的画面，杂乱的背景，三条腿，背景人很多，倒着走",
+            "node_id": "7",
+            "title": ""
+          },
+          "positive_6": {
+            "text": "A futuristic cyberpunk car speeding through a neon-lit city at night during heavy rain, captured with an FPV (First Person View) camera angle. The vehicle dynamically follows the fast-paced motion as it races along an elevated highway, moving at extreme speed with high wheel rotation, splashing water dramatically onto the wet pavement. Raindrops on the car’s surface stream backward due to the intense velocity, creating a dynamic visual effect. Neon lights reflect vividly on the glossy, rain-soaked road, enhancing the immersive and high-tech atmosphere. Glowing tire trails and futuristic energy streaks follow the motion of the car, emphasizing the sense of speed and fluidity. In the background, drones hover in the air, firing occasional red laser beams, adding tension and sci-fi action to the scene. The lighting is cinematic, with smooth motion blur, high-tech aesthetics, and a fast-paced, thrilling vibe.\n",
+            "node_id": "6",
+            "title": ""
+          }
+        },
+        "sampler": {
+          "3": {
+            "seed": 165117770567815,
+            "steps": "randomize",
+            "cfg": 20,
+            "sampler_name": 5,
+            "scheduler": "uni_pc",
+            "denoise": "simple"
+          }
+        },
+        "resolution": {},
+        "models": {
+          "38": {
+            "node_type": "CLIPLoader",
+            "params": {
+              "clip_name": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+              "type": "wan",
+              "device": "default"
+            }
+          },
+          "39": {
+            "node_type": "VAELoader",
+            "params": {
+              "vae_name": "wan2.2_vae.safetensors"
+            }
+          },
+          "37": {
+            "node_type": "UNETLoader",
+            "params": {
+              "unet_name": "wan2.2_ti2v_5B_fp16.safetensors",
+              "weight_dtype": "default"
+            }
+          }
+        },
+        "other": {}
+      },
+      "connections": [
+        {
+          "link_id": 35,
+          "source_node": 3,
+          "source_slot": 0,
+          "target_node": 8,
+          "target_slot": 0
+        },
+        {
+          "link_id": 46,
+          "source_node": 6,
+          "source_slot": 0,
+          "target_node": 3,
+          "target_slot": 1
+        },
+        {
+          "link_id": 52,
+          "source_node": 7,
+          "source_slot": 0,
+          "target_node": 3,
+          "target_slot": 2
+        },
+        {
+          "link_id": 74,
+          "source_node": 38,
+          "source_slot": 0,
+          "target_node": 6,
+          "target_slot": 0
+        },
+        {
+          "link_id": 75,
+          "source_node": 38,
+          "source_slot": 0,
+          "target_node": 7,
+          "target_slot": 0
+        },
+        {
+          "link_id": 76,
+          "source_node": 39,
+          "source_slot": 0,
+          "target_node": 8,
+          "target_slot": 1
+        },
+        {
+          "link_id": 95,
+          "source_node": 48,
+          "source_slot": 0,
+          "target_node": 3,
+          "target_slot": 0
+        },
+        {
+          "link_id": 104,
+          "source_node": 55,
+          "source_slot": 0,
+          "target_node": 3,
+          "target_slot": 3
+        },
+        {
+          "link_id": 105,
+          "source_node": 39,
+          "source_slot": 0,
+          "target_node": 55,
+          "target_slot": 0
+        },
+        {
+          "link_id": 106,
+          "source_node": 56,
+          "source_slot": 0,
+          "target_node": 55,
+          "target_slot": 1
+        },
+        {
+          "link_id": 107,
+          "source_node": 8,
+          "source_slot": 0,
+          "target_node": 57,
+          "target_slot": 0
+        },
+        {
+          "link_id": 108,
+          "source_node": 57,
+          "source_slot": 0,
+          "target_node": 58,
+          "target_slot": 0
+        },
+        {
+          "link_id": 110,
+          "source_node": 37,
+          "source_slot": 0,
+          "target_node": 48,
+          "target_slot": 0
+        },
+        {
+          "link_id": 111,
+          "source_node": 8,
+          "source_slot": 0,
+          "target_node": 61,
+          "target_slot": 0
+        }
+      ],
+      "custom_nodes": [
+        "Wan22ImageToVideoLatent",
+        "CreateVideo",
+        "MarkdownNote",
+        "ModelSamplingSD3",
+        "SaveAnimatedWEBP",
+        "SaveVideo"
+      ],
+      "template": {
+        "name": "wan2_2_5B_ti2v",
+        "structure": {
+          "node_types": [
+            {
+              "type": "CLIPLoader",
+              "category": "loader"
+            },
+            {
+              "type": "VAELoader",
+              "category": "loader"
+            },
+            {
+              "type": "MarkdownNote",
+              "category": "processor"
+            },
+            {
+              "type": "UNETLoader",
+              "category": "loader"
+            },
+            {
+              "type": "LoadImage",
+              "category": "processor"
+            },
+            {
+              "type": "CLIPTextEncode",
+              "category": "encoder"
+            },
+            {
+              "type": "ModelSamplingSD3",
+              "category": "processor"
+            },
+            {
+              "type": "Wan22ImageToVideoLatent",
+              "category": "processor"
+            },
+            {
+              "type": "KSampler",
+              "category": "sampler"
+            },
+            {
+              "type": "VAEDecode",
+              "category": "decoder"
+            },
+            {
+              "type": "CreateVideo",
+              "category": "processor"
+            },
+            {
+              "type": "SaveAnimatedWEBP",
+              "category": "processor"
+            },
+            {
+              "type": "SaveVideo",
+              "category": "processor"
+            }
+          ],
+          "data_flow": []
+        },
+        "configurable": {
+          "CLIPLoader.clip_name": {
+            "node_type": "CLIPLoader",
+            "param": "clip_name",
+            "param_type": "model",
+            "default_value": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+            "input_type": "COMBO",
+            "description": "clip_name"
+          },
+          "VAELoader.vae_name": {
+            "node_type": "VAELoader",
+            "param": "vae_name",
+            "param_type": "model",
+            "default_value": "wan2.2_vae.safetensors",
+            "input_type": "COMBO",
+            "description": "vae_name"
+          },
+          "CLIPTextEncode.text": {
+            "node_type": "CLIPTextEncode",
+            "param": "text",
+            "param_type": "prompt",
+            "default_value": "色调艳丽，过曝，静态，细节模糊不清，字幕，风格，作品，画作，画面，静止，整体发灰，最差质量，低质量，JPEG压缩残留，丑陋的，残缺的，多余的手指，画得不好的手部，画得不好的脸部，畸形的，毁容的，形态畸形的肢体，手指融合，静止不动的画面，杂乱的背景，三条腿，背景人很多，倒着走",
+            "input_type": "STRING",
+            "description": "text"
+          },
+          "KSampler.seed": {
+            "node_type": "KSampler",
+            "param": "seed",
+            "param_type": "sampler",
+            "default_value": 165117770567815,
+            "input_type": "INT",
+            "description": "seed"
+          },
+          "KSampler.steps": {
+            "node_type": "KSampler",
+            "param": "steps",
+            "param_type": "sampler",
+            "default_value": "randomize",
+            "input_type": "INT",
+            "description": "steps"
+          },
+          "KSampler.cfg": {
+            "node_type": "KSampler",
+            "param": "cfg",
+            "param_type": "sampler",
+            "default_value": 20,
+            "input_type": "FLOAT",
+            "description": "cfg"
+          },
+          "KSampler.sampler_name": {
+            "node_type": "KSampler",
+            "param": "sampler_name",
+            "param_type": "model",
+            "default_value": 5,
+            "input_type": "COMBO",
+            "description": "sampler_name"
+          },
+          "KSampler.scheduler": {
+            "node_type": "KSampler",
+            "param": "scheduler",
+            "param_type": "sampler_config",
+            "default_value": "uni_pc",
+            "input_type": "COMBO",
+            "description": "scheduler"
+          },
+          "KSampler.denoise": {
+            "node_type": "KSampler",
+            "param": "denoise",
+            "param_type": "sampler",
+            "default_value": "simple",
+            "input_type": "FLOAT",
+            "description": "denoise"
+          },
+          "Wan22ImageToVideoLatent.width": {
+            "node_type": "Wan22ImageToVideoLatent",
+            "param": "width",
+            "param_type": "resolution",
+            "default_value": 1280,
+            "input_type": "INT",
+            "description": "width"
+          },
+          "Wan22ImageToVideoLatent.height": {
+            "node_type": "Wan22ImageToVideoLatent",
+            "param": "height",
+            "param_type": "resolution",
+            "default_value": 704,
+            "input_type": "INT",
+            "description": "height"
+          },
+          "Wan22ImageToVideoLatent.batch_size": {
+            "node_type": "Wan22ImageToVideoLatent",
+            "param": "batch_size",
+            "param_type": "resolution",
+            "default_value": 1,
+            "input_type": "INT",
+            "description": "batch_size"
+          },
+          "UNETLoader.unet_name": {
+            "node_type": "UNETLoader",
+            "param": "unet_name",
+            "param_type": "model",
+            "default_value": "wan2.2_ti2v_5B_fp16.safetensors",
+            "input_type": "COMBO",
+            "description": "unet_name"
+          }
+        }
+      }
+    },
+    "workflow_analysis": {
+      "path": "workflow_analysis.json",
+      "category": "其他",
+      "node_count": 11,
+      "link_count": 11,
+      "node_types": {
+        "CLIPTextEncode": {
+          "count": 2,
+          "instances": [
+            "6",
+            "7"
+          ],
+          "inputs": [],
+          "outputs": []
+        },
+        "KSampler": {
+          "count": 1,
+          "instances": [
+            "3"
+          ],
+          "inputs": [],
+          "outputs": []
+        },
+        "EmptyLatentImage": {
+          "count": 1,
+          "instances": [
+            "5"
+          ],
+          "inputs": [],
+          "outputs": []
+        },
+        "UNETLoader": {
+          "count": 1,
+          "instances": [
+            "10"
+          ],
+          "inputs": [],
+          "outputs": []
+        },
+        "CLIPLoader": {
+          "count": 1,
+          "instances": [
+            "12"
+          ],
+          "inputs": [],
+          "outputs": []
+        },
+        "VAELoader": {
+          "count": 1,
+          "instances": [
+            "13"
+          ],
+          "inputs": [],
+          "outputs": []
+        },
+        "VAEDecode": {
+          "count": 1,
+          "instances": [
+            "8"
+          ],
+          "inputs": [],
+          "outputs": []
+        },
+        "SaveImage": {
+          "count": 1,
+          "instances": [
+            "9"
+          ],
+          "inputs": [],
+          "outputs": []
+        },
+        "UpscaleModelLoader": {
+          "count": 1,
+          "instances": [
+            "17"
+          ],
+          "inputs": [],
+          "outputs": []
+        },
+        "ImageUpscaleWithModel": {
+          "count": 1,
+          "instances": [
+            "15"
+          ],
+          "inputs": [],
+          "outputs": []
+        }
+      },
+      "models": {
+        "checkpoints": [],
+        "unet": [
+          "wan2.2_t2v_high_noise_14B_fp8_scaled.safetensors"
+        ],
+        "vae": [
+          "Wan2_1_VAE_bf16-fp8-e5m2.safetensors"
+        ],
+        "clip": [
+          "umt5_xxl_fp8_e4m3fn_scaled.safetensors"
+        ],
+        "lora": [],
+        "controlnet": [],
+        "upscale": [
+          "2x_StarSample_V2.0.safetensors"
+        ],
+        "other": []
+      },
+      "parameters": {
+        "prompts": {},
+        "sampler": {},
+        "resolution": {},
+        "models": {},
+        "other": {}
+      },
+      "connections": [],
+      "custom_nodes": [],
+      "template": {
+        "name": "workflow_analysis",
+        "structure": {
+          "node_types": [
+            {
+              "type": "EmptyLatentImage",
+              "category": "processor"
+            },
+            {
+              "type": "UNETLoader",
+              "category": "loader"
+            },
+            {
+              "type": "CLIPLoader",
+              "category": "loader"
+            },
+            {
+              "type": "VAELoader",
+              "category": "loader"
+            },
+            {
+              "type": "UpscaleModelLoader",
+              "category": "loader"
+            },
+            {
+              "type": "CLIPTextEncode",
+              "category": "encoder"
+            },
+            {
+              "type": "KSampler",
+              "category": "sampler"
+            },
+            {
+              "type": "VAEDecode",
+              "category": "decoder"
+            },
+            {
+              "type": "ImageUpscaleWithModel",
+              "category": "processor"
+            },
+            {
+              "type": "SaveImage",
+              "category": "processor"
+            }
+          ],
+          "data_flow": []
+        },
+        "configurable": {}
+      }
+    },
+    "workflow_library": {
+      "path": "workflow_library.json",
+      "category": "其他",
+      "node_count": 0,
+      "link_count": 0,
+      "node_types": {},
+      "models": {
+        "checkpoints": [],
+        "unet": [],
+        "vae": [],
+        "clip": [],
+        "lora": [],
+        "controlnet": [],
+        "upscale": [],
+        "other": []
+      },
+      "parameters": {
+        "prompts": {},
+        "sampler": {},
+        "resolution": {},
+        "models": {},
+        "other": {}
+      },
+      "connections": [],
+      "custom_nodes": [],
+      "template": {
+        "name": "workflow_library",
+        "structure": {
+          "node_types": [],
+          "data_flow": []
+        },
+        "configurable": {}
+      }
+    }
+  },
+  "statistics": {
+    "node_types": {
+      "CheckpointLoaderSimple": 1,
+      "EmptyLatentImage": 3,
+      "ControlNetLoader": 1,
+      "LoadImage": 3,
+      "UpscaleModelLoader": 4,
+      "CLIPTextEncode": 10,
+      "LoraLoader": 1,
+      "ControlNetApplyAdvanced": 1,
+      "KSampler": 6,
+      "LatentUpscale": 1,
+      "VAEDecode": 5,
+      "ImageUpscaleWithModel": 4,
+      "SaveImage": 3,
+      "ModelSamplingSD3": 3,
+      "LoraLoaderModelOnly": 4,
+      "PathchSageAttentionKJ": 2,
+      "ModelPatchTorchSettings": 2,
+      "KSamplerAdvanced": 2,
+      "VAELoader": 4,
+      "CLIPLoader": 4,
+      "CLIPVisionLoader": 1,
+      "CLIPVisionEncode": 1,
+      "WanImageToVideo": 1,
+      "Wan22PromptSelector": 1,
+      "LayerUtility: ImageScaleByAspectRatio V2": 1,
+      "SimpleMath+": 1,
+      "INTConstant": 2,
+      "ImageScaleBy": 1,
+      "easy cleanGpuUsed": 1,
+      "RIFE VFI": 1,
+      "UNETLoader": 5,
+      "Text Concatenate": 1,
+      "CR Text": 1,
+      "VHS_VideoCombine": 2,
+      "": 30,
+      "MarkdownNote": 1,
+      "CreateVideo": 1,
+      "Wan22ImageToVideoLatent": 1,
+      "SaveAnimatedWEBP": 1,
+      "SaveVideo": 1
+    },
+    "models": {
+      "checkpoints": [
+        "sam3.1_multiplex_fp16.safetensors"
+      ],
+      "unet": [
+        "wan2.2_ti2v_5B_fp16.safetensors",
+        "Wan2.2_Remix_NSFW_i2v_14b_low_lighting_fp8_e4m3fn_v3.0.safetensors",
+        "wan2.2_t2v_high_noise_14B_fp8_scaled.safetensors",
+        "Wan2.2_Remix_NSFW_i2v_14b_high_lighting_fp8_e4m3fn_v3.0.safetensors"
+      ],
+      "vae": [
+        "wan2.2_vae.safetensors",
+        "wan_2.1_vae.safetensors",
+        "Wan2_1_VAE_bf16-fp8-e5m2.safetensors"
+      ],
+      "clip": [
+        "umt5_xxl_fp8_e4m3fn_scaled.safetensors"
+      ],
+      "lora": [
+        "Wan2.2-Fun-A14B-InP-low-noise-HPS2.1.safetensors",
+        "FLUX-小红书极致真实V2.safetensors",
+        "lightx2v_I2V_14B_480p_cfg_step_distill_rank64_bf16.safetensors",
+        "Wan2.2-Fun-A14B-InP-high-noise-MPS.safetensors"
+      ],
+      "controlnet": [
+        "control_v11p_sd15_openpose.pth"
+      ],
+      "upscale": [
+        "2x_StarSample_V2.0.safetensors"
+      ]
+    },
+    "categories": {
+      "其他": 41,
+      "基础": 1,
+      "文生视频": 1
+    },
+    "custom_nodes": [
+      "",
+      "easy cleanGpuUsed",
+      "CLIPVisionLoader",
+      "Wan22PromptSelector",
+      "INTConstant",
+      "WanImageToVideo",
+      "ModelSamplingSD3",
+      "Text Concatenate",
+      "SaveAnimatedWEBP",
+      "PathchSageAttentionKJ",
+      "CreateVideo",
+      "LayerUtility: ImageScaleByAspectRatio V2",
+      "ModelPatchTorchSettings",
+      "ImageScaleBy",
+      "CLIPVisionEncode",
+      "SaveVideo",
+      "VHS_VideoCombine",
+      "SimpleMath+",
+      "Wan22ImageToVideoLatent",
+      "MarkdownNote",
+      "RIFE VFI",
+      "CR Text",
+      "KSamplerAdvanced"
+    ],
+    "common_parameters": {
+      "CheckpointLoaderSimple.ckpt_name": [
+        {
+          "workflow": "generated_complex_workflow",
+          "default_value": "sam3.1_multiplex_fp16.safetensors"
+        }
+      ],
+      "EmptyLatentImage.width": [
+        {
+          "workflow": "generated_complex_workflow",
+          "default_value": 512
+        },
+        {
+          "workflow": "tmp-workflow",
+          "default_value": 512
+        }
+      ],
+      "EmptyLatentImage.height": [
+        {
+          "workflow": "generated_complex_workflow",
+          "default_value": 512
+        },
+        {
+          "workflow": "tmp-workflow",
+          "default_value": 512
+        }
+      ],
+      "EmptyLatentImage.batch_size": [
+        {
+          "workflow": "generated_complex_workflow",
+          "default_value": 1
+        },
+        {
+          "workflow": "tmp-workflow",
+          "default_value": 1
+        }
+      ],
+      "ControlNetLoader.control_net_name": [
+        {
+          "workflow": "generated_complex_workflow",
+          "default_value": "control_v11p_sd15_openpose.pth"
+        }
+      ],
+      "UpscaleModelLoader.model_name": [
+        {
+          "workflow": "generated_complex_workflow",
+          "default_value": "2x_StarSample_V2.0.safetensors"
+        },
+        {
+          "workflow": "tmp-workflow",
+          "default_value": "2x_StarSample_V2.0.safetensors"
+        }
+      ],
+      "CLIPTextEncode.text": [
+        {
+          "workflow": "generated_complex_workflow",
+          "default_value": "生成一个文生图工作流，使用ControlNet控制姿势，添加LoRA风格，最后放大2倍"
+        },
+        {
+          "workflow": "task2_workflow_webui",
+          "default_value": "未来城市夜景，霓虹灯光闪烁，车流穿梭，镜头缓慢推进，电影质感"
+        },
+        {
+          "workflow": "tmp-workflow",
+          "default_value": "beautiful scenery nature glass bottle landscape, , purple galaxy bottle,"
+        },
+        {
+          "workflow": "wan2_2_5B_ti2v",
+          "default_value": "色调艳丽，过曝，静态，细节模糊不清，字幕，风格，作品，画作，画面，静止，整体发灰，最差质量，低质量，JPEG压缩残留，丑陋的，残缺的，多余的手指，画得不好的手部，画得不好的脸部，畸形的，毁容的，形态畸形的肢体，手指融合，静止不动的画面，杂乱的背景，三条腿，背景人很多，倒着走"
+        }
+      ],
+      "LoraLoader.lora_name": [
+        {
+          "workflow": "generated_complex_workflow",
+          "default_value": "FLUX-小红书极致真实V2.safetensors"
+        }
+      ],
+      "KSampler.seed": [
+        {
+          "workflow": "generated_complex_workflow",
+          "default_value": 2387437219
+        },
+        {
+          "workflow": "tmp-workflow",
+          "default_value": 81028957092542
+        },
+        {
+          "workflow": "wan2_2_5B_ti2v",
+          "default_value": 165117770567815
+        }
+      ],
+      "KSampler.steps": [
+        {
+          "workflow": "generated_complex_workflow",
+          "default_value": 20
+        },
+        {
+          "workflow": "tmp-workflow",
+          "default_value": "randomize"
+        },
+        {
+          "workflow": "wan2_2_5B_ti2v",
+          "default_value": "randomize"
+        }
+      ],
+      "KSampler.cfg": [
+        {
+          "workflow": "generated_complex_workflow",
+          "default_value": 8.0
+        },
+        {
+          "workflow": "tmp-workflow",
+          "default_value": 20
+        },
+        {
+          "workflow": "wan2_2_5B_ti2v",
+          "default_value": 20
+        }
+      ],
+      "KSampler.sampler_name": [
+        {
+          "workflow": "generated_complex_workflow",
+          "default_value": "euler"
+        },
+        {
+          "workflow": "tmp-workflow",
+          "default_value": 8
+        },
+        {
+          "workflow": "wan2_2_5B_ti2v",
+          "default_value": 5
+        }
+      ],
+      "KSampler.scheduler": [
+        {
+          "workflow": "generated_complex_workflow",
+          "default_value": "normal"
+        },
+        {
+          "workflow": "tmp-workflow",
+          "default_value": "euler"
+        },
+        {
+          "workflow": "wan2_2_5B_ti2v",
+          "default_value": "uni_pc"
+        }
+      ],
+      "KSampler.denoise": [
+        {
+          "workflow": "generated_complex_workflow",
+          "default_value": 1.0
+        },
+        {
+          "workflow": "tmp-workflow",
+          "default_value": "normal"
+        },
+        {
+          "workflow": "wan2_2_5B_ti2v",
+          "default_value": "simple"
+        }
+      ],
+      "LatentUpscale.width": [
+        {
+          "workflow": "generated_complex_workflow",
+          "default_value": 1024
+        }
+      ],
+      "LatentUpscale.height": [
+        {
+          "workflow": "generated_complex_workflow",
+          "default_value": 1024
+        }
+      ],
+      "LoraLoaderModelOnly.lora_name": [
+        {
+          "workflow": "task2_workflow_webui",
+          "default_value": "lightx2v_I2V_14B_480p_cfg_step_distill_rank64_bf16.safetensors"
+        }
+      ],
+      "KSamplerAdvanced.steps": [
+        {
+          "workflow": "task2_workflow_webui",
+          "default_value": "randomize"
+        }
+      ],
+      "KSamplerAdvanced.cfg": [
+        {
+          "workflow": "task2_workflow_webui",
+          "default_value": 6
+        }
+      ],
+      "KSamplerAdvanced.sampler_name": [
+        {
+          "workflow": "task2_workflow_webui",
+          "default_value": 1
+        }
+      ],
+      "KSamplerAdvanced.scheduler": [
+        {
+          "workflow": "task2_workflow_webui",
+          "default_value": "euler"
+        }
+      ],
+      "VAELoader.vae_name": [
+        {
+          "workflow": "task2_workflow_webui",
+          "default_value": "wan_2.1_vae.safetensors"
+        },
+        {
+          "workflow": "tmp-workflow",
+          "default_value": "Wan2_1_VAE_bf16-fp8-e5m2.safetensors"
+        },
+        {
+          "workflow": "wan2_2_5B_ti2v",
+          "default_value": "wan2.2_vae.safetensors"
+        }
+      ],
+      "CLIPLoader.clip_name": [
+        {
+          "workflow": "task2_workflow_webui",
+          "default_value": "umt5_xxl_fp8_e4m3fn_scaled.safetensors"
+        },
+        {
+          "workflow": "tmp-workflow",
+          "default_value": "umt5_xxl_fp8_e4m3fn_scaled.safetensors"
+        },
+        {
+          "workflow": "wan2_2_5B_ti2v",
+          "default_value": "umt5_xxl_fp8_e4m3fn_scaled.safetensors"
+        }
+      ],
+      "CLIPVisionLoader.clip_name": [
+        {
+          "workflow": "task2_workflow_webui",
+          "default_value": "clip_vision_h_Comfy-Org.safetensors"
+        }
+      ],
+      "WanImageToVideo.batch_size": [
+        {
+          "workflow": "task2_workflow_webui",
+          "default_value": 832
+        }
+      ],
+      "RIFE VFI.rife_name": [
+        {
+          "workflow": "task2_workflow_webui",
+          "default_value": "rife49.pth"
+        }
+      ],
+      "UNETLoader.unet_name": [
+        {
+          "workflow": "task2_workflow_webui",
+          "default_value": "Wan2.2_Remix_NSFW_i2v_14b_low_lighting_fp8_e4m3fn_v3.0.safetensors"
+        },
+        {
+          "workflow": "tmp-workflow",
+          "default_value": "wan2.2_t2v_high_noise_14B_fp8_scaled.safetensors"
+        },
+        {
+          "workflow": "wan2_2_5B_ti2v",
+          "default_value": "wan2.2_ti2v_5B_fp16.safetensors"
+        }
+      ],
+      "CR Text.text": [
+        {
+          "workflow": "task2_workflow_webui",
+          "default_value": "女孩原地转圈后对着镜头温柔的微笑，用双手比心"
+        }
+      ],
+      "Wan22ImageToVideoLatent.width": [
+        {
+          "workflow": "wan2_2_5B_ti2v",
+          "default_value": 1280
+        }
+      ],
+      "Wan22ImageToVideoLatent.height": [
+        {
+          "workflow": "wan2_2_5B_ti2v",
+          "default_value": 704
+        }
+      ],
+      "Wan22ImageToVideoLatent.batch_size": [
+        {
+          "workflow": "wan2_2_5B_ti2v",
+          "default_value": 1
+        }
+      ]
+    }
+  },
+  "templates": {
+    "api-workflow": {
+      "name": "api-workflow",
+      "structure": {
+        "node_types": [],
+        "data_flow": []
+      },
+      "configurable": {}
+    },
+    "default-workflow": {
+      "name": "default-workflow",
+      "structure": {
+        "node_types": [],
+        "data_flow": []
+      },
+      "configurable": {}
+    },
+    "flux2_api_workflow": {
+      "name": "flux2_api_workflow",
+      "structure": {
+        "node_types": [],
+        "data_flow": []
+      },
+      "configurable": {}
+    },
+    "generated_complex_workflow": {
+      "name": "generated_complex_workflow",
+      "structure": {
+        "node_types": [
+          {
+            "type": "CheckpointLoaderSimple",
+            "category": "loader"
+          },
+          {
+            "type": "EmptyLatentImage",
+            "category": "processor"
+          },
+          {
+            "type": "ControlNetLoader",
+            "category": "loader"
+          },
+          {
+            "type": "LoadImage",
+            "category": "processor"
+          },
+          {
+            "type": "UpscaleModelLoader",
+            "category": "loader"
+          },
+          {
+            "type": "CLIPTextEncode",
+            "category": "encoder"
+          },
+          {
+            "type": "LoraLoader",
+            "category": "loader"
+          },
+          {
+            "type": "ControlNetApplyAdvanced",
+            "category": "processor"
+          },
+          {
+            "type": "KSampler",
+            "category": "sampler"
+          },
+          {
+            "type": "LatentUpscale",
+            "category": "processor"
+          },
+          {
+            "type": "VAEDecode",
+            "category": "decoder"
+          },
+          {
+            "type": "ImageUpscaleWithModel",
+            "category": "processor"
+          },
+          {
+            "type": "SaveImage",
+            "category": "processor"
+          }
+        ],
+        "data_flow": []
+      },
+      "configurable": {
+        "CheckpointLoaderSimple.ckpt_name": {
+          "node_type": "CheckpointLoaderSimple",
+          "param": "ckpt_name",
+          "param_type": "model",
+          "default_value": "sam3.1_multiplex_fp16.safetensors",
+          "input_type": "MODEL",
+          "description": "ckpt_name"
+        },
+        "EmptyLatentImage.width": {
+          "node_type": "EmptyLatentImage",
+          "param": "width",
+          "param_type": "resolution",
+          "default_value": 512,
+          "input_type": "INT",
+          "description": "width"
+        },
+        "EmptyLatentImage.height": {
+          "node_type": "EmptyLatentImage",
+          "param": "height",
+          "param_type": "resolution",
+          "default_value": 512,
+          "input_type": "INT",
+          "description": "height"
+        },
+        "EmptyLatentImage.batch_size": {
+          "node_type": "EmptyLatentImage",
+          "param": "batch_size",
+          "param_type": "resolution",
+          "default_value": 1,
+          "input_type": "INT",
+          "description": "batch_size"
+        },
+        "ControlNetLoader.control_net_name": {
+          "node_type": "ControlNetLoader",
+          "param": "control_net_name",
+          "param_type": "model",
+          "default_value": "control_v11p_sd15_openpose.pth",
+          "input_type": "COMBO",
+          "description": "control_net_name"
+        },
+        "UpscaleModelLoader.model_name": {
+          "node_type": "UpscaleModelLoader",
+          "param": "model_name",
+          "param_type": "model",
+          "default_value": "2x_StarSample_V2.0.safetensors",
+          "input_type": "COMBO",
+          "description": "model_name"
+        },
+        "CLIPTextEncode.text": {
+          "node_type": "CLIPTextEncode",
+          "param": "text",
+          "param_type": "prompt",
+          "default_value": "生成一个文生图工作流，使用ControlNet控制姿势，添加LoRA风格，最后放大2倍",
+          "input_type": "STRING",
+          "description": "text"
+        },
+        "LoraLoader.lora_name": {
+          "node_type": "LoraLoader",
+          "param": "lora_name",
+          "param_type": "model",
+          "default_value": "FLUX-小红书极致真实V2.safetensors",
+          "input_type": "COMBO",
+          "description": "lora_name"
+        },
+        "KSampler.seed": {
+          "node_type": "KSampler",
+          "param": "seed",
+          "param_type": "sampler",
+          "default_value": 2387437219,
+          "input_type": "INT",
+          "description": "seed"
+        },
+        "KSampler.steps": {
+          "node_type": "KSampler",
+          "param": "steps",
+          "param_type": "sampler",
+          "default_value": 20,
+          "input_type": "INT",
+          "description": "steps"
+        },
+        "KSampler.cfg": {
+          "node_type": "KSampler",
+          "param": "cfg",
+          "param_type": "sampler",
+          "default_value": 8.0,
+          "input_type": "FLOAT",
+          "description": "cfg"
+        },
+        "KSampler.sampler_name": {
+          "node_type": "KSampler",
+          "param": "sampler_name",
+          "param_type": "model",
+          "default_value": "euler",
+          "input_type": "STRING",
+          "description": "sampler_name"
+        },
+        "KSampler.scheduler": {
+          "node_type": "KSampler",
+          "param": "scheduler",
+          "param_type": "sampler_config",
+          "default_value": "normal",
+          "input_type": "STRING",
+          "description": "scheduler"
+        },
+        "KSampler.denoise": {
+          "node_type": "KSampler",
+          "param": "denoise",
+          "param_type": "sampler",
+          "default_value": 1.0,
+          "input_type": "FLOAT",
+          "description": "denoise"
+        },
+        "LatentUpscale.width": {
+          "node_type": "LatentUpscale",
+          "param": "width",
+          "param_type": "resolution",
+          "default_value": 1024,
+          "input_type": "INT",
+          "description": "width"
+        },
+        "LatentUpscale.height": {
+          "node_type": "LatentUpscale",
+          "param": "height",
+          "param_type": "resolution",
+          "default_value": 1024,
+          "input_type": "INT",
+          "description": "height"
+        }
+      }
+    },
+    "object_info": {
+      "name": "object_info",
+      "structure": {
+        "node_types": [],
+        "data_flow": []
+      },
+      "configurable": {}
+    },
+    "task1_api_workflow": {
+      "name": "task1_api_workflow",
+      "structure": {
+        "node_types": [],
+        "data_flow": []
+      },
+      "configurable": {}
+    },
+    "task1_final": {
+      "name": "task1_final",
+      "structure": {
+        "node_types": [],
+        "data_flow": []
+      },
+      "configurable": {}
+    },
+    "task1_flux_workflow": {
+      "name": "task1_flux_workflow",
+      "structure": {
+        "node_types": [],
+        "data_flow": []
+      },
+      "configurable": {}
+    },
+    "task1_img_workflow": {
+      "name": "task1_img_workflow",
+      "structure": {
+        "node_types": [],
+        "data_flow": []
+      },
+      "configurable": {}
+    },
+    "task1_v2_final": {
+      "name": "task1_v2_final",
+      "structure": {
+        "node_types": [],
+        "data_flow": []
+      },
+      "configurable": {}
+    },
+    "task1_v3_final": {
+      "name": "task1_v3_final",
+      "structure": {
+        "node_types": [],
+        "data_flow": []
+      },
+      "configurable": {}
+    },
+    "task1_wan22_img_workflow": {
+      "name": "task1_wan22_img_workflow",
+      "structure": {
+        "node_types": [],
+        "data_flow": []
+      },
+      "configurable": {}
+    },
+    "task1_wan22_native": {
+      "name": "task1_wan22_native",
+      "structure": {
+        "node_types": [],
+        "data_flow": []
+      },
+      "configurable": {}
+    },
+    "task1_wan22_workflow": {
+      "name": "task1_wan22_workflow",
+      "structure": {
+        "node_types": [],
+        "data_flow": []
+      },
+      "configurable": {}
+    },
+    "task2_api": {
+      "name": "task2_api",
+      "structure": {
+        "node_types": [],
+        "data_flow": []
+      },
+      "configurable": {}
+    },
+    "task2_fast": {
+      "name": "task2_fast",
+      "structure": {
+        "node_types": [],
+        "data_flow": []
+      },
+      "configurable": {}
+    },
+    "task2_final": {
+      "name": "task2_final",
+      "structure": {
+        "node_types": [],
+        "data_flow": []
+      },
+      "configurable": {}
+    },
+    "task2_i2v_480x660_highquality": {
+      "name": "task2_i2v_480x660_highquality",
+      "structure": {
+        "node_types": [],
+        "data_flow": []
+      },
+      "configurable": {}
+    },
+    "task2_i2v_480x660_video": {
+      "name": "task2_i2v_480x660_video",
+      "structure": {
+        "node_types": [],
+        "data_flow": []
+      },
+      "configurable": {}
+    },
+    "task2_input_image": {
+      "name": "task2_input_image",
+      "structure": {
+        "node_types": [],
+        "data_flow": []
+      },
+      "configurable": {}
+    },
+    "task2_light": {
+      "name": "task2_light",
+      "structure": {
+        "node_types": [],
+        "data_flow": []
+      },
+      "configurable": {}
+    },
+    "task2_optimized": {
+      "name": "task2_optimized",
+      "structure": {
+        "node_types": [],
+        "data_flow": []
+      },
+      "configurable": {}
+    },
+    "task2_t2v_final": {
+      "name": "task2_t2v_final",
+      "structure": {
+        "node_types": [],
+        "data_flow": []
+      },
+      "configurable": {}
+    },
+    "task2_v2_final": {
+      "name": "task2_v2_final",
+      "structure": {
+        "node_types": [],
+        "data_flow": []
+      },
+      "configurable": {}
+    },
+    "task2_v3_final": {
+      "name": "task2_v3_final",
+      "structure": {
+        "node_types": [],
+        "data_flow": []
+      },
+      "configurable": {}
+    },
+    "task2_v4_final": {
+      "name": "task2_v4_final",
+      "structure": {
+        "node_types": [],
+        "data_flow": []
+      },
+      "configurable": {}
+    },
+    "task2_workflow_webui": {
+      "name": "task2_workflow_webui",
+      "structure": {
+        "node_types": [
+          {
+            "type": "VAELoader",
+            "category": "loader"
+          },
+          {
+            "type": "CLIPLoader",
+            "category": "loader"
+          },
+          {
+            "type": "CLIPVisionLoader",
+            "category": "loader"
+          },
+          {
+            "type": "Wan22PromptSelector",
+            "category": "processor"
+          },
+          {
+            "type": "INTConstant",
+            "category": "processor"
+          },
+          {
+            "type": "UNETLoader",
+            "category": "loader"
+          },
+          {
+            "type": "CR Text",
+            "category": "processor"
+          },
+          {
+            "type": "LoadImage",
+            "category": "processor"
+          },
+          {
+            "type": "CLIPTextEncode",
+            "category": "encoder"
+          },
+          {
+            "type": "LoraLoaderModelOnly",
+            "category": "loader"
+          },
+          {
+            "type": "Text Concatenate",
+            "category": "processor"
+          },
+          {
+            "type": "SimpleMath+",
+            "category": "processor"
+          },
+          {
+            "type": "LayerUtility: ImageScaleByAspectRatio V2",
+            "category": "processor"
+          },
+          {
+            "type": "CLIPVisionEncode",
+            "category": "encoder"
+          },
+          {
+            "type": "PathchSageAttentionKJ",
+            "category": "processor"
+          },
+          {
+            "type": "WanImageToVideo",
+            "category": "processor"
+          },
+          {
+            "type": "ModelPatchTorchSettings",
+            "category": "processor"
+          },
+          {
+            "type": "ModelSamplingSD3",
+            "category": "processor"
+          },
+          {
+            "type": "KSamplerAdvanced",
+            "category": "sampler"
+          },
+          {
+            "type": "VAEDecode",
+            "category": "decoder"
+          },
+          {
+            "type": "VHS_VideoCombine",
+            "category": "processor"
+          },
+          {
+            "type": "ImageScaleBy",
+            "category": "processor"
+          },
+          {
+            "type": "easy cleanGpuUsed",
+            "category": "processor"
+          },
+          {
+            "type": "RIFE VFI",
+            "category": "processor"
+          }
+        ],
+        "data_flow": []
+      },
+      "configurable": {
+        "LoraLoaderModelOnly.lora_name": {
+          "node_type": "LoraLoaderModelOnly",
+          "param": "lora_name",
+          "param_type": "model",
+          "default_value": "lightx2v_I2V_14B_480p_cfg_step_distill_rank64_bf16.safetensors",
+          "input_type": "COMBO",
+          "description": "LoRA名称"
+        },
+        "KSamplerAdvanced.steps": {
+          "node_type": "KSamplerAdvanced",
+          "param": "steps",
+          "param_type": "sampler",
+          "default_value": "randomize",
+          "input_type": "INT",
+          "description": "步数"
+        },
+        "KSamplerAdvanced.cfg": {
+          "node_type": "KSamplerAdvanced",
+          "param": "cfg",
+          "param_type": "sampler",
+          "default_value": 6,
+          "input_type": "FLOAT",
+          "description": "CFG"
+        },
+        "KSamplerAdvanced.sampler_name": {
+          "node_type": "KSamplerAdvanced",
+          "param": "sampler_name",
+          "param_type": "model",
+          "default_value": 1,
+          "input_type": "COMBO",
+          "description": "采样器"
+        },
+        "KSamplerAdvanced.scheduler": {
+          "node_type": "KSamplerAdvanced",
+          "param": "scheduler",
+          "param_type": "sampler_config",
+          "default_value": "euler",
+          "input_type": "COMBO",
+          "description": "调度器"
+        },
+        "VAELoader.vae_name": {
+          "node_type": "VAELoader",
+          "param": "vae_name",
+          "param_type": "model",
+          "default_value": "wan_2.1_vae.safetensors",
+          "input_type": "COMBO",
+          "description": "vae名称"
+        },
+        "CLIPLoader.clip_name": {
+          "node_type": "CLIPLoader",
+          "param": "clip_name",
+          "param_type": "model",
+          "default_value": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+          "input_type": "COMBO",
+          "description": "CLIP名称"
+        },
+        "CLIPTextEncode.text": {
+          "node_type": "CLIPTextEncode",
+          "param": "text",
+          "param_type": "prompt",
+          "default_value": "未来城市夜景，霓虹灯光闪烁，车流穿梭，镜头缓慢推进，电影质感",
+          "input_type": "STRING",
+          "description": "文本"
+        },
+        "CLIPVisionLoader.clip_name": {
+          "node_type": "CLIPVisionLoader",
+          "param": "clip_name",
+          "param_type": "model",
+          "default_value": "clip_vision_h_Comfy-Org.safetensors",
+          "input_type": "COMBO",
+          "description": "CLIP名称"
+        },
+        "WanImageToVideo.batch_size": {
+          "node_type": "WanImageToVideo",
+          "param": "batch_size",
+          "param_type": "resolution",
+          "default_value": 832,
+          "input_type": "INT",
+          "description": "批量大小"
+        },
+        "RIFE VFI.rife_name": {
+          "node_type": "RIFE VFI",
+          "param": "rife_name",
+          "param_type": "model",
+          "default_value": "rife49.pth",
+          "input_type": "COMBO",
+          "description": "rife_name"
+        },
+        "UNETLoader.unet_name": {
+          "node_type": "UNETLoader",
+          "param": "unet_name",
+          "param_type": "model",
+          "default_value": "Wan2.2_Remix_NSFW_i2v_14b_low_lighting_fp8_e4m3fn_v3.0.safetensors",
+          "input_type": "COMBO",
+          "description": "UNET名称"
+        },
+        "CR Text.text": {
+          "node_type": "CR Text",
+          "param": "text",
+          "param_type": "prompt",
+          "default_value": "女孩原地转圈后对着镜头温柔的微笑，用双手比心",
+          "input_type": "STRING",
+          "description": "文本"
+        }
+      }
+    },
+    "task3_api_raw": {
+      "name": "task3_api_raw",
+      "structure": {
+        "node_types": [],
+        "data_flow": []
+      },
+      "configurable": {}
+    },
+    "task3_api_workflow": {
+      "name": "task3_api_workflow",
+      "structure": {
+        "node_types": [],
+        "data_flow": []
+      },
+      "configurable": {}
+    },
+    "task3_final": {
+      "name": "task3_final",
+      "structure": {
+        "node_types": [],
+        "data_flow": []
+      },
+      "configurable": {}
+    },
+    "task3_t2v_480x960": {
+      "name": "task3_t2v_480x960",
+      "structure": {
+        "node_types": [],
+        "data_flow": []
+      },
+      "configurable": {}
+    },
+    "task3_t2v_720x1440": {
+      "name": "task3_t2v_720x1440",
+      "structure": {
+        "node_types": [],
+        "data_flow": []
+      },
+      "configurable": {}
+    },
+    "task3_v2_final": {
+      "name": "task3_v2_final",
+      "structure": {
+        "node_types": [],
+        "data_flow": []
+      },
+      "configurable": {}
+    },
+    "task3_v3_final": {
+      "name": "task3_v3_final",
+      "structure": {
+        "node_types": [],
+        "data_flow": []
+      },
+      "configurable": {}
+    },
+    "task3_v4_final": {
+      "name": "task3_v4_final",
+      "structure": {
+        "node_types": [],
+        "data_flow": []
+      },
+      "configurable": {}
+    },
+    "tmp-workflow": {
+      "name": "tmp-workflow",
+      "structure": {
+        "node_types": [
+          {
+            "type": "EmptyLatentImage",
+            "category": "processor"
+          },
+          {
+            "type": "UNETLoader",
+            "category": "loader"
+          },
+          {
+            "type": "CLIPLoader",
+            "category": "loader"
+          },
+          {
+            "type": "VAELoader",
+            "category": "loader"
+          },
+          {
+            "type": "UpscaleModelLoader",
+            "category": "loader"
+          },
+          {
+            "type": "CLIPTextEncode",
+            "category": "encoder"
+          },
+          {
+            "type": "KSampler",
+            "category": "sampler"
+          },
+          {
+            "type": "VAEDecode",
+            "category": "decoder"
+          },
+          {
+            "type": "ImageUpscaleWithModel",
+            "category": "processor"
+          },
+          {
+            "type": "SaveImage",
+            "category": "processor"
+          }
+        ],
+        "data_flow": []
+      },
+      "configurable": {
+        "CLIPTextEncode.text": {
+          "node_type": "CLIPTextEncode",
+          "param": "text",
+          "param_type": "prompt",
+          "default_value": "beautiful scenery nature glass bottle landscape, , purple galaxy bottle,",
+          "input_type": "STRING",
+          "description": "文本"
+        },
+        "KSampler.seed": {
+          "node_type": "KSampler",
+          "param": "seed",
+          "param_type": "sampler",
+          "default_value": 81028957092542,
+          "input_type": "INT",
+          "description": "种子"
+        },
+        "KSampler.steps": {
+          "node_type": "KSampler",
+          "param": "steps",
+          "param_type": "sampler",
+          "default_value": "randomize",
+          "input_type": "INT",
+          "description": "步数"
+        },
+        "KSampler.cfg": {
+          "node_type": "KSampler",
+          "param": "cfg",
+          "param_type": "sampler",
+          "default_value": 20,
+          "input_type": "FLOAT",
+          "description": "cfg"
+        },
+        "KSampler.sampler_name": {
+          "node_type": "KSampler",
+          "param": "sampler_name",
+          "param_type": "model",
+          "default_value": 8,
+          "input_type": "COMBO",
+          "description": "采样器名称"
+        },
+        "KSampler.scheduler": {
+          "node_type": "KSampler",
+          "param": "scheduler",
+          "param_type": "sampler_config",
+          "default_value": "euler",
+          "input_type": "COMBO",
+          "description": "调度器"
+        },
+        "KSampler.denoise": {
+          "node_type": "KSampler",
+          "param": "denoise",
+          "param_type": "sampler",
+          "default_value": "normal",
+          "input_type": "FLOAT",
+          "description": "降噪"
+        },
+        "EmptyLatentImage.width": {
+          "node_type": "EmptyLatentImage",
+          "param": "width",
+          "param_type": "resolution",
+          "default_value": 512,
+          "input_type": "INT",
+          "description": "宽度"
+        },
+        "EmptyLatentImage.height": {
+          "node_type": "EmptyLatentImage",
+          "param": "height",
+          "param_type": "resolution",
+          "default_value": 512,
+          "input_type": "INT",
+          "description": "高度"
+        },
+        "EmptyLatentImage.batch_size": {
+          "node_type": "EmptyLatentImage",
+          "param": "batch_size",
+          "param_type": "resolution",
+          "default_value": 1,
+          "input_type": "INT",
+          "description": "批量大小"
+        },
+        "UNETLoader.unet_name": {
+          "node_type": "UNETLoader",
+          "param": "unet_name",
+          "param_type": "model",
+          "default_value": "wan2.2_t2v_high_noise_14B_fp8_scaled.safetensors",
+          "input_type": "COMBO",
+          "description": "UNet名称"
+        },
+        "CLIPLoader.clip_name": {
+          "node_type": "CLIPLoader",
+          "param": "clip_name",
+          "param_type": "model",
+          "default_value": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+          "input_type": "COMBO",
+          "description": "CLIP名称"
+        },
+        "VAELoader.vae_name": {
+          "node_type": "VAELoader",
+          "param": "vae_name",
+          "param_type": "model",
+          "default_value": "Wan2_1_VAE_bf16-fp8-e5m2.safetensors",
+          "input_type": "COMBO",
+          "description": "vae名称"
+        },
+        "UpscaleModelLoader.model_name": {
+          "node_type": "UpscaleModelLoader",
+          "param": "model_name",
+          "param_type": "model",
+          "default_value": "2x_StarSample_V2.0.safetensors",
+          "input_type": "COMBO",
+          "description": "模型名称"
+        }
+      }
+    },
+    "wan22_i2v_workflow": {
+      "name": "wan22_i2v_workflow",
+      "structure": {
+        "node_types": [],
+        "data_flow": []
+      },
+      "configurable": {}
+    },
+    "wan22_simple_t2i": {
+      "name": "wan22_simple_t2i",
+      "structure": {
+        "node_types": [],
+        "data_flow": []
+      },
+      "configurable": {}
+    },
+    "wan22_t2v_workflow": {
+      "name": "wan22_t2v_workflow",
+      "structure": {
+        "node_types": [],
+        "data_flow": []
+      },
+      "configurable": {}
+    },
+    "wan22_txt2vid_analysis": {
+      "name": "wan22_txt2vid_analysis",
+      "structure": {
+        "node_types": [
+          {
+            "type": "",
+            "category": "processor"
+          }
+        ],
+        "data_flow": []
+      },
+      "configurable": {}
+    },
+    "wan2_2_5B_ti2v": {
+      "name": "wan2_2_5B_ti2v",
+      "structure": {
+        "node_types": [
+          {
+            "type": "CLIPLoader",
+            "category": "loader"
+          },
+          {
+            "type": "VAELoader",
+            "category": "loader"
+          },
+          {
+            "type": "MarkdownNote",
+            "category": "processor"
+          },
+          {
+            "type": "UNETLoader",
+            "category": "loader"
+          },
+          {
+            "type": "LoadImage",
+            "category": "processor"
+          },
+          {
+            "type": "CLIPTextEncode",
+            "category": "encoder"
+          },
+          {
+            "type": "ModelSamplingSD3",
+            "category": "processor"
+          },
+          {
+            "type": "Wan22ImageToVideoLatent",
+            "category": "processor"
+          },
+          {
+            "type": "KSampler",
+            "category": "sampler"
+          },
+          {
+            "type": "VAEDecode",
+            "category": "decoder"
+          },
+          {
+            "type": "CreateVideo",
+            "category": "processor"
+          },
+          {
+            "type": "SaveAnimatedWEBP",
+            "category": "processor"
+          },
+          {
+            "type": "SaveVideo",
+            "category": "processor"
+          }
+        ],
+        "data_flow": []
+      },
+      "configurable": {
+        "CLIPLoader.clip_name": {
+          "node_type": "CLIPLoader",
+          "param": "clip_name",
+          "param_type": "model",
+          "default_value": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+          "input_type": "COMBO",
+          "description": "clip_name"
+        },
+        "VAELoader.vae_name": {
+          "node_type": "VAELoader",
+          "param": "vae_name",
+          "param_type": "model",
+          "default_value": "wan2.2_vae.safetensors",
+          "input_type": "COMBO",
+          "description": "vae_name"
+        },
+        "CLIPTextEncode.text": {
+          "node_type": "CLIPTextEncode",
+          "param": "text",
+          "param_type": "prompt",
+          "default_value": "色调艳丽，过曝，静态，细节模糊不清，字幕，风格，作品，画作，画面，静止，整体发灰，最差质量，低质量，JPEG压缩残留，丑陋的，残缺的，多余的手指，画得不好的手部，画得不好的脸部，畸形的，毁容的，形态畸形的肢体，手指融合，静止不动的画面，杂乱的背景，三条腿，背景人很多，倒着走",
+          "input_type": "STRING",
+          "description": "text"
+        },
+        "KSampler.seed": {
+          "node_type": "KSampler",
+          "param": "seed",
+          "param_type": "sampler",
+          "default_value": 165117770567815,
+          "input_type": "INT",
+          "description": "seed"
+        },
+        "KSampler.steps": {
+          "node_type": "KSampler",
+          "param": "steps",
+          "param_type": "sampler",
+          "default_value": "randomize",
+          "input_type": "INT",
+          "description": "steps"
+        },
+        "KSampler.cfg": {
+          "node_type": "KSampler",
+          "param": "cfg",
+          "param_type": "sampler",
+          "default_value": 20,
+          "input_type": "FLOAT",
+          "description": "cfg"
+        },
+        "KSampler.sampler_name": {
+          "node_type": "KSampler",
+          "param": "sampler_name",
+          "param_type": "model",
+          "default_value": 5,
+          "input_type": "COMBO",
+          "description": "sampler_name"
+        },
+        "KSampler.scheduler": {
+          "node_type": "KSampler",
+          "param": "scheduler",
+          "param_type": "sampler_config",
+          "default_value": "uni_pc",
+          "input_type": "COMBO",
+          "description": "scheduler"
+        },
+        "KSampler.denoise": {
+          "node_type": "KSampler",
+          "param": "denoise",
+          "param_type": "sampler",
+          "default_value": "simple",
+          "input_type": "FLOAT",
+          "description": "denoise"
+        },
+        "Wan22ImageToVideoLatent.width": {
+          "node_type": "Wan22ImageToVideoLatent",
+          "param": "width",
+          "param_type": "resolution",
+          "default_value": 1280,
+          "input_type": "INT",
+          "description": "width"
+        },
+        "Wan22ImageToVideoLatent.height": {
+          "node_type": "Wan22ImageToVideoLatent",
+          "param": "height",
+          "param_type": "resolution",
+          "default_value": 704,
+          "input_type": "INT",
+          "description": "height"
+        },
+        "Wan22ImageToVideoLatent.batch_size": {
+          "node_type": "Wan22ImageToVideoLatent",
+          "param": "batch_size",
+          "param_type": "resolution",
+          "default_value": 1,
+          "input_type": "INT",
+          "description": "batch_size"
+        },
+        "UNETLoader.unet_name": {
+          "node_type": "UNETLoader",
+          "param": "unet_name",
+          "param_type": "model",
+          "default_value": "wan2.2_ti2v_5B_fp16.safetensors",
+          "input_type": "COMBO",
+          "description": "unet_name"
+        }
+      }
+    },
+    "workflow_analysis": {
+      "name": "workflow_analysis",
+      "structure": {
+        "node_types": [
+          {
+            "type": "EmptyLatentImage",
+            "category": "processor"
+          },
+          {
+            "type": "UNETLoader",
+            "category": "loader"
+          },
+          {
+            "type": "CLIPLoader",
+            "category": "loader"
+          },
+          {
+            "type": "VAELoader",
+            "category": "loader"
+          },
+          {
+            "type": "UpscaleModelLoader",
+            "category": "loader"
+          },
+          {
+            "type": "CLIPTextEncode",
+            "category": "encoder"
+          },
+          {
+            "type": "KSampler",
+            "category": "sampler"
+          },
+          {
+            "type": "VAEDecode",
+            "category": "decoder"
+          },
+          {
+            "type": "ImageUpscaleWithModel",
+            "category": "processor"
+          },
+          {
+            "type": "SaveImage",
+            "category": "processor"
+          }
+        ],
+        "data_flow": []
+      },
+      "configurable": {}
+    },
+    "workflow_library": {
+      "name": "workflow_library",
+      "structure": {
+        "node_types": [],
+        "data_flow": []
+      },
+      "configurable": {}
+    }
+  },
+  "component_library": {
+    "loaders": {
+      "CheckpointLoaderSimple": {
+        "count": 1,
+        "workflows": [
+          "generated_complex_workflow"
+        ],
+        "inputs": [],
+        "outputs": []
+      },
+      "ControlNetLoader": {
+        "count": 1,
+        "workflows": [
+          "generated_complex_workflow"
+        ],
+        "inputs": [],
+        "outputs": []
+      },
+      "LoadImage": {
+        "count": 3,
+        "workflows": [
+          "generated_complex_workflow",
+          "task2_workflow_webui",
+          "wan2_2_5B_ti2v"
+        ],
+        "inputs": [],
+        "outputs": []
+      },
+      "UpscaleModelLoader": {
+        "count": 4,
+        "workflows": [
+          "generated_complex_workflow",
+          "tmp-workflow",
+          "workflow_analysis"
+        ],
+        "inputs": [],
+        "outputs": []
+      },
+      "LoraLoader": {
+        "count": 1,
+        "workflows": [
+          "generated_complex_workflow"
+        ],
+        "inputs": [],
+        "outputs": []
+      },
+      "LoraLoaderModelOnly": {
+        "count": 4,
+        "workflows": [
+          "task2_workflow_webui"
+        ],
+        "inputs": [],
+        "outputs": []
+      },
+      "VAELoader": {
+        "count": 4,
+        "workflows": [
+          "task2_workflow_webui",
+          "tmp-workflow",
+          "wan2_2_5B_ti2v",
+          "workflow_analysis"
+        ],
+        "inputs": [],
+        "outputs": []
+      },
+      "CLIPLoader": {
+        "count": 4,
+        "workflows": [
+          "task2_workflow_webui",
+          "tmp-workflow",
+          "wan2_2_5B_ti2v",
+          "workflow_analysis"
+        ],
+        "inputs": [],
+        "outputs": []
+      },
+      "CLIPVisionLoader": {
+        "count": 1,
+        "workflows": [
+          "task2_workflow_webui"
+        ],
+        "inputs": [],
+        "outputs": []
+      },
+      "UNETLoader": {
+        "count": 5,
+        "workflows": [
+          "task2_workflow_webui",
+          "tmp-workflow",
+          "wan2_2_5B_ti2v",
+          "workflow_analysis"
+        ],
+        "inputs": [],
+        "outputs": []
+      }
+    },
+    "samplers": {
+      "KSampler": {
+        "count": 6,
+        "workflows": [
+          "generated_complex_workflow",
+          "tmp-workflow",
+          "wan2_2_5B_ti2v",
+          "workflow_analysis"
+        ],
+        "inputs": [],
+        "outputs": []
+      },
+      "KSamplerAdvanced": {
+        "count": 2,
+        "workflows": [
+          "task2_workflow_webui"
+        ],
+        "inputs": [],
+        "outputs": []
+      }
+    },
+    "encoders": {
+      "CLIPTextEncode": {
+        "count": 10,
+        "workflows": [
+          "generated_complex_workflow",
+          "task2_workflow_webui",
+          "tmp-workflow",
+          "wan2_2_5B_ti2v",
+          "workflow_analysis"
+        ],
+        "inputs": [],
+        "outputs": []
+      },
+      "CLIPVisionEncode": {
+        "count": 1,
+        "workflows": [
+          "task2_workflow_webui"
+        ],
+        "inputs": [],
+        "outputs": []
+      },
+      "Text Concatenate": {
+        "count": 1,
+        "workflows": [
+          "task2_workflow_webui"
+        ],
+        "inputs": [],
+        "outputs": []
+      },
+      "CR Text": {
+        "count": 1,
+        "workflows": [
+          "task2_workflow_webui"
+        ],
+        "inputs": [],
+        "outputs": []
+      }
+    },
+    "decoders": {
+      "VAEDecode": {
+        "count": 5,
+        "workflows": [
+          "generated_complex_workflow",
+          "task2_workflow_webui",
+          "tmp-workflow",
+          "wan2_2_5B_ti2v",
+          "workflow_analysis"
+        ],
+        "inputs": [],
+        "outputs": []
+      }
+    },
+    "processors": {
+      "ControlNetApplyAdvanced": {
+        "count": 1,
+        "workflows": [
+          "generated_complex_workflow"
+        ],
+        "inputs": [],
+        "outputs": []
+      },
+      "VHS_VideoCombine": {
+        "count": 2,
+        "workflows": [
+          "task2_workflow_webui"
+        ],
+        "inputs": [],
+        "outputs": []
+      }
+    },
+    "outputs": {
+      "SaveImage": {
+        "count": 3,
+        "workflows": [
+          "generated_complex_workflow",
+          "tmp-workflow",
+          "workflow_analysis"
+        ],
+        "inputs": [],
+        "outputs": []
+      },
+      "SaveAnimatedWEBP": {
+        "count": 1,
+        "workflows": [
+          "wan2_2_5B_ti2v"
+        ],
+        "inputs": [],
+        "outputs": []
+      },
+      "SaveVideo": {
+        "count": 1,
+        "workflows": [
+          "wan2_2_5B_ti2v"
+        ],
+        "inputs": [],
+        "outputs": []
+      }
+    },
+    "other": {
+      "EmptyLatentImage": {
+        "count": 3,
+        "workflows": [
+          "generated_complex_workflow",
+          "tmp-workflow",
+          "workflow_analysis"
+        ],
+        "inputs": [],
+        "outputs": []
+      },
+      "LatentUpscale": {
+        "count": 1,
+        "workflows": [
+          "generated_complex_workflow"
+        ],
+        "inputs": [],
+        "outputs": []
+      },
+      "ImageUpscaleWithModel": {
+        "count": 4,
+        "workflows": [
+          "generated_complex_workflow",
+          "tmp-workflow",
+          "workflow_analysis"
+        ],
+        "inputs": [],
+        "outputs": []
+      },
+      "ModelSamplingSD3": {
+        "count": 3,
+        "workflows": [
+          "task2_workflow_webui",
+          "wan2_2_5B_ti2v"
+        ],
+        "inputs": [],
+        "outputs": []
+      },
+      "PathchSageAttentionKJ": {
+        "count": 2,
+        "workflows": [
+          "task2_workflow_webui"
+        ],
+        "inputs": [],
+        "outputs": []
+      },
+      "ModelPatchTorchSettings": {
+        "count": 2,
+        "workflows": [
+          "task2_workflow_webui"
+        ],
+        "inputs": [],
+        "outputs": []
+      },
+      "WanImageToVideo": {
+        "count": 1,
+        "workflows": [
+          "task2_workflow_webui"
+        ],
+        "inputs": [],
+        "outputs": []
+      },
+      "Wan22PromptSelector": {
+        "count": 1,
+        "workflows": [
+          "task2_workflow_webui"
+        ],
+        "inputs": [],
+        "outputs": []
+      },
+      "LayerUtility: ImageScaleByAspectRatio V2": {
+        "count": 1,
+        "workflows": [
+          "task2_workflow_webui"
+        ],
+        "inputs": [],
+        "outputs": []
+      },
+      "SimpleMath+": {
+        "count": 1,
+        "workflows": [
+          "task2_workflow_webui"
+        ],
+        "inputs": [],
+        "outputs": []
+      },
+      "INTConstant": {
+        "count": 2,
+        "workflows": [
+          "task2_workflow_webui"
+        ],
+        "inputs": [],
+        "outputs": []
+      },
+      "ImageScaleBy": {
+        "count": 1,
+        "workflows": [
+          "task2_workflow_webui"
+        ],
+        "inputs": [],
+        "outputs": []
+      },
+      "easy cleanGpuUsed": {
+        "count": 1,
+        "workflows": [
+          "task2_workflow_webui"
+        ],
+        "inputs": [],
+        "outputs": []
+      },
+      "RIFE VFI": {
+        "count": 1,
+        "workflows": [
+          "task2_workflow_webui"
+        ],
+        "inputs": [],
+        "outputs": []
+      },
+      "": {
+        "count": 30,
+        "workflows": [
+          "wan22_txt2vid_analysis"
+        ],
+        "inputs": [],
+        "outputs": []
+      },
+      "MarkdownNote": {
+        "count": 1,
+        "workflows": [
+          "wan2_2_5B_ti2v"
+        ],
+        "inputs": [],
+        "outputs": []
+      },
+      "CreateVideo": {
+        "count": 1,
+        "workflows": [
+          "wan2_2_5B_ti2v"
+        ],
+        "inputs": [],
+        "outputs": []
+      },
+      "Wan22ImageToVideoLatent": {
+        "count": 1,
+        "workflows": [
+          "wan2_2_5B_ti2v"
+        ],
+        "inputs": [],
+        "outputs": []
+      }
+    }
+  }
+}

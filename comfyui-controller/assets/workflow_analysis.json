@@ -1,0 +1,923 @@
+{
+  "workflow_info": {
+    "id": "895e8e83-f428-43cc-883c-599ff180596f",
+    "revision": 0,
+    "last_node_id": 17,
+    "last_link_id": 18,
+    "total_nodes": 11,
+    "total_links": 11,
+    "version": 0.4
+  },
+  "nodes": [
+    {
+      "id": 6,
+      "type": "CLIPTextEncode",
+      "is_core": true,
+      "position": [
+        415,
+        186
+      ],
+      "size": [
+        422.84503173828125,
+        164.31304931640625
+      ],
+      "order": 5,
+      "widgets_values": [
+        "beautiful scenery nature glass bottle landscape, , purple galaxy bottle,"
+      ],
+      "widget_inputs": [
+        {
+          "name": "text",
+          "localized_name": "文本",
+          "type": "STRING",
+          "widget_name": "text"
+        }
+      ],
+      "connected_inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link_id": 11
+        }
+      ],
+      "output_connections": [
+        {
+          "name": "CONDITIONING",
+          "localized_name": "条件",
+          "type": "CONDITIONING",
+          "link_ids": [
+            4
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.21.1",
+        "Node name for S&R": "CLIPTextEncode"
+      }
+    },
+    {
+      "id": 3,
+      "type": "KSampler",
+      "is_core": true,
+      "position": [
+        1212.1109441522678,
+        512.5046493309912
+      ],
+      "size": [
+        315,
+        474
+      ],
+      "order": 7,
+      "widgets_values": [
+        81028957092542,
+        "randomize",
+        20,
+        8,
+        "euler",
+        "normal",
+        1
+      ],
+      "widget_inputs": [
+        {
+          "name": "seed",
+          "localized_name": "种子",
+          "type": "INT",
+          "widget_name": "seed"
+        },
+        {
+          "name": "steps",
+          "localized_name": "步数",
+          "type": "INT",
+          "widget_name": "steps"
+        },
+        {
+          "name": "cfg",
+          "localized_name": "cfg",
+          "type": "FLOAT",
+          "widget_name": "cfg"
+        },
+        {
+          "name": "sampler_name",
+          "localized_name": "采样器名称",
+          "type": "COMBO",
+          "widget_name": "sampler_name"
+        },
+        {
+          "name": "scheduler",
+          "localized_name": "调度器",
+          "type": "COMBO",
+          "widget_name": "scheduler"
+        },
+        {
+          "name": "denoise",
+          "localized_name": "降噪",
+          "type": "FLOAT",
+          "widget_name": "denoise"
+        }
+      ],
+      "connected_inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link_id": 13
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link_id": 4
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link_id": 6
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link_id": 2
+        }
+      ],
+      "output_connections": [
+        {
+          "name": "LATENT",
+          "localized_name": "Latent",
+          "type": "LATENT",
+          "link_ids": [
+            7
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.21.1",
+        "Node name for S&R": "KSampler"
+      }
+    },
+    {
+      "id": 5,
+      "type": "EmptyLatentImage",
+      "is_core": false,
+      "position": [
+        755.2156404561988,
+        842.4112244637488
+      ],
+      "size": [
+        315,
+        106
+      ],
+      "order": 0,
+      "widgets_values": [
+        512,
+        512,
+        1
+      ],
+      "widget_inputs": [
+        {
+          "name": "width",
+          "localized_name": "宽度",
+          "type": "INT",
+          "widget_name": "width"
+        },
+        {
+          "name": "height",
+          "localized_name": "高度",
+          "type": "INT",
+          "widget_name": "height"
+        },
+        {
+          "name": "batch_size",
+          "localized_name": "批量大小",
+          "type": "INT",
+          "widget_name": "batch_size"
+        }
+      ],
+      "connected_inputs": [],
+      "output_connections": [
+        {
+          "name": "LATENT",
+          "localized_name": "Latent",
+          "type": "LATENT",
+          "link_ids": [
+            2
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.21.1",
+        "Node name for S&R": "EmptyLatentImage"
+      }
+    },
+    {
+      "id": 7,
+      "type": "CLIPTextEncode",
+      "is_core": true,
+      "position": [
+        129.90444503776894,
+        738.6082331407794
+      ],
+      "size": [
+        425.27801513671875,
+        180.6060791015625
+      ],
+      "order": 6,
+      "widgets_values": [
+        "text, watermark"
+      ],
+      "widget_inputs": [
+        {
+          "name": "text",
+          "localized_name": "文本",
+          "type": "STRING",
+          "widget_name": "text"
+        }
+      ],
+      "connected_inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link_id": 12
+        }
+      ],
+      "output_connections": [
+        {
+          "name": "CONDITIONING",
+          "localized_name": "条件",
+          "type": "CONDITIONING",
+          "link_ids": [
+            6
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.21.1",
+        "Node name for S&R": "CLIPTextEncode"
+      }
+    },
+    {
+      "id": 10,
+      "type": "UNETLoader",
+      "is_core": true,
+      "position": [
+        -444.47913014441934,
+        381.7249353034472
+      ],
+      "size": [
+        437.06756591796875,
+        82
+      ],
+      "order": 1,
+      "widgets_values": [
+        "wan2.2_t2v_high_noise_14B_fp8_scaled.safetensors",
+        "default"
+      ],
+      "widget_inputs": [
+        {
+          "name": "unet_name",
+          "localized_name": "UNet名称",
+          "type": "COMBO",
+          "widget_name": "unet_name"
+        },
+        {
+          "name": "weight_dtype",
+          "localized_name": "数据类型",
+          "type": "COMBO",
+          "widget_name": "weight_dtype"
+        }
+      ],
+      "connected_inputs": [],
+      "output_connections": [
+        {
+          "name": "MODEL",
+          "localized_name": "模型",
+          "type": "MODEL",
+          "link_ids": [
+            13
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.46",
+        "Node name for S&R": "UNETLoader",
+        "widget_ue_connectable": {
+          "weight_dtype": true,
+          "unet_name": true
+        }
+      }
+    },
+    {
+      "id": 12,
+      "type": "CLIPLoader",
+      "is_core": true,
+      "position": [
+        -455.2051687344893,
+        634.5866865459575
+      ],
+      "size": [
+        395.4624328613281,
+        106
+      ],
+      "order": 2,
+      "widgets_values": [
+        "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+        "wan",
+        "default"
+      ],
+      "widget_inputs": [
+        {
+          "name": "clip_name",
+          "localized_name": "CLIP名称",
+          "type": "COMBO",
+          "widget_name": "clip_name"
+        },
+        {
+          "name": "type",
+          "localized_name": "类型",
+          "type": "COMBO",
+          "widget_name": "type"
+        },
+        {
+          "name": "device",
+          "localized_name": "设备",
+          "type": "COMBO",
+          "widget_name": "device"
+        }
+      ],
+      "connected_inputs": [],
+      "output_connections": [
+        {
+          "name": "CLIP",
+          "localized_name": "CLIP",
+          "type": "CLIP",
+          "link_ids": [
+            11,
+            12
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.46",
+        "Node name for S&R": "CLIPLoader",
+        "ue_properties": {
+          "widget_ue_connectable": {
+            "clip_name": true,
+            "type": true,
+            "device": true
+          },
+          "input_ue_unconnectable": {},
+          "version": "7.2.2"
+        },
+        "widget_ue_connectable": {
+          "clip_name": true,
+          "type": true,
+          "device": true
+        }
+      }
+    },
+    {
+      "id": 13,
+      "type": "VAELoader",
+      "is_core": true,
+      "position": [
+        -390.3371726896842,
+        88.7158978096183
+      ],
+      "size": [
+        319.8347288818263,
+        58
+      ],
+      "order": 3,
+      "widgets_values": [
+        "Wan2_1_VAE_bf16-fp8-e5m2.safetensors"
+      ],
+      "widget_inputs": [
+        {
+          "name": "vae_name",
+          "localized_name": "vae名称",
+          "type": "COMBO",
+          "widget_name": "vae_name"
+        }
+      ],
+      "connected_inputs": [],
+      "output_connections": [
+        {
+          "name": "VAE",
+          "localized_name": "VAE",
+          "type": "VAE",
+          "link_ids": [
+            10
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.6.0",
+        "Node name for S&R": "VAELoader",
+        "widget_ue_connectable": {},
+        "ttNbgOverride": {
+          "bgcolor": "#000",
+          "groupcolor": "#444",
+          "color": "#222"
+        }
+      }
+    },
+    {
+      "id": 8,
+      "type": "VAEDecode",
+      "is_core": true,
+      "position": [
+        1572.7855161162208,
+        189.06331659547877
+      ],
+      "size": [
+        210,
+        46
+      ],
+      "order": 8,
+      "widgets_values": [],
+      "widget_inputs": [],
+      "connected_inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link_id": 7
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link_id": 10
+        }
+      ],
+      "output_connections": [
+        {
+          "name": "IMAGE",
+          "localized_name": "图像",
+          "type": "IMAGE",
+          "link_ids": [
+            15
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.21.1",
+        "Node name for S&R": "VAEDecode"
+      }
+    },
+    {
+      "id": 9,
+      "type": "SaveImage",
+      "is_core": false,
+      "position": [
+        2194.2440847220887,
+        140.32274886700733
+      ],
+      "size": [
+        210,
+        270
+      ],
+      "order": 10,
+      "widgets_values": [
+        "ComfyUI"
+      ],
+      "widget_inputs": [
+        {
+          "name": "filename_prefix",
+          "localized_name": "文件名前缀",
+          "type": "STRING",
+          "widget_name": "filename_prefix"
+        }
+      ],
+      "connected_inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link_id": 16
+        }
+      ],
+      "output_connections": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.21.1",
+        "Node name for S&R": "SaveImage"
+      }
+    },
+    {
+      "id": 17,
+      "type": "UpscaleModelLoader",
+      "is_core": false,
+      "position": [
+        1228.2744490737202,
+        77.92149171522559
+      ],
+      "size": [
+        270,
+        58
+      ],
+      "order": 4,
+      "widgets_values": [
+        "2x_StarSample_V2.0.safetensors"
+      ],
+      "widget_inputs": [
+        {
+          "name": "model_name",
+          "localized_name": "模型名称",
+          "type": "COMBO",
+          "widget_name": "model_name"
+        }
+      ],
+      "connected_inputs": [],
+      "output_connections": [
+        {
+          "name": "UPSCALE_MODEL",
+          "localized_name": "放大模型",
+          "type": "UPSCALE_MODEL",
+          "link_ids": [
+            18
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.49",
+        "Node name for S&R": "UpscaleModelLoader"
+      }
+    },
+    {
+      "id": 15,
+      "type": "ImageUpscaleWithModel",
+      "is_core": false,
+      "position": [
+        1907.2076515197193,
+        -3.279047496420962
+      ],
+      "size": [
+        168.74999618530273,
+        46
+      ],
+      "order": 9,
+      "widgets_values": [],
+      "widget_inputs": [],
+      "connected_inputs": [
+        {
+          "name": "upscale_model",
+          "type": "UPSCALE_MODEL",
+          "link_id": 18
+        },
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link_id": 15
+        }
+      ],
+      "output_connections": [
+        {
+          "name": "IMAGE",
+          "localized_name": "图像",
+          "type": "IMAGE",
+          "link_ids": [
+            16
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.49",
+        "Node name for S&R": "ImageUpscaleWithModel"
+      }
+    }
+  ],
+  "links": [
+    {
+      "link_id": 2,
+      "origin_node_id": 5,
+      "origin_slot": 0,
+      "target_node_id": 3,
+      "target_slot": 3,
+      "data_type": "LATENT",
+      "origin_node_type": "EmptyLatentImage",
+      "target_node_type": "KSampler"
+    },
+    {
+      "link_id": 4,
+      "origin_node_id": 6,
+      "origin_slot": 0,
+      "target_node_id": 3,
+      "target_slot": 1,
+      "data_type": "CONDITIONING",
+      "origin_node_type": "CLIPTextEncode",
+      "target_node_type": "KSampler"
+    },
+    {
+      "link_id": 6,
+      "origin_node_id": 7,
+      "origin_slot": 0,
+      "target_node_id": 3,
+      "target_slot": 2,
+      "data_type": "CONDITIONING",
+      "origin_node_type": "CLIPTextEncode",
+      "target_node_type": "KSampler"
+    },
+    {
+      "link_id": 7,
+      "origin_node_id": 3,
+      "origin_slot": 0,
+      "target_node_id": 8,
+      "target_slot": 0,
+      "data_type": "LATENT",
+      "origin_node_type": "KSampler",
+      "target_node_type": "VAEDecode"
+    },
+    {
+      "link_id": 10,
+      "origin_node_id": 13,
+      "origin_slot": 0,
+      "target_node_id": 8,
+      "target_slot": 1,
+      "data_type": "VAE",
+      "origin_node_type": "VAELoader",
+      "target_node_type": "VAEDecode"
+    },
+    {
+      "link_id": 11,
+      "origin_node_id": 12,
+      "origin_slot": 0,
+      "target_node_id": 6,
+      "target_slot": 0,
+      "data_type": "CLIP",
+      "origin_node_type": "CLIPLoader",
+      "target_node_type": "CLIPTextEncode"
+    },
+    {
+      "link_id": 12,
+      "origin_node_id": 12,
+      "origin_slot": 0,
+      "target_node_id": 7,
+      "target_slot": 0,
+      "data_type": "CLIP",
+      "origin_node_type": "CLIPLoader",
+      "target_node_type": "CLIPTextEncode"
+    },
+    {
+      "link_id": 13,
+      "origin_node_id": 10,
+      "origin_slot": 0,
+      "target_node_id": 3,
+      "target_slot": 0,
+      "data_type": "MODEL",
+      "origin_node_type": "UNETLoader",
+      "target_node_type": "KSampler"
+    },
+    {
+      "link_id": 15,
+      "origin_node_id": 8,
+      "origin_slot": 0,
+      "target_node_id": 15,
+      "target_slot": 1,
+      "data_type": "IMAGE",
+      "origin_node_type": "VAEDecode",
+      "target_node_type": "ImageUpscaleWithModel"
+    },
+    {
+      "link_id": 16,
+      "origin_node_id": 15,
+      "origin_slot": 0,
+      "target_node_id": 9,
+      "target_slot": 0,
+      "data_type": "IMAGE",
+      "origin_node_type": "ImageUpscaleWithModel",
+      "target_node_type": "SaveImage"
+    },
+    {
+      "link_id": 18,
+      "origin_node_id": 17,
+      "origin_slot": 0,
+      "target_node_id": 15,
+      "target_slot": 0,
+      "data_type": "UPSCALE_MODEL",
+      "origin_node_type": "UpscaleModelLoader",
+      "target_node_type": "ImageUpscaleWithModel"
+    }
+  ],
+  "execution_flow": [
+    {
+      "id": 5,
+      "type": "EmptyLatentImage",
+      "order": 0,
+      "description": "EmptyLatentImage (node 5)"
+    },
+    {
+      "id": 10,
+      "type": "UNETLoader",
+      "order": 1,
+      "description": "UNETLoader (node 10)"
+    },
+    {
+      "id": 12,
+      "type": "CLIPLoader",
+      "order": 2,
+      "description": "CLIPLoader (node 12)"
+    },
+    {
+      "id": 13,
+      "type": "VAELoader",
+      "order": 3,
+      "description": "VAELoader (node 13)"
+    },
+    {
+      "id": 17,
+      "type": "UpscaleModelLoader",
+      "order": 4,
+      "description": "UpscaleModelLoader (node 17)"
+    },
+    {
+      "id": 6,
+      "type": "CLIPTextEncode",
+      "order": 5,
+      "description": "CLIPTextEncode (node 6)"
+    },
+    {
+      "id": 7,
+      "type": "CLIPTextEncode",
+      "order": 6,
+      "description": "CLIPTextEncode (node 7)"
+    },
+    {
+      "id": 3,
+      "type": "KSampler",
+      "order": 7,
+      "description": "KSampler (node 3)"
+    },
+    {
+      "id": 8,
+      "type": "VAEDecode",
+      "order": 8,
+      "description": "VAEDecode (node 8)"
+    },
+    {
+      "id": 15,
+      "type": "ImageUpscaleWithModel",
+      "order": 9,
+      "description": "ImageUpscaleWithModel (node 15)"
+    },
+    {
+      "id": 9,
+      "type": "SaveImage",
+      "order": 10,
+      "description": "SaveImage (node 9)"
+    }
+  ],
+  "summary": {
+    "total_nodes": 11,
+    "total_links": 11,
+    "core_nodes_count": 7,
+    "core_nodes": [
+      {
+        "id": 6,
+        "type": "CLIPTextEncode"
+      },
+      {
+        "id": 3,
+        "type": "KSampler"
+      },
+      {
+        "id": 7,
+        "type": "CLIPTextEncode"
+      },
+      {
+        "id": 10,
+        "type": "UNETLoader"
+      },
+      {
+        "id": 12,
+        "type": "CLIPLoader"
+      },
+      {
+        "id": 13,
+        "type": "VAELoader"
+      },
+      {
+        "id": 8,
+        "type": "VAEDecode"
+      }
+    ],
+    "user_configurable_nodes_count": 9,
+    "user_configurable_nodes": [
+      {
+        "id": 6,
+        "type": "CLIPTextEncode",
+        "widget_inputs": [
+          "text"
+        ],
+        "current_values": [
+          "beautiful scenery nature glass bottle landscape, , purple galaxy bottle,"
+        ]
+      },
+      {
+        "id": 3,
+        "type": "KSampler",
+        "widget_inputs": [
+          "seed",
+          "steps",
+          "cfg",
+          "sampler_name",
+          "scheduler",
+          "denoise"
+        ],
+        "current_values": [
+          81028957092542,
+          "randomize",
+          20,
+          8,
+          "euler",
+          "normal",
+          1
+        ]
+      },
+      {
+        "id": 5,
+        "type": "EmptyLatentImage",
+        "widget_inputs": [
+          "width",
+          "height",
+          "batch_size"
+        ],
+        "current_values": [
+          512,
+          512,
+          1
+        ]
+      },
+      {
+        "id": 7,
+        "type": "CLIPTextEncode",
+        "widget_inputs": [
+          "text"
+        ],
+        "current_values": [
+          "text, watermark"
+        ]
+      },
+      {
+        "id": 10,
+        "type": "UNETLoader",
+        "widget_inputs": [
+          "unet_name",
+          "weight_dtype"
+        ],
+        "current_values": [
+          "wan2.2_t2v_high_noise_14B_fp8_scaled.safetensors",
+          "default"
+        ]
+      },
+      {
+        "id": 12,
+        "type": "CLIPLoader",
+        "widget_inputs": [
+          "clip_name",
+          "type",
+          "device"
+        ],
+        "current_values": [
+          "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+          "wan",
+          "default"
+        ]
+      },
+      {
+        "id": 13,
+        "type": "VAELoader",
+        "widget_inputs": [
+          "vae_name"
+        ],
+        "current_values": [
+          "Wan2_1_VAE_bf16-fp8-e5m2.safetensors"
+        ]
+      },
+      {
+        "id": 9,
+        "type": "SaveImage",
+        "widget_inputs": [
+          "filename_prefix"
+        ],
+        "current_values": [
+          "ComfyUI"
+        ]
+      },
+      {
+        "id": 17,
+        "type": "UpscaleModelLoader",
+        "widget_inputs": [
+          "model_name"
+        ],
+        "current_values": [
+          "2x_StarSample_V2.0.safetensors"
+        ]
+      }
+    ]
+  }
+}

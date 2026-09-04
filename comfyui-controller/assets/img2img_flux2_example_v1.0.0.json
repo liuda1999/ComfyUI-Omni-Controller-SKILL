@@ -1,0 +1,100 @@
+{
+  "80": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "flux2-vae.safetensors"
+    }
+  },
+  "60": {
+    "class_type": "KSampler",
+    "inputs": {
+      "seed": 884215673901245,
+      "steps": 30,
+      "cfg": 1,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1,
+      "model": [
+        "78",
+        0
+      ],
+      "positive": [
+        "64",
+        0
+      ],
+      "negative": [
+        "63",
+        0
+      ],
+      "latent_image": [
+        "69",
+        0
+      ]
+    }
+  },
+  "63": {
+    "class_type": "ConditioningZeroOut",
+    "inputs": {
+      "conditioning": [
+        "64",
+        0
+      ]
+    }
+  },
+  "57": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "60",
+        0
+      ],
+      "vae": [
+        "80",
+        0
+      ]
+    }
+  },
+  "79": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen_3_8b_fp8mixed.safetensors",
+      "type": "flux2",
+      "device": "default"
+    }
+  },
+  "58": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "filename_prefix": "galaxy_bottle_flux2",
+      "images": [
+        "57",
+        0
+      ]
+    }
+  },
+  "69": {
+    "class_type": "EmptyFlux2LatentImage",
+    "inputs": {
+      "width": 960,
+      "height": 720,
+      "batch_size": 1
+    }
+  },
+  "78": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "F2K-9b-kleinova_10FP8.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "64": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "text": "A transparent glass bottle containing a miniature galaxy emitting soft blue-purple bioluminescent glow, tiny stars and cosmic dust swirling inside the bottle, placed on a weathered dark wooden table, dreamy ethereal atmosphere, magical realism, cinematic lighting, volumetric light rays, intricate details, sharp focus, 8k quality, fantasy art, ethereal mist around the bottle, deep space nebula colors visible through the glass, masterpiece",
+      "clip": [
+        "79",
+        0
+      ]
+    }
+  }
+}

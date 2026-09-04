@@ -1,0 +1,106 @@
+{
+  "1": {
+    "class_type": "LoadWanVideoT5TextEncoder",
+    "inputs": {
+      "model_name": "umt5-xxl-enc-fp8_e4m3fn.safetensors",
+      "precision": "bf16",
+      "load_device": "offload_device",
+      "quantization": "disabled"
+    }
+  },
+  "2": {
+    "class_type": "WanVideoVAELoader",
+    "inputs": {
+      "model_name": "Wan2_1_VAE_bf16.safetensors",
+      "precision": "bf16",
+      "use_cpu_cache": false
+    }
+  },
+  "3b": {
+    "class_type": "WanVideoBlockSwap",
+    "inputs": {
+      "blocks_to_swap": 5,
+      "offload_img_emb": true,
+      "offload_txt_emb": true,
+      "use_non_blocking": false,
+      "prefetch_blocks": 1
+    }
+  },
+  "3": {
+    "class_type": "WanVideoModelLoader",
+    "inputs": {
+      "model": "Wan2.2-T2V-A14B-HighNoise-Q5_K_M.gguf",
+      "base_precision": "bf16",
+      "quantization": "disabled",
+      "load_device": "offload_device",
+      "attention_mode": "sageattn",
+      "block_swap_args": ["3b", 0]
+    }
+  },
+  "4": {
+    "class_type": "WanVideoEmptyEmbeds",
+    "inputs": {
+      "width": 640,
+      "height": 352,
+      "num_frames": 1
+    }
+  },
+  "5": {
+    "class_type": "WanVideoTextEncode",
+    "inputs": {
+      "positive_prompt": "一位年轻少女机甲战士，浅金色长发发丝柔顺飘逸在空中，四周散开如丝绸般轻盈，面容精致五官立体皮肤白皙透亮双眼湛蓝清澈目光直视镜头表情坚毅冷峻，身穿白色高光泽紧身战斗服贴合身体曲线露出腰侧皮肤，战斗服表面有精密线条分割与银色金属接缝，胸前与肩部覆盖白色硬质装甲板边缘有银色金属包边，双臂穿戴白色机械臂甲关节处可见黑色液压管线与银色活塞连杆，双手握拳呈战斗姿态指关节处有金属加固件，腰部以下连接巨大白色机械腿部外骨骼装甲由多块流线型甲壳板层叠构成关节处暴露精密齿轮与管线，身后延伸出六根巨型能量炮管呈扇形放射排列，炮管末端发出明亮青蓝色圆形光芒光晕向外扩散，大量白色柔性线缆从炮管基部垂落飘散如触手般自然弯曲低角度仰拍约30度仰视，全身镜头景深较深人物与机械装置均清晰锐利，对角线构图人物身体从左下至右上倾斜形成动态张力，主体占画面约百分之八十，机械装置填充画面四周形成包围感虚拟纯白色极简背景无任何环境细节，空间感完全由人物与机械装置自身构建整体高明度冷白色调，白色装甲表面反射均匀柔和光线，青蓝色能量发光为画面中唯一高饱和色彩焦点在白色装甲表面投射冷蓝反光，正面偏上方柔和光照明暗对比中等，氛围干净未来感十足超高分辨率细节拉满超写实科幻角色摄影风格，白色装甲哑光与高光质感并存金属部件精密锐利，发丝飘动自然带有微风拂动感，能量发光体辉光柔和溢出，画面干净锐利无噪点",
+      "negative_prompt": "text, watermark, blurry, low quality, distorted face, bad anatomy, extra limbs, deformed, ugly, duplicate, mutation, noise, grain, pixelated, jpeg artifacts",
+      "force_offload": false,
+      "device": "gpu",
+      "t5": ["1", 0]
+    }
+  },
+  "6": {
+    "class_type": "WanVideoSampler",
+    "inputs": {
+      "seed": 123456789,
+      "steps": 30,
+      "cfg": 7.0,
+      "shift": 5.0,
+      "force_offload": true,
+      "scheduler": "unipc",
+      "riflex_freq_index": 0,
+      "model": ["3", 0],
+      "image_embeds": ["4", 0],
+      "text_embeds": ["5", 0],
+      "rope_function": "comfy_chunked"
+    }
+  },
+  "7": {
+    "class_type": "WanVideoDecode",
+    "inputs": {
+      "tile_x": 272,
+      "tile_y": 272,
+      "tile_stride_x": 144,
+      "tile_stride_y": 144,
+      "enable_vae_tiling": true,
+      "samples": ["6", 0],
+      "vae": ["2", 0]
+    }
+  },
+  "8": {
+    "class_type": "UpscaleModelLoader",
+    "inputs": {
+      "model_name": "RealESRGAN_x2.pth"
+    }
+  },
+  "9": {
+    "class_type": "ImageUpscaleWithModel",
+    "inputs": {
+      "upscale_model": ["8", 0],
+      "image": ["7", 0]
+    }
+  },
+  "10": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "filename_prefix": "task1_v2/output",
+      "images": ["9", 0]
+    }
+  }
+}

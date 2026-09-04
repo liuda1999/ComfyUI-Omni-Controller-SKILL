@@ -1,0 +1,1230 @@
+{
+  "last_node_id": 18,
+  "last_link_id": 35,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "CheckpointLoaderSimple",
+      "pos": [
+        100,
+        100
+      ],
+      "size": [
+        200,
+        100
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "ckpt_name",
+          "type": "MODEL",
+          "link": null,
+          "widget": {
+            "name": "ckpt_name"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [],
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [],
+          "slot_index": 1
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [],
+          "slot_index": 2
+        }
+      ],
+      "widgets_values": [
+        "sam3.1_multiplex_fp16.safetensors"
+      ],
+      "_meta": {}
+    },
+    {
+      "id": 4,
+      "type": "EmptyLatentImage",
+      "pos": [
+        500,
+        100
+      ],
+      "size": [
+        200,
+        100
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "width",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "width"
+          }
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "height"
+          }
+        },
+        {
+          "name": "batch_size",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "batch_size"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [],
+          "slot_index": 0
+        }
+      ],
+      "widgets_values": [
+        512,
+        512,
+        1
+      ],
+      "_meta": {}
+    },
+    {
+      "id": 9,
+      "type": "ControlNetLoader",
+      "pos": [
+        -150,
+        220
+      ],
+      "size": [
+        200,
+        100
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "control_net_name",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "control_net_name"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONTROL_NET",
+          "type": "CONTROL_NET",
+          "links": [],
+          "slot_index": 0
+        }
+      ],
+      "widgets_values": [
+        "control_v11p_sd15_openpose.pth"
+      ],
+      "_meta": {}
+    },
+    {
+      "id": 10,
+      "type": "LoadImage",
+      "pos": [
+        -150,
+        420
+      ],
+      "size": [
+        200,
+        100
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "image"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [],
+          "slot_index": 0
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": [],
+          "slot_index": 1
+        }
+      ],
+      "widgets_values": [
+        "example.png"
+      ],
+      "_meta": {}
+    },
+    {
+      "id": 12,
+      "type": "UpscaleModelLoader",
+      "pos": [
+        780,
+        200
+      ],
+      "size": [
+        200,
+        100
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model_name",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "model_name"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "UPSCALE_MODEL",
+          "type": "UPSCALE_MODEL",
+          "links": [],
+          "slot_index": 0
+        }
+      ],
+      "widgets_values": [
+        "2x_StarSample_V2.0.safetensors"
+      ],
+      "_meta": {}
+    },
+    {
+      "id": 17,
+      "type": "UpscaleModelLoader",
+      "pos": [
+        780,
+        200
+      ],
+      "size": [
+        200,
+        100
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model_name",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "model_name"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "UPSCALE_MODEL",
+          "type": "UPSCALE_MODEL",
+          "links": [],
+          "slot_index": 0
+        }
+      ],
+      "widgets_values": [
+        "2x_StarSample_V2.0.safetensors"
+      ],
+      "_meta": {}
+    },
+    {
+      "id": 2,
+      "type": "CLIPTextEncode",
+      "pos": [
+        100,
+        300
+      ],
+      "size": [
+        200,
+        100
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "text"
+          }
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [],
+          "slot_index": 0
+        }
+      ],
+      "widgets_values": [
+        "生成一个文生图工作流，使用ControlNet控制姿势，添加LoRA风格，最后放大2倍"
+      ],
+      "_meta": {}
+    },
+    {
+      "id": 3,
+      "type": "CLIPTextEncode",
+      "pos": [
+        300,
+        300
+      ],
+      "size": [
+        200,
+        100
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "text"
+          }
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [],
+          "slot_index": 0
+        }
+      ],
+      "widgets_values": [
+        "worst quality, low quality, bad anatomy"
+      ],
+      "_meta": {}
+    },
+    {
+      "id": 8,
+      "type": "LoraLoader",
+      "pos": [
+        350,
+        100
+      ],
+      "size": [
+        200,
+        100
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": null
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": null
+        },
+        {
+          "name": "lora_name",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "lora_name"
+          }
+        },
+        {
+          "name": "strength_model",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "strength_model"
+          }
+        },
+        {
+          "name": "strength_clip",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "strength_clip"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [],
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [],
+          "slot_index": 1
+        }
+      ],
+      "widgets_values": [
+        "FLUX-小红书极致真实V2.safetensors",
+        0.8,
+        1.0
+      ],
+      "_meta": {}
+    },
+    {
+      "id": 11,
+      "type": "ControlNetApplyAdvanced",
+      "pos": [
+        220,
+        360
+      ],
+      "size": [
+        200,
+        100
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": null
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": null
+        },
+        {
+          "name": "control_net",
+          "type": "CONTROL_NET",
+          "link": null
+        },
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "strength",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "strength"
+          }
+        },
+        {
+          "name": "start_percent",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "start_percent"
+          }
+        },
+        {
+          "name": "end_percent",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "end_percent"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "links": [],
+          "slot_index": 0
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "links": [],
+          "slot_index": 1
+        }
+      ],
+      "widgets_values": [
+        1.0,
+        0.0,
+        1.0
+      ],
+      "_meta": {}
+    },
+    {
+      "id": 5,
+      "type": "KSampler",
+      "pos": [
+        500,
+        300
+      ],
+      "size": [
+        200,
+        100
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": null
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "seed"
+          }
+        },
+        {
+          "name": "steps",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "steps"
+          }
+        },
+        {
+          "name": "cfg",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "cfg"
+          }
+        },
+        {
+          "name": "sampler_name",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "sampler_name"
+          }
+        },
+        {
+          "name": "scheduler",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "scheduler"
+          }
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": null
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": null
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": null
+        },
+        {
+          "name": "denoise",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "denoise"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [],
+          "slot_index": 0
+        }
+      ],
+      "widgets_values": [
+        2387437219,
+        20,
+        8.0,
+        "euler",
+        "normal",
+        1.0
+      ],
+      "_meta": {}
+    },
+    {
+      "id": 14,
+      "type": "LatentUpscale",
+      "pos": [
+        700,
+        300
+      ],
+      "size": [
+        200,
+        100
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": null
+        },
+        {
+          "name": "upscale_method",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "upscale_method"
+          }
+        },
+        {
+          "name": "width",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "width"
+          }
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "height"
+          }
+        },
+        {
+          "name": "crop",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "crop"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [],
+          "slot_index": 0
+        }
+      ],
+      "widgets_values": [
+        "nearest-exact",
+        1024,
+        1024,
+        "disabled"
+      ],
+      "_meta": {}
+    },
+    {
+      "id": 15,
+      "type": "KSampler",
+      "pos": [
+        950,
+        300
+      ],
+      "size": [
+        200,
+        100
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": null
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "seed"
+          }
+        },
+        {
+          "name": "steps",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "steps"
+          }
+        },
+        {
+          "name": "cfg",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "cfg"
+          }
+        },
+        {
+          "name": "sampler_name",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "sampler_name"
+          }
+        },
+        {
+          "name": "scheduler",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "scheduler"
+          }
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": null
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": null
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": null
+        },
+        {
+          "name": "denoise",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "denoise"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [],
+          "slot_index": 0
+        }
+      ],
+      "widgets_values": [
+        2097507267,
+        20,
+        8.0,
+        "euler",
+        "normal",
+        0.5
+      ],
+      "_meta": {}
+    },
+    {
+      "id": 16,
+      "type": "KSampler",
+      "pos": [
+        1200,
+        300
+      ],
+      "size": [
+        200,
+        100
+      ],
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": null
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "seed"
+          }
+        },
+        {
+          "name": "steps",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "steps"
+          }
+        },
+        {
+          "name": "cfg",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "cfg"
+          }
+        },
+        {
+          "name": "sampler_name",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "sampler_name"
+          }
+        },
+        {
+          "name": "scheduler",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "scheduler"
+          }
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": null
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": null
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": null
+        },
+        {
+          "name": "denoise",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "denoise"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [],
+          "slot_index": 0
+        }
+      ],
+      "widgets_values": [
+        4195665094,
+        20,
+        8.0,
+        "euler",
+        "normal",
+        0.6
+      ],
+      "_meta": {}
+    },
+    {
+      "id": 6,
+      "type": "VAEDecode",
+      "pos": [
+        700,
+        300
+      ],
+      "size": [
+        200,
+        100
+      ],
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": null
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [],
+          "slot_index": 0
+        }
+      ],
+      "widgets_values": [],
+      "_meta": {}
+    },
+    {
+      "id": 13,
+      "type": "ImageUpscaleWithModel",
+      "pos": [
+        950,
+        300
+      ],
+      "size": [
+        200,
+        100
+      ],
+      "flags": {},
+      "order": 15,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "upscale_model",
+          "type": "UPSCALE_MODEL",
+          "link": null
+        },
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [],
+          "slot_index": 0
+        }
+      ],
+      "widgets_values": [],
+      "_meta": {}
+    },
+    {
+      "id": 18,
+      "type": "ImageUpscaleWithModel",
+      "pos": [
+        950,
+        300
+      ],
+      "size": [
+        200,
+        100
+      ],
+      "flags": {},
+      "order": 16,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "upscale_model",
+          "type": "UPSCALE_MODEL",
+          "link": null
+        },
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [],
+          "slot_index": 0
+        }
+      ],
+      "widgets_values": [],
+      "_meta": {}
+    },
+    {
+      "id": 7,
+      "type": "SaveImage",
+      "pos": [
+        900,
+        300
+      ],
+      "size": [
+        200,
+        100
+      ],
+      "flags": {},
+      "order": 17,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "filename_prefix",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "filename_prefix"
+          }
+        },
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": null
+        }
+      ],
+      "outputs": [],
+      "widgets_values": [
+        "ComfyUI_Output"
+      ],
+      "_meta": {}
+    }
+  ],
+  "links": [
+    [
+      1,
+      1,
+      1,
+      2,
+      1
+    ],
+    [
+      2,
+      1,
+      1,
+      3,
+      1
+    ],
+    [
+      6,
+      4,
+      0,
+      5,
+      8
+    ],
+    [
+      8,
+      1,
+      2,
+      6,
+      1
+    ],
+    [
+      10,
+      8,
+      0,
+      5,
+      0
+    ],
+    [
+      11,
+      1,
+      0,
+      8,
+      0
+    ],
+    [
+      12,
+      1,
+      1,
+      8,
+      1
+    ],
+    [
+      13,
+      11,
+      0,
+      5,
+      6
+    ],
+    [
+      14,
+      11,
+      1,
+      5,
+      7
+    ],
+    [
+      15,
+      2,
+      0,
+      11,
+      0
+    ],
+    [
+      16,
+      3,
+      0,
+      11,
+      1
+    ],
+    [
+      17,
+      9,
+      0,
+      11,
+      2
+    ],
+    [
+      18,
+      10,
+      0,
+      11,
+      3
+    ],
+    [
+      19,
+      6,
+      0,
+      13,
+      1
+    ],
+    [
+      20,
+      12,
+      0,
+      13,
+      0
+    ],
+    [
+      21,
+      13,
+      0,
+      7,
+      1
+    ],
+    [
+      22,
+      8,
+      0,
+      15,
+      0
+    ],
+    [
+      23,
+      11,
+      0,
+      15,
+      6
+    ],
+    [
+      24,
+      11,
+      1,
+      15,
+      7
+    ],
+    [
+      25,
+      5,
+      0,
+      14,
+      0
+    ],
+    [
+      26,
+      14,
+      0,
+      15,
+      8
+    ],
+    [
+      28,
+      8,
+      0,
+      16,
+      0
+    ],
+    [
+      29,
+      11,
+      0,
+      16,
+      6
+    ],
+    [
+      30,
+      11,
+      1,
+      16,
+      7
+    ],
+    [
+      31,
+      15,
+      0,
+      16,
+      8
+    ],
+    [
+      32,
+      16,
+      0,
+      6,
+      0
+    ],
+    [
+      33,
+      6,
+      0,
+      18,
+      1
+    ],
+    [
+      34,
+      17,
+      0,
+      18,
+      0
+    ],
+    [
+      35,
+      18,
+      0,
+      7,
+      1
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {},
+  "version": 0.4
+}

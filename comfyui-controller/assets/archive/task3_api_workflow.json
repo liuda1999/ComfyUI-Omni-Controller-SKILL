@@ -1,0 +1,157 @@
+{
+  "38": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+      "type": "wan",
+      "device": "default"
+    }
+  },
+  "39": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "wan2.2_vae.safetensors"
+    }
+  },
+  "7": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "text": "色调艳丽，过曝，静态，细节模糊不清，字幕，风格，作品，画作，画面，静止，整体发灰，最差质量，低质量，JPEG压缩残留，丑陋的，残缺的，多余的手指，画得不好的手部，画得不好的脸部，畸形的，毁容的，形态畸形的肢体，手指融合，静止不动的画面，杂乱的背景，三条腿，背景人很多，倒着走",
+      "clip": [
+        "38",
+        0
+      ]
+    }
+  },
+  "59": {
+    "class_type": "MarkdownNote",
+    "inputs": {}
+  },
+  "3": {
+    "class_type": "KSampler",
+    "inputs": {
+      "seed": 165117770567815,
+      "steps": "randomize",
+      "cfg": 20,
+      "sampler_name": 5,
+      "scheduler": "uni_pc",
+      "denoise": "simple",
+      "model": [
+        "48",
+        0
+      ],
+      "positive": [
+        "6",
+        0
+      ],
+      "negative": [
+        "7",
+        0
+      ],
+      "latent_image": [
+        "55",
+        0
+      ]
+    }
+  },
+  "48": {
+    "class_type": "ModelSamplingSD3",
+    "inputs": {
+      "shift": 8,
+      "model": [
+        "37",
+        0
+      ]
+    }
+  },
+  "57": {
+    "class_type": "CreateVideo",
+    "inputs": {
+      "fps": 24,
+      "images": [
+        "8",
+        0
+      ]
+    }
+  },
+  "8": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "3",
+        0
+      ],
+      "vae": [
+        "39",
+        0
+      ]
+    }
+  },
+  "55": {
+    "class_type": "Wan22ImageToVideoLatent",
+    "inputs": {
+      "width": 1280,
+      "height": 704,
+      "length": 49,
+      "batch_size": 1,
+      "vae": [
+        "39",
+        0
+      ],
+      "start_image": [
+        "56",
+        0
+      ]
+    }
+  },
+  "37": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "wan2.2_ti2v_5B_fp16.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "6": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "text": "A futuristic cyberpunk car speeding through a neon-lit city at night during heavy rain, captured with an FPV (First Person View) camera angle. The vehicle dynamically follows the fast-paced motion as it races along an elevated highway, moving at extreme speed with high wheel rotation, splashing water dramatically onto the wet pavement. Raindrops on the car’s surface stream backward due to the intense velocity, creating a dynamic visual effect. Neon lights reflect vividly on the glossy, rain-soaked road, enhancing the immersive and high-tech atmosphere. Glowing tire trails and futuristic energy streaks follow the motion of the car, emphasizing the sense of speed and fluidity. In the background, drones hover in the air, firing occasional red laser beams, adding tension and sci-fi action to the scene. The lighting is cinematic, with smooth motion blur, high-tech aesthetics, and a fast-paced, thrilling vibe.\n",
+      "clip": [
+        "38",
+        0
+      ]
+    }
+  },
+  "61": {
+    "class_type": "SaveAnimatedWEBP",
+    "inputs": {
+      "filename_prefix": "ComfyUI",
+      "fps": 16,
+      "lossless": false,
+      "quality": 90,
+      "method": "default",
+      "images": [
+        "8",
+        0
+      ]
+    }
+  },
+  "58": {
+    "class_type": "SaveVideo",
+    "inputs": {
+      "filename_prefix": "video/ComfyUI",
+      "format": "auto",
+      "codec": "auto",
+      "video": [
+        "57",
+        0
+      ]
+    }
+  },
+  "56": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "car.webp",
+      "upload": "image"
+    }
+  }
+}

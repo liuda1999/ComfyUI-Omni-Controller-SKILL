@@ -1,0 +1,252 @@
+{
+  "89": {
+    "class_type": "PrimitiveNode",
+    "inputs": {}
+  },
+  "103": {
+    "class_type": "CreateCFGScheduleFloatList",
+    "inputs": {
+      "cfg_scale_start": 30,
+      "cfg_scale_end": 2,
+      "interpolation": 2,
+      "start_percent": "linear",
+      "end_percent": 0,
+      "steps": ["110", 0]
+    }
+  },
+  "90": {
+    "class_type": "LoadWanVideoT5TextEncoder",
+    "inputs": {
+      "model_name": "umt5-xxl-enc-bf16.safetensors",
+      "precision": "bf16",
+      "load_device": "offload_device",
+      "quantization": "disabled"
+    }
+  },
+  "100": {
+    "class_type": "WanVideoVAELoader",
+    "inputs": {
+      "model_name": "Wan2_1_VAE_bf16.safetensors",
+      "precision": "bf16",
+      "use_cpu_cache": false
+    }
+  },
+  "112": {
+    "class_type": "WanVideoEasyCache",
+    "inputs": {
+      "easycache_thresh": 0.015,
+      "start_step": 1,
+      "end_step": -1,
+      "cache_device": "offload_device"
+    }
+  },
+  "113": {
+    "class_type": "WanVideoEasyCache",
+    "inputs": {
+      "easycache_thresh": 0.015,
+      "start_step": 1,
+      "end_step": -1,
+      "cache_device": "offload_device"
+    }
+  },
+  "102": {
+    "class_type": "INTConstant",
+    "inputs": {
+      "value": 3
+    }
+  },
+  "92": {
+    "class_type": "WanVideoModelLoader",
+    "inputs": {
+      "model": "Wan2.2-T2V-A14B-LowNoise-Q5_K_M.gguf",
+      "base_precision": "bf16",
+      "quantization": "disabled",
+      "load_device": "offload_device",
+      "attention_mode": "sageattn",
+      "rms_norm_function": "default",
+      "block_swap_args": ["95", 0],
+      "lora": ["87", 0]
+    }
+  },
+  "101": {
+    "class_type": "WanVideoDecode",
+    "inputs": {
+      "enable_vae_tiling": false,
+      "tile_x": 272,
+      "tile_y": 272,
+      "tile_stride_x": 144,
+      "tile_stride_y": 128,
+      "normalization": "default",
+      "vae": ["100", 0],
+      "samples": ["106", 0]
+    }
+  },
+  "105": {
+    "class_type": "WanVideoSampler",
+    "inputs": {
+      "shift": 6,
+      "force_offload": 1,
+      "scheduler": 8,
+      "riflex_freq_index": 46962144800973,
+      "batched_cfg": "fixed",
+      "rope_function": true,
+      "start_step": "dpm++_sde",
+      "add_noise_to_samples": 0,
+      "model": ["91", 0],
+      "image_embeds": ["93", 0],
+      "text_embeds": ["98", 0],
+      "cache_args": ["112", 0],
+      "steps": ["110", 0],
+      "cfg": ["103", 0],
+      "seed": ["89", 0],
+      "denoise_strength": ["136", 0],
+      "end_step": ["102", 0]
+    }
+  },
+  "106": {
+    "class_type": "WanVideoSampler",
+    "inputs": {
+      "cfg": 6,
+      "shift": 1,
+      "force_offload": 8,
+      "scheduler": 46962144800973,
+      "riflex_freq_index": "fixed",
+      "batched_cfg": true,
+      "rope_function": "dpm++_sde",
+      "end_step": 0,
+      "add_noise_to_samples": 1,
+      "model": ["92", 0],
+      "image_embeds": ["93", 0],
+      "text_embeds": ["98", 0],
+      "samples": ["105", 0],
+      "cache_args": ["113", 0],
+      "steps": ["110", 0],
+      "seed": ["89", 0],
+      "denoise_strength": ["136", 0],
+      "start_step": ["102", 0]
+    }
+  },
+  "104": {
+    "class_type": "GetImageSizeAndCount",
+    "inputs": {
+      "image": ["101", 0]
+    }
+  },
+  "116": {
+    "class_type": "easy cleanGpuUsed",
+    "inputs": {
+      "anything": ["117", 0]
+    }
+  },
+  "117": {
+    "class_type": "easy clearCacheAll",
+    "inputs": {
+      "anything": ["130", 0]
+    }
+  },
+  "87": {
+    "class_type": "WanVideoLoraSelect",
+    "inputs": {
+      "lora": "Wan21_T2V_14B_lightx2v_cfg_step_distill_lora_rank32.safetensors",
+      "strength": 1,
+      "low_mem_load": false,
+      "merge_loras": false
+    }
+  },
+  "91": {
+    "class_type": "WanVideoModelLoader",
+    "inputs": {
+      "model": "Wan2.2-T2V-A14B-HighNoise-Q5_K_M.gguf",
+      "base_precision": "bf16",
+      "quantization": "disabled",
+      "load_device": "offload_device",
+      "attention_mode": "sageattn",
+      "rms_norm_function": "default",
+      "block_swap_args": ["95", 0],
+      "lora": ["86", 0]
+    }
+  },
+  "111": {
+    "class_type": "VHS_VideoCombine",
+    "inputs": {
+      "images": ["104", 0]
+    }
+  },
+  "129": {
+    "class_type": "UpscaleModelLoader",
+    "inputs": {
+      "model_name": "RealESRGAN_x2.pth"
+    }
+  },
+  "130": {
+    "class_type": "ImageUpscaleWithModel",
+    "inputs": {
+      "upscale_model": ["129", 0],
+      "image": ["104", 0]
+    }
+  },
+  "98": {
+    "class_type": "WanVideoTextEncode",
+    "inputs": {
+      "negative_prompt": "text, watermark, logo, signature, blur, low quality",
+      "force_offload": "色调艳丽，过曝，静态，细节模糊不清，字幕，风格，作品，画作，画面，静止，整体发灰，最差质量，低质量，JPEG压缩残留，丑陋的，残缺的，多余的手指，画得不好的手部，画得不好的脸部，畸形的，毁容的，形态畸形的肢体，手指融合，静止不动的画面，杂乱的背景",
+      "use_disk_cache": true,
+      "device": false,
+      "t5": ["90", 0],
+      "positive_prompt": ["132", 0]
+    }
+  },
+  "93": {
+    "class_type": "WanVideoEmptyEmbeds",
+    "inputs": {
+      "width": 1280,
+      "height": 720,
+      "num_frames": 1
+    }
+  },
+  "132": {
+    "class_type": "TextInput_",
+    "inputs": {
+      "text": "未来城市天际线，赛博朋克风格，霓虹灯光，高楼大厦，飞行汽车，雨水反射的街道灯光，电影质感，8K超高清"
+    }
+  },
+  "95": {
+    "class_type": "WanVideoBlockSwap",
+    "inputs": {
+      "blocks_to_swap": 40,
+      "offload_img_emb": false,
+      "offload_txt_emb": false,
+      "use_non_blocking": false,
+      "vace_blocks_to_swap": 0,
+      "prefetch_blocks": 0,
+      "block_swap_debug": false
+    }
+  },
+  "86": {
+    "class_type": "WanVideoLoraSelect",
+    "inputs": {
+      "lora": "Wan21_T2V_14B_lightx2v_cfg_step_distill_lora_rank32.safetensors",
+      "strength": 3.0000000000000004,
+      "low_mem_load": false,
+      "merge_loras": false
+    }
+  },
+  "110": {
+    "class_type": "INTConstant",
+    "inputs": {
+      "value": 6
+    }
+  },
+  "137": {
+    "class_type": "SimpleToggleNode",
+    "inputs": {
+      "value": true
+    }
+  },
+  "136": {
+    "class_type": "SimpleKnobNode",
+    "inputs": {
+      "value": 1
+    }
+  }
+}

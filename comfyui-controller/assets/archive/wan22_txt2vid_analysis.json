@@ -1,0 +1,2511 @@
+{
+  "ok": true,
+  "workflow_info": {
+    "id": "ec7da562-7e21-4dac-a0d2-f4441e1efd3b",
+    "revision": 0,
+    "last_node_id": 138,
+    "last_link_id": 245,
+    "total_nodes": 30,
+    "total_links": 33
+  },
+  "nodes": [
+    {
+      "node_id": "89",
+      "class_type": "PrimitiveNode",
+      "display_name": "PrimitiveNode",
+      "category": "unknown",
+      "description": "",
+      "inputs": {},
+      "outputs": [],
+      "python_module": "",
+      "is_custom_node": true,
+      "position": [
+        1054.0748291015625,
+        -90.99195861816406
+      ],
+      "size": [
+        210,
+        82
+      ],
+      "connections": {
+        "inputs": {},
+        "outputs": {
+          "0": [
+            {
+              "to_node": "105",
+              "to_slot": 20,
+              "link_id": 197
+            },
+            {
+              "to_node": "106",
+              "to_slot": 20,
+              "link_id": 204
+            }
+          ]
+        }
+      },
+      "issues": [],
+      "suggestions": []
+    },
+    {
+      "node_id": "103",
+      "class_type": "CreateCFGScheduleFloatList",
+      "display_name": "Create CFG Schedule Float List",
+      "category": "WanVideoWrapper",
+      "description": "Helper node to generate a list of floats that can be used to schedule cfg scale for the steps, outside the set range cfg is set to 1.0",
+      "inputs": {
+        "cfg_scale_start": {
+          "value": 30,
+          "is_connected": false,
+          "type": "FLOAT",
+          "config": {
+            "default": 5.0,
+            "min": 0.0,
+            "max": 30.0,
+            "step": 0.01,
+            "round": 0.01,
+            "tooltip": "CFG scale to use for the steps"
+          },
+          "is_required": true
+        },
+        "cfg_scale_end": {
+          "value": 2,
+          "is_connected": false,
+          "type": "FLOAT",
+          "config": {
+            "default": 5.0,
+            "min": 0.0,
+            "max": 30.0,
+            "step": 0.01,
+            "round": 0.01,
+            "tooltip": "CFG scale to use for the steps"
+          },
+          "is_required": true
+        },
+        "interpolation": {
+          "value": 2,
+          "is_connected": false,
+          "type": [
+            "linear",
+            "ease_in",
+            "ease_out"
+          ],
+          "config": {
+            "default": "linear",
+            "tooltip": "Interpolation method to use for the cfg scale"
+          },
+          "is_required": true
+        },
+        "start_percent": {
+          "value": "linear",
+          "is_connected": false,
+          "type": "FLOAT",
+          "config": {
+            "default": 0.0,
+            "min": 0.0,
+            "max": 1.0,
+            "step": 0.01,
+            "round": 0.01,
+            "tooltip": "Start percent of the steps to apply cfg"
+          },
+          "is_required": true
+        },
+        "end_percent": {
+          "value": 0,
+          "is_connected": false,
+          "type": "FLOAT",
+          "config": {
+            "default": 1.0,
+            "min": 0.0,
+            "max": 1.0,
+            "step": 0.01,
+            "round": 0.01,
+            "tooltip": "End percent of the steps to apply cfg"
+          },
+          "is_required": true
+        }
+      },
+      "outputs": [
+        {
+          "type": "FLOAT",
+          "name": "float_list",
+          "is_list": false
+        }
+      ],
+      "python_module": "custom_nodes.ComfyUI-WanVideoWrapper",
+      "is_custom_node": true,
+      "position": [
+        2098.4765625,
+        129.0128173828125
+      ],
+      "size": [
+        298.3199157714844,
+        228
+      ],
+      "connections": {
+        "inputs": {
+          "0": {
+            "from_node": "110",
+            "from_slot": 0,
+            "link_id": 243
+          }
+        },
+        "outputs": {
+          "0": [
+            {
+              "to_node": "105",
+              "to_slot": 18,
+              "link_id": 195
+            }
+          ]
+        }
+      },
+      "issues": [],
+      "suggestions": []
+    },
+    {
+      "node_id": "90",
+      "class_type": "LoadWanVideoT5TextEncoder",
+      "display_name": "WanVideo T5 Text Encoder Loader",
+      "category": "WanVideoWrapper",
+      "description": "Loads Wan text_encoder model from 'ComfyUI/models/LLM'",
+      "inputs": {
+        "model_name": {
+          "value": "umt5-xxl-enc-bf16.safetensors",
+          "is_connected": false,
+          "type": [
+            "umt5-xxl-enc-fp8_e4m3fn.safetensors",
+            "umt5_xxl_fp8_e4m3fn_scaled.safetensors"
+          ],
+          "config": {
+            "tooltip": "These models are loaded from 'ComfyUI/models/text_encoders'"
+          },
+          "is_required": true
+        },
+        "precision": {
+          "value": "bf16",
+          "is_connected": false,
+          "type": [
+            "fp32",
+            "bf16"
+          ],
+          "config": {
+            "default": "bf16"
+          },
+          "is_required": true
+        },
+        "load_device": {
+          "value": "offload_device",
+          "is_connected": false,
+          "type": [
+            "main_device",
+            "offload_device"
+          ],
+          "config": {
+            "default": "offload_device"
+          },
+          "is_required": false
+        },
+        "quantization": {
+          "value": "disabled",
+          "is_connected": false,
+          "type": [
+            "disabled",
+            "fp8_e4m3fn"
+          ],
+          "config": {
+            "default": "disabled",
+            "tooltip": "optional quantization method"
+          },
+          "is_required": false
+        }
+      },
+      "outputs": [
+        {
+          "type": "WANTEXTENCODER",
+          "name": "wan_t5_model",
+          "is_list": false
+        }
+      ],
+      "python_module": "custom_nodes.ComfyUI-WanVideoWrapper",
+      "is_custom_node": true,
+      "position": [
+        1309.3131103515625,
+        -92.37586975097656
+      ],
+      "size": [
+        377.1661376953125,
+        130
+      ],
+      "connections": {
+        "inputs": {},
+        "outputs": {
+          "0": [
+            {
+              "to_node": "98",
+              "to_slot": 0,
+              "link_id": 183
+            }
+          ]
+        }
+      },
+      "issues": [],
+      "suggestions": []
+    },
+    {
+      "node_id": "100",
+      "class_type": "WanVideoVAELoader",
+      "display_name": "WanVideo VAE Loader",
+      "category": "WanVideoWrapper",
+      "description": "Loads Wan VAE model from 'ComfyUI/models/vae'",
+      "inputs": {
+        "model_name": {
+          "value": "Wan2_1_VAE_bf16.safetensors",
+          "is_connected": false,
+          "type": [
+            "Wan2_1_VAE_bf16-fp8-e5m2.safetensors",
+            "Wan2_1_VAE_bf16.safetensors",
+            "clip_l.safetensors",
+            "comfy-wan_2.1_vae.safetensors",
+            "t5xxl_fp8_e4m3fn.safetensors",
+            "umt5-xxl-enc-fp8_e4m3fn.safetensors",
+            "umt5_xxl_fp8_e4m3fn_scaled.safetensors"
+          ],
+          "config": {
+            "tooltip": "These models are loaded from 'ComfyUI/models/vae'"
+          },
+          "is_required": true
+        },
+        "precision": {
+          "value": "bf16",
+          "is_connected": false,
+          "type": [
+            "fp16",
+            "fp32",
+            "bf16"
+          ],
+          "config": {
+            "default": "bf16"
+          },
+          "is_required": false
+        },
+        "use_cpu_cache": {
+          "value": false,
+          "is_connected": false,
+          "type": "BOOLEAN",
+          "config": {
+            "default": false,
+            "tooltip": "Reduces VRAM usage, but slows the VAE down a lot"
+          },
+          "is_required": false
+        }
+      },
+      "outputs": [
+        {
+          "type": "WANVAE",
+          "name": "vae",
+          "is_list": false
+        }
+      ],
+      "python_module": "custom_nodes.ComfyUI-WanVideoWrapper",
+      "is_custom_node": true,
+      "position": [
+        2247.990966796875,
+        -251.18960571289062
+      ],
+      "size": [
+        315,
+        106
+      ],
+      "connections": {
+        "inputs": {},
+        "outputs": {
+          "0": [
+            {
+              "to_node": "101",
+              "to_slot": 0,
+              "link_id": 187
+            }
+          ]
+        }
+      },
+      "issues": [],
+      "suggestions": []
+    },
+    {
+      "node_id": "112",
+      "class_type": "WanVideoEasyCache",
+      "display_name": "WanVideo EasyCache",
+      "category": "WanVideoWrapper",
+      "description": "EasyCache for WanVideoWrapper, source https://github.com/H-EmbodVis/EasyCache",
+      "inputs": {
+        "easycache_thresh": {
+          "value": 0.015,
+          "is_connected": false,
+          "type": "FLOAT",
+          "config": {
+            "default": 0.015,
+            "min": 0.0,
+            "max": 1.0,
+            "step": 0.001,
+            "tooltip": "How strongly to cache the output of diffusion model. This value must be non-negative."
+          },
+          "is_required": true
+        },
+        "start_step": {
+          "value": 1,
+          "is_connected": false,
+          "type": "INT",
+          "config": {
+            "default": 10,
+            "min": 0,
+            "max": 9999,
+            "step": 1,
+            "tooltip": "Step to start applying EasyCache"
+          },
+          "is_required": true
+        },
+        "end_step": {
+          "value": -1,
+          "is_connected": false,
+          "type": "INT",
+          "config": {
+            "default": -1,
+            "min": -1,
+            "max": 9999,
+            "step": 1,
+            "tooltip": "Step to end applying EasyCache"
+          },
+          "is_required": true
+        },
+        "cache_device": {
+          "value": "offload_device",
+          "is_connected": false,
+          "type": [
+            "main_device",
+            "offload_device"
+          ],
+          "config": {
+            "default": "offload_device",
+            "tooltip": "Device to cache to"
+          },
+          "is_required": true
+        }
+      },
+      "outputs": [
+        {
+          "type": "CACHEARGS",
+          "name": "cache_args",
+          "is_list": false
+        }
+      ],
+      "python_module": "custom_nodes.ComfyUI-WanVideoWrapper",
+      "is_custom_node": true,
+      "position": [
+        2862.873779296875,
+        -988.4769897460938
+      ],
+      "size": [
+        270,
+        130
+      ],
+      "connections": {
+        "inputs": {},
+        "outputs": {
+          "0": [
+            {
+              "to_node": "105",
+              "to_slot": 6,
+              "link_id": 210
+            }
+          ]
+        }
+      },
+      "issues": [],
+      "suggestions": []
+    },
+    {
+      "node_id": "113",
+      "class_type": "WanVideoEasyCache",
+      "display_name": "WanVideo EasyCache",
+      "category": "WanVideoWrapper",
+      "description": "EasyCache for WanVideoWrapper, source https://github.com/H-EmbodVis/EasyCache",
+      "inputs": {
+        "easycache_thresh": {
+          "value": 0.015,
+          "is_connected": false,
+          "type": "FLOAT",
+          "config": {
+            "default": 0.015,
+            "min": 0.0,
+            "max": 1.0,
+            "step": 0.001,
+            "tooltip": "How strongly to cache the output of diffusion model. This value must be non-negative."
+          },
+          "is_required": true
+        },
+        "start_step": {
+          "value": 1,
+          "is_connected": false,
+          "type": "INT",
+          "config": {
+            "default": 10,
+            "min": 0,
+            "max": 9999,
+            "step": 1,
+            "tooltip": "Step to start applying EasyCache"
+          },
+          "is_required": true
+        },
+        "end_step": {
+          "value": -1,
+          "is_connected": false,
+          "type": "INT",
+          "config": {
+            "default": -1,
+            "min": -1,
+            "max": 9999,
+            "step": 1,
+            "tooltip": "Step to end applying EasyCache"
+          },
+          "is_required": true
+        },
+        "cache_device": {
+          "value": "offload_device",
+          "is_connected": false,
+          "type": [
+            "main_device",
+            "offload_device"
+          ],
+          "config": {
+            "default": "offload_device",
+            "tooltip": "Device to cache to"
+          },
+          "is_required": true
+        }
+      },
+      "outputs": [
+        {
+          "type": "CACHEARGS",
+          "name": "cache_args",
+          "is_list": false
+        }
+      ],
+      "python_module": "custom_nodes.ComfyUI-WanVideoWrapper",
+      "is_custom_node": true,
+      "position": [
+        3275.736572265625,
+        -990.7872924804688
+      ],
+      "size": [
+        270,
+        130
+      ],
+      "connections": {
+        "inputs": {},
+        "outputs": {
+          "0": [
+            {
+              "to_node": "106",
+              "to_slot": 6,
+              "link_id": 211
+            }
+          ]
+        }
+      },
+      "issues": [],
+      "suggestions": []
+    },
+    {
+      "node_id": "102",
+      "class_type": "INTConstant",
+      "display_name": "INT Constant",
+      "category": "KJNodes/constants",
+      "description": "",
+      "inputs": {
+        "value": {
+          "value": 3,
+          "is_connected": false,
+          "type": "INT",
+          "config": {
+            "default": 0,
+            "min": -18446744073709551615,
+            "max": 18446744073709551615
+          },
+          "is_required": true
+        }
+      },
+      "outputs": [
+        {
+          "type": "INT",
+          "name": "value",
+          "is_list": false
+        }
+      ],
+      "python_module": "custom_nodes.ComfyUI-KJNodes",
+      "is_custom_node": true,
+      "position": [
+        2462.158447265625,
+        165.97390747070312
+      ],
+      "size": [
+        210,
+        58
+      ],
+      "connections": {
+        "inputs": {},
+        "outputs": {
+          "0": [
+            {
+              "to_node": "105",
+              "to_slot": 28,
+              "link_id": 196
+            },
+            {
+              "to_node": "106",
+              "to_slot": 27,
+              "link_id": 203
+            }
+          ]
+        }
+      },
+      "issues": [],
+      "suggestions": []
+    },
+    {
+      "node_id": "92",
+      "class_type": "WanVideoModelLoader",
+      "display_name": "WanVideo Model Loader",
+      "category": "WanVideoWrapper",
+      "description": "",
+      "inputs": {
+        "model": {
+          "value": "Wan2.2-T2V-A14B-LowNoise-Q4_K_S.gguf",
+          "is_connected": false,
+          "type": [
+            "Wan2.2-I2V-A14B-LowNoise-Q5_K_M.gguf",
+            "Wan2.2-T2V-A14B-HighNoise-Q5_K_M.gguf",
+            "Wan2.2-T2V-A14B-LowNoise-Q5_K_M.gguf",
+            "F2K-9b-kleinova_10FP8.safetensors",
+            "Wan2.2_Remix_NSFW_i2v_14b_high_lighting_v2.0.safetensors",
+            "Wan2_2-I2V-A14B-HIGH_fp8_e4m3fn_scaled_KJ.safetensors",
+            "Wan2_2-I2V-A14B-LOW_fp8_e4m3fn_scaled_KJ.safetensors",
+            "wan2.2_I2VLLSDasiwaNm.low.safetensors",
+            "wan2.2_animate_14b_fp16_learned_nvfp4mixed.safetensors"
+          ],
+          "config": {
+            "tooltip": "These models are loaded from the 'ComfyUI/models/diffusion_models' -folder"
+          },
+          "is_required": true
+        },
+        "base_precision": {
+          "value": "fp16_fast",
+          "is_connected": false,
+          "type": [
+            "fp32",
+            "bf16",
+            "fp16",
+            "fp16_fast"
+          ],
+          "config": {
+            "default": "bf16"
+          },
+          "is_required": true
+        },
+        "quantization": {
+          "value": "disabled",
+          "is_connected": false,
+          "type": [
+            "disabled",
+            "fp8_e4m3fn",
+            "fp8_e4m3fn_fast",
+            "fp8_e4m3fn_scaled",
+            "fp8_e4m3fn_scaled_fast",
+            "fp8_e5m2",
+            "fp8_e5m2_fast",
+            "fp8_e5m2_scaled",
+            "fp8_e5m2_scaled_fast"
+          ],
+          "config": {
+            "default": "disabled",
+            "tooltip": "Optional quantization method, 'disabled' acts as autoselect based by weights. Scaled modes only work with matching weights, _fast modes (fp8 matmul) require CUDA compute capability >= 8.9 (NVIDIA 4000 series and up), e4m3fn generally can not be torch.compiled on compute capability < 8.9 (3000 series and under)"
+          },
+          "is_required": true
+        },
+        "load_device": {
+          "value": "offload_device",
+          "is_connected": false,
+          "type": [
+            "main_device",
+            "offload_device"
+          ],
+          "config": {
+            "default": "offload_device",
+            "tooltip": "Initial device to load the model to, NOT recommended with the larger models unless you have 48GB+ VRAM"
+          },
+          "is_required": true
+        },
+        "attention_mode": {
+          "value": "sageattn",
+          "is_connected": false,
+          "type": [
+            "sdpa",
+            "flash_attn_2",
+            "flash_attn_3",
+            "sageattn",
+            "sageattn_3",
+            "radial_sage_attention",
+            "sageattn_compiled"
+          ],
+          "config": {
+            "default": "sdpa"
+          },
+          "is_required": false
+        },
+        "rms_norm_function": {
+          "value": "default",
+          "is_connected": false,
+          "type": [
+            "default",
+            "pytorch"
+          ],
+          "config": {
+            "default": "default",
+            "tooltip": "RMSNorm function to use, 'pytorch' is the new native torch RMSNorm, which is faster (when not using torch.compile mostly) but changes results slightly. 'default' is the original WanRMSNorm"
+          },
+          "is_required": false
+        }
+      },
+      "outputs": [
+        {
+          "type": "WANVIDEOMODEL",
+          "name": "model",
+          "is_list": false
+        }
+      ],
+      "python_module": "custom_nodes.ComfyUI-WanVideoWrapper",
+      "is_custom_node": true,
+      "position": [
+        1723.8323974609375,
+        -442.0349426269531
+      ],
+      "size": [
+        477.4410095214844,
+        338
+      ],
+      "connections": {
+        "inputs": {
+          "1": {
+            "from_node": "95",
+            "from_slot": 0,
+            "link_id": 233
+          },
+          "2": {
+            "from_node": "87",
+            "from_slot": 0,
+            "link_id": 236
+          }
+        },
+        "outputs": {
+          "0": [
+            {
+              "to_node": "106",
+              "to_slot": 0,
+              "link_id": 240
+            }
+          ]
+        }
+      },
+      "issues": [],
+      "suggestions": []
+    },
+    {
+      "node_id": "101",
+      "class_type": "WanVideoDecode",
+      "display_name": "WanVideo Decode",
+      "category": "WanVideoWrapper",
+      "description": "",
+      "inputs": {
+        "enable_vae_tiling": {
+          "value": false,
+          "is_connected": false,
+          "type": "BOOLEAN",
+          "config": {
+            "default": false,
+            "tooltip": "Drastically reduces memory use but will introduce seams at tile stride boundaries. The location and number of seams is dictated by the tile stride size. The visibility of seams can be controlled by increasing the tile size. Seams become less obvious at 1.5x stride and are barely noticeable at 2x stride size. Which is to say if you use a stride width of 160, the seams are barely noticeable with a tile width of 320."
+          },
+          "is_required": true
+        },
+        "tile_x": {
+          "value": 272,
+          "is_connected": false,
+          "type": "INT",
+          "config": {
+            "default": 272,
+            "min": 40,
+            "max": 2048,
+            "step": 8,
+            "tooltip": "Tile width in pixels. Smaller values use less VRAM but will make seams more obvious."
+          },
+          "is_required": true
+        },
+        "tile_y": {
+          "value": 272,
+          "is_connected": false,
+          "type": "INT",
+          "config": {
+            "default": 272,
+            "min": 40,
+            "max": 2048,
+            "step": 8,
+            "tooltip": "Tile height in pixels. Smaller values use less VRAM but will make seams more obvious."
+          },
+          "is_required": true
+        },
+        "tile_stride_x": {
+          "value": 144,
+          "is_connected": false,
+          "type": "INT",
+          "config": {
+            "default": 144,
+            "min": 32,
+            "max": 2040,
+            "step": 8,
+            "tooltip": "Tile stride width in pixels. Smaller values use less VRAM but will introduce more seams."
+          },
+          "is_required": true
+        },
+        "tile_stride_y": {
+          "value": 128,
+          "is_connected": false,
+          "type": "INT",
+          "config": {
+            "default": 128,
+            "min": 32,
+            "max": 2040,
+            "step": 8,
+            "tooltip": "Tile stride height in pixels. Smaller values use less VRAM but will introduce more seams."
+          },
+          "is_required": true
+        },
+        "normalization": {
+          "value": "default",
+          "is_connected": false,
+          "type": [
+            "default",
+            "minmax"
+          ],
+          "config": {
+            "advanced": true
+          },
+          "is_required": false
+        }
+      },
+      "outputs": [
+        {
+          "type": "IMAGE",
+          "name": "images",
+          "is_list": false
+        }
+      ],
+      "python_module": "custom_nodes.ComfyUI-WanVideoWrapper",
+      "is_custom_node": true,
+      "position": [
+        2446.328369140625,
+        -110.41962432861328
+      ],
+      "size": [
+        315,
+        198
+      ],
+      "connections": {
+        "inputs": {
+          "0": {
+            "from_node": "100",
+            "from_slot": 0,
+            "link_id": 187
+          },
+          "1": {
+            "from_node": "106",
+            "from_slot": 0,
+            "link_id": 188
+          }
+        },
+        "outputs": {
+          "0": [
+            {
+              "to_node": "104",
+              "to_slot": 0,
+              "link_id": 190
+            }
+          ]
+        }
+      },
+      "issues": [],
+      "suggestions": []
+    },
+    {
+      "node_id": "105",
+      "class_type": "WanVideoSampler",
+      "display_name": "WanVideo Sampler",
+      "category": "WanVideoWrapper",
+      "description": "",
+      "inputs": {
+        "shift": {
+          "value": 6,
+          "is_connected": false,
+          "type": "FLOAT",
+          "config": {
+            "default": 5.0,
+            "min": 0.0,
+            "max": 1000.0,
+            "step": 0.01
+          },
+          "is_required": true
+        },
+        "force_offload": {
+          "value": 1,
+          "is_connected": false,
+          "type": "BOOLEAN",
+          "config": {
+            "default": true,
+            "tooltip": "Moves the model to the offload device after sampling"
+          },
+          "is_required": true
+        },
+        "scheduler": {
+          "value": 8,
+          "is_connected": false,
+          "type": [
+            "unipc",
+            "unipc/beta",
+            "dpm++",
+            "dpm++/beta",
+            "dpm++_sde",
+            "dpm++_sde/beta",
+            "euler",
+            "euler/beta",
+            "longcat_distill_euler",
+            "deis",
+            "lcm",
+            "lcm/beta",
+            "res_multistep",
+            "flowmatch_causvid",
+            "flowmatch_distill",
+            "flowmatch_pusa",
+            "multitalk",
+            "sa_ode_stable",
+            "rcm",
+            "vibt_unipc"
+          ],
+          "config": {
+            "default": "unipc"
+          },
+          "is_required": true
+        },
+        "riflex_freq_index": {
+          "value": 46962144800973,
+          "is_connected": false,
+          "type": "INT",
+          "config": {
+            "default": 0,
+            "min": 0,
+            "max": 1000,
+            "step": 1,
+            "tooltip": "Frequency index for RIFLEX, disabled when 0, default 6. Allows for new frames to be generated after without looping"
+          },
+          "is_required": true
+        },
+        "batched_cfg": {
+          "value": "fixed",
+          "is_connected": false,
+          "type": "BOOLEAN",
+          "config": {
+            "default": false,
+            "tooltip": "Batch cond and uncond for faster sampling, possibly faster on some hardware, uses more memory"
+          },
+          "is_required": false
+        },
+        "rope_function": {
+          "value": true,
+          "is_connected": false,
+          "type": [
+            "default",
+            "comfy",
+            "comfy_chunked"
+          ],
+          "config": {
+            "default": "comfy",
+            "tooltip": "Comfy's RoPE implementation doesn't use complex numbers and can thus be compiled, that should be a lot faster when using torch.compile. Chunked version has reduced peak VRAM usage when not using torch.compile"
+          },
+          "is_required": false
+        },
+        "start_step": {
+          "value": "dpm++_sde",
+          "is_connected": false,
+          "type": "INT",
+          "config": {
+            "default": 0,
+            "min": 0,
+            "max": 10000,
+            "step": 1,
+            "tooltip": "Start step for the sampling, 0 means full sampling, otherwise samples only from this step"
+          },
+          "is_required": false
+        },
+        "add_noise_to_samples": {
+          "value": 0,
+          "is_connected": false,
+          "type": "BOOLEAN",
+          "config": {
+            "default": false,
+            "tooltip": "Add noise to the samples before sampling, needed for video2video sampling when starting from clean video"
+          },
+          "is_required": false
+        }
+      },
+      "outputs": [
+        {
+          "type": "LATENT",
+          "name": "samples",
+          "is_list": false
+        },
+        {
+          "type": "LATENT",
+          "name": "denoised_samples",
+          "is_list": false
+        }
+      ],
+      "python_module": "custom_nodes.ComfyUI-WanVideoWrapper",
+      "is_custom_node": true,
+      "position": [
+        2848.666015625,
+        -779.0357666015625
+      ],
+      "size": [
+        315,
+        902
+      ],
+      "connections": {
+        "inputs": {
+          "2": {
+            "from_node": "98",
+            "from_slot": 0,
+            "link_id": 192
+          },
+          "1": {
+            "from_node": "93",
+            "from_slot": 0,
+            "link_id": 193
+          },
+          "17": {
+            "from_node": "110",
+            "from_slot": 0,
+            "link_id": 194
+          },
+          "18": {
+            "from_node": "103",
+            "from_slot": 0,
+            "link_id": 195
+          },
+          "28": {
+            "from_node": "102",
+            "from_slot": 0,
+            "link_id": 196
+          },
+          "20": {
+            "from_node": "89",
+            "from_slot": 0,
+            "link_id": 197
+          },
+          "6": {
+            "from_node": "112",
+            "from_slot": 0,
+            "link_id": 210
+          },
+          "0": {
+            "from_node": "91",
+            "from_slot": 0,
+            "link_id": 238
+          },
+          "24": {
+            "from_node": "136",
+            "from_slot": 0,
+            "link_id": 244
+          }
+        },
+        "outputs": {
+          "0": [
+            {
+              "to_node": "106",
+              "to_slot": 3,
+              "link_id": 201
+            }
+          ]
+        }
+      },
+      "issues": [],
+      "suggestions": []
+    },
+    {
+      "node_id": "106",
+      "class_type": "WanVideoSampler",
+      "display_name": "WanVideo Sampler",
+      "category": "WanVideoWrapper",
+      "description": "",
+      "inputs": {
+        "cfg": {
+          "value": 6,
+          "is_connected": false,
+          "type": "FLOAT",
+          "config": {
+            "default": 6.0,
+            "min": 0.0,
+            "max": 30.0,
+            "step": 0.01
+          },
+          "is_required": true
+        },
+        "shift": {
+          "value": 1,
+          "is_connected": false,
+          "type": "FLOAT",
+          "config": {
+            "default": 5.0,
+            "min": 0.0,
+            "max": 1000.0,
+            "step": 0.01
+          },
+          "is_required": true
+        },
+        "force_offload": {
+          "value": 8,
+          "is_connected": false,
+          "type": "BOOLEAN",
+          "config": {
+            "default": true,
+            "tooltip": "Moves the model to the offload device after sampling"
+          },
+          "is_required": true
+        },
+        "scheduler": {
+          "value": 46962144800973,
+          "is_connected": false,
+          "type": [
+            "unipc",
+            "unipc/beta",
+            "dpm++",
+            "dpm++/beta",
+            "dpm++_sde",
+            "dpm++_sde/beta",
+            "euler",
+            "euler/beta",
+            "longcat_distill_euler",
+            "deis",
+            "lcm",
+            "lcm/beta",
+            "res_multistep",
+            "flowmatch_causvid",
+            "flowmatch_distill",
+            "flowmatch_pusa",
+            "multitalk",
+            "sa_ode_stable",
+            "rcm",
+            "vibt_unipc"
+          ],
+          "config": {
+            "default": "unipc"
+          },
+          "is_required": true
+        },
+        "riflex_freq_index": {
+          "value": "fixed",
+          "is_connected": false,
+          "type": "INT",
+          "config": {
+            "default": 0,
+            "min": 0,
+            "max": 1000,
+            "step": 1,
+            "tooltip": "Frequency index for RIFLEX, disabled when 0, default 6. Allows for new frames to be generated after without looping"
+          },
+          "is_required": true
+        },
+        "batched_cfg": {
+          "value": true,
+          "is_connected": false,
+          "type": "BOOLEAN",
+          "config": {
+            "default": false,
+            "tooltip": "Batch cond and uncond for faster sampling, possibly faster on some hardware, uses more memory"
+          },
+          "is_required": false
+        },
+        "rope_function": {
+          "value": "dpm++_sde",
+          "is_connected": false,
+          "type": [
+            "default",
+            "comfy",
+            "comfy_chunked"
+          ],
+          "config": {
+            "default": "comfy",
+            "tooltip": "Comfy's RoPE implementation doesn't use complex numbers and can thus be compiled, that should be a lot faster when using torch.compile. Chunked version has reduced peak VRAM usage when not using torch.compile"
+          },
+          "is_required": false
+        },
+        "end_step": {
+          "value": 0,
+          "is_connected": false,
+          "type": "INT",
+          "config": {
+            "default": -1,
+            "min": -1,
+            "max": 10000,
+            "step": 1,
+            "tooltip": "End step for the sampling, -1 means full sampling, otherwise samples only until this step"
+          },
+          "is_required": false
+        },
+        "add_noise_to_samples": {
+          "value": 1,
+          "is_connected": false,
+          "type": "BOOLEAN",
+          "config": {
+            "default": false,
+            "tooltip": "Add noise to the samples before sampling, needed for video2video sampling when starting from clean video"
+          },
+          "is_required": false
+        }
+      },
+      "outputs": [
+        {
+          "type": "LATENT",
+          "name": "samples",
+          "is_list": false
+        },
+        {
+          "type": "LATENT",
+          "name": "denoised_samples",
+          "is_list": false
+        }
+      ],
+      "python_module": "custom_nodes.ComfyUI-WanVideoWrapper",
+      "is_custom_node": true,
+      "position": [
+        3243.892822265625,
+        -779.4600830078125
+      ],
+      "size": [
+        315,
+        902
+      ],
+      "connections": {
+        "inputs": {
+          "2": {
+            "from_node": "98",
+            "from_slot": 0,
+            "link_id": 199
+          },
+          "1": {
+            "from_node": "93",
+            "from_slot": 0,
+            "link_id": 200
+          },
+          "3": {
+            "from_node": "105",
+            "from_slot": 0,
+            "link_id": 201
+          },
+          "17": {
+            "from_node": "110",
+            "from_slot": 0,
+            "link_id": 202
+          },
+          "27": {
+            "from_node": "102",
+            "from_slot": 0,
+            "link_id": 203
+          },
+          "20": {
+            "from_node": "89",
+            "from_slot": 0,
+            "link_id": 204
+          },
+          "6": {
+            "from_node": "113",
+            "from_slot": 0,
+            "link_id": 211
+          },
+          "0": {
+            "from_node": "92",
+            "from_slot": 0,
+            "link_id": 240
+          },
+          "24": {
+            "from_node": "136",
+            "from_slot": 0,
+            "link_id": 245
+          }
+        },
+        "outputs": {
+          "0": [
+            {
+              "to_node": "101",
+              "to_slot": 1,
+              "link_id": 188
+            }
+          ]
+        }
+      },
+      "issues": [],
+      "suggestions": []
+    },
+    {
+      "node_id": "104",
+      "class_type": "GetImageSizeAndCount",
+      "display_name": "Get Image Size & Count",
+      "category": "KJNodes/image",
+      "description": "\nReturns width, height and batch size of the image,  \nand passes it through unchanged.  \n\n",
+      "inputs": {},
+      "outputs": [
+        {
+          "type": "IMAGE",
+          "name": "image",
+          "is_list": false
+        },
+        {
+          "type": "INT",
+          "name": "width",
+          "is_list": false
+        },
+        {
+          "type": "INT",
+          "name": "height",
+          "is_list": false
+        },
+        {
+          "type": "INT",
+          "name": "count",
+          "is_list": false
+        }
+      ],
+      "python_module": "custom_nodes.ComfyUI-KJNodes",
+      "is_custom_node": true,
+      "position": [
+        1417.36669921875,
+        137.40867614746094
+      ],
+      "size": [
+        240.41265869140625,
+        86
+      ],
+      "connections": {
+        "inputs": {
+          "0": {
+            "from_node": "101",
+            "from_slot": 0,
+            "link_id": 190
+          }
+        },
+        "outputs": {
+          "0": [
+            {
+              "to_node": "130",
+              "to_slot": 1,
+              "link_id": 228
+            },
+            {
+              "to_node": "111",
+              "to_slot": 0,
+              "link_id": 231
+            }
+          ]
+        }
+      },
+      "issues": [],
+      "suggestions": []
+    },
+    {
+      "node_id": "116",
+      "class_type": "easy cleanGpuUsed",
+      "display_name": "Clean VRAM Used",
+      "category": "EasyUse/Logic",
+      "description": "",
+      "inputs": {},
+      "outputs": [
+        {
+          "type": "*",
+          "name": "output",
+          "is_list": false
+        }
+      ],
+      "python_module": "custom_nodes.ComfyUI-Easy-Use",
+      "is_custom_node": true,
+      "position": [
+        2529.750732421875,
+        313.7322692871094
+      ],
+      "size": [
+        140,
+        26
+      ],
+      "connections": {
+        "inputs": {
+          "0": {
+            "from_node": "117",
+            "from_slot": 0,
+            "link_id": 217
+          }
+        },
+        "outputs": {}
+      },
+      "issues": [],
+      "suggestions": []
+    },
+    {
+      "node_id": "117",
+      "class_type": "easy clearCacheAll",
+      "display_name": "Clear Cache All",
+      "category": "EasyUse/Logic",
+      "description": "",
+      "inputs": {},
+      "outputs": [
+        {
+          "type": "*",
+          "name": "output",
+          "is_list": false
+        }
+      ],
+      "python_module": "custom_nodes.ComfyUI-Easy-Use",
+      "is_custom_node": true,
+      "position": [
+        1850.6673583984375,
+        309.178466796875
+      ],
+      "size": [
+        140,
+        26
+      ],
+      "connections": {
+        "inputs": {
+          "0": {
+            "from_node": "130",
+            "from_slot": 0,
+            "link_id": 229
+          }
+        },
+        "outputs": {
+          "0": [
+            {
+              "to_node": "116",
+              "to_slot": 0,
+              "link_id": 217
+            }
+          ]
+        }
+      },
+      "issues": [],
+      "suggestions": []
+    },
+    {
+      "node_id": "87",
+      "class_type": "WanVideoLoraSelect",
+      "display_name": "WanVideo Lora Select",
+      "category": "WanVideoWrapper",
+      "description": "Select a LoRA model from ComfyUI/models/loras",
+      "inputs": {
+        "lora": {
+          "value": "Wan21_T2V_14B_lightx2v_cfg_step_distill_lora_rank32.safetensors",
+          "is_connected": false,
+          "type": [
+            "FLUX-小红书极致真实V2.safetensors",
+            "FLUX-超级质感细节增强.safetensors",
+            "SVI_v2_PRO_Wan2.2-I2V-A14B_HIGH_lora_rank_128_fp16.safetensors",
+            "Wan2.2-Fun-A14B-InP-low-noise-HPS2.1.safetensors",
+            "Wan21_I2V_14B_lightx2v_cfg_step_distill_lora_rank64.safetensors",
+            "Wan21_T2V_14B_lightx2v_cfg_step_distill_lora_rank32.safetensors",
+            "WanAnimate_relight_lora_fp16.safetensors",
+            "lightx2v_I2V_14B_480p_cfg_step_distill_rank64_bf16.safetensors",
+            "lightx2v_T2V_14B_cfg_step_distill_v2_lora_rank64_bf16.safetensors"
+          ],
+          "config": {
+            "tooltip": "LORA models are expected to be in ComfyUI/models/loras with .safetensors extension"
+          },
+          "is_required": true
+        },
+        "strength": {
+          "value": 1,
+          "is_connected": false,
+          "type": "FLOAT",
+          "config": {
+            "default": 1.0,
+            "min": -10.0,
+            "max": 10.0,
+            "step": 0.0001,
+            "tooltip": "LORA strength, set to 0.0 to unmerge the LORA"
+          },
+          "is_required": true
+        },
+        "low_mem_load": {
+          "value": false,
+          "is_connected": false,
+          "type": "BOOLEAN",
+          "config": {
+            "default": false,
+            "tooltip": "Load the LORA model with less VRAM usage, slower loading. This affects ALL LoRAs, not just the current one. No effect if merge_loras is False"
+          },
+          "is_required": false
+        },
+        "merge_loras": {
+          "value": false,
+          "is_connected": false,
+          "type": "BOOLEAN",
+          "config": {
+            "default": true,
+            "tooltip": "Merge LoRAs into the model, otherwise they are loaded on the fly. Always disabled for GGUF and scaled fp8 models. This affects ALL LoRAs, not just the current one"
+          },
+          "is_required": false
+        }
+      },
+      "outputs": [
+        {
+          "type": "WANVIDLORA",
+          "name": "lora",
+          "is_list": false
+        }
+      ],
+      "python_module": "custom_nodes.ComfyUI-WanVideoWrapper",
+      "is_custom_node": true,
+      "position": [
+        1037.185791015625,
+        -301.63873291015625
+      ],
+      "size": [
+        624.4888305664062,
+        150
+      ],
+      "connections": {
+        "inputs": {},
+        "outputs": {
+          "0": [
+            {
+              "to_node": "92",
+              "to_slot": 2,
+              "link_id": 236
+            }
+          ]
+        }
+      },
+      "issues": [],
+      "suggestions": []
+    },
+    {
+      "node_id": "91",
+      "class_type": "WanVideoModelLoader",
+      "display_name": "WanVideo Model Loader",
+      "category": "WanVideoWrapper",
+      "description": "",
+      "inputs": {
+        "model": {
+          "value": "Wan2.2-T2V-A14B-HighNoise-Q4_K_S.gguf",
+          "is_connected": false,
+          "type": [
+            "Wan2.2-I2V-A14B-LowNoise-Q5_K_M.gguf",
+            "Wan2.2-T2V-A14B-HighNoise-Q5_K_M.gguf",
+            "Wan2.2-T2V-A14B-LowNoise-Q5_K_M.gguf",
+            "F2K-9b-kleinova_10FP8.safetensors",
+            "Wan2.2_Remix_NSFW_i2v_14b_high_lighting_v2.0.safetensors",
+            "Wan2_2-I2V-A14B-HIGH_fp8_e4m3fn_scaled_KJ.safetensors",
+            "Wan2_2-I2V-A14B-LOW_fp8_e4m3fn_scaled_KJ.safetensors",
+            "wan2.2_I2VLLSDasiwaNm.low.safetensors",
+            "wan2.2_animate_14b_fp16_learned_nvfp4mixed.safetensors"
+          ],
+          "config": {
+            "tooltip": "These models are loaded from the 'ComfyUI/models/diffusion_models' -folder"
+          },
+          "is_required": true
+        },
+        "base_precision": {
+          "value": "fp16_fast",
+          "is_connected": false,
+          "type": [
+            "fp32",
+            "bf16",
+            "fp16",
+            "fp16_fast"
+          ],
+          "config": {
+            "default": "bf16"
+          },
+          "is_required": true
+        },
+        "quantization": {
+          "value": "disabled",
+          "is_connected": false,
+          "type": [
+            "disabled",
+            "fp8_e4m3fn",
+            "fp8_e4m3fn_fast",
+            "fp8_e4m3fn_scaled",
+            "fp8_e4m3fn_scaled_fast",
+            "fp8_e5m2",
+            "fp8_e5m2_fast",
+            "fp8_e5m2_scaled",
+            "fp8_e5m2_scaled_fast"
+          ],
+          "config": {
+            "default": "disabled",
+            "tooltip": "Optional quantization method, 'disabled' acts as autoselect based by weights. Scaled modes only work with matching weights, _fast modes (fp8 matmul) require CUDA compute capability >= 8.9 (NVIDIA 4000 series and up), e4m3fn generally can not be torch.compiled on compute capability < 8.9 (3000 series and under)"
+          },
+          "is_required": true
+        },
+        "load_device": {
+          "value": "offload_device",
+          "is_connected": false,
+          "type": [
+            "main_device",
+            "offload_device"
+          ],
+          "config": {
+            "default": "offload_device",
+            "tooltip": "Initial device to load the model to, NOT recommended with the larger models unless you have 48GB+ VRAM"
+          },
+          "is_required": true
+        },
+        "attention_mode": {
+          "value": "sageattn",
+          "is_connected": false,
+          "type": [
+            "sdpa",
+            "flash_attn_2",
+            "flash_attn_3",
+            "sageattn",
+            "sageattn_3",
+            "radial_sage_attention",
+            "sageattn_compiled"
+          ],
+          "config": {
+            "default": "sdpa"
+          },
+          "is_required": false
+        },
+        "rms_norm_function": {
+          "value": "default",
+          "is_connected": false,
+          "type": [
+            "default",
+            "pytorch"
+          ],
+          "config": {
+            "default": "default",
+            "tooltip": "RMSNorm function to use, 'pytorch' is the new native torch RMSNorm, which is faster (when not using torch.compile mostly) but changes results slightly. 'default' is the original WanRMSNorm"
+          },
+          "is_required": false
+        }
+      },
+      "outputs": [
+        {
+          "type": "WANVIDEOMODEL",
+          "name": "model",
+          "is_list": false
+        }
+      ],
+      "python_module": "custom_nodes.ComfyUI-WanVideoWrapper",
+      "is_custom_node": true,
+      "position": [
+        1714.8914794921875,
+        -781.587158203125
+      ],
+      "size": [
+        477.4410095214844,
+        338
+      ],
+      "connections": {
+        "inputs": {
+          "1": {
+            "from_node": "95",
+            "from_slot": 0,
+            "link_id": 234
+          },
+          "2": {
+            "from_node": "86",
+            "from_slot": 0,
+            "link_id": 235
+          }
+        },
+        "outputs": {
+          "0": [
+            {
+              "to_node": "105",
+              "to_slot": 0,
+              "link_id": 238
+            }
+          ]
+        }
+      },
+      "issues": [],
+      "suggestions": []
+    },
+    {
+      "node_id": "111",
+      "class_type": "VHS_VideoCombine",
+      "display_name": "Video Combine 🎥🅥🅗🅢",
+      "category": "Video Helper Suite 🎥🅥🅗🅢",
+      "description": "Video Combine 🎥🅥🅗🅢<div style=\"font-size: 0.8em\"><div id=VHS_shortdesc>Combine an image sequence into a video</div></div><div style=\"font-size: 0.8em\"><div vhs_title=\"Inputs\" style=\"display: flex; font-size: 0.8em\" class=\"VHS_collapse\"><div style=\"color: #AAA; height: 1.5em;\">[<span style=\"font-family: monospace\">-</span>]</div><div style=\"width: 100%\">Inputs: <div vhs_title=\"images\" style=\"display: flex; font-size: 1em\" class=\"VHS_collapse\"><div style=\"color: #AAA; height: 1.5em;\">[<span style=\"font-family: monospace\">-</span>]</div><div style=\"width: 100%\">images: The images to be turned into a video</div></div><div vhs_title=\"audio\" style=\"display: flex; font-size: 1em\" class=\"VHS_collapse\"><div style=\"color: #AAA; height: 1.5em;\">[<span style=\"font-family: monospace\">-</span>]</div><div style=\"width: 100%\">audio: (optional) audio to add to the video</div></div><div vhs_title=\"meta_batch\" style=\"display: flex; font-size: 1em\" class=\"VHS_collapse\"><div style=\"color: #AAA; height: 1.5em;\">[<span style=\"font-family: monospace\">-</span>]</div><div style=\"width: 100%\">meta_batch: (optional) Connect to a Meta Batch manager to divide extremely long image sequences into sub batches. See the documentation for Meta Batch Manager</div></div><div vhs_title=\"vae\" style=\"display: flex; font-size: 1em\" class=\"VHS_collapse\"><div style=\"color: #AAA; height: 1.5em;\">[<span style=\"font-family: monospace\">-</span>]</div><div style=\"width: 100%\">vae: (optional) If provided, the node will take latents as input instead of images. This drastically reduces the required RAM (not VRAM) when working with long (100+ frames) sequences<div style=\"font-size: 1em\">Unlike on Load Video, this isn't always a strict upgrade over using a standalone VAE Decode.</div><div style=\"font-size: 1em\">If you have multiple Video Combine outputs, then the VAE decode will be performed for each output node increasing execution time</div><div style=\"font-size: 1em\">If you make any change to output settings on the Video Combine (such as changing the output format), the VAE decode will be performed again as the decoded result is (by design) not cached</div></div></div></div></div><div vhs_title=\"Widgets\" style=\"display: flex; font-size: 0.8em\" class=\"VHS_collapse\"><div style=\"color: #AAA; height: 1.5em;\">[<span style=\"font-family: monospace\">-</span>]</div><div style=\"width: 100%\">Widgets: <div vhs_title=\"frame_rate\" style=\"display: flex; font-size: 1em\" class=\"VHS_collapse\"><div style=\"color: #AAA; height: 1.5em;\">[<span style=\"font-family: monospace\">-</span>]</div><div style=\"width: 100%\">frame_rate: The frame rate which will be used for the output video. Consider converting this to an input and connecting this to a Load Video with Video Info(Loaded)->fps. When including audio, failure to properly set this will result in audio desync</div></div><div vhs_title=\"loop_count\" style=\"display: flex; font-size: 1em\" class=\"VHS_collapse\"><div style=\"color: #AAA; height: 1.5em;\">[<span style=\"font-family: monospace\">-</span>]</div><div style=\"width: 100%\">loop_count: The number of additional times the video should repeat. Can cause performance issues when used with long (100+ frames) sequences</div></div><div vhs_title=\"filename_prefix\" style=\"display: flex; font-size: 1em\" class=\"VHS_collapse\"><div style=\"color: #AAA; height: 1.5em;\">[<span style=\"font-family: monospace\">-</span>]</div><div style=\"width: 100%\">filename_prefix: A prefix to add to the name of the output filename. This can include subfolders or format strings.</div></div><div vhs_title=\"format\" style=\"display: flex; font-size: 1em\" class=\"VHS_collapse\"><div style=\"color: #AAA; height: 1.5em;\">[<span style=\"font-family: monospace\">-</span>]</div><div style=\"width: 100%\">format: The output format to use. Formats starting with, 'image' are saved with PIL, but formats starting with 'video' utilize the video_formats system. 'video' options require ffmpeg and selecting one frequently adds additional options to the node.</div></div><div vhs_title=\"pingpong\" style=\"display: flex; font-size: 1em\" class=\"VHS_collapse\"><div style=\"color: #AAA; height: 1.5em;\">[<span style=\"font-family: monospace\">-</span>]</div><div style=\"width: 100%\">pingpong: Play the video normally, then repeat the video in reverse so that it 'pingpongs' back and forth. This is frequently used to minimize the appearance of skips on very short animations.</div></div><div vhs_title=\"save_output\" style=\"display: flex; font-size: 1em\" class=\"VHS_collapse\"><div style=\"color: #AAA; height: 1.5em;\">[<span style=\"font-family: monospace\">-</span>]</div><div style=\"width: 100%\">save_output: Specifies if output files should be saved to the output folder, or the temporary output folder</div></div><div vhs_title=\"videopreview\" style=\"display: flex; font-size: 1em\" class=\"VHS_collapse\"><div style=\"color: #AAA; height: 1.5em;\">[<span style=\"font-family: monospace\">-</span>]</div><div style=\"width: 100%\">videopreview: Displays a preview for the processed result. If advanced previews is enabled, the output is always converted to a format viewable from the browser. If the video has audio, it will also be previewed when moused over. Additional preview options can be accessed with right click.</div></div></div></div><div vhs_title=\"Common Format Widgets\" style=\"display: flex; font-size: 0.8em\" class=\"VHS_collapse\"><div style=\"color: #AAA; height: 1.5em;\">[<span style=\"font-family: monospace\">-</span>]</div><div style=\"width: 100%\">Common Format Widgets: <div vhs_title=\"crf\" style=\"display: flex; font-size: 1em\" class=\"VHS_collapse\"><div style=\"color: #AAA; height: 1.5em;\">[<span style=\"font-family: monospace\">-</span>]</div><div style=\"width: 100%\">crf: Determines how much to prioritize quality over filesize. Numbers vary between formats, but on each format that includes it, the default value provides visually loss less output</div></div><div vhs_title=\"pix_fmt\" style=\"display: flex; font-size: 1em\" class=\"VHS_collapse\"><div style=\"color: #AAA; height: 1.5em;\">[<span style=\"font-family: monospace\">-</span>]</div><div style=\"width: 100%\">pix_fmt: The pixel format to use for output. Alternative options will often have higher quality at the cost of increased file size and reduced compatibility with external software.<div style=\"font-size: 1em\"><div vhs_title=\"yuv420p\" style=\"display: flex; font-size: 1em\" class=\"VHS_collapse\"><div style=\"color: #AAA; height: 1.5em;\">[<span style=\"font-family: monospace\">-</span>]</div><div style=\"width: 100%\">yuv420p: The most common and default format</div></div><div vhs_title=\"yuv420p10le\" style=\"display: flex; font-size: 1em\" class=\"VHS_collapse\"><div style=\"color: #AAA; height: 1.5em;\">[<span style=\"font-family: monospace\">-</span>]</div><div style=\"width: 100%\">yuv420p10le: Use 10 bit color depth. This can improve color quality when combined with 16bit input color depth</div></div><div vhs_title=\"yuva420p\" style=\"display: flex; font-size: 1em\" class=\"VHS_collapse\"><div style=\"color: #AAA; height: 1.5em;\">[<span style=\"font-family: monospace\">-</span>]</div><div style=\"width: 100%\">yuva420p: Include transparency in the output video</div></div></div></div></div><div vhs_title=\"input_color_depth\" style=\"display: flex; font-size: 1em\" class=\"VHS_collapse\"><div style=\"color: #AAA; height: 1.5em;\">[<span style=\"font-family: monospace\">-</span>]</div><div style=\"width: 100%\">input_color_depth: VHS supports outputting 16bit images. While this produces higher quality output, the difference usually isn't visible without postprocessing and it significantly increases file size and processing time.</div></div><div vhs_title=\"save_metadata\" style=\"display: flex; font-size: 1em\" class=\"VHS_collapse\"><div style=\"color: #AAA; height: 1.5em;\">[<span style=\"font-family: monospace\">-</span>]</div><div style=\"width: 100%\">save_metadata: Determines if metadata for the workflow should be included in the output video file</div></div></div></div></div>",
+      "inputs": {},
+      "outputs": [
+        {
+          "type": "VHS_FILENAMES",
+          "name": "Filenames",
+          "is_list": false
+        }
+      ],
+      "python_module": "custom_nodes.ComfyUI-VideoHelperSuite",
+      "is_custom_node": true,
+      "position": [
+        3682.66064453125,
+        -992.3555297851562
+      ],
+      "size": [
+        795.8709716796875,
+        334
+      ],
+      "connections": {
+        "inputs": {
+          "0": {
+            "from_node": "104",
+            "from_slot": 0,
+            "link_id": 231
+          }
+        },
+        "outputs": {}
+      },
+      "issues": [],
+      "suggestions": []
+    },
+    {
+      "node_id": "129",
+      "class_type": "UpscaleModelLoader",
+      "display_name": "Load Upscale Model",
+      "category": "loaders",
+      "description": "",
+      "inputs": {
+        "model_name": {
+          "value": "RealESRGAN_x2.pth",
+          "is_connected": false,
+          "type": "COMBO",
+          "config": {
+            "multiselect": false,
+            "options": [
+              "2x_StarSample_V2.0.safetensors",
+              "RealESRGAN_x2.pth"
+            ]
+          },
+          "is_required": true
+        }
+      },
+      "outputs": [
+        {
+          "type": "UPSCALE_MODEL",
+          "name": "UPSCALE_MODEL",
+          "is_list": false
+        }
+      ],
+      "python_module": "comfy_extras.nodes_upscale_model",
+      "is_custom_node": true,
+      "position": [
+        1770.4862060546875,
+        405.6307678222656
+      ],
+      "size": [
+        270,
+        58
+      ],
+      "connections": {
+        "inputs": {},
+        "outputs": {
+          "0": [
+            {
+              "to_node": "130",
+              "to_slot": 0,
+              "link_id": 227
+            }
+          ]
+        }
+      },
+      "issues": [
+        {
+          "type": "model_not_found",
+          "node_id": "129",
+          "node_type": "UpscaleModelLoader",
+          "param_name": "model_name",
+          "requested_model": "RealESRGAN_x2.pth",
+          "available_models": "COMBO"
+        }
+      ],
+      "suggestions": []
+    },
+    {
+      "node_id": "130",
+      "class_type": "ImageUpscaleWithModel",
+      "display_name": "Upscale Image (using Model)",
+      "category": "image/upscaling",
+      "description": "",
+      "inputs": {},
+      "outputs": [
+        {
+          "type": "IMAGE",
+          "name": "IMAGE",
+          "is_list": false
+        }
+      ],
+      "python_module": "comfy_extras.nodes_upscale_model",
+      "is_custom_node": true,
+      "position": [
+        2143.942138671875,
+        414.6625061035156
+      ],
+      "size": [
+        151.9,
+        46
+      ],
+      "connections": {
+        "inputs": {
+          "0": {
+            "from_node": "129",
+            "from_slot": 0,
+            "link_id": 227
+          },
+          "1": {
+            "from_node": "104",
+            "from_slot": 0,
+            "link_id": 228
+          }
+        },
+        "outputs": {
+          "0": [
+            {
+              "to_node": "117",
+              "to_slot": 0,
+              "link_id": 229
+            }
+          ]
+        }
+      },
+      "issues": [],
+      "suggestions": []
+    },
+    {
+      "node_id": "98",
+      "class_type": "WanVideoTextEncode",
+      "display_name": "WanVideo TextEncode",
+      "category": "WanVideoWrapper",
+      "description": "Encodes text prompts into text embeddings. For rudimentary prompt travel you can input multiple prompts separated by '|', they will be equally spread over the video length",
+      "inputs": {
+        "negative_prompt": {
+          "value": "女人拿着相机拍照",
+          "is_connected": false,
+          "type": "STRING",
+          "config": {
+            "default": "",
+            "multiline": true
+          },
+          "is_required": true
+        },
+        "force_offload": {
+          "value": "色调艳丽，过曝，静态，细节模糊不清，字幕，风格，作品，画作，画面，静止，整体发灰，最差质量，低质量，JPEG压缩残留，丑陋的，残缺的，多余的手指，画得不好的手部，画得不好的脸部，畸形的，毁容的，形态畸形的肢体，手指融合，静止不动的画面，杂乱的背景，三条腿，背景人很多，倒着走",
+          "is_connected": false,
+          "type": "BOOLEAN",
+          "config": {
+            "default": true
+          },
+          "is_required": false
+        },
+        "use_disk_cache": {
+          "value": true,
+          "is_connected": false,
+          "type": "BOOLEAN",
+          "config": {
+            "default": false,
+            "tooltip": "Cache the text embeddings to disk for faster re-use, under the custom_nodes/ComfyUI-WanVideoWrapper/text_embed_cache directory"
+          },
+          "is_required": false
+        },
+        "device": {
+          "value": false,
+          "is_connected": false,
+          "type": [
+            "gpu",
+            "cpu"
+          ],
+          "config": {
+            "default": "gpu",
+            "tooltip": "Device to run the text encoding on."
+          },
+          "is_required": false
+        }
+      },
+      "outputs": [
+        {
+          "type": "WANVIDEOTEXTEMBEDS",
+          "name": "text_embeds",
+          "is_list": false
+        }
+      ],
+      "python_module": "custom_nodes.ComfyUI-WanVideoWrapper",
+      "is_custom_node": true,
+      "position": [
+        2301.05322265625,
+        -745.7943115234375
+      ],
+      "size": [
+        474.3573303222656,
+        316.48370361328125
+      ],
+      "connections": {
+        "inputs": {
+          "0": {
+            "from_node": "90",
+            "from_slot": 0,
+            "link_id": 183
+          },
+          "2": {
+            "from_node": "132",
+            "from_slot": 0,
+            "link_id": 232
+          }
+        },
+        "outputs": {
+          "0": [
+            {
+              "to_node": "105",
+              "to_slot": 2,
+              "link_id": 192
+            },
+            {
+              "to_node": "106",
+              "to_slot": 2,
+              "link_id": 199
+            }
+          ]
+        }
+      },
+      "issues": [],
+      "suggestions": []
+    },
+    {
+      "node_id": "133",
+      "class_type": "Note",
+      "display_name": "Note",
+      "category": "unknown",
+      "description": "",
+      "inputs": {},
+      "outputs": [],
+      "python_module": "",
+      "is_custom_node": true,
+      "position": [
+        584.0462646484375,
+        -175.3966827392578
+      ],
+      "size": [
+        273.00018310546875,
+        137.49575805664062
+      ],
+      "connections": {
+        "inputs": {},
+        "outputs": {}
+      },
+      "issues": [],
+      "suggestions": []
+    },
+    {
+      "node_id": "93",
+      "class_type": "WanVideoEmptyEmbeds",
+      "display_name": "WanVideo Empty Embeds",
+      "category": "WanVideoWrapper",
+      "description": "",
+      "inputs": {
+        "width": {
+          "value": 480,
+          "is_connected": false,
+          "type": "INT",
+          "config": {
+            "default": 832,
+            "min": 64,
+            "max": 8096,
+            "step": 8,
+            "tooltip": "Width of the image to encode"
+          },
+          "is_required": true
+        },
+        "height": {
+          "value": 832,
+          "is_connected": false,
+          "type": "INT",
+          "config": {
+            "default": 480,
+            "min": 64,
+            "max": 8096,
+            "step": 8,
+            "tooltip": "Height of the image to encode"
+          },
+          "is_required": true
+        },
+        "num_frames": {
+          "value": 81,
+          "is_connected": false,
+          "type": "INT",
+          "config": {
+            "default": 81,
+            "min": 1,
+            "max": 10000,
+            "step": 4,
+            "tooltip": "Number of frames to encode"
+          },
+          "is_required": true
+        }
+      },
+      "outputs": [
+        {
+          "type": "WANVIDIMAGE_EMBEDS",
+          "name": "image_embeds",
+          "is_list": false
+        }
+      ],
+      "python_module": "custom_nodes.ComfyUI-WanVideoWrapper",
+      "is_custom_node": true,
+      "position": [
+        543.275390625,
+        -598.3201904296875
+      ],
+      "size": [
+        364.1769104003906,
+        299.03009033203125
+      ],
+      "connections": {
+        "inputs": {},
+        "outputs": {
+          "0": [
+            {
+              "to_node": "105",
+              "to_slot": 1,
+              "link_id": 193
+            },
+            {
+              "to_node": "106",
+              "to_slot": 1,
+              "link_id": 200
+            }
+          ]
+        }
+      },
+      "issues": [],
+      "suggestions": []
+    },
+    {
+      "node_id": "132",
+      "class_type": "TextInput_",
+      "display_name": "Text Input ♾️Mixlab",
+      "category": "♾️Mixlab/Input",
+      "description": "",
+      "inputs": {
+        "text": {
+          "value": "一位古代美女，戴着金丝边眼镜，拥有丰满的胸部和精致的五官，写实风格，头发绑成一个棕色麻花辫放在前面，她双手挥舞着，从指尖施放法术，只见一道道彩色的光束随着她的动作在流动，单人镜头，自然光，阳光，暖色调，平视角度，人像镜头，云台平滑运动，黄金时刻，平滑运动，光线，电影风格，开心表情，非对称构图，专业电影质量，高细节，4K分辨率",
+          "is_connected": false,
+          "type": "STRING",
+          "config": {
+            "multiline": true,
+            "default": ""
+          },
+          "is_required": true
+        }
+      },
+      "outputs": [
+        {
+          "type": "STRING",
+          "name": "STRING",
+          "is_list": false
+        }
+      ],
+      "python_module": "custom_nodes.comfyui-mixlab-nodes",
+      "is_custom_node": true,
+      "position": [
+        517.4340209960938,
+        -945.6536865234375
+      ],
+      "size": [
+        448.0179138183594,
+        223.18099975585938
+      ],
+      "connections": {
+        "inputs": {},
+        "outputs": {
+          "0": [
+            {
+              "to_node": "98",
+              "to_slot": 2,
+              "link_id": 232
+            }
+          ]
+        }
+      },
+      "issues": [],
+      "suggestions": []
+    },
+    {
+      "node_id": "95",
+      "class_type": "WanVideoBlockSwap",
+      "display_name": "WanVideo Block Swap",
+      "category": "WanVideoWrapper",
+      "description": "Settings for block swapping, reduces VRAM use by swapping blocks to CPU memory",
+      "inputs": {
+        "blocks_to_swap": {
+          "value": 40,
+          "is_connected": false,
+          "type": "INT",
+          "config": {
+            "default": 20,
+            "min": 0,
+            "max": 48,
+            "step": 1,
+            "tooltip": "Number of transformer blocks to swap, the 14B model has 40, while the 1.3B and 5B models have 30 blocks. LongCat-video has 48"
+          },
+          "is_required": true
+        },
+        "offload_img_emb": {
+          "value": false,
+          "is_connected": false,
+          "type": "BOOLEAN",
+          "config": {
+            "default": false,
+            "tooltip": "Offload img_emb to offload_device"
+          },
+          "is_required": true
+        },
+        "offload_txt_emb": {
+          "value": false,
+          "is_connected": false,
+          "type": "BOOLEAN",
+          "config": {
+            "default": false,
+            "tooltip": "Offload time_emb to offload_device"
+          },
+          "is_required": true
+        },
+        "use_non_blocking": {
+          "value": false,
+          "is_connected": false,
+          "type": "BOOLEAN",
+          "config": {
+            "default": false,
+            "tooltip": "Use non-blocking memory transfer for offloading, reserves more RAM but is faster"
+          },
+          "is_required": false
+        },
+        "vace_blocks_to_swap": {
+          "value": 0,
+          "is_connected": false,
+          "type": "INT",
+          "config": {
+            "default": 0,
+            "min": 0,
+            "max": 15,
+            "step": 1,
+            "tooltip": "Number of VACE blocks to swap, the VACE model has 15 blocks"
+          },
+          "is_required": false
+        },
+        "prefetch_blocks": {
+          "value": 0,
+          "is_connected": false,
+          "type": "INT",
+          "config": {
+            "default": 0,
+            "min": 0,
+            "max": 40,
+            "step": 1,
+            "tooltip": "Number of blocks to prefetch ahead, can speed up processing but increases memory usage. 1 is usually enough to offset speed loss from block swapping, use the debug option to confirm it for your system"
+          },
+          "is_required": false
+        },
+        "block_swap_debug": {
+          "value": false,
+          "is_connected": false,
+          "type": "BOOLEAN",
+          "config": {
+            "default": false,
+            "tooltip": "Enable debug logging for block swapping"
+          },
+          "is_required": false
+        }
+      },
+      "outputs": [
+        {
+          "type": "BLOCKSWAPARGS",
+          "name": "block_swap_args",
+          "is_list": false
+        }
+      ],
+      "python_module": "custom_nodes.ComfyUI-WanVideoWrapper",
+      "is_custom_node": true,
+      "position": [
+        569.544677734375,
+        43.88091278076172
+      ],
+      "size": [
+        315,
+        202
+      ],
+      "connections": {
+        "inputs": {},
+        "outputs": {
+          "0": [
+            {
+              "to_node": "92",
+              "to_slot": 1,
+              "link_id": 233
+            },
+            {
+              "to_node": "91",
+              "to_slot": 1,
+              "link_id": 234
+            }
+          ]
+        }
+      },
+      "issues": [],
+      "suggestions": []
+    },
+    {
+      "node_id": "86",
+      "class_type": "WanVideoLoraSelect",
+      "display_name": "WanVideo Lora Select",
+      "category": "WanVideoWrapper",
+      "description": "Select a LoRA model from ComfyUI/models/loras",
+      "inputs": {
+        "lora": {
+          "value": "Wan21_T2V_14B_lightx2v_cfg_step_distill_lora_rank32.safetensors",
+          "is_connected": false,
+          "type": [
+            "FLUX-小红书极致真实V2.safetensors",
+            "FLUX-超级质感细节增强.safetensors",
+            "SVI_v2_PRO_Wan2.2-I2V-A14B_HIGH_lora_rank_128_fp16.safetensors",
+            "Wan2.2-Fun-A14B-InP-low-noise-HPS2.1.safetensors",
+            "Wan21_I2V_14B_lightx2v_cfg_step_distill_lora_rank64.safetensors",
+            "Wan21_T2V_14B_lightx2v_cfg_step_distill_lora_rank32.safetensors",
+            "WanAnimate_relight_lora_fp16.safetensors",
+            "lightx2v_I2V_14B_480p_cfg_step_distill_rank64_bf16.safetensors",
+            "lightx2v_T2V_14B_cfg_step_distill_v2_lora_rank64_bf16.safetensors"
+          ],
+          "config": {
+            "tooltip": "LORA models are expected to be in ComfyUI/models/loras with .safetensors extension"
+          },
+          "is_required": true
+        },
+        "strength": {
+          "value": 3.0000000000000004,
+          "is_connected": false,
+          "type": "FLOAT",
+          "config": {
+            "default": 1.0,
+            "min": -10.0,
+            "max": 10.0,
+            "step": 0.0001,
+            "tooltip": "LORA strength, set to 0.0 to unmerge the LORA"
+          },
+          "is_required": true
+        },
+        "low_mem_load": {
+          "value": false,
+          "is_connected": false,
+          "type": "BOOLEAN",
+          "config": {
+            "default": false,
+            "tooltip": "Load the LORA model with less VRAM usage, slower loading. This affects ALL LoRAs, not just the current one. No effect if merge_loras is False"
+          },
+          "is_required": false
+        },
+        "merge_loras": {
+          "value": false,
+          "is_connected": false,
+          "type": "BOOLEAN",
+          "config": {
+            "default": true,
+            "tooltip": "Merge LoRAs into the model, otherwise they are loaded on the fly. Always disabled for GGUF and scaled fp8 models. This affects ALL LoRAs, not just the current one"
+          },
+          "is_required": false
+        }
+      },
+      "outputs": [
+        {
+          "type": "WANVIDLORA",
+          "name": "lora",
+          "is_list": false
+        }
+      ],
+      "python_module": "custom_nodes.ComfyUI-WanVideoWrapper",
+      "is_custom_node": true,
+      "position": [
+        1010.1231079101562,
+        -739.1185302734375
+      ],
+      "size": [
+        631.3829956054688,
+        152.00701904296875
+      ],
+      "connections": {
+        "inputs": {},
+        "outputs": {
+          "0": [
+            {
+              "to_node": "91",
+              "to_slot": 2,
+              "link_id": 235
+            }
+          ]
+        }
+      },
+      "issues": [],
+      "suggestions": []
+    },
+    {
+      "node_id": "110",
+      "class_type": "INTConstant",
+      "display_name": "INT Constant",
+      "category": "KJNodes/constants",
+      "description": "",
+      "inputs": {
+        "value": {
+          "value": 6,
+          "is_connected": false,
+          "type": "INT",
+          "config": {
+            "default": 0,
+            "min": -18446744073709551615,
+            "max": 18446744073709551615
+          },
+          "is_required": true
+        }
+      },
+      "outputs": [
+        {
+          "type": "INT",
+          "name": "value",
+          "is_list": false
+        }
+      ],
+      "python_module": "custom_nodes.ComfyUI-KJNodes",
+      "is_custom_node": true,
+      "position": [
+        1753.107421875,
+        -17.564178466796875
+      ],
+      "size": [
+        210,
+        58
+      ],
+      "connections": {
+        "inputs": {},
+        "outputs": {
+          "0": [
+            {
+              "to_node": "105",
+              "to_slot": 17,
+              "link_id": 194
+            },
+            {
+              "to_node": "106",
+              "to_slot": 17,
+              "link_id": 202
+            },
+            {
+              "to_node": "103",
+              "to_slot": 0,
+              "link_id": 243
+            }
+          ]
+        }
+      },
+      "issues": [],
+      "suggestions": []
+    },
+    {
+      "node_id": "137",
+      "class_type": "SimpleToggleNode",
+      "display_name": "T",
+      "category": "CRT/Utils/UI",
+      "description": "",
+      "inputs": {
+        "value": {
+          "value": true,
+          "is_connected": false,
+          "type": "BOOLEAN",
+          "config": {
+            "default": false
+          },
+          "is_required": true
+        }
+      },
+      "outputs": [
+        {
+          "type": "BOOLEAN",
+          "name": " ",
+          "is_list": false
+        }
+      ],
+      "python_module": "custom_nodes.CRT-Nodes",
+      "is_custom_node": true,
+      "position": [
+        1822.6312255859375,
+        -983.5323486328125
+      ],
+      "size": [
+        210,
+        100
+      ],
+      "connections": {
+        "inputs": {},
+        "outputs": {}
+      },
+      "issues": [],
+      "suggestions": []
+    },
+    {
+      "node_id": "136",
+      "class_type": "SimpleKnobNode",
+      "display_name": "K",
+      "category": "CRT/Utils/UI",
+      "description": "",
+      "inputs": {
+        "value": {
+          "value": 1,
+          "is_connected": false,
+          "type": "FLOAT",
+          "config": {
+            "default": 0,
+            "min": -10000.0,
+            "max": 10000.0,
+            "step": 0.01,
+            "widget": "simple_knob"
+          },
+          "is_required": true
+        }
+      },
+      "outputs": [
+        {
+          "type": "FLOAT",
+          "name": " ",
+          "is_list": false
+        }
+      ],
+      "python_module": "custom_nodes.CRT-Nodes",
+      "is_custom_node": true,
+      "position": [
+        2061.447998046875,
+        -983.4421997070312
+      ],
+      "size": [
+        210,
+        100
+      ],
+      "connections": {
+        "inputs": {},
+        "outputs": {
+          "0": [
+            {
+              "to_node": "105",
+              "to_slot": 24,
+              "link_id": 244
+            },
+            {
+              "to_node": "106",
+              "to_slot": 24,
+              "link_id": 245
+            }
+          ]
+        }
+      },
+      "issues": [],
+      "suggestions": []
+    },
+    {
+      "node_id": "135",
+      "class_type": "FancyNoteNode",
+      "display_name": "Fancy Note (CRT)",
+      "category": "CRT/Utils/UI",
+      "description": "",
+      "inputs": {
+        "text": {
+          "value": "我不是T8，我不会王炸",
+          "is_connected": false,
+          "type": "STRING",
+          "config": {
+            "multiline": true,
+            "default": ""
+          },
+          "is_required": true
+        }
+      },
+      "outputs": [],
+      "python_module": "custom_nodes.CRT-Nodes",
+      "is_custom_node": true,
+      "position": [
+        1541.770751953125,
+        -1431.1851806640625
+      ],
+      "size": [
+        1809.87451171875,
+        202.6983642578125
+      ],
+      "connections": {
+        "inputs": {},
+        "outputs": {}
+      },
+      "issues": [],
+      "suggestions": []
+    },
+    {
+      "node_id": "134",
+      "class_type": "FancyTimerNode",
+      "display_name": "Fancy Timer Node",
+      "category": "CRT/Utils/UI",
+      "description": "",
+      "inputs": {},
+      "outputs": [],
+      "python_module": "custom_nodes.CRT-Nodes",
+      "is_custom_node": true,
+      "position": [
+        2326.381591796875,
+        -971.8562622070312
+      ],
+      "size": [
+        420,
+        130
+      ],
+      "connections": {
+        "inputs": {},
+        "outputs": {}
+      },
+      "issues": [],
+      "suggestions": []
+    }
+  ],
+  "summary": {
+    "total_issues": 1,
+    "total_suggestions": 0,
+    "issues": [
+      {
+        "type": "model_not_found",
+        "node_id": "129",
+        "node_type": "UpscaleModelLoader",
+        "param_name": "model_name",
+        "requested_model": "RealESRGAN_x2.pth",
+        "available_models": "COMBO"
+      }
+    ],
+    "suggestions": [],
+    "local_models_found": 0
+  }
+}

@@ -1,0 +1,260 @@
+{
+  "g_unet_high": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "Wan2.2_Remix_NSFW_i2v_14b_high_lighting_v2.0.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "g_lora_high": {
+    "class_type": "LoraLoaderModelOnly",
+    "inputs": {
+      "model": [
+        "g_unet_high",
+        0
+      ],
+      "lora_name": "SVI_v2_PRO_Wan2.2-I2V-A14B_HIGH_lora_rank_128_fp16.safetensors",
+      "strength_model": 1.0
+    }
+  },
+  "g_sage_high": {
+    "class_type": "PathchSageAttentionKJ",
+    "inputs": {
+      "model": [
+        "g_lora_high",
+        0
+      ],
+      "sage_attention": "auto",
+      "allow_compile": false
+    }
+  },
+  "g_torch_high": {
+    "class_type": "ModelPatchTorchSettings",
+    "inputs": {
+      "model": [
+        "g_sage_high",
+        0
+      ],
+      "enable_fp16_accumulation": true
+    }
+  },
+  "g_unet_low": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "Wan2.2_Remix_NSFW_i2v_14b_high_lighting_v2.0.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "g_lora_low": {
+    "class_type": "LoraLoaderModelOnly",
+    "inputs": {
+      "model": [
+        "g_unet_low",
+        0
+      ],
+      "lora_name": "SVI_v2_PRO_Wan2.2-I2V-A14B_HIGH_lora_rank_128_fp16.safetensors",
+      "strength_model": 1.0
+    }
+  },
+  "g_sage_low": {
+    "class_type": "PathchSageAttentionKJ",
+    "inputs": {
+      "model": [
+        "g_lora_low",
+        0
+      ],
+      "sage_attention": "auto",
+      "allow_compile": false
+    }
+  },
+  "g_torch_low": {
+    "class_type": "ModelPatchTorchSettings",
+    "inputs": {
+      "model": [
+        "g_sage_low",
+        0
+      ],
+      "enable_fp16_accumulation": true
+    }
+  },
+  "g_clip": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+      "type": "wan"
+    }
+  },
+  "g_vae": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "comfy-wan_2.1_vae.safetensors"
+    }
+  },
+  "g_loadimage": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "c7_1.png"
+    }
+  },
+  "g_resize": {
+    "class_type": "ImageResizeKJv2",
+    "inputs": {
+      "image": [
+        "g_loadimage",
+        0
+      ],
+      "width": 848,
+      "height": 480,
+      "upscale_method": "lanczos",
+      "keep_proportion": "crop",
+      "pad_color": "0, 0, 0",
+      "crop_position": "center",
+      "divisible_by": 16,
+      "device": "cpu"
+    }
+  },
+  "g_vaeencode": {
+    "class_type": "VAEEncode",
+    "inputs": {
+      "pixels": [
+        "g_resize",
+        0
+      ],
+      "vae": [
+        "g_vae",
+        0
+      ]
+    }
+  },
+  "clip_pos": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": [
+        "g_clip",
+        0
+      ],
+      "text": "一个漂亮的女孩，站在原地，缓慢转身360度，微笑表情，自然流畅的动作，光线柔和，高清画质"
+    }
+  },
+  "clip_neg": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": [
+        "g_clip",
+        0
+      ],
+      "text": "色调艳丽，过曝，静态，细节模糊不清，字幕，最差质量，低质量，丑陋的，残缺的"
+    }
+  },
+  "svi": {
+    "class_type": "WanImageToVideoSVIPro",
+    "inputs": {
+      "positive": [
+        "clip_pos",
+        0
+      ],
+      "negative": [
+        "clip_neg",
+        0
+      ],
+      "anchor_samples": [
+        "g_vaeencode",
+        0
+      ],
+      "length": 41,
+      "motion_latent_count": 0
+    }
+  },
+  "ks_high": {
+    "class_type": "KSamplerAdvanced",
+    "inputs": {
+      "model": [
+        "g_torch_high",
+        0
+      ],
+      "positive": [
+        "svi",
+        0
+      ],
+      "negative": [
+        "svi",
+        1
+      ],
+      "latent_image": [
+        "svi",
+        2
+      ],
+      "add_noise": "enable",
+      "noise_seed": 214,
+      "steps": 6,
+      "cfg": 1.0,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "start_at_step": 0,
+      "end_at_step": 2,
+      "return_with_leftover_noise": "enable"
+    }
+  },
+  "ks_low": {
+    "class_type": "KSamplerAdvanced",
+    "inputs": {
+      "model": [
+        "g_torch_low",
+        0
+      ],
+      "positive": [
+        "svi",
+        0
+      ],
+      "negative": [
+        "svi",
+        1
+      ],
+      "latent_image": [
+        "ks_high",
+        0
+      ],
+      "add_noise": "disable",
+      "noise_seed": 214,
+      "steps": 6,
+      "cfg": 1.0,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "start_at_step": 2,
+      "end_at_step": 10000,
+      "return_with_leftover_noise": "disable"
+    }
+  },
+  "vaedecode": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "ks_low",
+        0
+      ],
+      "vae": [
+        "g_vae",
+        0
+      ]
+    }
+  },
+  "video": {
+    "class_type": "VHS_VideoCombine",
+    "inputs": {
+      "images": [
+        "vaedecode",
+        0
+      ],
+      "frame_rate": 20,
+      "loop_count": 0,
+      "filename_prefix": "c7_test_41f",
+      "format": "video/h264-mp4",
+      "pix_fmt": "yuv420p",
+      "crf": 20,
+      "save_metadata": true,
+      "trim_to_audio": false,
+      "pingpong": false,
+      "save_output": true
+    }
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "prompt": {
+    "1": {
+      "class_type": "LoadWanVideoT5TextEncoder",
+      "inputs": {
+        "model_name": "umt5-xxl-enc-fp8_e4m3fn.safetensors",
+        "precision": "bf16",
+        "load_device": "offload_device",
+        "quantization": "disabled"
+      }
+    },
+    "2": {
+      "class_type": "WanVideoVAELoader",
+      "inputs": {
+        "model_name": "Wan2_1_VAE_bf16.safetensors",
+        "precision": "bf16",
+        "use_cpu_cache": false
+      }
+    },
+    "3": {
+      "class_type": "WanVideoModelLoader",
+      "inputs": {
+        "model": "Wan2.2-T2V-A14B-LowNoise-Q5_K_M.gguf",
+        "base_precision": "bf16",
+        "quantization": "disabled",
+        "load_device": "offload_device",
+        "attention_mode": "sageattn"
+      }
+    },
+    "4": {
+      "class_type": "WanVideoEmptyEmbeds",
+      "inputs": {
+        "width": 1280,
+        "height": 720,
+        "num_frames": 1
+      }
+    },
+    "5": {
+      "class_type": "WanVideoTextEncode",
+      "inputs": {
+        "positive_prompt": "未来城市天际线，赛博朋克风格，霓虹灯光，高楼大厦，飞行汽车，雨水反射的街道灯光，电影质感，8K超高清",
+        "negative_prompt": "text, watermark, logo, signature, blur, low quality, ugly, distorted",
+        "force_offload": false,
+        "device": "gpu",
+        "t5": ["1", 0]
+      }
+    },
+    "6": {
+      "class_type": "WanVideoSampler",
+      "inputs": {
+        "seed": 123456789,
+        "steps": 30,
+        "cfg": 5.0,
+        "shift": 5.0,
+        "force_offload": true,
+        "scheduler": "unipc",
+        "riflex_freq_index": 0,
+        "model": ["3", 0],
+        "image_embeds": ["4", 0],
+        "text_embeds": ["5", 0]
+      }
+    },
+    "7": {
+      "class_type": "WanVideoDecode",
+      "inputs": {
+        "tile_x": 272,
+        "tile_y": 272,
+        "tile_stride_x": 144,
+        "tile_stride_y": 144,
+        "enable_vae_tiling": true,
+        "samples": ["6", 0],
+        "vae": ["2", 0]
+      }
+    },
+    "8": {
+      "class_type": "SaveImage",
+      "inputs": {
+        "filename_prefix": "Wan22_T2I_1280x720_Cyberpunk",
+        "images": ["7", 0]
+      }
+    }
+  }
+}

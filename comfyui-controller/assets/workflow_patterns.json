@@ -1,0 +1,435 @@
+{
+  "patterns": [
+    {
+      "task_category": "图生视频",
+      "model_family": "Wan2.2",
+      "sample_count": 2,
+      "typical_node_sequence": [
+        {
+          "frequency": 1,
+          "sequence": [
+            "Load Diffusion Model",
+            "Load CLIP",
+            "Load VAE",
+            "Load Image",
+            "MarkdownNote",
+            "ModelSamplingSD3",
+            "CLIP Text Encode ",
+            "CLIP Text Encode ",
+            "Wan22ImageToVideoLatent",
+            "KSampler",
+            "VAE Decode",
+            "Create Video",
+            "Save Animated WEBP",
+            "Save Video"
+          ]
+        },
+        {
+          "frequency": 1,
+          "sequence": [
+            "Load Diffusion Model",
+            "Load Diffusion Model",
+            "Load CLIP",
+            "Fast Groups Bypasser ",
+            "Note",
+            "Load VAE",
+            "Load Image",
+            "INT Constant",
+            "INT Constant",
+            "INT Constant",
+            "GetNode",
+            "GetNode",
+            "GetNode",
+            "INT Constant",
+            "INT Constant",
+            "⚙️ CR Prompt Text",
+            "⚙️ CR Prompt Text",
+            "⚙️ CR Prompt Text",
+            "⚙️ CR Prompt Text",
+            "⚙️ CR Prompt Text",
+            "GetNode",
+            "GetNode",
+            "GetNode",
+            "GetNode",
+            "GetNode",
+            "GetNode",
+            "GetNode",
+            "GetNode",
+            "GetNode",
+            "GetNode",
+            "GetNode",
+            "GetNode",
+            "GetNode",
+            "GetNode",
+            "GetNode",
+            "GetNode",
+            "GetNode",
+            "GetNode",
+            "GetNode",
+            "GetNode",
+            "GetNode",
+            "GetNode",
+            "GetNode",
+            "GetNode",
+            "GetNode",
+            "GetNode",
+            "GetNode",
+            "GetNode",
+            "GetNode",
+            "GetNode",
+            "GetNode",
+            "GetNode",
+            "GetNode",
+            "GetNode",
+            "GetNode",
+            "GetNode",
+            "GetNode",
+            "GetNode",
+            "GetNode",
+            "GetNode",
+            "GetNode",
+            "Load Diffusion Model",
+            "GetNode",
+            "GetNode",
+            "GetNode",
+            "GetNode",
+            "GetNode",
+            "MarkdownNote",
+            "Load LoRA",
+            "Load LoRA",
+            "SetNode",
+            "SetNode",
+            "SetNode",
+            "SetNode",
+            "SetNode",
+            "Resize Image v2",
+            "SetNode",
+            "SetNode",
+            "SetNode",
+            "SetNode",
+            "SetNode",
+            "SetNode",
+            "SetNode",
+            "CLIP Text Encode ",
+            "CLIP Text Encode ",
+            "CLIP Text Encode ",
+            "CLIP Text Encode ",
+            "CLIP Text Encode ",
+            "CLIP Text Encode ",
+            "CLIP Text Encode ",
+            "CLIP Text Encode ",
+            "CLIP Text Encode ",
+            "CLIP Text Encode ",
+            "Video Combine 🎥🅥🅗🅢",
+            "Patch Sage Attention KJ",
+            "Patch Sage Attention KJ",
+            "VAE Encode",
+            "WanImageToVideoSVIPro",
+            "Model Patch Torch Settings",
+            "Model Patch Torch Settings",
+            "SetNode",
+            "KSampler ",
+            "SetNode",
+            "SetNode",
+            "KSampler ",
+            "VAE Decode",
+            "WanImageToVideoSVIPro",
+            "Video Combine 🎥🅥🅗🅢",
+            "KSampler ",
+            "KSampler ",
+            "VAE Decode",
+            "WanImageToVideoSVIPro",
+            "Image Batch Extend With Overlap",
+            "KSampler ",
+            "Video Combine 🎥🅥🅗🅢",
+            "KSampler ",
+            "VAE Decode",
+            "WanImageToVideoSVIPro",
+            "Image Batch Extend With Overlap",
+            "KSampler ",
+            "Video Combine 🎥🅥🅗🅢",
+            "KSampler ",
+            "VAE Decode",
+            "WanImageToVideoSVIPro",
+            "Image Batch Extend With Overlap",
+            "KSampler ",
+            "Video Combine 🎥🅥🅗🅢",
+            "KSampler ",
+            "VAE Decode",
+            "Image Batch Extend With Overlap",
+            "PlaySound 🐍",
+            "Video Combine 🎥🅥🅗🅢",
+            "SetNode"
+          ]
+        }
+      ],
+      "typical_parameters": {
+        "text": [
+          {
+            "value": "色调艳丽，过曝，静态，细节模糊不清，字幕，风格，作品，画作，画面，静止，整体发灰，最差质量，低质量，JPEG压缩残留，丑陋的，残缺的，多余的手指，画得不好的手部，画得不好的脸部，畸形的，毁容的，形态畸形的肢体，手指融合，静止不动的画面，杂乱的背景，三条腿，背景人很多，倒着走",
+            "count": 2
+          }
+        ],
+        "cfg": [
+          {
+            "value": 5,
+            "count": 2
+          },
+          {
+            "value": "euler",
+            "count": 1
+          }
+        ],
+        "sampler_name": [
+          {
+            "value": "uni_pc",
+            "count": 2
+          },
+          {
+            "value": "simple",
+            "count": 1
+          }
+        ],
+        "scheduler": [
+          {
+            "value": "simple",
+            "count": 2
+          },
+          {
+            "value": 10,
+            "count": 1
+          }
+        ],
+        "lora_name": [
+          {
+            "value": "SVI_v2_PRO_Wan2.2-I2V-A14B_HIGH_lora_rank_128_fp16.safetensors",
+            "count": 1
+          }
+        ],
+        "prompt": [
+          {
+            "value": "1 秒：男生眸色骤然睁大\n2 秒：抬步向她走近半步\n3 秒：指尖轻搭在她臂弯处\n4 秒：两人身影在火光里挨近",
+            "count": 1
+          }
+        ],
+        "vae_name": [
+          {
+            "value": "comfy-wan_2.1_vae.safetensors",
+            "count": 1
+          },
+          {
+            "value": "wan2.2_vae.safetensors",
+            "count": 1
+          }
+        ],
+        "unet_name": [
+          {
+            "value": "Wan2.2_Remix_NSFW_i2v_14b_high_lighting_v2.0.safetensors",
+            "count": 1
+          },
+          {
+            "value": "wan2.2_ti2v_5B_fp16.safetensors",
+            "count": 1
+          }
+        ],
+        "clip_name": [
+          {
+            "value": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+            "count": 2
+          }
+        ],
+        "seed": [
+          {
+            "value": 165117770567815,
+            "count": 2
+          }
+        ],
+        "steps": [
+          {
+            "value": 20,
+            "count": 2
+          }
+        ],
+        "denoise": [
+          {
+            "value": 1,
+            "count": 2
+          }
+        ],
+        "width": [
+          {
+            "value": 1280,
+            "count": 1
+          }
+        ],
+        "height": [
+          {
+            "value": 704,
+            "count": 1
+          }
+        ],
+        "batch_size": [
+          {
+            "value": 1,
+            "count": 1
+          }
+        ]
+      },
+      "typical_model_combos": [
+        {
+          "frequency": 1,
+          "combo": {
+            "clip": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+            "lora": "SVI_v2_PRO_Wan2.2-I2V-A14B_HIGH_lora_rank_128_fp16.safetensors",
+            "unet": "Wan2.2_Remix_NSFW_i2v_14b_high_lighting_v2.0.safetensors",
+            "vae": "comfy-wan_2.1_vae.safetensors"
+          }
+        },
+        {
+          "frequency": 1,
+          "combo": {
+            "clip": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+            "unet": "wan2.2_ti2v_5B_fp16.safetensors",
+            "vae": "wan2.2_vae.safetensors"
+          }
+        }
+      ],
+      "neutral_nodes": [
+        "Note"
+      ]
+    },
+    {
+      "task_category": "文生图",
+      "model_family": "Wan2.2",
+      "sample_count": 1,
+      "typical_node_sequence": [
+        {
+          "frequency": 1,
+          "sequence": [
+            "KSampler",
+            "Empty Latent Image",
+            "CLIP Text Encode ",
+            "CLIP Text Encode ",
+            "VAE Decode",
+            "Save Image",
+            "Load Diffusion Model",
+            "Load CLIP",
+            "Load VAE",
+            "Upscale Image ",
+            "Load Upscale Model"
+          ]
+        }
+      ],
+      "typical_parameters": {
+        "text": [
+          {
+            "value": "beautiful scenery nature glass bottle landscape, , purple galaxy bottle,",
+            "count": 1
+          }
+        ],
+        "seed": [
+          {
+            "value": 81028957092542,
+            "count": 2
+          }
+        ],
+        "steps": [
+          {
+            "value": 20,
+            "count": 2
+          }
+        ],
+        "cfg": [
+          {
+            "value": 8,
+            "count": 2
+          }
+        ],
+        "sampler_name": [
+          {
+            "value": "euler",
+            "count": 2
+          }
+        ],
+        "scheduler": [
+          {
+            "value": "normal",
+            "count": 2
+          }
+        ],
+        "denoise": [
+          {
+            "value": 1,
+            "count": 2
+          }
+        ],
+        "width": [
+          {
+            "value": 512,
+            "count": 2
+          }
+        ],
+        "height": [
+          {
+            "value": 512,
+            "count": 2
+          }
+        ],
+        "batch_size": [
+          {
+            "value": 1,
+            "count": 2
+          }
+        ],
+        "unet_name": [
+          {
+            "value": "wan2.2_t2v_high_noise_14B_fp8_scaled.safetensors",
+            "count": 1
+          }
+        ],
+        "clip_name": [
+          {
+            "value": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+            "count": 1
+          }
+        ],
+        "vae_name": [
+          {
+            "value": "Wan2_1_VAE_bf16-fp8-e5m2.safetensors",
+            "count": 1
+          }
+        ]
+      },
+      "typical_model_combos": [
+        {
+          "frequency": 1,
+          "combo": {
+            "clip": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+            "unet": "wan2.2_t2v_high_noise_14B_fp8_scaled.safetensors",
+            "upscale": "2x_StarSample_V2.0.safetensors",
+            "vae": "Wan2_1_VAE_bf16-fp8-e5m2.safetensors"
+          }
+        }
+      ],
+      "neutral_nodes": [
+        "SaveImage"
+      ]
+    }
+  ],
+  "warnings": [
+    "工作流 'api-workflow' model_family 为 unknown，已跳过",
+    "工作流 'default-workflow' model_family 为 unknown，已跳过",
+    "工作流 'flux2_api_workflow' model_family 为 unknown，已跳过",
+    "工作流 'i2v_wan22_kj_v1.0.0' model_family 为 unknown，已跳过",
+    "工作流 'i2v_wan22_v1.0.0' model_family 为 unknown，已跳过",
+    "工作流 'img2img_flux2_example_v1.0.0' model_family 为 unknown，已跳过",
+    "工作流 'img_gen_v1.0.0' model_family 为 unknown，已跳过",
+    "工作流 'object_info' model_family 为 unknown，已跳过",
+    "工作流 'svi_pro_long_video_v1.0.0' model_family 为 unknown，已跳过",
+    "工作流 't2v_wan22_v1.0.0' model_family 为 unknown，已跳过",
+    "工作流 'wan22_i2v_workflow' model_family 为 unknown，已跳过",
+    "工作流 'wan22_simple_t2i' model_family 为 unknown，已跳过",
+    "工作流 'wan22_t2v_workflow' model_family 为 unknown，已跳过",
+    "工作流 'workflow_library' model_family 为 unknown，已跳过"
+  ]
+}

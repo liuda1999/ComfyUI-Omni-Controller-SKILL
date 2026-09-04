@@ -1,0 +1,100 @@
+{
+  "6": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "text": "Extreme close-up shot, a single drop of vibrant blue ink falling into clear water, pure white background, soft top lighting, 8K, high resolution, cinematic lighting",
+      "clip": [
+        "12",
+        0
+      ]
+    }
+  },
+  "3": {
+    "class_type": "KSampler",
+    "inputs": {
+      "seed": 123456789,
+      "steps": 25,
+      "cfg": 7.0,
+      "sampler_name": "euler",
+      "scheduler": "normal",
+      "denoise": 1.0,
+      "model": [
+        "10",
+        0
+      ],
+      "positive": [
+        "6",
+        0
+      ],
+      "negative": [
+        "7",
+        0
+      ],
+      "latent_image": [
+        "5",
+        0
+      ]
+    }
+  },
+  "5": {
+    "class_type": "EmptyLatentImage",
+    "inputs": {
+      "width": 480,
+      "height": 660,
+      "batch_size": 1
+    }
+  },
+  "7": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "text": "text, watermark, blurry, low quality, distorted, ugly",
+      "clip": [
+        "12",
+        0
+      ]
+    }
+  },
+  "10": {
+    "class_type": "UnetLoaderGGUF",
+    "inputs": {
+      "unet_name": "Wan2.2-T2V-A14B-HighNoise-Q5_K_M.gguf"
+    }
+  },
+  "12": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+      "type": "wan",
+      "device": "default"
+    }
+  },
+  "13": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "Wan2_1_VAE_bf16.safetensors"
+    }
+  },
+  "8": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "3",
+        0
+      ],
+      "vae": [
+        "13",
+        0
+      ]
+    }
+  },
+  "9": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "filename_prefix": "task2_input",
+      "images": [
+        "8",
+        0
+      ]
+    }
+  }
+}

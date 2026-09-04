@@ -1,0 +1,162 @@
+{
+  "119": {
+    "class_type": "WanVideoVAELoader",
+    "inputs": {
+      "model_name": "Wan2_1_VAE_bf16.safetensors",
+      "precision": "bf16"
+    }
+  },
+  "114": {
+    "class_type": "WanVideoModelLoader",
+    "inputs": {
+      "model": "Wan2_2-I2V-A14B-HIGH_fp8_e4m3fn_scaled_KJ.safetensors",
+      "base_precision": "bf16",
+      "quantization": "fp8_e4m3fn_scaled",
+      "load_device": "offload_device",
+      "attention_mode": "sdpa",
+      "rms_norm_function": "default"
+    }
+  },
+  "115": {
+    "class_type": "WanVideoModelLoader",
+    "inputs": {
+      "model": "Wan2_2-I2V-A14B-LOW_fp8_e4m3fn_scaled_KJ.safetensors",
+      "base_precision": "bf16",
+      "quantization": "fp8_e4m3fn_scaled",
+      "load_device": "offload_device",
+      "attention_mode": "sdpa",
+      "rms_norm_function": "default"
+    }
+  },
+  "116": {
+    "class_type": "WanVideoSetBlockSwap",
+    "inputs": {
+      "model": ["114", 0],
+      "block_swap_args": ["153", 0]
+    }
+  },
+  "117": {
+    "class_type": "WanVideoSetBlockSwap",
+    "inputs": {
+      "model": ["115", 0],
+      "block_swap_args": ["153", 0]
+    }
+  },
+  "153": {
+    "class_type": "WanVideoBlockSwap",
+    "inputs": {
+      "blocks_to_swap": 36,
+      "offload_img_emb": true,
+      "offload_txt_emb": true
+    }
+  },
+  "125": {
+    "class_type": "LoadWanVideoT5TextEncoder",
+    "inputs": {
+      "model_name": "umt5-xxl-enc-fp8_e4m3fn.safetensors",
+      "precision": "bf16",
+      "load_device": "offload_device",
+      "quantization": "disabled"
+    }
+  },
+  "129": {
+    "class_type": "WanVideoTextEncode",
+    "inputs": {
+      "negative_prompt": "face distortion, facial features deformation, limb clipping, screen flickering, character model collapse, rabbit deformation, motion freezing, sudden brightness changes, major composition changes, worst quality, low quality, blurry, distorted body, deformed limbs, extra limbs, missing limbs",
+      "device": "gpu",
+      "t5": ["125", 0],
+      "positive_prompt": "Ancient Chinese style Chang'e, white-haired goddess, wearing deep blue gold-traced qipao, magnificent blue sapphire phoenix crown, red eyes. Standing in a moonlit lotus pond in shallow water, slowly rising to stand. A glowing white jade rabbit around her. Purple-blue flowing light mist, gentle ripples on water, full moon and ancient pavilion background, soft lighting, Chinese fantasy xianxia aesthetic"
+    }
+  },
+  "131": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "c6_1.png"
+    }
+  },
+  "128": {
+    "class_type": "WanVideoImageToVideoEncode",
+    "inputs": {
+      "width": 352,
+      "height": 640,
+      "num_frames": 16,
+      "noise_aug_strength": 0.1,
+      "start_latent_strength": 1,
+      "end_latent_strength": 1,
+      "force_offload": true,
+      "fun_or_fl2v_model": false,
+      "augment_empty_frames": 0.0,
+      "vae": ["119", 0],
+      "start_image": ["131", 0]
+    }
+  },
+  "134": {
+    "class_type": "WanVideoSampler",
+    "inputs": {
+      "model": ["116", 0],
+      "image_embeds": ["128", 0],
+      "text_embeds": ["129", 0],
+      "steps": 15,
+      "cfg": 5.0,
+      "shift": 8.0,
+      "seed": 987654321,
+      "force_offload": true,
+      "scheduler": "dpm++_sde",
+      "riflex_freq_index": 0,
+      "denoise_strength": 1.0,
+      "rope_function": "comfy",
+      "start_step": 0,
+      "end_step": 8
+    }
+  },
+  "135": {
+    "class_type": "WanVideoSampler",
+    "inputs": {
+      "model": ["117", 0],
+      "image_embeds": ["128", 0],
+      "text_embeds": ["129", 0],
+      "samples": ["134", 0],
+      "steps": 15,
+      "cfg": 5.0,
+      "shift": 8.0,
+      "seed": 987654321,
+      "force_offload": true,
+      "scheduler": "dpm++_sde",
+      "riflex_freq_index": 0,
+      "denoise_strength": 1.0,
+      "rope_function": "comfy",
+      "start_step": 8,
+      "end_step": -1,
+      "add_noise_to_samples": false
+    }
+  },
+  "120": {
+    "class_type": "WanVideoDecode",
+    "inputs": {
+      "vae": ["119", 0],
+      "samples": ["135", 0],
+      "enable_vae_tiling": false,
+      "tile_x": 272,
+      "tile_y": 272,
+      "tile_stride_x": 144,
+      "tile_stride_y": 128,
+      "normalization": "default"
+    }
+  },
+  "126": {
+    "class_type": "VHS_VideoCombine",
+    "inputs": {
+      "images": ["120", 0],
+      "frame_rate": 20,
+      "loop_count": 0,
+      "filename_prefix": "c6_test_dual",
+      "format": "video/h264-mp4",
+      "pix_fmt": "yuv420p10le",
+      "crf": 14,
+      "save_metadata": false,
+      "trim_to_audio": false,
+      "pingpong": false,
+      "save_output": true
+    }
+  }
+}

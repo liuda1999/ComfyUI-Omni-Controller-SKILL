@@ -1,0 +1,125 @@
+{
+  "80": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "flux2-vae.safetensors"
+    }
+  },
+  "60": {
+    "class_type": "KSampler",
+    "inputs": {
+      "seed": 119562114804876,
+      "steps": "randomize",
+      "cfg": 20,
+      "sampler_name": 1,
+      "scheduler": "euler",
+      "denoise": "simple",
+      "model": [
+        "78",
+        0
+      ],
+      "positive": [
+        "64",
+        0
+      ],
+      "negative": [
+        "63",
+        0
+      ],
+      "latent_image": [
+        "69",
+        0
+      ]
+    }
+  },
+  "63": {
+    "class_type": "ConditioningZeroOut",
+    "inputs": {
+      "conditioning": [
+        "64",
+        0
+      ]
+    }
+  },
+  "57": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "60",
+        0
+      ],
+      "vae": [
+        "80",
+        0
+      ]
+    }
+  },
+  "79": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen_3_8b_fp8mixed.safetensors",
+      "type": "flux2",
+      "device": "default"
+    }
+  },
+  "58": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "filename_prefix": "ComfyUI",
+      "images": [
+        "57",
+        0
+      ]
+    }
+  },
+  "69": {
+    "class_type": "EmptyFlux2LatentImage",
+    "inputs": {
+      "width": 2048,
+      "height": 1024,
+      "batch_size": 1
+    }
+  },
+  "78": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "flux-2-klein-9b-fp8.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "81": {
+    "class_type": "MarkdownNote",
+    "inputs": {}
+  },
+  "64": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "text": "中国风，竹林背景，电影质感，一个熊猫骑着战马在竹林里飞奔，前景虚化的竹叶飘落，背景景深，整体画面视觉冲击力强，居中构图，电影质感，大师获奖作品，杰作，",
+      "clip": [
+        "79",
+        0
+      ]
+    }
+  },
+  "96": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "2f7a9ded457bd318d6048e17db47e4e1e4495468f2e3917f9e54b0ffe1153eff.png",
+      "upload": "image"
+    }
+  },
+  "97": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "10dea12eab0762dab4c8534147e9e22247d1a5f15e4dc4944f99f7837a094b7a.jpg",
+      "upload": "image"
+    }
+  },
+  "98": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "0374c24bf9f089685ab3dba4576d57dec5dbab4ceb588df0780429f15551a78a.jpg",
+      "upload": "image"
+    }
+  }
+}

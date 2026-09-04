@@ -1,0 +1,148 @@
+{
+  "1": {
+    "class_type": "VHS_LoadVideo",
+    "inputs": {
+      "video": "AUTO_DETECT_SEG1_VIDEO",
+      "force_rate": 0,
+      "custom_width": 0,
+      "custom_height": 0,
+      "frame_load_cap": 0,
+      "skip_first_frames": 0,
+      "select_every_nth": 1,
+      "format": "Wan"
+    }
+  },
+  "2": {
+    "class_type": "VHS_LoadVideo",
+    "inputs": {
+      "video": "AUTO_DETECT_SEG2_VIDEO",
+      "force_rate": 0,
+      "custom_width": 0,
+      "custom_height": 0,
+      "frame_load_cap": 0,
+      "skip_first_frames": 0,
+      "select_every_nth": 1,
+      "format": "Wan"
+    }
+  },
+  "3": {
+    "class_type": "VHS_LoadVideo",
+    "inputs": {
+      "video": "AUTO_DETECT_SEG3_VIDEO",
+      "force_rate": 0,
+      "custom_width": 0,
+      "custom_height": 0,
+      "frame_load_cap": 0,
+      "skip_first_frames": 0,
+      "select_every_nth": 1,
+      "format": "Wan"
+    }
+  },
+  "4": {
+    "class_type": "VHS_LoadVideo",
+    "inputs": {
+      "video": "AUTO_DETECT_SEG4_VIDEO",
+      "force_rate": 0,
+      "custom_width": 0,
+      "custom_height": 0,
+      "frame_load_cap": 0,
+      "skip_first_frames": 0,
+      "select_every_nth": 1,
+      "format": "Wan"
+    }
+  },
+  "5": {
+    "class_type": "VHS_LoadVideo",
+    "inputs": {
+      "video": "AUTO_DETECT_SEG5_VIDEO",
+      "force_rate": 0,
+      "custom_width": 0,
+      "custom_height": 0,
+      "frame_load_cap": 0,
+      "skip_first_frames": 0,
+      "select_every_nth": 1,
+      "format": "Wan"
+    }
+  },
+  "6": {
+    "class_type": "ImageBatchExtendWithOverlap",
+    "inputs": {
+      "source_images": [
+        "1",
+        0
+      ],
+      "new_images": [
+        "2",
+        0
+      ],
+      "overlap": 5,
+      "overlap_side": "source",
+      "overlap_mode": "linear_blend"
+    }
+  },
+  "7": {
+    "class_type": "ImageBatchExtendWithOverlap",
+    "inputs": {
+      "source_images": [
+        "6",
+        0
+      ],
+      "new_images": [
+        "3",
+        0
+      ],
+      "overlap": 5,
+      "overlap_side": "source",
+      "overlap_mode": "linear_blend"
+    }
+  },
+  "8": {
+    "class_type": "ImageBatchExtendWithOverlap",
+    "inputs": {
+      "source_images": [
+        "7",
+        0
+      ],
+      "new_images": [
+        "4",
+        0
+      ],
+      "overlap": 5,
+      "overlap_side": "source",
+      "overlap_mode": "linear_blend"
+    }
+  },
+  "9": {
+    "class_type": "ImageBatchExtendWithOverlap",
+    "inputs": {
+      "source_images": [
+        "8",
+        0
+      ],
+      "new_images": [
+        "5",
+        0
+      ],
+      "overlap": 5,
+      "overlap_side": "source",
+      "overlap_mode": "linear_blend"
+    }
+  },
+  "10": {
+    "class_type": "VHS_VideoCombine",
+    "inputs": {
+      "images": [
+        "9",
+        0
+      ],
+      "frame_rate": 20,
+      "loop_count": 0,
+      "filename_prefix": "c7_svi_pro_20s_final",
+      "format": "video/h264-mp4",
+      "pix_fmt": "yuv420p10le",
+      "crf": 14,
+      "pingpong": false,
+      "save_output": true
+    }
+  }
+}
