@@ -554,7 +554,7 @@ C2 视频生成任务在启动 ComfyUI 阶段耗时过长，经历 10 次启动�
 
 | 问题 | 根因 | 解决方案 |
 |------|------|----------|
-| venv 环境失效 | `${COMFYUI_PATH}/venv/pyvenv.cfg` 指向其他用户路径（venv跨机器不可移植） | 使用嵌入式 Python `.\python\python.exe` |
+| venv 环境失效 | `${COMFYUI_PATH}/venv/pyvenv.cfg` 指向其他用户路径（venv跨机器不可移植） | 使用官方标准 Python 启动：Windows 嵌入式 Python `.\python\python.exe`，Linux/macOS 系统 Python `python` |
 | Manager 联网超时崩溃 | config.ini 的 network_mode=public，启动时从 GitHub 获取节点列表超时 | 白名单模式自动跳过 Manager（而非修改 config.ini，修改可能不生效） |
 | config.ini 修改不生效 | 两个 config.ini 都改为 local，但启动日志仍显示 public | 放弃修改 config.ini，改用白名单模式 |
 | --disable-manager-ui 参数错误 | ComfyUI 0.27.0 无此参数 | 不使用此参数 |
@@ -869,6 +869,17 @@ Set-Location "${COMFYUI_PATH}"
 ```
 
 验证结果：ComfyUI 0.27.0 成功启动，HTTP 200 响应正常。该命令在 11.3、13 节中已多次验证，可作为稳定启动方案。
+
+**Linux/macOS 等价命令**（官方标准启动，须在 ComfyUI 安装目录下执行）：
+
+```bash
+cd "${COMFYUI_PATH}"
+python -u main.py --port ${COMFYUI_PORT} --listen 127.0.0.1 \
+  --disable-all-custom-nodes \
+  --whitelist-custom-nodes ComfyUI-WanVideoWrapper ComfyUI-VideoHelperSuite ComfyUI-KJNodes comfyui-frame-interpolation comfyui-essentials \
+  --output-directory ${OUTPUT_DIR} \
+  --temp-directory ${TEMP_DIR}
+```
 
 ### 13.4 工作流仓库管理功能验证
 
@@ -1979,8 +1990,9 @@ with open(filepath, 'rb') as f:
 
 **恢复方案**（按优先级）：
 1. 重启 TRAE IDE
-2. 手动启动：`D:\2026-ComfyUI-V8.3\python\python.exe -s main.py --windows-standalone-build --fast --port 3198`
-3. 使用"绘世启动器.exe"启动
+2. 使用官方标准命令手动启动（不依赖任何第三方 GUI 启动器，如 wangyi AI绘世启动器.exe 等）：
+   - Windows（嵌入式 Python 独立版）：`.\python\python.exe -u main.py --port ${COMFYUI_PORT} --listen 127.0.0.1`
+   - Linux/macOS（标准安装）：`python main.py --listen 127.0.0.1 --port ${COMFYUI_PORT}`（须在 ComfyUI 安装目录下执行）
 
 ### 20.4 zsq_loader.py VAELoader.vae_list() 参数变更
 
@@ -2020,7 +2032,7 @@ vae_list = folder_paths.get_filename_list("vae")
 | `cli/update.py` | 版本获取，已添加异常保护 |
 | `cli/logging_utils.py` | 日志工具（原 logging.py） |
 | `cli/typing_compat.py` | 类型兼容（原 typing.py） |
-| `scripts/start_server.py` | 服务器启动器 |
+| `scripts/start_server.py` | 服务器启动脚本 |
 | `scripts/run_workflow.py` | 脚本模式工作流执行 |
 | `scripts/c2_video_task.py` | C2 视频任务执行脚本（5秒@20fps） |
 | `scripts/c3_video_task.py` | C3 视频任务执行脚本（10秒@24fps） |

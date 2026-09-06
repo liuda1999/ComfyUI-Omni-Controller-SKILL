@@ -79,7 +79,7 @@ description: "视频生成任务执行前的强制检查与准备指南。当用
 - 如服务启动失败，检查 ComfyUI 控制台是否有第三方节点报错（如 zsq_prompt 的 VAELoader.vae_list() 错误），这类错误通常非致命，服务仍可继续启动
 - 如端口被占用，使用 `--port` 指定其他端口
 
-**ComfyUI 启动标准命令（验证成功，必须使用）**：
+**ComfyUI 启动标准命令（验证成功，必须使用；Windows 版）**：
 ```powershell
 .\python\python.exe -u main.py --port ${COMFYUI_PORT} --listen 127.0.0.1 `
   --disable-all-custom-nodes `
@@ -87,7 +87,18 @@ description: "视频生成任务执行前的强制检查与准备指南。当用
   --output-directory ${OUTPUT_DIR} `
   --temp-directory ${TEMP_DIR}
 ```
-- **必须使用嵌入式 Python** `.\python\python.exe`（venv 已失效）
+
+**Linux/macOS 等价命令**（官方标准启动，须在 ComfyUI 安装目录下执行，使用系统 Python 或 venv Python）：
+```bash
+cd ${COMFYUI_PATH}
+python -u main.py --port ${COMFYUI_PORT} --listen 127.0.0.1 \
+  --disable-all-custom-nodes \
+  --whitelist-custom-nodes ComfyUI-WanVideoWrapper ComfyUI-VideoHelperSuite ComfyUI-KJNodes comfyui-frame-interpolation comfyui-essentials ComfyUI_LayerStyle \
+  --output-directory ${OUTPUT_DIR} \
+  --temp-directory ${TEMP_DIR}
+```
+
+- **官方标准启动方式**：Windows 使用嵌入式 Python `.\python\python.exe`（venv 已失效），Linux/macOS 使用标准 `python`（或 `venv/bin/python`）；**不依赖任何第三方 GUI 启动器**（如 wangyi AI绘世启动器.exe 等）
 - **`--whitelist-custom-nodes` 必须与 `--disable-all-custom-nodes` 同时使用**（单独使用无效）
 - **`--whitelist-custom-nodes` 参数必须使用空格分隔**（逗号分隔会被识别为单个字符串导致白名单失效）
 - **必须重定向输出目录**（避免 ComfyUI 安装目录权限问题导致 VHS_VideoCombine 失败）

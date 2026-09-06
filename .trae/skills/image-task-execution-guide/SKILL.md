@@ -62,6 +62,10 @@ description: "图片生成任务执行前的强制检查与反问指南。当用
 
 **失败处理**: 终止任务，提示"ComfyUI 服务不可用，请确认服务已启动（端口 ${COMFYUI_PORT}）"
 
+**服务未启动时的官方标准启动方式**（在 ComfyUI 安装目录 `${COMFYUI_PATH}` 下，不依赖任何第三方 GUI 启动器）：
+- Windows（嵌入式 Python 独立版）：`.\python\python.exe -u main.py --port ${COMFYUI_PORT} --listen 127.0.0.1`
+- Linux/macOS（标准 Python）：`python main.py --listen 127.0.0.1 --port ${COMFYUI_PORT}`
+
 ---
 
 ### 检查2: 模型选择（按系列分组，禁止跨系列混用）

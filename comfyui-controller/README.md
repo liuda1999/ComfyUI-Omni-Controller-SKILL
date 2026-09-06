@@ -159,6 +159,8 @@ export COMFYUI_PORT=3198
 
 ## 快速开始
 
+> **重要**：本项目严格遵循 **ComfyUI 官方标准启动方式**（`python main.py` 或内置 CLI `comfy launch`），**不依赖任何第三方 GUI 启动器**（如 wangyi AI绘世启动器.exe、秋叶整合包等 Windows 专属工具）。在 Windows / Linux / macOS 上均按官方标准方式启动，切勿使用第三方启动器。
+
 ### 1. 环境检查
 
 ```bash
@@ -181,8 +183,20 @@ python scripts/start_server.py --install --port 3198
 
 ### 3. 启动服务器
 
+> **官方标准启动**（在 ComfyUI 安装目录下）：
+>
+> ```bash
+> # Windows（嵌入式 Python 独立版）
+> cd ${COMFYUI_PATH}
+> .\python\python.exe -u main.py --port 3198 --listen 127.0.0.1
+>
+> # Linux / macOS（标准 Python 安装）
+> cd ${COMFYUI_PATH}
+> python main.py --listen 127.0.0.1 --port 3198
+> ```
+
 ```bash
-# CLI 模式（后台）
+# CLI 模式（后台，等价于官方 `python main.py` 启动）
 comfy launch --background
 
 # 脚本模式（前台）

@@ -81,6 +81,20 @@ python scripts/check_status.py   # 环境检查
 2. 一键执行：[scripts/video_task_runner.py](../../../scripts/video_task_runner.py) `img2vid|first_last_frame|multi_image_video|long_video|video_concat|multi_ref_video`
 3. 硬件自适应：显存四档（L1-L4）自动推荐参数
 
+### 2.3 启动 ComfyUI（官方标准，必读）
+
+> **重要**：严格遵循 **ComfyUI 官方标准启动方式**（`python main.py` 或内置 CLI `comfy launch`），**不依赖任何第三方 GUI 启动器**（如 wangyi AI绘世启动器.exe 等）。在 ComfyUI 安装目录 `${COMFYUI_PATH}` 下：
+>
+> ```bash
+> # Windows（嵌入式 Python 独立版）
+> .\python\python.exe -u main.py --port ${COMFYUI_PORT} --listen 127.0.0.1
+>
+> # Linux / macOS（标准 Python 安装）
+> python main.py --listen 127.0.0.1 --port ${COMFYUI_PORT}
+> ```
+>
+> 端口默认 `3198`；启动成功标志：`GET http://127.0.0.1:3198/system_stats` 返回 200。工作流执行：[scripts/run_workflow.py](../../../scripts/run_workflow.py) 或 `comfy run workflow.json --json`。
+
 ---
 
 ## 3. 强制约束（硬约束，不可违反）

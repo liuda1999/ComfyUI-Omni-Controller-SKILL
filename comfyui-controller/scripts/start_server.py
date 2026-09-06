@@ -217,21 +217,6 @@ def is_server_running(host="127.0.0.1", port="3198"):  # comfyui-cli项目标准
         return False
 
 
-def start_with_launcher(launcher_path):
-    """使用启动器启动"""
-    try:
-        log("info", f"正在通过启动器启动: {launcher_path}")
-        subprocess.Popen(
-            [launcher_path],
-            cwd=os.path.dirname(launcher_path),
-            creationflags=subprocess.CREATE_NEW_CONSOLE if platform.system() == "Windows" else 0
-        )
-        return True
-    except Exception as e:
-        log("error", f"启动器启动失败: {e}")
-        return False
-
-
 def start_direct(python_exe, comfy_path, host, port, listen):
     """直接启动ComfyUI"""
     main_py = os.path.join(comfy_path, "main.py")
@@ -340,16 +325,9 @@ def main():
     # 尝试启动
     started = False
     
-    # 1. 尝试使用启动器
-    launcher_path = os.path.join(comfy_path, "wangyi AI绘世启动器.exe")
-    if os.path.isfile(launcher_path):
-        log("info", "检测到启动器，尝试通过启动器启动...")
-        if start_with_launcher(launcher_path):
-            started = True
-    
-    # 2. 直接启动
-    if not started and check_report["python"]["python_exe"]:
-        log("info", "尝试直接启动ComfyUI...")
+    # 使用官方标准方式直接启动（python main.py，不依赖任何第三方 GUI 启动器）
+    if check_report["python"]["python_exe"]:
+        log("info", "使用官方标准方式直接启动ComfyUI（python main.py）...")
         if start_direct(
             check_report["python"]["python_exe"],
             comfy_path,

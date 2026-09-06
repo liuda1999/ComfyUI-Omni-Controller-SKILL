@@ -77,7 +77,7 @@
 | 脚本 | 功能 | 关键参数 | 状态 |
 |------|------|------|------|
 | `controller.py` | 服务器控制中枢（start/stop/wait） | `--port`, `--cpu`, `--wait` | 稳定 |
-| `start_server.py` | 启动器（含首次安装） | `--port`, `--install`, `--cpu` | 稳定 |
+| `start_server.py` | 服务器启动脚本（含首次安装，官方标准方式） | `--port`, `--install`, `--cpu` | 稳定 |
 | `run_workflow.py` | WebSocket 工作流执行器 | `--workflow`, `--wait`, `--timeout`, `--output-dir` | 需测试 |
 | `check_status.py` | 环境检查（Python/PyTorch/CUDA/GPU/节点/模型） | 无参数，全量输出 | 稳定 |
 | `workflow_converter.py` | UI 格式(nodes/links) -> API 格式(class_type/inputs) | `--input`, `--output` | 稳定 |
@@ -159,15 +159,20 @@ D:\2026-ComfyUI-V8.3\
 
 ### 2.1 启动命令
 
-经过 5+ 次重启验证的最佳启动命令：
+经过 5+ 次重启验证的最佳启动命令（官方标准方式，在 ComfyUI 安装目录下执行）：
 
 ```bash
-D:\2026-ComfyUI-V8.3\python\python.exe -s D:\2026-ComfyUI-V8.3\main.py --port 3198 --listen 127.0.0.1
+# Windows（嵌入式 Python 独立版）
+.\python\python.exe -u main.py --port 3198 --listen 127.0.0.1
+
+# Linux / macOS（标准 Python 安装）
+python main.py --port 3198 --listen 127.0.0.1
 ```
 
-- `-s` 标志禁用用户 site-packages，避免包冲突
+- `-u` 无缓冲输出，便于查看日志
 - `--port 3198` 自定义端口
 - `--listen 127.0.0.1` 仅本地监听（安全性）
+- 不依赖任何第三方 GUI 启动器（如 wangyi AI绘世启动器.exe 等）
 - **不要**加 `--lowvram`，会严重降低性能（本次实测性能下降 3-5x）
 
 ### 2.2 服务器稳定性问题

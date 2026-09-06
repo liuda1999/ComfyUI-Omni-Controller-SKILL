@@ -186,7 +186,7 @@ comfyui-controller/
 │   └── archive/                      # 旧版本归档（task1_*/task2_v3_final/c5_video_task_v6 等历史版本）
 ├── scripts/                          # 技能模式脚本（comfyui-controller 原有）
 │   ├── controller.py                 # 服务器控制（启动/停止/状态）
-│   ├── start_server.py               # 服务器启动器（支持安装）
+│   ├── start_server.py               # 服务器启动脚本（官方标准方式，支持安装）
 │   ├── run_workflow.py               # 工作流执行器（WebSocket 实时监听）
 │   ├── check_status.py               # 环境检查器
 │   ├── workflow_converter.py         # UI→API 格式转换器
@@ -247,7 +247,7 @@ comfyui-controller/
 
 - `get_gpu_info()`: 获取 GPU 信息
 
-#### 3.1.2 start\_server.py - 服务器启动器
+#### 3.1.2 start\_server.py - 服务器启动脚本
 
 - 支持 `--install` 自动安装 ComfyUI
 
@@ -1851,6 +1851,24 @@ Flux2 段N ImageResize 输出 → ColorMatch_N → 下游节点
 **注**：调度器场景化分析详见 EXPERIENCE.md 21.8 节；采样参数（steps/cfg/shift）选择方法论见 4.6 节。
 
 ## 5. 使用指南
+
+### 5.0 启动 ComfyUI（官方标准方式，必读）
+
+> **重要**：本控制器严格遵循 **ComfyUI 官方标准启动方式**（`python main.py` 或内置 CLI `comfy launch`），**不依赖任何第三方 GUI 启动器**（如 wangyi AI绘世启动器.exe、秋叶整合包等 Windows 专属工具）。在 Windows / Linux / macOS 上均按以下方式启动，切勿使用第三方启动器。
+
+在 ComfyUI 安装目录 `${COMFYUI_PATH}` 下：
+
+```bash
+# Windows（嵌入式 Python 独立版）
+.\python\python.exe -u main.py --port ${COMFYUI_PORT} --listen 127.0.0.1
+
+# Linux / macOS（标准 Python 安装）
+python main.py --listen 127.0.0.1 --port ${COMFYUI_PORT}
+```
+
+- 端口默认 `3198`（`COMFYUI_PORT` 环境变量可覆盖），`--listen 127.0.0.1` 仅本地监听
+- 也可用内置 CLI 后台启动：`comfy launch --background`（停止：`comfy stop`）
+- 启动成功标志：`GET http://127.0.0.1:${COMFYUI_PORT}/system_stats` 返回 200
 
 ### 5.1 技能模式使用示例
 

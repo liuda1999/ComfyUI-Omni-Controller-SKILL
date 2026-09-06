@@ -35,6 +35,51 @@
 
 ***
 
+## ComfyUI 启动与工作流执行（必读）
+
+> **重要**：本项目严格遵循 **ComfyUI 官方标准启动方式**，**不依赖、也不要求任何第三方 GUI 启动器**（如 wangyi AI绘世启动器.exe、秋叶整合包等 Windows 专属工具）。在任何操作系统（Windows / Linux / macOS）上，都请按以下官方标准方式启动与执行，切勿使用第三方启动器。
+
+### 1. 启动 ComfyUI（官方标准）
+
+在 **ComfyUI 安装目录**（`${COMFYUI_PATH}`）下，使用官方 `main.py` 启动：
+
+```bash
+# Windows（嵌入式 Python 独立版）
+cd ${COMFYUI_PATH}
+.\python\python.exe -u main.py --port 3198 --listen 127.0.0.1
+
+# Linux / macOS（标准 Python 安装，官方标准方式）
+cd ${COMFYUI_PATH}
+python main.py --listen 127.0.0.1 --port 3198
+```
+
+> - `${COMFYUI_PATH}` 通过环境变量 `COMFYUI_PATH` 指定；默认端口 `3198`（通过 `COMFYUI_PORT` 配置）
+> - 若 ComfyUI 已安装为独立 venv，则使用 `venv/bin/python main.py`（Linux/macOS）或 `venv\Scripts\python.exe main.py`（Windows）
+> - 也可使用本项目内置 CLI 后台启动：`comfy launch --background`（前台：`comfy launch`），停止：`comfy stop`
+
+### 2. 执行工作流（两种方式，等价）
+
+```bash
+# 方式一：内置 CLI（推荐，UI/API 双格式自动转换 + NDJSON 结构化输出）
+comfy run --workflow workflow.json --json --wait
+
+# 方式二：脚本模式
+python scripts/run_workflow.py --workflow workflow.json --wait --timeout 600
+```
+
+> - `comfy run` 同时接受 ComfyUI **API 格式**与 **UI 格式**工作流 JSON，UI 格式会自动转换后提交
+> - 执行前请先确认服务可用：`GET http://127.0.0.1:3198/system_stats` 返回 200
+
+### 3. 环境变量
+
+| 变量 | 说明 | 默认值 |
+|------|------|--------|
+| `COMFYUI_PATH` | ComfyUI 安装目录 | 无（必填） |
+| `COMFYUI_HOST` | ComfyUI 服务地址 | `127.0.0.1` |
+| `COMFYUI_PORT` | ComfyUI 服务端口 | `3198` |
+
+***
+
 ## 功能模块
 
 ### 智能体预检与反问

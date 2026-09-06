@@ -149,7 +149,6 @@ def detect_comfyui_version(comfyui_path):
         "exists": os.path.exists(comfyui_path) if comfyui_path else False,
         "version_type": "unknown",
         "web_url": None,
-        "has_gui_launcher": False,
         "has_embedded_python": False,
         "has_venv": False,
     }
@@ -157,29 +156,20 @@ def detect_comfyui_version(comfyui_path):
     if not comfyui_path or not os.path.exists(comfyui_path):
         return version_info
     
-    # Check for 绘世社区版 (HuiShi/Community Edition) - has GUI launcher
-    gui_launcher = os.path.join(comfyui_path, "wangyi AI绘世启动器.exe")
-    if os.path.exists(gui_launcher):
-        version_info["has_gui_launcher"] = True
-        version_info["version_type"] = "huishi_community"
-        version_info["web_url"] = "https://www.aigodlike.com/"
-    
-    # Check for 秋叶整合包 (QiuYe/Autumn Leaf Package)
-    qiuYe_markers = ["A绘世启动器.exe", "绘世启动器.exe", "A启动器.exe"]
-    for marker in qiuYe_markers:
-        if os.path.exists(os.path.join(comfyui_path, marker)):
-            version_info["version_type"] = "qiuye_package"
-            version_info["web_url"] = "https://pan.baidu.com/s/1SKaXQ5hnEEGNoMvm9fyt5A?pwd=n2zn"
-            break
-    
+    # 使用官方标准方式检测 ComfyUI 安装（不依赖任何第三方 GUI 启动器，如 wangyi AI绘世启动器.exe 等）
     # Check for embedded Python
     embedded_python = os.path.join(comfyui_path, "python", "python.exe")
     if os.path.exists(embedded_python):
         version_info["has_embedded_python"] = True
     
-    # Check for venv
-    venv_python = os.path.join(comfyui_path, "venv", "Scripts", "python.exe")
-    if os.path.exists(venv_python):
+    # Check for venv (Windows: venv/Scripts/python.exe; Linux/macOS: venv/bin/python)
+    venv_candidates = [
+        os.path.join(comfyui_path, "venv", "Scripts", "python.exe"),
+        os.path.join(comfyui_path, "venv", "bin", "python"),
+        os.path.join(comfyui_path, ".venv", "Scripts", "python.exe"),
+        os.path.join(comfyui_path, ".venv", "bin", "python"),
+    ]
+    if any(os.path.exists(p) for p in venv_candidates):
         version_info["has_venv"] = True
     
     # Check for version file
@@ -211,10 +201,6 @@ def check_capabilities(system_info, memory_info, gpu_info):
         "recommendation": "",
         "warnings": [],
     }
-    
-    # Check OS
-    if not system_info.get("is_windows"):
-        capabilities["warnings"].append("Non-Windows system detected. Some features may not work correctly.")
     
     # Check RAM
     ram_total = memory_info.get("total_gb", 0)
