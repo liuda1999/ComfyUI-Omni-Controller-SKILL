@@ -124,6 +124,7 @@ def launch_comfyui(extra, frontend_pr=None, python=sys.executable):
                         text=True,
                         env=new_env,
                         encoding="utf-8",
+                        errors="replace",
                         shell=True,  # win32 only
                         creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,  # win32 only
                     )
@@ -133,6 +134,7 @@ def launch_comfyui(extra, frontend_pr=None, python=sys.executable):
                         text=True,
                         env=new_env,
                         encoding="utf-8",
+                        errors="replace",
                         stdout=subprocess.PIPE,
                         stderr=subprocess.PIPE,
                     )
@@ -275,6 +277,7 @@ async def launch_and_monitor(cmd, listen, port):
             text=True,
             env=env,
             encoding="utf-8",
+            errors="replace",
             shell=True,  # win32 only
             creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,  # win32 only
         )
@@ -286,6 +289,7 @@ async def launch_and_monitor(cmd, listen, port):
             text=True,
             env=env,
             encoding="utf-8",
+            errors="replace",
         )
 
     def msg_hook(stream):

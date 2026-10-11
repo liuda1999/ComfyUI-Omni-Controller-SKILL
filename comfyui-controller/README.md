@@ -138,7 +138,7 @@ pip install -r requirements.txt
 uv pip install -r requirements.txt
 
 # 安装 CLI 模式（可选）
-pip install -e cli/
+pip install -e .
 ```
 
 ### 环境变量配置

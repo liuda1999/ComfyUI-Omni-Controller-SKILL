@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "comfyui-omni-controller"
+version = "0.1.2"
+description = "ComfyUI Omni-Controller CLI - lifecycle management for ComfyUI (launch/stop/run/node/model)"
+requires-python = ">=3.10"
+dependencies = [
+    "typer",
+    "rich",
+    "questionary",
+    "httpx",
+    "requests",
+    "websocket-client",
+    "psutil",
+    "PyYAML",
+    "packaging",
+    "GitPython",
+    "semver",
+    "pathspec",
+    "tomlkit",
+    "mixpanel",
+    "posthog",
+    "aria2p",
+    "cookiecutter",
+    "huggingface_hub",
+]
+
+[project.scripts]
+comfy = "cli.cmdline:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["cli*"]

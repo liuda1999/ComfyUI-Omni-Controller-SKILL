@@ -29,7 +29,7 @@ def check_for_newer_pypi_version(package_name, current_version):
 
 def check_for_updates():
     current_version = get_version_from_pyproject()
-    has_newer, newer_version = check_for_newer_pypi_version("comfy-cli", current_version)
+    has_newer, newer_version = check_for_newer_pypi_version("comfyui-omni-controller", current_version)
 
     if has_newer:
         notify_update(current_version, newer_version)
@@ -37,7 +37,7 @@ def check_for_updates():
 
 def get_version_from_pyproject():
     try:
-        package_metadata = metadata("comfy-cli")
+        package_metadata = metadata("comfyui-omni-controller")
         return package_metadata["Version"]
     except Exception:
         return "0.0.0"
@@ -45,9 +45,9 @@ def get_version_from_pyproject():
 
 def notify_update(current_version: str, newer_version: str):
     message = (
-        f":sparkles: Newer version of [bold magenta]comfy-cli[/bold magenta] is available: [bold green]{newer_version}[/bold green].\n"
+        f":sparkles: Newer version of [bold magenta]comfyui-omni-controller[/bold magenta] is available: [bold green]{newer_version}[/bold green].\n"
         f"Current version: [bold cyan]{current_version}[/bold cyan]\n"
-        f"Update by running: [bold yellow]'pip install --upgrade comfy-cli'[/bold yellow] :arrow_up:"
+        f"Update by running: [bold yellow]'pip install --upgrade comfyui-omni-controller'[/bold yellow] :arrow_up:"
     )
 
     if sys.platform == "win32":

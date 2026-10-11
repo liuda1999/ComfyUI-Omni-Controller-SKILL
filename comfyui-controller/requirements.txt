@@ -1,0 +1,34 @@
+# ComfyUI Omni-Controller - CLI runtime dependencies
+#
+# Groups:
+#   [core]  hard dependencies imported at module level (CLI fails to start without them)
+#   [extra] lazy/optional imports - missing them disables only the specific subcommand:
+#           aria2p          -> aria2 download backend
+#           cookiecutter    -> custom-node template creation
+#           huggingface_hub -> download models from HuggingFace
+#
+# Install:
+#   pip install -r requirements.txt
+#   uv pip install -r requirements.txt
+
+# ---- [core] hard deps ----
+typer
+rich
+questionary
+requests
+httpx
+websocket-client
+psutil
+PyYAML
+packaging
+GitPython
+semver
+pathspec
+tomlkit
+mixpanel
+posthog
+
+# ---- [extra] optional deps ----
+aria2p
+cookiecutter
+huggingface_hub

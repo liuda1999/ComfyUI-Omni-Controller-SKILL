@@ -165,7 +165,7 @@ docs_cli/ 技术文档（统一入口 → docs_cli/INDEX.md 快速索引）:
 | **工作流编辑**      | `scripts/edit_workflow.py`            | 无直接对应                               | 技能模式独有功能                                                                                                                          |
 | **云端生成**       | 无直接对应                                 | `comfy generate`                    | CLI 模式独有功能（Partner Nodes）                                                                                                         |
 | **快照管理**       | 无直接对应                                 | `comfy node save-snapshot`          | CLI 模式独有功能                                                                                                                        |
-| **GitHub PR**  | 无直接对应                                 | `comfy github`                      | CLI 模式独有功能                                                                                                                        |
+| **GitHub PR**  | 无直接对应                                 | `comfy install`（PR 由 install 处理，无独立 github 子命令）                      | CLI 模式独有功能                                                                                                                        |
 
 ### 2.3 项目目录结构（融合后）
 
@@ -473,7 +473,7 @@ comfyui-controller/
 
 - `comfy update`: 更新 ComfyUI 或节点
 
-- `comfy github`: GitHub PR 信息
+- `comfy github`（未实现；GitHub PR 由 `comfy install` 处理）: GitHub PR 信息
 
 ## 4. ComfyUI 图片与视频生成工作流知识
 

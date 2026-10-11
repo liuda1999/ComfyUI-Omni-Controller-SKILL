@@ -64,7 +64,7 @@ python main.py --listen 127.0.0.1 --port 3198
 comfy run --workflow workflow.json --json --wait
 
 # 方式二：脚本模式
-python scripts/run_workflow.py --workflow workflow.json --wait --timeout 600
+python scripts/run_workflow.py --workflow workflow.json --timeout 600
 ```
 
 > - `comfy run` 同时接受 ComfyUI **API 格式**与 **UI 格式**工作流 JSON，UI 格式会自动转换后提交
@@ -241,7 +241,7 @@ python scripts/run_workflow.py --workflow workflow.json --wait --timeout 600
    ```bash
    git clone https://github.com/liuda1999/ComfyUI-Omni-Controller-SKILL.git
    cd ComfyUI-Omni-Controller-SKILL/comfyui-controller
-   pip install -e cli/
+   pip install -e .
    ```
 
 2. **智能体自动安装**：智能体可通过技能文档中的安装指引，自动执行克隆、依赖安装、环境配置全流程
@@ -266,7 +266,6 @@ python scripts/run_workflow.py --workflow workflow.json --wait --timeout 600
 
 - `.trae/skills/` — 技能文档（智能体读取入口，含预检指南和架构经验）
 
-- `.trae/specs/` — 规格文档（任务规划、检查清单、验收标准）
 
 - `comfyui-controller/SKILL.md` — 完整功能映射表和 ComfyUI 工作流知识库
 

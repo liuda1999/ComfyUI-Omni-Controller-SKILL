@@ -162,7 +162,7 @@ class ConfigManager:
         # Note: this approach should work for users installing the CLI via
         # PyPi and Homebrew (e.g., pip install comfy-cli)
         try:
-            return version("comfy-cli")
+            return version("comfyui-omni-controller")
         except Exception as e:
             logging_utils.debug(f"Error occurred while retrieving CLI version using importlib.metadata: {e}")
 
