@@ -4819,3 +4819,73 @@ ComfyUI 以 `--cuda-device 0,1` 启动，但实测**只在 card0 承载**
 6. **GGUF 量化 ≠ 省显存**（本例 Q6 反而更占，因反量化为 bf16）；量化主要省**磁盘**。
 7. 服务恢复是"停-跑-释放-起-校验"的有序过程，释放环节最容易漏。
 
+
+---
+
+## 28. 工作流"学习入库"链路修复（P0 内容校验 + P1 API 格式 + P1 标注防覆盖）
+
+### 28.1 背景与问题定位
+
+对"用户下载新工作流 → 智能体检查/分析/拆解/学习 → 入库"链路做专项审计，发现三项
+阻断/高优先级缺陷（2026-10-14 修复并全部复验）：
+
+| 级别 | 问题 | 根因 |
+|---|---|---|
+| P0 | 按项目文档命令执行入库**必崩**（`AttributeError: 'str' object has no attribute 'get'`） | `get_workflow_files` 只按 `.json` 扩展名收集不验证内容；`node_registry.json` 的 `nodes` 是 **dict**，被当工作流遍历 |
+| P1 | API 格式工作流全链路空转，规范库 23 个顶层条目中 **12 个是 0 节点空壳** | 分析器/构建器只认 UI 格式（`nodes` 列表）；API（prompt）格式顶层是节点 ID 映射 |
+| P1 | 人工标注被静默覆盖（走查时打的 H3 `MiniMaxH3` 标签被重分析覆盖回 unknown） | `update_library` 整条目替换；git 克隆改变 mtime 触发全量重分析，机器 unknown 值直接覆盖 curated 值 |
+
+附带实锤：`workflow_analysis.json`（分析产物）被当成工作流入库（11 节点/Wan2.2）；
+6 个 `.param_spec.json` 参数规范也被索引入库——机制不验证内容的直接证据。
+
+### 28.2 修复内容（`scripts/build_workflow_library.py` / `scripts/workflow_analyzer.py`）
+
+1. **内容级校验（P0）**：新增 `detect_workflow_format()`——UI 格式要求 `nodes` 为
+   dict 列表且含 `type/id`；API 格式要求顶层值均为含 `class_type` 的 dict（兼容
+   `{"prompt": {...}}` 包装）；节点注册表/索引/object_info/分析产物（含
+   `workflow_info/summary/execution_flow` 标记键）/空画布一律判非工作流。非工作流
+   文件跳过并登记 `file_index`（不重复判定），`metadata.skipped_non_workflows` 留痕。
+   `workflow_param_spec/` 目录与 `archive/` 一同列入构建器跳过名单。
+2. **API 格式支持（P1）**：新增 `api_to_pseudo_ui()` 把 API prompt 规范化为伪 UI
+   结构（`widgets_values`=标量输入值、`inputs`=连接项、`links` 由输入二元列表重建），
+   复用 UI 侧全部分析函数（节点类型/模型/参数/注解/拓扑执行流/模板）。分析器同步
+   支持，报告新增 `format` 字段；非工作流文件明确报错并 `exit 1`。
+   家族识别增加两级兜底：任意"加载器类"节点的模型文件名扫描（覆盖 kijai/RH/GGUF
+   包装加载器）与 class_type 关键词投票（API 文件无模型名时用，如
+   `MiniMaxH3TurboSampler → MiniMaxH3`）。类别兜底：家族形态已知且推断未命中时，
+   视频+LoadImage→图生视频，视频→文生视频，图像→文生图。
+3. **标注防覆盖（P1）**：`update_library` 改为合并语义——结构字段以新分析为准，
+   `legacy` 等额外键保留；`model_family/model_modality/category` 已有非空值时，
+   机器识别为空不覆盖、冲突保留原值并打印 `[标注保护]` 告警；`--refresh-labels`
+   可强制以机器识别为准。新增**陈旧条目检测**：条目 `node_count` 与文件实际节点数
+   不符时重新分析（自愈历史 0 节点空壳，文件未变化不走 added/modified 也能拾回）。
+   新增**自愈**：当前被判非工作流的文件，其残留条目自动移除。
+
+### 28.3 验证证据（全部实测）
+
+- 全量构建（文档记载命令）：exit 0，28 条入库、**0 空壳**、7 个非工作流文件跳过留痕；
+  修复前同一命令必崩。
+- 增量入库（scratch 复刻真实仓库 + 新下载工作流 + mtime 全变）：自愈移除
+  `workflow_analysis`，12 个空壳全部愈合，6 个 H3 API 变体完整入库（21~119 节点、
+  家族 MiniMaxH3、注解/执行流齐全），新工作流 161 节点全量入库，legacy 54 条不丢失。
+- 标注防覆盖：单元 13/13 + 集成（curated MiniMaxH3 对抗机器 Wan2.2 冲突保留原值，
+  结构字段仍刷新；`--refresh-labels` 可覆盖）。
+- 分析器远程实测（真实 ComfyUI）：API/`prompt` 包装/UI 三种格式 ok=True 且
+  注解/执行流完整；非工作流 ok=false + exit 1。
+- 闭环：模式提取器现在能学习 API 条目（图生视频/MiniMaxH3 样本 2→8）；
+  `workflow_generator` 实测 `design_source: pattern:文生图:Wan2.2`（学习模式复用）。
+- 落地：规范库 77→82（+6 API 变体、-1 分析产物、12 空壳愈合），已同步技能库
+  （130 = 82 规范 + 48 个人），查询器 H3 系列 6→12。
+
+### 28.4 教训
+
+1. "按扩展名收集"不是收集，是埋雷——**先判格式再分析**，且判据要覆盖注册表/索引/
+   分析产物这类"结构酷似"的文件。
+2. API（prompt）格式与 UI 格式是**两种一等公民**：用户从网络下载的工作流大量是
+   API 格式（ComfyUI "Save (API Format)"），只认 UI 等于把一半以上输入当空壳。
+3. 增量更新里"机器识别"是**建议**不是**事实**：curated 标注必须防覆盖，冲突时保留
+   并告警，同时给 `--refresh-labels` 逃生口。
+4. mtime 会因克隆/拷贝漂移，变更检测不能只信 mtime——**节点数比对**能低成本拾回
+   陈旧空壳条目。
+5. 离线转换（无 object_info）产出的 API 文件会丢 widget 值，只剩链接；分析这类
+   文件时结构/连接/注解仍完整，但模型/参数为空，属数据源限制而非分析缺陷。

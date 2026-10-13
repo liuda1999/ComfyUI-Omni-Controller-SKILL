@@ -137,6 +137,22 @@ def detect_model_family(model_name):
     return ("unknown", "unknown")
 
 
+def _infer_model_role(node_type):
+    """从节点类型名推断模型角色（用于通用兜底扫描的优先级排序）"""
+    t = (node_type or '').lower()
+    if 'lora' in t:
+        return 'lora'
+    if 'controlnet' in t or 'control_net' in t:
+        return 'controlnet'
+    if 'vae' in t:
+        return 'vae'
+    if 'clip' in t or 'text_encoder' in t or 't5' in t:
+        return 'clip'
+    if 'upscale' in t:
+        return 'upscale'
+    return 'unet'
+
+
 def detect_workflow_model_family(workflow, object_info=None):
     """识别工作流所依赖的大模型系列。
     综合考虑 checkpoint/unet/lora/controlnet 等模型，返回主模型系列。
@@ -200,6 +216,39 @@ def detect_workflow_model_family(workflow, object_info=None):
             if family != 'unknown':
                 detected.append((family, modality, model_name, model_role))
 
+    # 通用兜底①：任意"加载器类"节点 widgets_values 中的模型文件名。
+    # 覆盖 kijai/RH/GGUF 等未逐一列举的包装类加载器（API 伪 UI 的 widgets_values 即标量输入值）。
+    if not detected:
+        for node in nodes:
+            node_type = node.get('type', '')
+            if not any(h in (node_type or '').lower() for h in _LOADERISH_HINTS):
+                continue
+            role = _infer_model_role(node_type)
+            for value in node.get('widgets_values', []) or []:
+                if isinstance(value, str) and value.lower().endswith(_MODEL_FILE_EXTS):
+                    family, modality = detect_model_family(value)
+                    if family != 'unknown':
+                        detected.append((family, modality, value, role))
+
+    # 通用兜底②：class_type 名称关键词。API 文件可能不含模型文件名
+    # （如离线转换丢失 widget 值），此时用节点类型名识别（如 MiniMaxH3TurboSampler → MiniMaxH3）。
+    if not detected:
+        type_votes = defaultdict(int)
+        type_first = {}
+        for node in nodes:
+            node_type = node.get('type', '')
+            if not node_type:
+                continue
+            tlc = node_type.lower()
+            for family, keywords, modality in _MODEL_FAMILY_RULES:
+                if any(kw in tlc for kw in keywords):
+                    type_votes[family] += 1
+                    type_first.setdefault(family, (family, modality, node_type, 'node_type'))
+                    break
+        if type_votes:
+            best = max(type_votes.items(), key=lambda kv: kv[1])[0]
+            detected.append(type_first[best])
+
     if not detected:
         return ("unknown", "unknown", [])
 
@@ -213,11 +262,15 @@ def detect_workflow_model_family(workflow, object_info=None):
 
 
 def get_workflow_files(directory):
-    """递归获取所有工作流文件（跳过 archive/ 子目录，避免历史版本污染索引）"""
+    """递归获取所有工作流文件。
+    跳过两类子目录（均为资产目录而非工作流）：
+    - archive/：历史版本归档（旧版本，由 build_all_legacy.py 单独合并）
+    - workflow_param_spec/：参数规范文件（节点的参数规格说明，不是工作流）
+    """
     workflows = []
     for root, dirs, files in os.walk(directory):
-        # 跳过 archive 子目录（旧版本归档，不纳入资料库索引）
-        dirs[:] = [d for d in dirs if d != 'archive']
+        # 跳过资产子目录，避免把非工作流内容纳入索引
+        dirs[:] = [d for d in dirs if d not in ('archive', 'workflow_param_spec')]
         for file in files:
             if file.endswith('.json') and file != '.index.json':
                 workflows.append(os.path.join(root, file))
@@ -231,6 +284,148 @@ def load_workflow(path):
             return json.load(f)
     except Exception as e:
         return {"error": str(e)}
+
+
+# 已知的非工作流资产文件（资料库自身的元数据/索引/规范文件，绝不是工作流）
+_NON_WORKFLOW_ASSET_NAMES = {
+    'node_registry.json',             # 节点注册表（nodes 为 dict，遍历会崩溃）
+    'legacy_workflow_index.json',     # 历史工作流索引
+    'node_parameter_standards.json',  # 节点参数标准
+    'object_info.json',               # 节点 schema 全量导出
+    'workflow_analysis.json',         # 分析产物（含 nodes 列表，但它是报告不是工作流）
+    'workflow_library.json',          # 资料库自身
+    'workflow_patterns.json',         # 模式库
+}
+
+# 分析产物标记键：workflow_analyzer 的报告同时含 nodes 列表与这些键，用于排除误索引
+_ANALYSIS_PRODUCT_KEYS = {'workflow_info', 'execution_flow', 'summary'}
+
+# 模型文件扩展名（从任意节点的 widget/input 值中识别模型文件名用）
+_MODEL_FILE_EXTS = ('.safetensors', '.ckpt', '.pt', '.pth', '.gguf', '.sft')
+
+# 加载器/模型类节点名关键词（通用模型名兜底扫描时限定节点范围，避免误把提示词当模型名）
+_LOADERISH_HINTS = ('load', 'model', 'gguf', 'ckpt', 'unet', 'vae', 'clip', 'lora', 'checkpoint')
+
+
+def _is_api_prompt(data):
+    """判断是否为 API(prompt) 格式：非空 dict 且所有值都是含 class_type 的 dict"""
+    if not isinstance(data, dict) or not data:
+        return False
+    for value in data.values():
+        if not (isinstance(value, dict) and 'class_type' in value):
+            return False
+    return True
+
+
+def detect_workflow_format(data, basename=""):
+    """识别 JSON 数据的工作流格式。
+    返回 'ui' / 'api' / None（None 表示不是可入库的工作流内容）。
+    - ui：ComfyUI 画布导出格式（顶层 nodes 为 dict 列表，节点含 type/id）
+    - api：ComfyUI API(prompt) 格式（顶层键为节点 ID，值为含 class_type 的 dict），
+           兼容 {"prompt": {...}} 包装
+    - 其他内容（节点注册表/索引/object_info/分析产物/空画布/结构异常）一律 None
+    """
+    if not isinstance(data, dict):
+        return None
+    if basename in _NON_WORKFLOW_ASSET_NAMES:
+        return None
+
+    nodes = data.get('nodes')
+    if isinstance(nodes, list):
+        if _ANALYSIS_PRODUCT_KEYS & set(data.keys()):
+            return None  # 分析产物，不是工作流
+        if not nodes:
+            return None  # 空画布（0 节点），无学习价值
+        if all(isinstance(n, dict) and ('type' in n or 'id' in n) for n in nodes):
+            return 'ui'
+        return None  # nodes 结构异常（如 dict 或字符串列表）
+
+    # {"prompt": {...}} 包装的 API 格式
+    if 'prompt' in data and isinstance(data['prompt'], dict) and _is_api_prompt(data['prompt']):
+        return 'api'
+
+    if _is_api_prompt(data):
+        return 'api'
+    return None
+
+
+def api_to_pseudo_ui(api_data):
+    """把 API(prompt) 格式规范化为伪 UI 结构，复用 UI 侧全部分析函数。
+    返回 {'nodes': [...], 'links': [...]}：
+    - nodes: [{id, type, _meta, widgets_values(标量输入值), inputs(仅连接项), outputs, pos, size, order}]
+    - links: [link_id, source_id, source_slot, target_id, target_slot, type]
+    注意：离线转换产出的 API 文件可能不含 widget 值（只有链接），此时
+    models/parameters 提取结果为空，但结构/连接/注解/执行流完整。
+    """
+    id_set = {str(k) for k in api_data.keys()}
+    nodes = []
+    links = []
+    link_id = 0
+    for order, (raw_id, node_data) in enumerate(api_data.items()):
+        if not isinstance(node_data, dict):
+            continue
+        try:
+            node_id = int(raw_id)
+        except (TypeError, ValueError):
+            node_id = raw_id
+        class_type = node_data.get('class_type', '')
+        inputs = node_data.get('inputs', {})
+        if not isinstance(inputs, dict):
+            inputs = {}
+        meta = node_data.get('_meta') if isinstance(node_data.get('_meta'), dict) else {}
+        widgets_values = []
+        pseudo_inputs = []
+        for slot, (name, value) in enumerate(inputs.items()):
+            # API 格式中连接输入值为 [源节点ID, 源输出槽] 二元列表
+            is_link = (isinstance(value, list) and len(value) == 2
+                       and str(value[0]) in id_set and isinstance(value[1], int))
+            if is_link:
+                try:
+                    src_id = int(value[0])
+                except (TypeError, ValueError):
+                    src_id = value[0]
+                links.append([link_id, src_id, value[1], node_id, slot, ''])
+                pseudo_inputs.append({'name': name, 'link': link_id, 'type': ''})
+                link_id += 1
+            else:
+                widgets_values.append(value)
+        nodes.append({
+            'id': node_id,
+            'type': class_type,
+            '_meta': {'title': meta.get('title', '')} if meta else {},
+            'widgets_values': widgets_values,
+            'inputs': pseudo_inputs,
+            'outputs': [],
+            'pos': [0, 0],
+            'size': [0, 0],
+            'order': order,
+        })
+    return {'nodes': nodes, 'links': links}
+
+
+def unwrap_api_prompt(data):
+    """解包 {"prompt": {...}} 包装，返回纯 API(prompt) 节点字典"""
+    if isinstance(data, dict) and 'prompt' in data and isinstance(data['prompt'], dict):
+        return data['prompt']
+    return data
+
+
+def load_workflow_checked(path):
+    """加载并校验工作流文件（内容级校验，替代仅按扩展名收集）。
+    返回 (workflow, fmt, error)：
+    - 成功：workflow 为 UI 原结构或 API 规范化后的伪 UI 结构，fmt 为 'ui'/'api'，error 为 None
+    - JSON 解析失败：workflow=None, fmt=None, error=错误信息
+    - 非工作流内容：workflow=None, fmt=None, error='non-workflow'
+    """
+    data = load_workflow(path)
+    if isinstance(data, dict) and 'error' in data:
+        return None, None, data['error']
+    fmt = detect_workflow_format(data, os.path.basename(path))
+    if fmt is None:
+        return None, None, 'non-workflow'
+    if fmt == 'api':
+        data = api_to_pseudo_ui(unwrap_api_prompt(data))
+    return data, fmt, None
 
 
 def extract_node_types(workflow):
@@ -269,11 +464,14 @@ def extract_node_types(workflow):
                     out_type = tuple(out_type)
                 node_types[node_type]['outputs'].add(out_type)
     
-    # 转换set为list以便JSON序列化
+    # 转换set为list以便JSON序列化。
+    # 必须排序：Python 字符串哈希随机化会使 set 迭代顺序逐进程变化，
+    # 不排序则每次重建这些字段都在 diff 里翻烧饼（集合等价但顺序不同），
+    # 导致资料库产物的变更无法审查。
     for nt in node_types.values():
-        nt['inputs'] = list(nt['inputs'])
-        nt['outputs'] = list(nt['outputs'])
-    
+        nt['inputs'] = sorted(nt['inputs'], key=lambda v: (isinstance(v, tuple), str(v)))
+        nt['outputs'] = sorted(nt['outputs'], key=lambda v: (isinstance(v, tuple), str(v)))
+
     return node_types
 
 
@@ -332,11 +530,11 @@ def extract_models(workflow):
                         'value': value
                     })
     
-    # 去重
+    # 去重（排序保证输出确定性，避免 set 迭代顺序导致的 diff 翻烧饼）
     for key in models:
         if key != 'other':
-            models[key] = list(set(models[key]))
-    
+            models[key] = sorted(set(models[key]))
+
     return models
 
 
@@ -522,8 +720,8 @@ def extract_custom_nodes(workflow):
         node_type = node.get('type', '')
         if node_type not in core_nodes:
             custom_nodes.add(node_type)
-    
-    return list(custom_nodes)
+
+    return sorted(custom_nodes)
 
 
 def build_node_annotations(workflow, object_info):
@@ -804,17 +1002,22 @@ def build_library(workflows_dir, output_path, object_info=None):
         'file_index': {}  # 文件索引：{相对路径: {mtime, size}}
     }
     
+    skipped_non_workflows = []
     for filepath in workflow_files:
         name = os.path.splitext(os.path.basename(filepath))[0]
         rel_path = os.path.relpath(filepath, workflows_dir)
-        
-        print(f"  分析: {rel_path}")
-        
-        workflow = load_workflow(filepath)
-        if 'error' in workflow:
-            print(f"    错误: {workflow['error']}")
+
+        # 内容级校验：非工作流 JSON（节点注册表/索引/object_info/分析产物等）跳过，不崩溃
+        workflow, fmt, load_err = load_workflow_checked(filepath)
+        if load_err == 'non-workflow':
+            skipped_non_workflows.append(rel_path)
             continue
-        
+        if load_err:
+            print(f"    错误: {rel_path}: {load_err}")
+            continue
+
+        print(f"  分析: {rel_path} [{fmt}]")
+
         # 基础信息
         category = analyze_workflow_category(filepath, workflow)
         node_types = extract_node_types(workflow)
@@ -825,6 +1028,15 @@ def build_library(workflows_dir, output_path, object_info=None):
         template = build_workflow_template(workflow, name, object_info, filepath)
         # 识别大模型系列（不同系列工作流不能混用）
         model_family, model_modality, family_models = detect_workflow_model_family(workflow, object_info)
+
+        # 类别兜底：路径关键词与节点类型推断均未命中、但家族形态已知时，按形态给基础类别
+        if category == '其他' and model_modality in ('image', 'video'):
+            if model_modality == 'image':
+                category = '文生图'
+            elif 'LoadImage' in node_types:
+                category = '图生视频'
+            else:
+                category = '文生视频'
 
         # 更新 file_index（记录文件 mtime 和 size 用于增量更新）
         try:
@@ -911,17 +1123,23 @@ def build_library(workflows_dir, output_path, object_info=None):
             if name not in library['component_library'][node_category][node_type]['workflows']:
                 library['component_library'][node_category][node_type]['workflows'].append(name)
     
-    # 转换set为list以便JSON序列化
+    # 转换set为list以便JSON序列化（排序保证确定性，理由见 extract_node_types）
     for key in library['statistics']['models']:
-        library['statistics']['models'][key] = list(library['statistics']['models'][key])
-    library['statistics']['custom_nodes'] = list(library['statistics']['custom_nodes'])
-    
+        library['statistics']['models'][key] = sorted(library['statistics']['models'][key])
+    library['statistics']['custom_nodes'] = sorted(library['statistics']['custom_nodes'])
+
+    # 工作流总数以实际入库条目为准（跳过的非工作流文件不计入）
+    library['metadata']['total_workflows'] = len(library['workflows'])
+    library['metadata']['skipped_non_workflows'] = skipped_non_workflows
+
     # 保存资料库
     with open(output_path, 'w', encoding='utf-8') as f:
         json.dump(library, f, indent=2, ensure_ascii=False)
-    
+
     print(f"\n资料库已生成: {output_path}")
     print(f"  工作流总数: {library['metadata']['total_workflows']}")
+    if skipped_non_workflows:
+        print(f"  跳过非工作流文件 {len(skipped_non_workflows)} 个: {', '.join(skipped_non_workflows)}")
     print(f"  节点类型数: {len(library['statistics']['node_types'])}")
     print(f"  自定义节点数: {len(library['statistics']['custom_nodes'])}")
     print(f"  类别分布: {dict(library['statistics']['categories'])}")
@@ -975,7 +1193,43 @@ def compute_file_changes(source_dir, existing_file_index):
     return {'added': added, 'modified': modified, 'deleted': deleted}
 
 
-def update_library(source_dir, library_path, object_info):
+# 可被人工/智能体策展的标注字段（增量更新时机器识别不得覆盖已有非空值）
+_CURATABLE_FIELDS = ('model_family', 'model_modality', 'category')
+# 视为"空"的标注值（机器识别不到时的返回值）
+_EMPTY_LABELS = {'', None, 'unknown', '其他'}
+
+
+def _merge_workflow_entry(existing, new_entry, refresh_labels=False, name=''):
+    """增量更新时合并新旧条目（标注防覆盖）。
+    - 结构类字段（节点/模型/参数/连接/注解/执行流/模板）以新分析为准
+    - 新分析未产生的额外键（如 legacy 历史扫描信息）原样保留
+    - model_family/model_modality/category 已有非空值时：
+      机器识别为空不覆盖；机器识别与原值冲突时保留原值并告警。
+      refresh_labels=True 时强制以机器识别为准（--refresh-labels）。
+    """
+    if not existing:
+        return new_entry
+    merged = dict(existing)
+    merged.update(new_entry)
+    if not refresh_labels:
+        for field in _CURATABLE_FIELDS:
+            old = existing.get(field)
+            new = new_entry.get(field)
+            if old in _EMPTY_LABELS:
+                continue  # 原值为空，采用机器识别
+            if new in _EMPTY_LABELS:
+                merged[field] = old
+                print(f"    [标注保护] {name}.{field}: 机器识别为空，保留原值 {old!r}")
+            elif new != old:
+                merged[field] = old
+                print(f"    [标注保护] {name}.{field}: 机器识别 {new!r} 与原值 {old!r} 冲突，保留原值")
+        # family_models：新分析为空时保留原有明细
+        if not new_entry.get('family_models') and existing.get('family_models'):
+            merged['family_models'] = existing['family_models']
+    return merged
+
+
+def update_library(source_dir, library_path, object_info, refresh_labels=False):
     """增量更新工作流资料库。
     - 加载现有 library（若不存在则视为空 library，相当于全量构建）
     - 调用 compute_file_changes 计算变更集
@@ -1025,13 +1279,67 @@ def update_library(source_dir, library_path, object_info):
     if 'file_index' not in library:
         library['file_index'] = {}
 
-    # 计算变更集
+    # ---- 分类 pass：一次性加载并判定源目录所有 JSON 文件的格式 ----
+    # 非工作流文件（节点注册表/索引/object_info/分析产物等）不得入库，
+    # 同时登记进 file_index，避免每次更新重复判定。
+    current_files = {}  # rel_path -> abs_path
+    for abs_path in get_workflow_files(source_dir):
+        current_files[os.path.relpath(abs_path, source_dir)] = abs_path
+
+    classified = {}  # rel_path -> (workflow, fmt, err)
+    for rel_path, abs_path in current_files.items():
+        basename = os.path.basename(abs_path)
+        if basename in _NON_WORKFLOW_ASSET_NAMES:
+            classified[rel_path] = (None, None, 'non-workflow')  # 已知资产，免加载
+            continue
+        classified[rel_path] = load_workflow_checked(abs_path)
+
+    # ---- 自愈：清除非工作流文件残留的条目（历史误索引），并登记 file_index ----
+    healed_entries = []
+    for rel_path, (_, fmt, err) in classified.items():
+        if fmt is not None or err != 'non-workflow':
+            continue  # 解析失败的文件不登记 file_index（修复后可被重新拾取）
+        name = os.path.splitext(os.path.basename(rel_path))[0]
+        if name in library['workflows']:
+            del library['workflows'][name]
+            library['templates'].pop(name, None)
+            healed_entries.append(name)
+        try:
+            stat_info = os.stat(current_files[rel_path])
+            library['file_index'][rel_path] = {'mtime': stat_info.st_mtime, 'size': stat_info.st_size}
+        except Exception:
+            pass
+    if healed_entries:
+        print(f"自愈：移除非工作流残留条目 {len(healed_entries)} 个: {', '.join(healed_entries)}")
+
+    # ---- 变更集（在自愈登记 file_index 之后计算，避免非工作流文件被误判为新增）----
     changes = compute_file_changes(source_dir, library['file_index'])
     added_files = changes['added']
     modified_files = changes['modified']
     deleted_rel_paths = changes['deleted']
 
     print(f"变更集：新增 {len(added_files)} 个、修改 {len(modified_files)} 个、删除 {len(deleted_rel_paths)} 个")
+
+    # ---- 陈旧条目检测：条目 node_count 与文件实际节点数不符时重新分析 ----
+    # 修复历史遗留的 0 节点空壳条目（旧构建器不识别 API 格式，入库即为空条目；
+    # 文件未变化所以不走 added/modified，需靠节点数比对拾回）。
+    changed_rel = {os.path.relpath(p, source_dir) for p in added_files + modified_files}
+    stale_files = []
+    for rel_path, abs_path in current_files.items():
+        if rel_path in changed_rel:
+            continue
+        name = os.path.splitext(os.path.basename(abs_path))[0]
+        existing = library['workflows'].get(name)
+        if not existing:
+            continue
+        entry = classified.get(rel_path)
+        if not entry or entry[1] is None:
+            continue
+        actual = len(entry[0].get('nodes', []))
+        if existing.get('node_count') != actual:
+            stale_files.append(abs_path)
+    if stale_files:
+        print(f"陈旧条目：{len(stale_files)} 个条目节点数与文件不符，重新分析")
 
     # 处理删除的文件：通过 path 反查工作流名并移除
     for rel_path in deleted_rel_paths:
@@ -1048,17 +1356,20 @@ def update_library(source_dir, library_path, object_info):
         if rel_path in library['file_index']:
             del library['file_index'][rel_path]
 
-    # 处理新增和修改的文件：调用 build_workflow_template（与 build_library 保持一致）
-    for abs_path in added_files + modified_files:
+    # 处理新增/修改/陈旧的文件：调用 build_workflow_template（与 build_library 保持一致）
+    for abs_path in added_files + modified_files + stale_files:
         name = os.path.splitext(os.path.basename(abs_path))[0]
         rel_path = os.path.relpath(abs_path, source_dir)
 
-        print(f"  分析: {rel_path}")
-
-        workflow = load_workflow(abs_path)
-        if 'error' in workflow:
-            print(f"    错误: {workflow['error']}")
+        # 复用分类 pass 的加载结果
+        workflow, fmt, load_err = classified.get(rel_path, (None, None, 'not-classified'))
+        if load_err == 'non-workflow':
+            continue  # 已在自愈阶段处理
+        if load_err or workflow is None:
+            print(f"    错误: {rel_path}: {load_err}")
             continue
+
+        print(f"  分析: {rel_path} [{fmt}]")
 
         # 基础信息（与 build_library 中的调用方式保持一致）
         category = analyze_workflow_category(abs_path, workflow)
@@ -1070,12 +1381,21 @@ def update_library(source_dir, library_path, object_info):
         template = build_workflow_template(workflow, name, object_info, abs_path)
         model_family, model_modality, family_models = detect_workflow_model_family(workflow, object_info)
 
+        # 类别兜底：路径关键词与节点类型推断均未命中、但家族形态已知时，按形态给基础类别
+        if category == '其他' and model_modality in ('image', 'video'):
+            if model_modality == 'image':
+                category = '文生图'
+            elif 'LoadImage' in node_types:
+                category = '图生视频'
+            else:
+                category = '文生视频'
+
         # 保存工作流详情（node_annotations/execution_flow/file_meta 提升到顶层，符合 spec 数据结构要求）
         node_annotations = template.pop('node_annotations', {})
         execution_flow = template.pop('execution_flow', {})
         file_meta = template.pop('file_meta', {'mtime': None, 'size': None})
 
-        library['workflows'][name] = {
+        new_entry = {
             'path': rel_path,
             'category': category,
             'model_family': model_family,
@@ -1093,6 +1413,10 @@ def update_library(source_dir, library_path, object_info):
             'file_meta': file_meta,
             'template': template
         }
+
+        # 标注防覆盖合并：保留 curated 标注与 legacy 等额外键
+        library['workflows'][name] = _merge_workflow_entry(
+            library['workflows'].get(name), new_entry, refresh_labels, name)
 
         # 更新 file_index
         try:
@@ -1148,12 +1472,14 @@ def update_library(source_dir, library_path, object_info):
 
     # 转换 set 为 list 以便 JSON 序列化
     for key in library['statistics']['models']:
-        library['statistics']['models'][key] = list(library['statistics']['models'][key])
-    library['statistics']['custom_nodes'] = list(library['statistics']['custom_nodes'])
+        library['statistics']['models'][key] = sorted(library['statistics']['models'][key])
+    library['statistics']['custom_nodes'] = sorted(library['statistics']['custom_nodes'])
 
     # 更新 metadata
     library['metadata']['total_workflows'] = len(library['workflows'])
     library['metadata']['build_time'] = datetime.now().isoformat()
+    library['metadata']['skipped_non_workflows'] = sorted(
+        rel for rel, (_, fmt, err) in classified.items() if fmt is None and err == 'non-workflow')
 
     # 保存资料库
     with open(library_path, 'w', encoding='utf-8') as f:
@@ -1161,6 +1487,10 @@ def update_library(source_dir, library_path, object_info):
 
     print(f"\n资料库已更新: {library_path}")
     print(f"  新增 {len(added_files)} 个、修改 {len(modified_files)} 个、删除 {len(deleted_rel_paths)} 个")
+    if stale_files:
+        print(f"  陈旧重分析 {len(stale_files)} 个")
+    if healed_entries:
+        print(f"  自愈移除 {len(healed_entries)} 个")
     print(f"  工作流总数: {library['metadata']['total_workflows']}")
 
     return library
@@ -1180,6 +1510,8 @@ def main():
     ap.add_argument("--port", default=DEFAULT_PORT, help="ComfyUI 服务器端口")  
     ap.add_argument("--object-info", help="object_info 文件路径（优先于服务器）")
     ap.add_argument("--update", action="store_true", help="增量更新现有资料库（而非全量重建）")
+    ap.add_argument("--refresh-labels", action="store_true",
+                    help="强制以机器识别覆盖已有标注（默认保护人工/策展标注，仅填空与冲突告警）")
     args = ap.parse_args()
 
     # 加载 object_info 用于 widget 映射
@@ -1191,7 +1523,7 @@ def main():
 
     # 根据 --update 参数选择增量更新或全量重建
     if args.update:
-        library = update_library(args.input, args.output, object_info)
+        library = update_library(args.input, args.output, object_info, args.refresh_labels)
     else:
         library = build_library(args.input, args.output, object_info)
     

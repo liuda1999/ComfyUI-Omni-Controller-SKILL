@@ -22,7 +22,9 @@ DEFAULT_PORT = os.environ.get("COMFYUI_PORT", "8188")
 
 # 添加模块搜索路径以便导入 build_workflow_library
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from build_workflow_library import build_node_annotations, build_execution_flow, load_object_info
+from build_workflow_library import (build_node_annotations, build_execution_flow,
+                                     load_object_info, detect_workflow_format,
+                                     api_to_pseudo_ui, unwrap_api_prompt)
 
 # control_after_generate 标记值
 _CONTROL_AFTER_GENERATE_VALUES = {"fixed", "increment", "randomize", "disable"}
@@ -332,8 +334,22 @@ def main():
     ap.add_argument("--output", help="分析结果输出路径")
     args = ap.parse_args()
 
-    # 加载数据
-    workflow = load_workflow(args.workflow)
+    # 加载数据（识别 UI/API 格式；API 格式规范化为伪 UI 结构后复用全部分析逻辑）
+    try:
+        raw_workflow = load_workflow(args.workflow)
+    except Exception as e:
+        print(json.dumps({"ok": False, "error": f"工作流文件解析失败: {e}"}, ensure_ascii=False))
+        sys.exit(1)
+    workflow_format = detect_workflow_format(raw_workflow, os.path.basename(args.workflow))
+    if workflow_format is None:
+        print(json.dumps({
+            "ok": False,
+            "error": "不是有效的工作流文件（UI 画布格式 / API prompt 格式均未匹配，"
+                     "也可能是节点注册表/索引/分析产物等非工作流 JSON）"
+        }, ensure_ascii=False))
+        sys.exit(1)
+    workflow = api_to_pseudo_ui(unwrap_api_prompt(raw_workflow)) if workflow_format == 'api' else raw_workflow
+
     object_info = load_object_info(args.host, args.port)
     local_models = get_local_models(args.comfyui_path)
 
@@ -417,6 +433,7 @@ def main():
     # 构建完整分析报告
     report = {
         "ok": True,
+        "format": workflow_format,
         "workflow_info": {
             "id": workflow.get("id", ""),
             "revision": workflow.get("revision", 0),
