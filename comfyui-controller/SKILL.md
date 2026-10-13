@@ -224,7 +224,7 @@ comfyui-controller/
 │   └── cuda_detect.py                # CUDA 检测
 ├── docs_cli/                         # 文档目录
 │   ├── INDEX.md                      # **全量经验/技术文档快速索引**（主题速查 + 章节行号导航）
-│   ├── EXPERIENCE.md                 # 迭代经验与问题排查（24 章：导入/依赖/HTTP/工作流/参数梯度/节点详解/任务复盘/长视频修复）
+│   ├── EXPERIENCE.md                 # 迭代经验与问题排查（27 章：导入/依赖/HTTP/工作流/参数梯度/节点详解/任务复盘/长视频修复）
 │   ├── wan22_dual_instance_tuning_guide.md # Wan2.2 双实例视频生成调参手册
 │   ├── long_video_svi_pro_wan22_report.md  # C8/长视频完整任务报告
 │   ├── DESIGN-uv-compile.md          # uv 编译设计文档

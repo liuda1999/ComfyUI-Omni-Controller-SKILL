@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "comfyui-omni-controller"
-version = "0.1.2"
+version = "0.2.0"
 description = "ComfyUI Omni-Controller CLI - lifecycle management for ComfyUI (launch/stop/run/node/model)"
 requires-python = ">=3.10"
 dependencies = [

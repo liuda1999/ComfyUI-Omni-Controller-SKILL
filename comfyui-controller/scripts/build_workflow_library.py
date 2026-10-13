@@ -100,6 +100,7 @@ def _get_widget_names_from_object_info(node_type, object_info):
 _MODEL_FAMILY_RULES = [
     # 视频模型
     ("Wan2.2", ["wan2.2", "wan2_2", "wan21", "wan2.1", "wan2_1", "wananimate", "lightx2v"], "video"),
+    ("MiniMaxH3", ["minimax", "minimax_h3"], "video"),
     ("HunyuanVideo", ["hunyuan", "hyvideo"], "video"),
     ("LTX-Video", ["ltxv", "ltx-video"], "video"),
     ("CogVideoX", ["cogvideo", "cogvideox"], "video"),

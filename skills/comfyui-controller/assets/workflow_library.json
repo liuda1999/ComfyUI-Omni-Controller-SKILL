@@ -11733,9 +11733,34 @@
     "minimax_h3_t2v_turbo_v1.0.0": {
       "path": "minimax_h3_t2v_turbo_v1.0.0.json",
       "category": "文生视频",
-      "model_family": "unknown",
-      "model_modality": "unknown",
-      "family_models": [],
+      "model_family": "MiniMaxH3",
+      "model_modality": "video",
+      "family_models": [
+        {
+          "family": "MiniMaxH3",
+          "modality": "video",
+          "name": "minimax_h3_ref2va_pruned_fp8_scaled.safetensors",
+          "role": "diffusion"
+        },
+        {
+          "family": "MiniMaxH3",
+          "modality": "video",
+          "name": "minimax_h3_video_vae_fp16.safetensors",
+          "role": "vae"
+        },
+        {
+          "family": "MiniMaxH3",
+          "modality": "video",
+          "name": "minimax_h3_audio_vae_fp32.safetensors",
+          "role": "vae"
+        },
+        {
+          "family": "MiniMaxH3",
+          "modality": "video",
+          "name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "role": "clip"
+        }
+      ],
       "node_count": 21,
       "link_count": 22,
       "node_types": {
@@ -12546,8 +12571,8 @@
     "minimax_h3_fl2va_first_last_frame_v1.0.0": {
       "path": "minimax_h3_fl2va_first_last_frame_v1.0.0.json",
       "category": "图生视频",
-      "model_family": "unknown",
-      "model_modality": "unknown",
+      "model_family": "MiniMaxH3",
+      "model_modality": "video",
       "family_models": [],
       "node_count": 35,
       "link_count": 41,
@@ -13686,9 +13711,40 @@
     "minimax_h3_ref2v_av_turbo_v1.0.0": {
       "path": "minimax_h3_ref2v_av_turbo_v1.0.0.json",
       "category": "图生视频",
-      "model_family": "unknown",
-      "model_modality": "unknown",
-      "family_models": [],
+      "model_family": "MiniMaxH3",
+      "model_modality": "video",
+      "family_models": [
+        {
+          "family": "MiniMaxH3",
+          "modality": "video",
+          "name": "minimax_h3_ref2va_pruned_fp8_scaled.safetensors",
+          "role": "diffusion"
+        },
+        {
+          "family": "MiniMaxH3",
+          "modality": "video",
+          "name": "minimax_h3_video_vae_fp16.safetensors",
+          "role": "vae"
+        },
+        {
+          "family": "MiniMaxH3",
+          "modality": "video",
+          "name": "minimax_h3_audio_vae_fp32.safetensors",
+          "role": "vae"
+        },
+        {
+          "family": "MiniMaxH3",
+          "modality": "video",
+          "name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "role": "clip"
+        },
+        {
+          "family": "MiniMaxH3",
+          "modality": "video",
+          "name": "minimax_h3_ref2v_turbo_8step_v1.0_768p_comfyui_resized_avg_rank_20_bf16.safetensors",
+          "role": "lora"
+        }
+      ],
       "node_count": 62,
       "link_count": 63,
       "node_types": {
@@ -15476,9 +15532,40 @@
     "minimax_h3_ref2v_multi_reference_v1.0.0": {
       "path": "minimax_h3_ref2v_multi_reference_v1.0.0.json",
       "category": "图生视频",
-      "model_family": "unknown",
-      "model_modality": "unknown",
-      "family_models": [],
+      "model_family": "MiniMaxH3",
+      "model_modality": "video",
+      "family_models": [
+        {
+          "family": "MiniMaxH3",
+          "modality": "video",
+          "name": "minimax_h3_hybrid_fl2va_ref2va_b25-49-int8.safetensors",
+          "role": "diffusion"
+        },
+        {
+          "family": "MiniMaxH3",
+          "modality": "video",
+          "name": "minimax_h3_audio_vae_fp32.safetensors",
+          "role": "vae"
+        },
+        {
+          "family": "MiniMaxH3",
+          "modality": "video",
+          "name": "minimax_h3_video_vae_int8_convrot.safetensors",
+          "role": "vae"
+        },
+        {
+          "family": "MiniMaxH3",
+          "modality": "video",
+          "name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "role": "clip"
+        },
+        {
+          "family": "MiniMaxH3",
+          "modality": "video",
+          "name": "minimax_h3_turbo_v4_step600_ema_pruned_comfyui.safetensors",
+          "role": "lora"
+        }
+      ],
       "node_count": 119,
       "link_count": 89,
       "node_types": {
@@ -18276,9 +18363,40 @@
     "minimax_h3_all_in_one_v1.0.0": {
       "path": "minimax_h3_all_in_one_v1.0.0.json",
       "category": "图生视频",
-      "model_family": "unknown",
-      "model_modality": "unknown",
-      "family_models": [],
+      "model_family": "MiniMaxH3",
+      "model_modality": "video",
+      "family_models": [
+        {
+          "family": "MiniMaxH3",
+          "modality": "video",
+          "name": "H3\\minimax_h3_ref2va_pruned_int8_convrot.safetensors",
+          "role": "diffusion"
+        },
+        {
+          "family": "MiniMaxH3",
+          "modality": "video",
+          "name": "H3\\minimax_h3_video_vae_int8_convrot.safetensors",
+          "role": "vae"
+        },
+        {
+          "family": "MiniMaxH3",
+          "modality": "video",
+          "name": "H3\\minimax_h3_audio_vae_fp32.safetensors",
+          "role": "vae"
+        },
+        {
+          "family": "MiniMaxH3",
+          "modality": "video",
+          "name": "H3\\qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "role": "clip"
+        },
+        {
+          "family": "MiniMaxH3",
+          "modality": "video",
+          "name": "H3\\minimax_h3_ref2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors",
+          "role": "lora"
+        }
+      ],
       "node_count": 79,
       "link_count": 64,
       "node_types": {
@@ -20426,9 +20544,40 @@
     "minimax_h3_video_motion_transfer_v1.0.0": {
       "path": "minimax_h3_video_motion_transfer_v1.0.0.json",
       "category": "动作迁移",
-      "model_family": "unknown",
-      "model_modality": "unknown",
-      "family_models": [],
+      "model_family": "MiniMaxH3",
+      "model_modality": "video",
+      "family_models": [
+        {
+          "family": "MiniMaxH3",
+          "modality": "video",
+          "name": "H3\\DasiwaMinimaxH3_dasiwaHybridV2_int8.safetensors",
+          "role": "diffusion"
+        },
+        {
+          "family": "MiniMaxH3",
+          "modality": "video",
+          "name": "H3\\minimax_h3_video_vae_int8_convrot.safetensors",
+          "role": "vae"
+        },
+        {
+          "family": "MiniMaxH3",
+          "modality": "video",
+          "name": "H3\\minimax_h3_audio_vae_fp32.safetensors",
+          "role": "vae"
+        },
+        {
+          "family": "MiniMaxH3",
+          "modality": "video",
+          "name": "H3\\qwen3vl_32b_minimax_h3_int8_convrot.safetensors",
+          "role": "clip"
+        },
+        {
+          "family": "MiniMaxH3",
+          "modality": "video",
+          "name": "H3\\minimax_h3_turbo_v4_step600_ema_pruned_comfyui.safetensors",
+          "role": "lora"
+        }
+      ],
       "node_count": 83,
       "link_count": 96,
       "node_types": {
@@ -80452,9 +80601,11 @@
       "文生图": 2
     },
     "model_families": {
-      "Wan2.2": 4,
-      "unknown": 21,
-      "Flux": 1
+      "Wan2.2": 10,
+      "unknown": 93,
+      "Flux": 11,
+      "MiniMaxH3": 6,
+      "LLM": 4
     },
     "custom_nodes": [
       "MiniMaxClipBinDualPicker",

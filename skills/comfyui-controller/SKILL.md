@@ -25,7 +25,7 @@ description: "ComfyUI 全能控制器技能包。支持自然语言驱动的图�
 
 1. **定位文档**：先查 [docs_cli/INDEX.md 快速索引](../../comfyui-controller/docs_cli/INDEX.md)（主题速查 + 章节行号导航）
 2. **查完整知识**：主文档 [SKILL.md](../../comfyui-controller/SKILL.md)（功能映射 + 工作流知识库）
-3. **查迭代经验**：[docs_cli/EXPERIENCE.md](../../comfyui-controller/docs_cli/EXPERIENCE.md)（24 章问题排查 + 参数梯度）
+3. **查迭代经验**：[docs_cli/EXPERIENCE.md](../../comfyui-controller/docs_cli/EXPERIENCE.md)（27 章问题排查 + 参数梯度）
 
 ### 0.3 安装为技能（两种方式）
 
@@ -36,7 +36,7 @@ description: "ComfyUI 全能控制器技能包。支持自然语言驱动的图�
 ```bash
 git clone https://github.com/liuda1999/ComfyUI-Omni-Controller-SKILL.git
 cd ComfyUI-Omni-Controller-SKILL/comfyui-controller
-pip install -e cli/        # 安装 comfy-cli 命令
+pip install -e .           # 安装 comfy 命令
 python scripts/check_status.py   # 环境检查
 ```
 
@@ -58,7 +58,7 @@ skills/comfyui-controller/
 |------|------|------|
 | 主文档 | [comfyui-controller/SKILL.md](../../comfyui-controller/SKILL.md) | 完整功能映射 + 工作流知识库（图片/视频/参数/禁忌/排错） |
 | 快速索引 | [docs_cli/INDEX.md](../../comfyui-controller/docs_cli/INDEX.md) | 全量经验/技术文档统一检索入口 |
-| 迭代经验 | [docs_cli/EXPERIENCE.md](../../comfyui-controller/docs_cli/EXPERIENCE.md) | 24 章问题排查 + 参数梯度分析 + 提示词工程 |
+| 迭代经验 | [docs_cli/EXPERIENCE.md](../../comfyui-controller/docs_cli/EXPERIENCE.md) | 27 章问题排查 + 参数梯度分析 + 提示词工程 |
 | 采样器手册 | [SKILL.md §4.19](../../comfyui-controller/SKILL.md) | K 采样器完全参考手册（ComfyUI 全家族，独立章节） |
 | 双实例调参 | [docs_cli/wan22_dual_instance_tuning_guide.md](../../comfyui-controller/docs_cli/wan22_dual_instance_tuning_guide.md) | Wan2.2 双卡视频生成调参 |
 | 图片预检 | [skills/image-task-execution-guide/SKILL.md](../image-task-execution-guide/SKILL.md) | 图片任务 5 项强制预检 |
@@ -120,4 +120,4 @@ skills/comfyui-controller/
 
 ---
 
-*技能版本：v0.1.0 | 许可证：Apache-2.0 | 配套工作流库见 [assets/workflow_library.json](assets/workflow_library.json)*
+*技能版本：v0.2.0 | 许可证：Apache-2.0 | 配套工作流库见 [assets/workflow_library.json](assets/workflow_library.json)*

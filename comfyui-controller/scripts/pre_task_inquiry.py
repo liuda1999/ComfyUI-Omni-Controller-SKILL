@@ -742,7 +742,7 @@ def get_adaptive_params(vram_mb):
         return {"tier": "L4 专业级", "steps": 10, "blocks_to_swap": 20, "split_step": 5,
                 "base_precision": "fp16_fast", "vram_gb": round(vram_gb, 1), **core}
     elif vram_mb >= 16384:
-        return {"tier": "L3 高性能", "steps": 8, "blocks_to_swap": 20, "split_step": 4,
+        return {"tier": "L3 高性能级", "steps": 8, "blocks_to_swap": 20, "split_step": 4,
                 "base_precision": "bf16", "vram_gb": round(vram_gb, 1), **core}
     elif vram_mb >= 12288:
         return {"tier": "L2 标准级", "steps": 6, "blocks_to_swap": 38, "split_step": 3,
