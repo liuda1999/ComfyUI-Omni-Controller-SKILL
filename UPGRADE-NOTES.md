@@ -88,6 +88,12 @@
 | `advanced_workflow_builder.py` | 高级工作流构建 | 待探索 | 未测试 |
 | `workflow_analyzer.py` | 工作流分析 | 待探索 | 未测试 |
 
+> **v0.2.3 更新（2026-10-14）**：`build_workflow_library.py` 的 widget 名映射修复——识别
+> 新版 object_info 的 `["COMBO", {...}]` 形式（旧版只认 options 列表），修复 COMBO 之后
+> widget 值整体错位（如 `BasicScheduler.denoise` 错记 steps 的值）。全库已重分析修正。
+> 另：`minimax_h3_t2v_turbo` steps 20→4、`ref2v_av_turbo` 20→8，与 turbo LoRA 步数匹配
+> （原默认 20 步会抵消 4 步加速收益），UI/API/param_spec/库四层一致。
+
 #### 1.3.2 cli/ -- CLI 模式（comfy-cli 移植）
 
 | 路径 | 功能 | 备注 |

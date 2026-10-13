@@ -2,7 +2,7 @@
   "metadata": {
     "source_dir": "assets",
     "total_workflows": 130,
-    "build_time": "2026-10-14T03:50:16.437979",
+    "build_time": "2026-10-14T04:08:05.114372",
     "skipped_non_workflows": [
       "legacy_workflow_index.json",
       "node_parameter_standards.json",
@@ -18,7 +18,7 @@
       "assets"
     ],
     "sync_note": "canonical=仓库内 assets 盘点（含 MiniMax + 旧工作流 node_dependencies）；personal=本机个人工作流（仅本地，不入 file_index，避免增量更新误删）",
-    "sync_time": 1791921046
+    "sync_time": 1791922090
   },
   "workflows": {
     "animate_wan22_threeview_v1.0.0": {
@@ -2215,7 +2215,7 @@
         "cycle_warning": null
       },
       "file_meta": {
-        "mtime": 1791918840.7576265,
+        "mtime": 1791922047.9903083,
         "size": 113892
       },
       "template": {
@@ -2406,7 +2406,7 @@
             "node_type": "WanVideoSamplerSettings",
             "param": "scheduler",
             "param_type": "sampler_config",
-            "default_value": true,
+            "default_value": "euler",
             "input_type": "",
             "description": "scheduler"
           },
@@ -2895,7 +2895,7 @@
         "cycle_warning": null
       },
       "file_meta": {
-        "mtime": 1791918840.7622533,
+        "mtime": 1791922048.1657054,
         "size": 1489
       },
       "template": {
@@ -3304,7 +3304,7 @@
         "cycle_warning": null
       },
       "file_meta": {
-        "mtime": 1791918840.7670715,
+        "mtime": 1791922048.3412385,
         "size": 1388
       },
       "template": {
@@ -3756,7 +3756,7 @@
         "cycle_warning": null
       },
       "file_meta": {
-        "mtime": 1791918840.7719493,
+        "mtime": 1791922048.5151937,
         "size": 1930
       },
       "template": {
@@ -4443,7 +4443,7 @@
         "cycle_warning": null
       },
       "file_meta": {
-        "mtime": 1791918840.7759573,
+        "mtime": 1791922048.6904368,
         "size": 6062
       },
       "template": {
@@ -4542,7 +4542,7 @@
             "node_type": "WanVideoSampler",
             "param": "scheduler",
             "param_type": "sampler_config",
-            "default_value": true,
+            "default_value": "dpm++_sde",
             "input_type": "",
             "description": "scheduler"
           },
@@ -4939,8 +4939,8 @@
           "1.WanVideo T5 Text Encoder Loader",
           "2.WanVideo VAE Loader",
           "3.WanVideo Empty Embeds",
-          "4.Load Upscale Model",
-          "5.WanVideo Block Swap",
+          "4.WanVideo Block Swap",
+          "5.Load Upscale Model",
           "6.WanVideo TextEncode",
           "7.WanVideo Model Loader",
           "8.WanVideo Sampler",
@@ -4951,7 +4951,7 @@
         "cycle_warning": null
       },
       "file_meta": {
-        "mtime": 1791918840.7802334,
+        "mtime": 1791922048.8647213,
         "size": 2785
       },
       "template": {
@@ -5066,9 +5066,17 @@
             "node_type": "WanVideoSampler",
             "param": "scheduler",
             "param_type": "sampler_config",
-            "default_value": true,
+            "default_value": "euler",
             "input_type": "",
             "description": "scheduler"
+          },
+          "UpscaleModelLoader.model_name": {
+            "node_type": "UpscaleModelLoader",
+            "param": "model_name",
+            "param_type": "model",
+            "default_value": "RealESRGAN_x2.pth",
+            "input_type": "",
+            "description": "model_name"
           }
         }
       },
@@ -5421,7 +5429,7 @@
         "cycle_warning": null
       },
       "file_meta": {
-        "mtime": 1791918840.7853446,
+        "mtime": 1791922049.040521,
         "size": 2055
       },
       "template": {
@@ -5904,8 +5912,8 @@
           "1.WanVideo T5 Text Encoder Loader",
           "2.WanVideo VAE Loader",
           "3.WanVideo Empty Embeds",
-          "4.Load Upscale Model",
-          "5.WanVideo Block Swap",
+          "4.WanVideo Block Swap",
+          "5.Load Upscale Model",
           "6.WanVideo TextEncode",
           "7.WanVideo Model Loader",
           "8.WanVideo Sampler",
@@ -5916,7 +5924,7 @@
         "cycle_warning": null
       },
       "file_meta": {
-        "mtime": 1791918840.7901704,
+        "mtime": 1791922049.2135844,
         "size": 4211
       },
       "template": {
@@ -6031,9 +6039,17 @@
             "node_type": "WanVideoSampler",
             "param": "scheduler",
             "param_type": "sampler_config",
-            "default_value": true,
+            "default_value": "euler",
             "input_type": "",
             "description": "scheduler"
+          },
+          "UpscaleModelLoader.model_name": {
+            "node_type": "UpscaleModelLoader",
+            "param": "model_name",
+            "param_type": "model",
+            "default_value": "RealESRGAN_x2.pth",
+            "input_type": "",
+            "description": "model_name"
           }
         }
       },
@@ -10212,7 +10228,7 @@
         "cycle_warning": null
       },
       "file_meta": {
-        "mtime": 1791918840.795942,
+        "mtime": 1791922049.5623283,
         "size": 276328
       },
       "template": {
@@ -10423,6 +10439,14 @@
             "input_type": "",
             "description": "height"
           },
+          "KSamplerSelect.sampler_name": {
+            "node_type": "KSamplerSelect",
+            "param": "sampler_name",
+            "param_type": "model",
+            "default_value": "euler",
+            "input_type": "",
+            "description": "sampler_name"
+          },
           "KSamplerAdvanced.steps": {
             "node_type": "KSamplerAdvanced",
             "param": "steps",
@@ -10454,6 +10478,14 @@
             "default_value": "simple",
             "input_type": "",
             "description": "scheduler"
+          },
+          "UpscaleModelLoader.model_name": {
+            "node_type": "UpscaleModelLoader",
+            "param": "model_name",
+            "param_type": "model",
+            "default_value": "RealESRGAN_x2.pth",
+            "input_type": "",
+            "description": "model_name"
           }
         }
       },
@@ -12033,14 +12065,14 @@
       },
       "execution_flow": {
         "steps": [
-          "1.Load Image",
-          "2.Load Diffusion Model",
+          "1.Load CLIP",
+          "2.Load VAE",
           "3.Load Diffusion Model",
-          "4.Load CLIP",
-          "5.Load VAE",
-          "6.Resize Image v2",
-          "7.Load LoRA",
-          "8.Load LoRA",
+          "4.Load Diffusion Model",
+          "5.Load Image",
+          "6.CLIP Text Encode (Prompt)",
+          "7.CLIP Text Encode (Prompt)",
+          "8.CLIP Text Encode (Prompt)",
           "9.CLIP Text Encode (Prompt)",
           "10.CLIP Text Encode (Prompt)",
           "11.CLIP Text Encode (Prompt)",
@@ -12048,15 +12080,15 @@
           "13.CLIP Text Encode (Prompt)",
           "14.CLIP Text Encode (Prompt)",
           "15.CLIP Text Encode (Prompt)",
-          "16.CLIP Text Encode (Prompt)",
-          "17.CLIP Text Encode (Prompt)",
-          "18.CLIP Text Encode (Prompt)",
-          "19.VAE Encode",
+          "16.Load LoRA",
+          "17.Load LoRA",
+          "18.Resize Image v2",
+          "19.Patch Sage Attention KJ",
           "20.Patch Sage Attention KJ",
-          "21.Patch Sage Attention KJ",
-          "22.WanImageToVideoSVIPro",
+          "21.VAE Encode",
+          "22.Model Patch Torch Settings",
           "23.Model Patch Torch Settings",
-          "24.Model Patch Torch Settings",
+          "24.WanImageToVideoSVIPro",
           "25.KSampler (Advanced)",
           "26.KSampler (Advanced)",
           "27.VAE Decode",
@@ -12094,7 +12126,7 @@
         "cycle_warning": null
       },
       "file_meta": {
-        "mtime": 1791918840.8624017,
+        "mtime": 1791922052.1773367,
         "size": 17421
       },
       "template": {
@@ -12620,8 +12652,8 @@
           "1.WanVideo T5 Text Encoder Loader",
           "2.WanVideo VAE Loader",
           "3.WanVideo Empty Embeds",
-          "4.Load Upscale Model",
-          "5.WanVideo Block Swap",
+          "4.WanVideo Block Swap",
+          "5.Load Upscale Model",
           "6.WanVideo TextEncode",
           "7.WanVideo Model Loader",
           "8.WanVideo Sampler",
@@ -12632,7 +12664,7 @@
         "cycle_warning": null
       },
       "file_meta": {
-        "mtime": 1791918840.8667579,
+        "mtime": 1791922052.352005,
         "size": 2780
       },
       "template": {
@@ -12747,9 +12779,17 @@
             "node_type": "WanVideoSampler",
             "param": "scheduler",
             "param_type": "sampler_config",
-            "default_value": true,
+            "default_value": "euler",
             "input_type": "",
             "description": "scheduler"
+          },
+          "UpscaleModelLoader.model_name": {
+            "node_type": "UpscaleModelLoader",
+            "param": "model_name",
+            "param_type": "model",
+            "default_value": "RealESRGAN_x2.pth",
+            "input_type": "",
+            "description": "model_name"
           }
         }
       },
@@ -13074,7 +13114,7 @@
         "cycle_warning": null
       },
       "file_meta": {
-        "mtime": 1791918840.8709683,
+        "mtime": 1791922052.5262115,
         "size": 2662
       },
       "template": {
@@ -13181,7 +13221,7 @@
             "node_type": "WanVideoSampler",
             "param": "scheduler",
             "param_type": "sampler_config",
-            "default_value": true,
+            "default_value": "unipc",
             "input_type": "",
             "description": "scheduler"
           }
@@ -13486,7 +13526,7 @@
         "cycle_warning": null
       },
       "file_meta": {
-        "mtime": 1791918840.8748407,
+        "mtime": 1791922052.704736,
         "size": 2166
       },
       "template": {
@@ -13589,7 +13629,7 @@
             "node_type": "WanVideoSampler",
             "param": "scheduler",
             "param_type": "sampler_config",
-            "default_value": true,
+            "default_value": "unipc",
             "input_type": "",
             "description": "scheduler"
           }
@@ -16329,7 +16369,7 @@
         "cycle_warning": null
       },
       "file_meta": {
-        "mtime": 1791918840.8788455,
+        "mtime": 1791922052.8822124,
         "size": 110733
       },
       "template": {
@@ -16843,7 +16883,7 @@
         "cycle_warning": null
       },
       "file_meta": {
-        "mtime": 1791918840.8829079,
+        "mtime": 1791922053.0587802,
         "size": 2326
       },
       "template": {
@@ -16946,7 +16986,7 @@
             "node_type": "WanVideoSampler",
             "param": "scheduler",
             "param_type": "sampler_config",
-            "default_value": true,
+            "default_value": "unipc",
             "input_type": "",
             "description": "scheduler"
           }
@@ -17484,7 +17524,7 @@
         "cycle_warning": null
       },
       "file_meta": {
-        "mtime": 1791918840.8873677,
+        "mtime": 1791922053.23587,
         "size": 13155
       },
       "template": {
@@ -18344,8 +18384,8 @@
         "cycle_warning": null
       },
       "file_meta": {
-        "mtime": 1791921004.2972484,
-        "size": 44003
+        "mtime": 1791922051.132887,
+        "size": 44002
       },
       "template": {
         "name": "minimax_h3_t2v_turbo_v1.0.0",
@@ -18451,11 +18491,19 @@
             "input_type": "",
             "description": "unet_name"
           },
+          "BasicScheduler.scheduler": {
+            "node_type": "BasicScheduler",
+            "param": "scheduler",
+            "param_type": "sampler_config",
+            "default_value": "simple",
+            "input_type": "",
+            "description": "scheduler"
+          },
           "BasicScheduler.steps": {
             "node_type": "BasicScheduler",
             "param": "steps",
             "param_type": "sampler",
-            "default_value": "simple",
+            "default_value": 4,
             "input_type": "",
             "description": "steps"
           },
@@ -18463,7 +18511,7 @@
             "node_type": "BasicScheduler",
             "param": "denoise",
             "param_type": "sampler",
-            "default_value": 20,
+            "default_value": 1,
             "input_type": "",
             "description": "denoise"
           }
@@ -19404,7 +19452,7 @@
         "cycle_warning": null
       },
       "file_meta": {
-        "mtime": 1791918840.8094702,
+        "mtime": 1791922050.085873,
         "size": 68018
       },
       "template": {
@@ -20991,8 +21039,8 @@
         "cycle_warning": null
       },
       "file_meta": {
-        "mtime": 1791918840.818754,
-        "size": 100599
+        "mtime": 1791922050.434474,
+        "size": 100598
       },
       "template": {
         "name": "minimax_h3_ref2v_av_turbo_v1.0.0",
@@ -21118,11 +21166,27 @@
           "data_flow": []
         },
         "configurable": {
+          "KSamplerSelect.sampler_name": {
+            "node_type": "KSamplerSelect",
+            "param": "sampler_name",
+            "param_type": "model",
+            "default_value": "ddim",
+            "input_type": "",
+            "description": "sampler_name"
+          },
+          "BasicScheduler.scheduler": {
+            "node_type": "BasicScheduler",
+            "param": "scheduler",
+            "param_type": "sampler_config",
+            "default_value": "simple",
+            "input_type": "",
+            "description": "scheduler"
+          },
           "BasicScheduler.steps": {
             "node_type": "BasicScheduler",
             "param": "steps",
             "param_type": "sampler",
-            "default_value": "simple",
+            "default_value": 8,
             "input_type": "",
             "description": "steps"
           },
@@ -21130,7 +21194,7 @@
             "node_type": "BasicScheduler",
             "param": "denoise",
             "param_type": "sampler",
-            "default_value": 20,
+            "default_value": 1,
             "input_type": "",
             "description": "denoise"
           },
@@ -23434,7 +23498,7 @@
         "cycle_warning": null
       },
       "file_meta": {
-        "mtime": 1791918840.8265972,
+        "mtime": 1791922050.784542,
         "size": 185421
       },
       "template": {
@@ -23597,6 +23661,14 @@
             "input_type": "",
             "description": "clip_name"
           },
+          "KSamplerSelect.sampler_name": {
+            "node_type": "KSamplerSelect",
+            "param": "sampler_name",
+            "param_type": "model",
+            "default_value": "euler",
+            "input_type": "",
+            "description": "sampler_name"
+          },
           "UNETLoader.unet_name": {
             "node_type": "UNETLoader",
             "param": "unet_name",
@@ -23605,11 +23677,19 @@
             "input_type": "",
             "description": "unet_name"
           },
+          "BasicScheduler.scheduler": {
+            "node_type": "BasicScheduler",
+            "param": "scheduler",
+            "param_type": "sampler_config",
+            "default_value": "beta",
+            "input_type": "",
+            "description": "scheduler"
+          },
           "BasicScheduler.steps": {
             "node_type": "BasicScheduler",
             "param": "steps",
             "param_type": "sampler",
-            "default_value": "beta",
+            "default_value": 12,
             "input_type": "",
             "description": "steps"
           },
@@ -23617,7 +23697,7 @@
             "node_type": "BasicScheduler",
             "param": "denoise",
             "param_type": "sampler",
-            "default_value": 12,
+            "default_value": 1,
             "input_type": "",
             "description": "denoise"
           }
@@ -25283,7 +25363,7 @@
         "cycle_warning": null
       },
       "file_meta": {
-        "mtime": 1791918840.7998018,
+        "mtime": 1791922049.7381866,
         "size": 150307
       },
       "template": {
@@ -25406,11 +25486,27 @@
           "data_flow": []
         },
         "configurable": {
+          "KSamplerSelect.sampler_name": {
+            "node_type": "KSamplerSelect",
+            "param": "sampler_name",
+            "param_type": "model",
+            "default_value": "euler",
+            "input_type": "",
+            "description": "sampler_name"
+          },
+          "BasicScheduler.scheduler": {
+            "node_type": "BasicScheduler",
+            "param": "scheduler",
+            "param_type": "sampler_config",
+            "default_value": "beta",
+            "input_type": "",
+            "description": "scheduler"
+          },
           "BasicScheduler.steps": {
             "node_type": "BasicScheduler",
             "param": "steps",
             "param_type": "sampler",
-            "default_value": "beta",
+            "default_value": 12,
             "input_type": "",
             "description": "steps"
           },
@@ -25418,7 +25514,7 @@
             "node_type": "BasicScheduler",
             "param": "denoise",
             "param_type": "sampler",
-            "default_value": 12,
+            "default_value": 1,
             "input_type": "",
             "description": "denoise"
           },
@@ -27630,7 +27726,7 @@
         ]
       },
       "file_meta": {
-        "mtime": 1791918840.8433237,
+        "mtime": 1791922051.4790885,
         "size": 313354
       },
       "template": {
@@ -30909,7 +31005,7 @@
         "cycle_warning": null
       },
       "file_meta": {
-        "mtime": 1791921003.7438025,
+        "mtime": 1791922049.912292,
         "size": 16226
       },
       "template": {
@@ -31012,11 +31108,27 @@
           "data_flow": []
         },
         "configurable": {
+          "KSamplerSelect.sampler_name": {
+            "node_type": "KSamplerSelect",
+            "param": "sampler_name",
+            "param_type": "model",
+            "default_value": "euler",
+            "input_type": "",
+            "description": "sampler_name"
+          },
+          "BasicScheduler.scheduler": {
+            "node_type": "BasicScheduler",
+            "param": "scheduler",
+            "param_type": "sampler_config",
+            "default_value": "beta",
+            "input_type": "",
+            "description": "scheduler"
+          },
           "BasicScheduler.steps": {
             "node_type": "BasicScheduler",
             "param": "steps",
             "param_type": "sampler",
-            "default_value": "beta",
+            "default_value": 12,
             "input_type": "",
             "description": "steps"
           },
@@ -31024,7 +31136,7 @@
             "node_type": "BasicScheduler",
             "param": "denoise",
             "param_type": "sampler",
-            "default_value": 12,
+            "default_value": 1,
             "input_type": "",
             "description": "denoise"
           },
@@ -31843,7 +31955,7 @@
         "cycle_warning": null
       },
       "file_meta": {
-        "mtime": 1791921003.9431832,
+        "mtime": 1791922050.2606635,
         "size": 8519
       },
       "template": {
@@ -32886,8 +32998,8 @@
         "cycle_warning": null
       },
       "file_meta": {
-        "mtime": 1791921003.3937588,
-        "size": 9467
+        "mtime": 1791922050.6084168,
+        "size": 9466
       },
       "template": {
         "name": "minimax_h3_ref2v_av_turbo_v1.0.0_api",
@@ -32993,11 +33105,27 @@
           "data_flow": []
         },
         "configurable": {
+          "KSamplerSelect.sampler_name": {
+            "node_type": "KSamplerSelect",
+            "param": "sampler_name",
+            "param_type": "model",
+            "default_value": "ddim",
+            "input_type": "",
+            "description": "sampler_name"
+          },
+          "BasicScheduler.scheduler": {
+            "node_type": "BasicScheduler",
+            "param": "scheduler",
+            "param_type": "sampler_config",
+            "default_value": "simple",
+            "input_type": "",
+            "description": "scheduler"
+          },
           "BasicScheduler.steps": {
             "node_type": "BasicScheduler",
             "param": "steps",
             "param_type": "sampler",
-            "default_value": "simple",
+            "default_value": 8,
             "input_type": "",
             "description": "steps"
           },
@@ -33005,7 +33133,7 @@
             "node_type": "BasicScheduler",
             "param": "denoise",
             "param_type": "sampler",
-            "default_value": 20,
+            "default_value": 1,
             "input_type": "",
             "description": "denoise"
           },
@@ -34148,7 +34276,7 @@
         "cycle_warning": null
       },
       "file_meta": {
-        "mtime": 1791921003.570515,
+        "mtime": 1791922050.959132,
         "size": 14140
       },
       "template": {
@@ -34291,6 +34419,14 @@
             "input_type": "",
             "description": "clip_name"
           },
+          "KSamplerSelect.sampler_name": {
+            "node_type": "KSamplerSelect",
+            "param": "sampler_name",
+            "param_type": "model",
+            "default_value": "euler",
+            "input_type": "",
+            "description": "sampler_name"
+          },
           "UNETLoader.unet_name": {
             "node_type": "UNETLoader",
             "param": "unet_name",
@@ -34299,11 +34435,19 @@
             "input_type": "",
             "description": "unet_name"
           },
+          "BasicScheduler.scheduler": {
+            "node_type": "BasicScheduler",
+            "param": "scheduler",
+            "param_type": "sampler_config",
+            "default_value": "beta",
+            "input_type": "",
+            "description": "scheduler"
+          },
           "BasicScheduler.steps": {
             "node_type": "BasicScheduler",
             "param": "steps",
             "param_type": "sampler",
-            "default_value": "beta",
+            "default_value": 12,
             "input_type": "",
             "description": "steps"
           },
@@ -34311,7 +34455,7 @@
             "node_type": "BasicScheduler",
             "param": "denoise",
             "param_type": "sampler",
-            "default_value": 12,
+            "default_value": 1,
             "input_type": "",
             "description": "denoise"
           }
@@ -34887,8 +35031,8 @@
         "cycle_warning": null
       },
       "file_meta": {
-        "mtime": 1791921003.2175326,
-        "size": 7544
+        "mtime": 1791922051.3043597,
+        "size": 7543
       },
       "template": {
         "name": "minimax_h3_t2v_turbo_v1.0.0_api",
@@ -34990,11 +35134,19 @@
             "input_type": "",
             "description": "unet_name"
           },
+          "BasicScheduler.scheduler": {
+            "node_type": "BasicScheduler",
+            "param": "scheduler",
+            "param_type": "sampler_config",
+            "default_value": "simple",
+            "input_type": "",
+            "description": "scheduler"
+          },
           "BasicScheduler.steps": {
             "node_type": "BasicScheduler",
             "param": "steps",
             "param_type": "sampler",
-            "default_value": "simple",
+            "default_value": 4,
             "input_type": "",
             "description": "steps"
           },
@@ -35002,7 +35154,7 @@
             "node_type": "BasicScheduler",
             "param": "denoise",
             "param_type": "sampler",
-            "default_value": 20,
+            "default_value": 1,
             "input_type": "",
             "description": "denoise"
           }
@@ -36909,33 +37061,33 @@
       },
       "execution_flow": {
         "steps": [
-          "1.ManualSigmas(3 step Sigmas)",
-          "2.Load Image(参考图1)",
-          "3.Text String (Multiline)(提示词)",
+          "1.Load Image(参考图1)",
+          "2.Text String (Multiline)(提示词)",
+          "3.MiniMaxClipBinDualPicker(MiniMaxClipBinDualPicker)",
           "4.Boolean(一采手动强制关闭加噪 (True=始终跳过))",
           "5.H3 Segment Picker(H3 Segment Picker)",
-          "6.MiniMaxClipBinDualPicker(MiniMaxClipBinDualPicker)",
+          "6.KSamplerSelect(KSamplerSelect)",
           "7.Boolean(二采手动强制关闭加噪 (True=始终跳过))",
           "8.Fast Groups Bypasser (rgthree)(切换工作)",
           "9.Text Multiline(Text Multiline)",
           "10.Load Image(参考图2)",
-          "11.Seed (rgthree)(Seed (rgthree))",
-          "12.ManualSigmas(6 step Sigmas)",
-          "13.Text String (Multiline)(提示词)",
-          "14.KSamplerSelect(KSamplerSelect)",
-          "15.Load Diffusion Model(Load Diffusion Model)",
-          "16.Load CLIP(Load CLIP)",
-          "17.Load VAE(Load VAE)",
-          "18.Load VAE(Load VAE)",
-          "19.Float(二采放大倍率)",
-          "20.ManualSigmas(4 step Sigmas)",
-          "21.INT Constant(一采步数（建议4-8）)",
-          "22.Boolean(True (强制时用))",
-          "23.KSamplerSelect(KSamplerSelect)",
-          "24.Float Constant(Float Constant)",
-          "25.Resolution Selector(分辨率选择器（像素）)",
-          "26.Boolean(True (强制时用))",
-          "27.ManualSigmas(5 step Sigmas)",
+          "11.Boolean(True (强制时用))",
+          "12.ManualSigmas(3 step Sigmas)",
+          "13.Boolean(True (强制时用))",
+          "14.Seed (rgthree)(Seed (rgthree))",
+          "15.Text String (Multiline)(提示词)",
+          "16.ManualSigmas(6 step Sigmas)",
+          "17.ManualSigmas(4 step Sigmas)",
+          "18.Load Diffusion Model(Load Diffusion Model)",
+          "19.Load CLIP(Load CLIP)",
+          "20.Load VAE(Load VAE)",
+          "21.Load VAE(Load VAE)",
+          "22.KSamplerSelect(KSamplerSelect)",
+          "23.Float(二采放大倍率)",
+          "24.ManualSigmas(5 step Sigmas)",
+          "25.INT Constant(一采步数（建议4-8）)",
+          "26.Float Constant(Float Constant)",
+          "27.Resolution Selector(分辨率选择器（像素）)",
           "28.Is None(检测空latent (首段?))",
           "29.Is None(检测空latent (首段?))",
           "30.🔤 CR Text Concatenate(🔤 CR Text Concatenate)",
@@ -36986,7 +37138,7 @@
         "cycle_warning": null
       },
       "file_meta": {
-        "mtime": 1791921004.1179185,
+        "mtime": 1791922051.6533415,
         "size": 38876
       },
       "template": {
@@ -37213,13 +37365,21 @@
             "input_type": "",
             "description": "lora_name"
           },
-          "BasicScheduler.denoise": {
-            "node_type": "BasicScheduler",
-            "param": "denoise",
-            "param_type": "sampler",
-            "default_value": 1,
+          "KSamplerSelect.sampler_name": {
+            "node_type": "KSamplerSelect",
+            "param": "sampler_name",
+            "param_type": "model",
+            "default_value": "er_sde",
             "input_type": "",
-            "description": "denoise"
+            "description": "sampler_name"
+          },
+          "BasicScheduler.scheduler": {
+            "node_type": "BasicScheduler",
+            "param": "scheduler",
+            "param_type": "sampler_config",
+            "default_value": "simple",
+            "input_type": "",
+            "description": "scheduler"
           },
           "Text Multiline.text": {
             "node_type": "Text Multiline",
@@ -92970,7 +93130,7 @@
       "WanVideoSamplerSettings.scheduler": [
         {
           "workflow": "animate_wan22_threeview_v1.0.0",
-          "default_value": true
+          "default_value": "euler"
         }
       ],
       "SDPoseKeypointExtractor.batch_size": [
@@ -93578,31 +93738,31 @@
       "WanVideoSampler.scheduler": [
         {
           "workflow": "i2v_wan22_kj_v1.0.0",
-          "default_value": true
+          "default_value": "dpm++_sde"
         },
         {
           "workflow": "i2v_wan22_v1.0.0",
-          "default_value": true
+          "default_value": "euler"
         },
         {
           "workflow": "img_gen_v1.0.0",
-          "default_value": true
+          "default_value": "euler"
         },
         {
           "workflow": "t2v_wan22_v1.0.0",
-          "default_value": true
+          "default_value": "euler"
         },
         {
           "workflow": "wan22_i2v_workflow",
-          "default_value": true
+          "default_value": "unipc"
         },
         {
           "workflow": "wan22_simple_t2i",
-          "default_value": true
+          "default_value": "unipc"
         },
         {
           "workflow": "wan22_t2v_workflow",
-          "default_value": true
+          "default_value": "unipc"
         }
       ],
       "LoadWanVideoT5TextEncoder.model_name": [
@@ -93699,6 +93859,24 @@
           "default_value": 1440
         }
       ],
+      "UpscaleModelLoader.model_name": [
+        {
+          "workflow": "i2v_wan22_v1.0.0",
+          "default_value": "RealESRGAN_x2.pth"
+        },
+        {
+          "workflow": "img_gen_v1.0.0",
+          "default_value": "RealESRGAN_x2.pth"
+        },
+        {
+          "workflow": "long_video_svi_pro_wan22_v1.0.0",
+          "default_value": "RealESRGAN_x2.pth"
+        },
+        {
+          "workflow": "t2v_wan22_v1.0.0",
+          "default_value": "RealESRGAN_x2.pth"
+        }
+      ],
       "LoraLoaderModelOnly.lora_name": [
         {
           "workflow": "long_video_svi_pro_wan22_v1.0.0",
@@ -93781,6 +93959,40 @@
         {
           "workflow": "svi_pro_long_video_v1.0.0",
           "default_value": 848
+        }
+      ],
+      "KSamplerSelect.sampler_name": [
+        {
+          "workflow": "long_video_svi_pro_wan22_v1.0.0",
+          "default_value": "euler"
+        },
+        {
+          "workflow": "minimax_h3_ref2v_av_turbo_v1.0.0",
+          "default_value": "ddim"
+        },
+        {
+          "workflow": "minimax_h3_ref2v_multi_reference_v1.0.0",
+          "default_value": "euler"
+        },
+        {
+          "workflow": "minimax_h3_all_in_one_v1.0.0",
+          "default_value": "euler"
+        },
+        {
+          "workflow": "minimax_h3_all_in_one_v1.0.0_api",
+          "default_value": "euler"
+        },
+        {
+          "workflow": "minimax_h3_ref2v_av_turbo_v1.0.0_api",
+          "default_value": "ddim"
+        },
+        {
+          "workflow": "minimax_h3_ref2v_multi_reference_v1.0.0_api",
+          "default_value": "euler"
+        },
+        {
+          "workflow": "minimax_h3_video_motion_transfer_v1.0.0_api",
+          "default_value": "er_sde"
         }
       ],
       "KSamplerAdvanced.steps": [
@@ -93867,7 +94079,7 @@
           "default_value": 1
         }
       ],
-      "BasicScheduler.steps": [
+      "BasicScheduler.scheduler": [
         {
           "workflow": "minimax_h3_t2v_turbo_v1.0.0",
           "default_value": "simple"
@@ -93899,43 +94111,77 @@
         {
           "workflow": "minimax_h3_t2v_turbo_v1.0.0_api",
           "default_value": "simple"
+        },
+        {
+          "workflow": "minimax_h3_video_motion_transfer_v1.0.0_api",
+          "default_value": "simple"
+        }
+      ],
+      "BasicScheduler.steps": [
+        {
+          "workflow": "minimax_h3_t2v_turbo_v1.0.0",
+          "default_value": 4
+        },
+        {
+          "workflow": "minimax_h3_ref2v_av_turbo_v1.0.0",
+          "default_value": 8
+        },
+        {
+          "workflow": "minimax_h3_ref2v_multi_reference_v1.0.0",
+          "default_value": 12
+        },
+        {
+          "workflow": "minimax_h3_all_in_one_v1.0.0",
+          "default_value": 12
+        },
+        {
+          "workflow": "minimax_h3_all_in_one_v1.0.0_api",
+          "default_value": 12
+        },
+        {
+          "workflow": "minimax_h3_ref2v_av_turbo_v1.0.0_api",
+          "default_value": 8
+        },
+        {
+          "workflow": "minimax_h3_ref2v_multi_reference_v1.0.0_api",
+          "default_value": 12
+        },
+        {
+          "workflow": "minimax_h3_t2v_turbo_v1.0.0_api",
+          "default_value": 4
         }
       ],
       "BasicScheduler.denoise": [
         {
           "workflow": "minimax_h3_t2v_turbo_v1.0.0",
-          "default_value": 20
+          "default_value": 1
         },
         {
           "workflow": "minimax_h3_ref2v_av_turbo_v1.0.0",
-          "default_value": 20
+          "default_value": 1
         },
         {
           "workflow": "minimax_h3_ref2v_multi_reference_v1.0.0",
-          "default_value": 12
+          "default_value": 1
         },
         {
           "workflow": "minimax_h3_all_in_one_v1.0.0",
-          "default_value": 12
+          "default_value": 1
         },
         {
           "workflow": "minimax_h3_all_in_one_v1.0.0_api",
-          "default_value": 12
+          "default_value": 1
         },
         {
           "workflow": "minimax_h3_ref2v_av_turbo_v1.0.0_api",
-          "default_value": 20
+          "default_value": 1
         },
         {
           "workflow": "minimax_h3_ref2v_multi_reference_v1.0.0_api",
-          "default_value": 12
+          "default_value": 1
         },
         {
           "workflow": "minimax_h3_t2v_turbo_v1.0.0_api",
-          "default_value": 20
-        },
-        {
-          "workflow": "minimax_h3_video_motion_transfer_v1.0.0_api",
           "default_value": 1
         }
       ],
@@ -94178,7 +94424,7 @@
           "node_type": "WanVideoSamplerSettings",
           "param": "scheduler",
           "param_type": "sampler_config",
-          "default_value": true,
+          "default_value": "euler",
           "input_type": "",
           "description": "scheduler"
         },
@@ -94746,7 +94992,7 @@
           "node_type": "WanVideoSampler",
           "param": "scheduler",
           "param_type": "sampler_config",
-          "default_value": true,
+          "default_value": "dpm++_sde",
           "input_type": "",
           "description": "scheduler"
         },
@@ -94888,9 +95134,17 @@
           "node_type": "WanVideoSampler",
           "param": "scheduler",
           "param_type": "sampler_config",
-          "default_value": true,
+          "default_value": "euler",
           "input_type": "",
           "description": "scheduler"
+        },
+        "UpscaleModelLoader.model_name": {
+          "node_type": "UpscaleModelLoader",
+          "param": "model_name",
+          "param_type": "model",
+          "default_value": "RealESRGAN_x2.pth",
+          "input_type": "",
+          "description": "model_name"
         }
       }
     },
@@ -95156,9 +95410,17 @@
           "node_type": "WanVideoSampler",
           "param": "scheduler",
           "param_type": "sampler_config",
-          "default_value": true,
+          "default_value": "euler",
           "input_type": "",
           "description": "scheduler"
+        },
+        "UpscaleModelLoader.model_name": {
+          "node_type": "UpscaleModelLoader",
+          "param": "model_name",
+          "param_type": "model",
+          "default_value": "RealESRGAN_x2.pth",
+          "input_type": "",
+          "description": "model_name"
         }
       }
     },
@@ -95370,6 +95632,14 @@
           "input_type": "",
           "description": "height"
         },
+        "KSamplerSelect.sampler_name": {
+          "node_type": "KSamplerSelect",
+          "param": "sampler_name",
+          "param_type": "model",
+          "default_value": "euler",
+          "input_type": "",
+          "description": "sampler_name"
+        },
         "KSamplerAdvanced.steps": {
           "node_type": "KSamplerAdvanced",
           "param": "steps",
@@ -95401,6 +95671,14 @@
           "default_value": "simple",
           "input_type": "",
           "description": "scheduler"
+        },
+        "UpscaleModelLoader.model_name": {
+          "node_type": "UpscaleModelLoader",
+          "param": "model_name",
+          "param_type": "model",
+          "default_value": "RealESRGAN_x2.pth",
+          "input_type": "",
+          "description": "model_name"
         }
       }
     },
@@ -95686,9 +95964,17 @@
           "node_type": "WanVideoSampler",
           "param": "scheduler",
           "param_type": "sampler_config",
-          "default_value": true,
+          "default_value": "euler",
           "input_type": "",
           "description": "scheduler"
+        },
+        "UpscaleModelLoader.model_name": {
+          "node_type": "UpscaleModelLoader",
+          "param": "model_name",
+          "param_type": "model",
+          "default_value": "RealESRGAN_x2.pth",
+          "input_type": "",
+          "description": "model_name"
         }
       }
     },
@@ -95796,7 +96082,7 @@
           "node_type": "WanVideoSampler",
           "param": "scheduler",
           "param_type": "sampler_config",
-          "default_value": true,
+          "default_value": "unipc",
           "input_type": "",
           "description": "scheduler"
         }
@@ -95902,7 +96188,7 @@
           "node_type": "WanVideoSampler",
           "param": "scheduler",
           "param_type": "sampler_config",
-          "default_value": true,
+          "default_value": "unipc",
           "input_type": "",
           "description": "scheduler"
         }
@@ -96182,7 +96468,7 @@
           "node_type": "WanVideoSampler",
           "param": "scheduler",
           "param_type": "sampler_config",
-          "default_value": true,
+          "default_value": "unipc",
           "input_type": "",
           "description": "scheduler"
         }
@@ -96474,11 +96760,19 @@
           "input_type": "",
           "description": "unet_name"
         },
+        "BasicScheduler.scheduler": {
+          "node_type": "BasicScheduler",
+          "param": "scheduler",
+          "param_type": "sampler_config",
+          "default_value": "simple",
+          "input_type": "",
+          "description": "scheduler"
+        },
         "BasicScheduler.steps": {
           "node_type": "BasicScheduler",
           "param": "steps",
           "param_type": "sampler",
-          "default_value": "simple",
+          "default_value": 4,
           "input_type": "",
           "description": "steps"
         },
@@ -96486,7 +96780,7 @@
           "node_type": "BasicScheduler",
           "param": "denoise",
           "param_type": "sampler",
-          "default_value": 20,
+          "default_value": 1,
           "input_type": "",
           "description": "denoise"
         }
@@ -96718,11 +97012,27 @@
         "data_flow": []
       },
       "configurable": {
+        "KSamplerSelect.sampler_name": {
+          "node_type": "KSamplerSelect",
+          "param": "sampler_name",
+          "param_type": "model",
+          "default_value": "ddim",
+          "input_type": "",
+          "description": "sampler_name"
+        },
+        "BasicScheduler.scheduler": {
+          "node_type": "BasicScheduler",
+          "param": "scheduler",
+          "param_type": "sampler_config",
+          "default_value": "simple",
+          "input_type": "",
+          "description": "scheduler"
+        },
         "BasicScheduler.steps": {
           "node_type": "BasicScheduler",
           "param": "steps",
           "param_type": "sampler",
-          "default_value": "simple",
+          "default_value": 8,
           "input_type": "",
           "description": "steps"
         },
@@ -96730,7 +97040,7 @@
           "node_type": "BasicScheduler",
           "param": "denoise",
           "param_type": "sampler",
-          "default_value": 20,
+          "default_value": 1,
           "input_type": "",
           "description": "denoise"
         },
@@ -96936,6 +97246,14 @@
           "input_type": "",
           "description": "clip_name"
         },
+        "KSamplerSelect.sampler_name": {
+          "node_type": "KSamplerSelect",
+          "param": "sampler_name",
+          "param_type": "model",
+          "default_value": "euler",
+          "input_type": "",
+          "description": "sampler_name"
+        },
         "UNETLoader.unet_name": {
           "node_type": "UNETLoader",
           "param": "unet_name",
@@ -96944,11 +97262,19 @@
           "input_type": "",
           "description": "unet_name"
         },
+        "BasicScheduler.scheduler": {
+          "node_type": "BasicScheduler",
+          "param": "scheduler",
+          "param_type": "sampler_config",
+          "default_value": "beta",
+          "input_type": "",
+          "description": "scheduler"
+        },
         "BasicScheduler.steps": {
           "node_type": "BasicScheduler",
           "param": "steps",
           "param_type": "sampler",
-          "default_value": "beta",
+          "default_value": 12,
           "input_type": "",
           "description": "steps"
         },
@@ -96956,7 +97282,7 @@
           "node_type": "BasicScheduler",
           "param": "denoise",
           "param_type": "sampler",
-          "default_value": 12,
+          "default_value": 1,
           "input_type": "",
           "description": "denoise"
         }
@@ -97082,11 +97408,27 @@
         "data_flow": []
       },
       "configurable": {
+        "KSamplerSelect.sampler_name": {
+          "node_type": "KSamplerSelect",
+          "param": "sampler_name",
+          "param_type": "model",
+          "default_value": "euler",
+          "input_type": "",
+          "description": "sampler_name"
+        },
+        "BasicScheduler.scheduler": {
+          "node_type": "BasicScheduler",
+          "param": "scheduler",
+          "param_type": "sampler_config",
+          "default_value": "beta",
+          "input_type": "",
+          "description": "scheduler"
+        },
         "BasicScheduler.steps": {
           "node_type": "BasicScheduler",
           "param": "steps",
           "param_type": "sampler",
-          "default_value": "beta",
+          "default_value": 12,
           "input_type": "",
           "description": "steps"
         },
@@ -97094,7 +97436,7 @@
           "node_type": "BasicScheduler",
           "param": "denoise",
           "param_type": "sampler",
-          "default_value": 12,
+          "default_value": 1,
           "input_type": "",
           "description": "denoise"
         },
@@ -97490,11 +97832,27 @@
         "data_flow": []
       },
       "configurable": {
+        "KSamplerSelect.sampler_name": {
+          "node_type": "KSamplerSelect",
+          "param": "sampler_name",
+          "param_type": "model",
+          "default_value": "euler",
+          "input_type": "",
+          "description": "sampler_name"
+        },
+        "BasicScheduler.scheduler": {
+          "node_type": "BasicScheduler",
+          "param": "scheduler",
+          "param_type": "sampler_config",
+          "default_value": "beta",
+          "input_type": "",
+          "description": "scheduler"
+        },
         "BasicScheduler.steps": {
           "node_type": "BasicScheduler",
           "param": "steps",
           "param_type": "sampler",
-          "default_value": "beta",
+          "default_value": 12,
           "input_type": "",
           "description": "steps"
         },
@@ -97502,7 +97860,7 @@
           "node_type": "BasicScheduler",
           "param": "denoise",
           "param_type": "sampler",
-          "default_value": 12,
+          "default_value": 1,
           "input_type": "",
           "description": "denoise"
         },
@@ -97738,11 +98096,27 @@
         "data_flow": []
       },
       "configurable": {
+        "KSamplerSelect.sampler_name": {
+          "node_type": "KSamplerSelect",
+          "param": "sampler_name",
+          "param_type": "model",
+          "default_value": "ddim",
+          "input_type": "",
+          "description": "sampler_name"
+        },
+        "BasicScheduler.scheduler": {
+          "node_type": "BasicScheduler",
+          "param": "scheduler",
+          "param_type": "sampler_config",
+          "default_value": "simple",
+          "input_type": "",
+          "description": "scheduler"
+        },
         "BasicScheduler.steps": {
           "node_type": "BasicScheduler",
           "param": "steps",
           "param_type": "sampler",
-          "default_value": "simple",
+          "default_value": 8,
           "input_type": "",
           "description": "steps"
         },
@@ -97750,7 +98124,7 @@
           "node_type": "BasicScheduler",
           "param": "denoise",
           "param_type": "sampler",
-          "default_value": 20,
+          "default_value": 1,
           "input_type": "",
           "description": "denoise"
         },
@@ -97936,6 +98310,14 @@
           "input_type": "",
           "description": "clip_name"
         },
+        "KSamplerSelect.sampler_name": {
+          "node_type": "KSamplerSelect",
+          "param": "sampler_name",
+          "param_type": "model",
+          "default_value": "euler",
+          "input_type": "",
+          "description": "sampler_name"
+        },
         "UNETLoader.unet_name": {
           "node_type": "UNETLoader",
           "param": "unet_name",
@@ -97944,11 +98326,19 @@
           "input_type": "",
           "description": "unet_name"
         },
+        "BasicScheduler.scheduler": {
+          "node_type": "BasicScheduler",
+          "param": "scheduler",
+          "param_type": "sampler_config",
+          "default_value": "beta",
+          "input_type": "",
+          "description": "scheduler"
+        },
         "BasicScheduler.steps": {
           "node_type": "BasicScheduler",
           "param": "steps",
           "param_type": "sampler",
-          "default_value": "beta",
+          "default_value": 12,
           "input_type": "",
           "description": "steps"
         },
@@ -97956,7 +98346,7 @@
           "node_type": "BasicScheduler",
           "param": "denoise",
           "param_type": "sampler",
-          "default_value": 12,
+          "default_value": 1,
           "input_type": "",
           "description": "denoise"
         }
@@ -98062,11 +98452,19 @@
           "input_type": "",
           "description": "unet_name"
         },
+        "BasicScheduler.scheduler": {
+          "node_type": "BasicScheduler",
+          "param": "scheduler",
+          "param_type": "sampler_config",
+          "default_value": "simple",
+          "input_type": "",
+          "description": "scheduler"
+        },
         "BasicScheduler.steps": {
           "node_type": "BasicScheduler",
           "param": "steps",
           "param_type": "sampler",
-          "default_value": "simple",
+          "default_value": 4,
           "input_type": "",
           "description": "steps"
         },
@@ -98074,7 +98472,7 @@
           "node_type": "BasicScheduler",
           "param": "denoise",
           "param_type": "sampler",
-          "default_value": 20,
+          "default_value": 1,
           "input_type": "",
           "description": "denoise"
         }
@@ -98304,13 +98702,21 @@
           "input_type": "",
           "description": "lora_name"
         },
-        "BasicScheduler.denoise": {
-          "node_type": "BasicScheduler",
-          "param": "denoise",
-          "param_type": "sampler",
-          "default_value": 1,
+        "KSamplerSelect.sampler_name": {
+          "node_type": "KSamplerSelect",
+          "param": "sampler_name",
+          "param_type": "model",
+          "default_value": "er_sde",
           "input_type": "",
-          "description": "denoise"
+          "description": "sampler_name"
+        },
+        "BasicScheduler.scheduler": {
+          "node_type": "BasicScheduler",
+          "param": "scheduler",
+          "param_type": "sampler_config",
+          "default_value": "simple",
+          "input_type": "",
+          "description": "scheduler"
         },
         "Text Multiline.text": {
           "node_type": "Text Multiline",
@@ -99021,39 +99427,39 @@
   },
   "file_index": {
     "animate_wan22_threeview_v1.0.0.json": {
-      "mtime": 1791918840.7576265,
+      "mtime": 1791922047.9903083,
       "size": 113892
     },
     "api-workflow.json": {
-      "mtime": 1791918840.7622533,
+      "mtime": 1791922048.1657054,
       "size": 1489
     },
     "default-workflow.json": {
-      "mtime": 1791918840.7670715,
+      "mtime": 1791922048.3412385,
       "size": 1388
     },
     "flux2_api_workflow.json": {
-      "mtime": 1791918840.7719493,
+      "mtime": 1791922048.5151937,
       "size": 1930
     },
     "i2v_wan22_kj_v1.0.0.json": {
-      "mtime": 1791918840.7759573,
+      "mtime": 1791922048.6904368,
       "size": 6062
     },
     "i2v_wan22_v1.0.0.json": {
-      "mtime": 1791918840.7802334,
+      "mtime": 1791922048.8647213,
       "size": 2785
     },
     "img2img_flux2_example_v1.0.0.json": {
-      "mtime": 1791918840.7853446,
+      "mtime": 1791922049.040521,
       "size": 2055
     },
     "img_gen_v1.0.0.json": {
-      "mtime": 1791918840.7901704,
+      "mtime": 1791922049.2135844,
       "size": 4211
     },
     "long_video_svi_pro_wan22_v1.0.0.json": {
-      "mtime": 1791918840.795942,
+      "mtime": 1791922049.5623283,
       "size": 276328
     },
     "object_info.json": {
@@ -99061,103 +99467,103 @@
       "size": 6129705
     },
     "svi_pro_long_video_v1.0.0.json": {
-      "mtime": 1791918840.8624017,
+      "mtime": 1791922052.1773367,
       "size": 17421
     },
     "t2v_wan22_v1.0.0.json": {
-      "mtime": 1791918840.8667579,
+      "mtime": 1791922052.352005,
       "size": 2780
     },
     "wan22_i2v_workflow.json": {
-      "mtime": 1791918840.8709683,
+      "mtime": 1791922052.5262115,
       "size": 2662
     },
     "wan22_simple_t2i.json": {
-      "mtime": 1791918840.8748407,
+      "mtime": 1791922052.704736,
       "size": 2166
     },
     "wan22_svi_pro_long_video.json": {
-      "mtime": 1791918840.8788455,
+      "mtime": 1791922052.8822124,
       "size": 110733
     },
     "wan22_t2v_workflow.json": {
-      "mtime": 1791918840.8829079,
+      "mtime": 1791922053.0587802,
       "size": 2326
     },
     "wan2_2_5B_ti2v.json": {
-      "mtime": 1791918840.8873677,
+      "mtime": 1791922053.23587,
       "size": 13155
     },
     "workflow_analysis.json": {
-      "mtime": 1791918840.892134,
+      "mtime": 1791922053.4099624,
       "size": 19745
     },
     "workflow_library.json": {
-      "mtime": 1791921010.2581599,
-      "size": 1609125
+      "mtime": 1791922054.6661222,
+      "size": 1622977
     },
     "workflow_patterns.json": {
-      "mtime": 1791918840.8965945,
+      "mtime": 1791922053.5906696,
       "size": 11611
     },
     "minimax_h3_t2v_turbo_v1.0.0.json": {
-      "mtime": 1791921004.2972484,
-      "size": 44003
+      "mtime": 1791922051.132887,
+      "size": 44002
     },
     "minimax_h3_fl2va_first_last_frame_v1.0.0.json": {
-      "mtime": 1791918840.8094702,
+      "mtime": 1791922050.085873,
       "size": 68018
     },
     "minimax_h3_ref2v_av_turbo_v1.0.0.json": {
-      "mtime": 1791918840.818754,
-      "size": 100599
+      "mtime": 1791922050.434474,
+      "size": 100598
     },
     "minimax_h3_ref2v_multi_reference_v1.0.0.json": {
-      "mtime": 1791918840.8265972,
+      "mtime": 1791922050.784542,
       "size": 185421
     },
     "minimax_h3_all_in_one_v1.0.0.json": {
-      "mtime": 1791918840.7998018,
+      "mtime": 1791922049.7381866,
       "size": 150307
     },
     "minimax_h3_video_motion_transfer_v1.0.0.json": {
-      "mtime": 1791918840.8433237,
+      "mtime": 1791922051.4790885,
       "size": 313354
     },
     "legacy_workflow_index.json": {
-      "mtime": 1791918840.7914717,
+      "mtime": 1791922049.3864825,
       "size": 120995
     },
     "node_parameter_standards.json": {
-      "mtime": 1791918840.8488486,
+      "mtime": 1791922051.8270347,
       "size": 35055
     },
     "node_registry.json": {
-      "mtime": 1791918840.8503206,
+      "mtime": 1791922052.0020754,
       "size": 68659
     },
     "minimax_h3_all_in_one_v1.0.0_api.json": {
-      "mtime": 1791921003.7438025,
+      "mtime": 1791922049.912292,
       "size": 16226
     },
     "minimax_h3_fl2va_first_last_frame_v1.0.0_api.json": {
-      "mtime": 1791921003.9431832,
+      "mtime": 1791922050.2606635,
       "size": 8519
     },
     "minimax_h3_ref2v_av_turbo_v1.0.0_api.json": {
-      "mtime": 1791921003.3937588,
-      "size": 9467
+      "mtime": 1791922050.6084168,
+      "size": 9466
     },
     "minimax_h3_ref2v_multi_reference_v1.0.0_api.json": {
-      "mtime": 1791921003.570515,
+      "mtime": 1791922050.959132,
       "size": 14140
     },
     "minimax_h3_t2v_turbo_v1.0.0_api.json": {
-      "mtime": 1791921003.2175326,
-      "size": 7544
+      "mtime": 1791922051.3043597,
+      "size": 7543
     },
     "minimax_h3_video_motion_transfer_v1.0.0_api.json": {
-      "mtime": 1791921004.1179185,
+      "mtime": 1791922051.6533415,
       "size": 38876
     }
   }

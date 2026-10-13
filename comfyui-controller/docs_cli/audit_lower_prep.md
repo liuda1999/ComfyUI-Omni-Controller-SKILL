@@ -494,7 +494,7 @@ class ModelLTX2(ModelTemplate):
 
 | # | 发现 | 说明 |
 | --- | --- | --- |
-| D1 | **工作流命名与配置不一致** | `minimax_h3_t2v_turbo`（名为"Turbo **4 步**快速版"）实际 `BasicScheduler.steps=20`，单次采样约 15 分钟；与"4 步 turbo"设计意图不符。本次**按原样执行**以保证可比性，未擅自改参数 |
+| D1 | **工作流命名与配置不一致（已修复 2026-10-14）** | `minimax_h3_t2v_turbo`（名为"Turbo **4 步**快速版"）实际 `BasicScheduler.steps=20`，单次采样约 15 分钟；与"4 步 turbo"设计意图不符。远程实测时**按原样执行**以保证可比性；资产侧已于 v0.2.3 修复：t2v_turbo steps 20→4、ref2v_av_turbo 20→8（配 8 步 LoRA），UI/API/param_spec/库四层一致 |
 | D2 | **双卡未形成显存分摊** | 实测仅在 **card0** 加载（text encoder 14956 MB + DiT 19983 MB 动态 staged），**card1 几乎闲置**（~300 MB）。`--cuda-device 0,1` 并未让两卡分担；若要真正分摊需换用 multi-GPU 节点（`UnetLoaderGGUF*MultiGPU` / DisTorch 系列） |
 | D3 | 库内 `*_api.json` 不可直接提交 | 再次确认（见 §15 R3），必须走 UI 版 + UI→API 转换 |
 | D4 | 单卡临界承载 | DiT 19983 MB staged 于 19.7 GiB 卡上、空闲仅 3.4 GB —— 依赖 ComfyUI 的动态加载；这正是必须停 LLM 腾显存的原因 |

@@ -27,7 +27,7 @@
   "124": {
     "inputs": {
       "scheduler": "simple",
-      "steps": 20,
+      "steps": 8,
       "denoise": 1,
       "model": [
         "136",

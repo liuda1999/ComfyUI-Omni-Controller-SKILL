@@ -1066,6 +1066,41 @@ API 格式示例：
 7. **UI 转 API 后清理无关节点**：MarkdownNote、Note、未连接的 LoadImage 必须删除
 8. **AI 图片放大用 2x_StarSample_V2.0**：RealESRGAN_x2 对 AI 内容产生伪影
 9. **执行流程标准化**：启动服务 → 查询可用模型 → 准备工作流（转换+清理+参数核对） → 执行 → 验证输出
+10. **COMBO widget 必须计入 widget 名映射**：新版 object_info 的 COMBO 是 `["COMBO", {...}]` 形式，映射表漏认会导致其后所有 widget 值整体错位（steps 的值记到 denoise 名下）；模型名映射错误还会静默回退
+11. **turbo LoRA 必须配对应步数**：4 步 LoRA 配 20 步调度会完全抵消加速收益；资产入库时要核对 LoRA 文件名步数与 `BasicScheduler.steps` 一致
+
+### 13.10 D1 修复：turbo 工作流步数与 LoRA 匹配 + widget 映射错位 bug（2026-10-14，v0.2.3）
+
+#### 背景
+
+`audit_lower_prep.md` D1 记录：`minimax_h3_t2v_turbo` 名为"Turbo 4 步"实际 `BasicScheduler.steps=20`，单次采样约 15 分钟，加速收益被完全抵消。远程实测时按原样执行以保证可比性；v0.2.3 修复资产侧默认值。
+
+#### 修复内容（四层一致）
+
+| 层 | 文件 | 修复 |
+|---|---|---|
+| UI | `minimax_h3_t2v_turbo_v1.0.0.json` | 节点 124 BasicScheduler steps 20→**4**（配 fl2v_turbo_4step） |
+| UI | `minimax_h3_ref2v_av_turbo_v1.0.0.json` | 节点 124 BasicScheduler steps 20→**8**（配 ref2v_turbo_8step） |
+| API | 对应 `_api.json` | 修复后 UI 经离线 object_info 重转换，仅 steps 变化（节点数/loader 值不变） |
+| param_spec | `workflow_param_spec/*.param_spec.json` | steps default 同步 4/8，range/meaning 注明 turbo 匹配 |
+
+非 turbo 工作流（multi_reference/all_in_one/fl2va 的 12 步、motion_transfer 的 step600 蒸馏）不涉 LoRA 步数错配，未改动。
+
+#### 顺带修复：widget 名映射错位（系统性 bug）
+
+重建库时发现 `template.configurable` 中 `BasicScheduler.denoise.default_value=20`——排查为 `_get_widget_names_from_object_info` 只认旧版 COMBO（options 列表），不认新版 object_info 的 `["COMBO", {...}]`，导致 COMBO widget 名（scheduler）缺失、其后 widget 全部错位：
+
+- `BasicScheduler.steps` 记到 'simple'（scheduler 的值）、`denoise` 记到 20（steps 的值）
+- `WanVideoSampler.scheduler` 记到 `true`（control_after_generate 标记）
+- `LoraLoader.strength_model` 会记到 LoRA 文件名字符串
+
+修复：识别条件增加 `"COMBO"`/`"BOOLEAN"`。全量重分析后 7 类键修正为真实值（BasicScheduler.scheduler='simple'、steps=4/8、denoise=1；KSamplerSelect.sampler_name='euler'；WanVideoSampler.scheduler='dpm++_sde' 等），82 条与 54 条 legacy 无损失、无退化。
+
+#### 教训
+
+1. **对象信息路径必须写全**：本次用错 `--object-info assets/object_info.json`（实际在 `comfyui-controller/assets/`）导致一次重建把注解/参数清空——虽被二次对比发现并恢复，但说明"构建器输出 0 变更"不等于"库正确"，重建后必须与基线逐条目对比
+2. **错位是静默的**：widget 映射错位不报错、只产错值；定期用真实 UI 值与库 configurable 抽查对账
+3. **四层一致才闭环**：UI / API / param_spec / 库 template 四层的 steps 必须一致，任一层漏改都会在执行时被"默认值"覆盖
 
 ---
 

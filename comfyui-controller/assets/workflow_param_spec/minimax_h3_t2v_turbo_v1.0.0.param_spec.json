@@ -618,9 +618,9 @@
         },
         "steps": {
           "type": "INT",
-          "default": 20,
-          "range": "1~50（Turbo 4 步 / 8 步）",
-          "meaning": "去噪步数",
+          "default": 4,
+          "range": "Turbo 匹配：4（默认）；换常规模型可调 8~50",
+          "meaning": "去噪步数；本工作流配 minimax_h3_fl2v_turbo_4step（4 步 Turbo LoRA），默认 20 系官方模板遗留、会抵消 LoRA 加速收益",
           "required": true
         },
         "denoise": {

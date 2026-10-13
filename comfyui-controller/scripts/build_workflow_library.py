@@ -89,8 +89,9 @@ def _get_widget_names_from_object_info(node_type, object_info):
             for name, type_info in section_inputs.items():
                 if isinstance(type_info, list) and len(type_info) > 0:
                     input_type = type_info[0]
-                    # widget 类型：列表（combo 选择）、INT、FLOAT、STRING
-                    if isinstance(input_type, list) or input_type in ("INT", "FLOAT", "STRING"):
+                    # widget 类型：列表（combo 选择）、INT、FLOAT、STRING、COMBO（新版 object_info 的
+                    # ["COMBO", {...}] 形式）、BOOLEAN。链接类（MODEL/LATENT/VAE...）不占 widget 位
+                    if isinstance(input_type, list) or input_type in ("INT", "FLOAT", "STRING", "COMBO", "BOOLEAN"):
                         widget_names.append(name)
     return widget_names
 

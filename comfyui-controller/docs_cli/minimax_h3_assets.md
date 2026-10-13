@@ -19,6 +19,12 @@
 | `minimax_h3_all_in_one_v1.0.0.json` | `minimax_h3_all_in_one_v1.0.0_api.json` | 79 | 综合全能版（社区整合流，含微调基模与放大） |
 | `minimax_h3_video_motion_transfer_v1.0.0.json` | `minimax_h3_video_motion_transfer_v1.0.0_api.json` | 83 | 视频驱动动作迁移 / 人物替换（二采流） |
 
+> **v0.2.3（2026-10-14）步数修正**：两个 turbo 工作流的 `BasicScheduler.steps` 默认值已与
+> LoRA 步数匹配——`t2v_turbo` 20→**4**（fl2v_turbo_4step）、`ref2v_av_turbo` 20→**8**
+> （ref2v_turbo_8step）。原默认 20 步系官方模板遗留，会完全抵消 4 步 LoRA 的加速收益
+> （单次采样约 15 分钟）。UI/API/param_spec/库四层一致。换常规（非 turbo）模型时可将
+> steps 调回 12~20。
+
 **原始文件名对照**（便于溯源）：
 
 | 落位文件名 | 原始文件名 |
