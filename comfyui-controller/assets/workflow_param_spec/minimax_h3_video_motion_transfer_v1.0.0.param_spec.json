@@ -1,0 +1,3276 @@
+{
+  "workflow": "minimax_h3_video_motion_transfer_v1.0.0",
+  "purpose": "视频驱动动作迁移 / 人物替换（二采流）",
+  "node_count": 83,
+  "format": "UI (ComfyUI 界面可加载)",
+  "nodes": [
+    {
+      "id": 584,
+      "type": "VAELoader",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "vae_name": "H3\\minimax_h3_audio_vae_fp32.safetensors"
+      },
+      "inputs": [
+        {
+          "name": "vae_name",
+          "type": "COMBO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "VAE"
+      ],
+      "standard": {
+        "vae_name": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/vae/ 下 .safetensors",
+          "meaning": "如 minimax_h3_video_vae_fp16.safetensors（视频）/ minimax_h3_audio_vae_fp32（音频，须 fp32）",
+          "required": true
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 216,
+      "type": "LoraLoaderModelOnly",
+      "title": "加速Lora",
+      "role": "loaders",
+      "widgets": {
+        "lora_name": "H3\\minimax_h3_turbo_v4_step600_ema_pruned_comfyui.safetensors",
+        "strength_model": 1.0000000000000002
+      },
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 1446
+        },
+        {
+          "name": "lora_name",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "strength_model",
+          "type": "FLOAT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "MODEL"
+      ],
+      "standard": {
+        "lora_name": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/loras/ 下 .safetensors",
+          "meaning": "LoRA 文件名",
+          "required": true
+        },
+        "strength_model": {
+          "type": "FLOAT",
+          "default": 1.0,
+          "range": "-10 ~ 10",
+          "meaning": "模型侧强度，1=原强度",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 5139,
+      "type": "easy boolean",
+      "title": "一采手动强制关闭加噪 (True=始终跳过)",
+      "role": "util",
+      "widgets": {
+        "value": true
+      },
+      "inputs": [
+        {
+          "name": "value",
+          "type": "BOOLEAN",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "boolean"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 5409,
+      "type": "easy clearCacheAll",
+      "title": null,
+      "role": "util",
+      "widgets": {},
+      "inputs": [
+        {
+          "name": "anything",
+          "type": "*",
+          "link": 2691
+        }
+      ],
+      "outputs": [
+        "output"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 213,
+      "type": "ModelAttentionBackend",
+      "title": null,
+      "role": "perf",
+      "widgets": {
+        "attention": "comfy kitchen attention"
+      },
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 1086
+        },
+        {
+          "name": "attention",
+          "type": "COMBO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "MODEL"
+      ],
+      "standard": {
+        "attention": {
+          "type": "COMBO",
+          "default": "comfy kitchen attention",
+          "range": "comfy kitchen attention / sage / flash",
+          "meaning": "后端",
+          "required": true
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 5398,
+      "type": "MiniMaxLowVRAMAttention",
+      "title": null,
+      "role": "perf",
+      "widgets": {
+        "head_chunks": 4
+      },
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 2676
+        },
+        {
+          "name": "head_chunks",
+          "type": "INT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "model"
+      ],
+      "standard": {
+        "head_chunks": {
+          "type": "INT",
+          "default": 4,
+          "range": "≥1",
+          "meaning": "头分块数",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 5358,
+      "type": "MiniMaxH3MotionContextClipStream",
+      "title": null,
+      "role": "h3_main",
+      "widgets": {
+        "context_length": "22",
+        "audio_context_length": 24,
+        "enable_audio_context": false
+      },
+      "inputs": [
+        {
+          "name": "conditioning",
+          "type": "CONDITIONING",
+          "link": 2541
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 2540
+        },
+        {
+          "name": "latent",
+          "type": "LATENT",
+          "link": 2542
+        },
+        {
+          "name": "context_frames",
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "context_latent",
+          "type": "LATENT",
+          "link": 2543
+        },
+        {
+          "name": "audio_vae",
+          "type": "VAE",
+          "link": 2544
+        },
+        {
+          "name": "context_audio",
+          "type": "AUDIO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "conditioning",
+        "trim_frames"
+      ],
+      "standard": {
+        "context_length": {
+          "type": "STRING",
+          "default": "22",
+          "range": "整数（视频上下文帧）",
+          "meaning": "视频上下文长度",
+          "required": false
+        },
+        "audio_context_length": {
+          "type": "INT",
+          "default": 24,
+          "range": "≥1（音频上下文帧）",
+          "meaning": "音频上下文长度",
+          "required": false
+        },
+        "enable_audio_context": {
+          "type": "BOOLEAN",
+          "default": false,
+          "range": "true/false",
+          "meaning": "启用音频上下文",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 5141,
+      "type": "MiniMaxH3ContextLatentTaperNoise",
+      "title": null,
+      "role": "sched_noise",
+      "widgets": {
+        "tail_frames": "22",
+        "alpha": 0.45,
+        "alpha_end": 0.1,
+        "ramp_steps": 2,
+        "seed": 879120741482747,
+        "control_after_generate": "randomize",
+        "noise_scale": "match_latent_std"
+      },
+      "inputs": [
+        {
+          "name": "context_latent",
+          "type": "LATENT",
+          "link": 2071
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": 2696
+        }
+      ],
+      "outputs": [
+        "context_latent",
+        "alpha_schedule"
+      ],
+      "standard": {
+        "tail_frames": {
+          "type": "STRING",
+          "default": "22",
+          "range": "整数",
+          "meaning": "尾部锥度帧数",
+          "required": true
+        },
+        "alpha": {
+          "type": "FLOAT",
+          "default": 0.45,
+          "range": "0~1",
+          "meaning": "起始噪声混合比例",
+          "required": false
+        },
+        "alpha_end": {
+          "type": "FLOAT",
+          "default": 0.1,
+          "range": "0~1",
+          "meaning": "结束噪声混合比例",
+          "required": false
+        },
+        "ramp_steps": {
+          "type": "INT",
+          "default": 2,
+          "range": "≥1",
+          "meaning": "锥度过渡步数",
+          "required": false
+        },
+        "seed": {
+          "type": "INT",
+          "default": 0,
+          "range": "0~2^53",
+          "meaning": "种子",
+          "required": true
+        },
+        "control_after_generate": {
+          "type": "COMBO",
+          "default": "randomize",
+          "range": "randomize/fixed/...",
+          "meaning": "种子行为",
+          "required": false
+        },
+        "noise_scale": {
+          "type": "COMBO",
+          "default": "match_latent_std",
+          "range": "match_latent_std / ...",
+          "meaning": "噪声缩放方式",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 5368,
+      "type": "MiniMaxH3MotionContextClipStream",
+      "title": null,
+      "role": "h3_main",
+      "widgets": {
+        "context_length": "22",
+        "audio_context_length": 24,
+        "enable_audio_context": false
+      },
+      "inputs": [
+        {
+          "name": "conditioning",
+          "type": "CONDITIONING",
+          "link": 2590
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 2591
+        },
+        {
+          "name": "latent",
+          "type": "LATENT",
+          "link": 2637
+        },
+        {
+          "name": "context_frames",
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "context_latent",
+          "type": "LATENT",
+          "link": 2594
+        },
+        {
+          "name": "audio_vae",
+          "type": "VAE",
+          "link": 2592
+        },
+        {
+          "name": "context_audio",
+          "type": "AUDIO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "conditioning",
+        "trim_frames"
+      ],
+      "standard": {
+        "context_length": {
+          "type": "STRING",
+          "default": "22",
+          "range": "整数（视频上下文帧）",
+          "meaning": "视频上下文长度",
+          "required": false
+        },
+        "audio_context_length": {
+          "type": "INT",
+          "default": 24,
+          "range": "≥1（音频上下文帧）",
+          "meaning": "音频上下文长度",
+          "required": false
+        },
+        "enable_audio_context": {
+          "type": "BOOLEAN",
+          "default": false,
+          "range": "true/false",
+          "meaning": "启用音频上下文",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 5149,
+      "type": "MiniMaxH3ContextLatentTaperNoise",
+      "title": null,
+      "role": "sched_noise",
+      "widgets": {
+        "tail_frames": "22",
+        "alpha": 0.45,
+        "alpha_end": 0.1,
+        "ramp_steps": 2,
+        "seed": 555540423438918,
+        "control_after_generate": "randomize",
+        "noise_scale": "match_latent_std"
+      },
+      "inputs": [
+        {
+          "name": "context_latent",
+          "type": "LATENT",
+          "link": 2075
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": 2697
+        }
+      ],
+      "outputs": [
+        "context_latent",
+        "alpha_schedule"
+      ],
+      "standard": {
+        "tail_frames": {
+          "type": "STRING",
+          "default": "22",
+          "range": "整数",
+          "meaning": "尾部锥度帧数",
+          "required": true
+        },
+        "alpha": {
+          "type": "FLOAT",
+          "default": 0.45,
+          "range": "0~1",
+          "meaning": "起始噪声混合比例",
+          "required": false
+        },
+        "alpha_end": {
+          "type": "FLOAT",
+          "default": 0.1,
+          "range": "0~1",
+          "meaning": "结束噪声混合比例",
+          "required": false
+        },
+        "ramp_steps": {
+          "type": "INT",
+          "default": 2,
+          "range": "≥1",
+          "meaning": "锥度过渡步数",
+          "required": false
+        },
+        "seed": {
+          "type": "INT",
+          "default": 0,
+          "range": "0~2^53",
+          "meaning": "种子",
+          "required": true
+        },
+        "control_after_generate": {
+          "type": "COMBO",
+          "default": "randomize",
+          "range": "randomize/fixed/...",
+          "meaning": "种子行为",
+          "required": false
+        },
+        "noise_scale": {
+          "type": "COMBO",
+          "default": "match_latent_std",
+          "range": "match_latent_std / ...",
+          "meaning": "噪声缩放方式",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 665,
+      "type": "VHS_VideoCombine",
+      "title": "一采",
+      "role": "io",
+      "widgets": {
+        "frame_rate": 24,
+        "loop_count": 0,
+        "filename_prefix": "视频驱动动作迁移/1采/",
+        "format": "video/h264-mp4",
+        "pix_fmt": "yuv420p",
+        "crf": 19,
+        "save_metadata": false,
+        "trim_to_audio": false,
+        "pingpong": false,
+        "save_output": false,
+        "videopreview": {
+          "hidden": true,
+          "paused": false,
+          "params": {
+            "filename": "1采_00004-audio.mp4",
+            "subfolder": "视频驱动动作迁移",
+            "type": "temp",
+            "format": "video/h264-mp4",
+            "frame_rate": 24,
+            "workflow": "1采_00004.png",
+            "fullpath": "D:\\AIUI\\ComfyUI-aki-v3\\ComfyUI-aki-v3\\ComfyUI\\temp\\视频驱动动作迁移\\1采_00004-audio.mp4"
+          }
+        }
+      },
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 2582
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 2583
+        },
+        {
+          "name": "meta_batch",
+          "type": "VHS_BatchManager",
+          "link": null
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": null
+        },
+        {
+          "name": "frame_rate",
+          "type": "FLOAT",
+          "link": null
+        },
+        {
+          "name": "loop_count",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "filename_prefix",
+          "type": "STRING",
+          "link": null
+        },
+        {
+          "name": "format",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "pingpong",
+          "type": "BOOLEAN",
+          "link": null
+        },
+        {
+          "name": "save_output",
+          "type": "BOOLEAN",
+          "link": null
+        },
+        {
+          "name": "pix_fmt",
+          "type": [
+            "yuv420p",
+            "yuv420p10le"
+          ],
+          "link": null
+        },
+        {
+          "name": "save_metadata",
+          "type": "BOOLEAN",
+          "link": null
+        },
+        {
+          "name": "trim_to_audio",
+          "type": "BOOLEAN",
+          "link": null
+        },
+        {
+          "name": "crf",
+          "type": "INT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "Filenames"
+      ],
+      "standard": {
+        "frame_rate": {
+          "type": "FLOAT",
+          "default": 24,
+          "range": ">0",
+          "meaning": "帧率",
+          "required": false
+        },
+        "filename_prefix": {
+          "type": "STRING",
+          "default": "AnimateDiff",
+          "range": "文本",
+          "meaning": "前缀",
+          "required": false
+        },
+        "format": {
+          "type": "COMBO",
+          "default": "image/gif",
+          "range": "video/mp4 / image/gif / ...",
+          "meaning": "格式",
+          "required": false
+        },
+        "lossless": {
+          "type": "BOOLEAN",
+          "default": false,
+          "range": "true/false",
+          "meaning": "无损",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 667,
+      "type": "VHS_VideoCombine",
+      "title": "二采",
+      "role": "io",
+      "widgets": {
+        "frame_rate": 24,
+        "loop_count": 0,
+        "filename_prefix": "视频驱动动作迁移/2采/",
+        "format": "video/h264-mp4",
+        "pix_fmt": "yuv420p",
+        "crf": 19,
+        "save_metadata": false,
+        "trim_to_audio": false,
+        "pingpong": false,
+        "save_output": true,
+        "videopreview": {
+          "hidden": true,
+          "paused": false,
+          "params": {
+            "filename": "2采_00001-audio.mp4",
+            "subfolder": "视频驱动动作迁移",
+            "type": "output",
+            "format": "video/h264-mp4",
+            "frame_rate": 24,
+            "workflow": "2采_00001.png",
+            "fullpath": "D:\\AIUI\\ComfyUI-aki-v3\\ComfyUI-aki-v3\\ComfyUI\\output\\视频驱动动作迁移\\2采_00001-audio.mp4"
+          }
+        }
+      },
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 2640
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 2641
+        },
+        {
+          "name": "meta_batch",
+          "type": "VHS_BatchManager",
+          "link": null
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": null
+        },
+        {
+          "name": "frame_rate",
+          "type": "FLOAT",
+          "link": null
+        },
+        {
+          "name": "loop_count",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "filename_prefix",
+          "type": "STRING",
+          "link": null
+        },
+        {
+          "name": "format",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "pingpong",
+          "type": "BOOLEAN",
+          "link": null
+        },
+        {
+          "name": "save_output",
+          "type": "BOOLEAN",
+          "link": null
+        },
+        {
+          "name": "pix_fmt",
+          "type": [
+            "yuv420p",
+            "yuv420p10le"
+          ],
+          "link": null
+        },
+        {
+          "name": "save_metadata",
+          "type": "BOOLEAN",
+          "link": null
+        },
+        {
+          "name": "trim_to_audio",
+          "type": "BOOLEAN",
+          "link": null
+        },
+        {
+          "name": "crf",
+          "type": "INT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "Filenames"
+      ],
+      "standard": {
+        "frame_rate": {
+          "type": "FLOAT",
+          "default": 24,
+          "range": ">0",
+          "meaning": "帧率",
+          "required": false
+        },
+        "filename_prefix": {
+          "type": "STRING",
+          "default": "AnimateDiff",
+          "range": "文本",
+          "meaning": "前缀",
+          "required": false
+        },
+        "format": {
+          "type": "COMBO",
+          "default": "image/gif",
+          "range": "video/mp4 / image/gif / ...",
+          "meaning": "格式",
+          "required": false
+        },
+        "lossless": {
+          "type": "BOOLEAN",
+          "default": false,
+          "range": "true/false",
+          "meaning": "无损",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 5143,
+      "type": "MiniMaxClipBinDualSaver",
+      "title": null,
+      "role": "io",
+      "widgets": {
+        "project_name": "Default_Project",
+        "shot_tag": "Auto (自动编号)",
+        "prompt": "",
+        "parent_clip_id": "",
+        "save_video": false
+      },
+      "inputs": [
+        {
+          "name": "latent_一采",
+          "type": "LATENT",
+          "link": 2579
+        },
+        {
+          "name": "latent_二采",
+          "type": "LATENT",
+          "link": 2638
+        },
+        {
+          "name": "images_一采",
+          "type": "IMAGE",
+          "link": 2581
+        },
+        {
+          "name": "images_二采",
+          "type": "IMAGE",
+          "link": 2639
+        },
+        {
+          "name": "audio_一采",
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "audio_二采",
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "video_file_一采",
+          "type": "*",
+          "link": null
+        },
+        {
+          "name": "video_file_二采",
+          "type": "*",
+          "link": null
+        },
+        {
+          "name": "project_name",
+          "type": "STRING",
+          "link": 2069
+        },
+        {
+          "name": "parent_clip_id",
+          "type": "STRING",
+          "link": 2070
+        }
+      ],
+      "outputs": [
+        "clip_id",
+        "preview_image",
+        "project_name"
+      ],
+      "standard": {
+        "project_name": {
+          "type": "STRING",
+          "default": "Default_Project",
+          "range": "文本",
+          "meaning": "工程名",
+          "required": false
+        },
+        "shot_tag": {
+          "type": "COMBO",
+          "default": "Auto (自动编号)",
+          "range": "Auto/自定义",
+          "meaning": "镜头标签",
+          "required": false
+        },
+        "prompt": {
+          "type": "STRING",
+          "default": "",
+          "range": "文本",
+          "meaning": "提示词备注",
+          "required": false
+        },
+        "parent_clip_id": {
+          "type": "STRING",
+          "default": "",
+          "range": "文本",
+          "meaning": "父片段 ID",
+          "required": false
+        },
+        "save_video": {
+          "type": "BOOLEAN",
+          "default": false,
+          "range": "true/false",
+          "meaning": "是否保存视频",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 427,
+      "type": "easy cleanGpuUsed",
+      "title": null,
+      "role": "util",
+      "widgets": {},
+      "inputs": [
+        {
+          "name": "anything",
+          "type": "*",
+          "link": 1615
+        }
+      ],
+      "outputs": [
+        "output"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 428,
+      "type": "easy clearCacheAll",
+      "title": null,
+      "role": "util",
+      "widgets": {},
+      "inputs": [
+        {
+          "name": "anything",
+          "type": "*",
+          "link": 977
+        }
+      ],
+      "outputs": [
+        "output"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 426,
+      "type": "easy showAnything",
+      "title": null,
+      "role": "io",
+      "widgets": {
+        "text": "[\n    false,\n    [\n        \"D:\\\\AIUI\\\\ComfyUI-aki-v3\\\\ComfyUI-aki-v3\\\\ComfyUI\\\\temp\\\\视频驱动动作迁移\\\\1采_00004.png\",\n        \"D:\\\\AIUI\\\\ComfyUI-aki-v3\\\\ComfyUI-aki-v3\\\\ComfyUI\\\\temp\\\\视频驱动动作迁移\\\\1采_00004.mp4\",\n        \"D:\\\\AIUI\\\\ComfyUI-aki-v3\\\\ComfyUI-aki-v3\\\\ComfyUI\\\\temp\\\\视频驱动动作迁移\\\\1采_00004-audio.mp4\"\n    ]\n]"
+      },
+      "inputs": [
+        {
+          "name": "anything",
+          "type": "*",
+          "link": 1629
+        }
+      ],
+      "outputs": [
+        "output"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 227,
+      "type": "SetNode",
+      "title": "Set_clip",
+      "role": "util",
+      "widgets": {
+        "Constant": "clip"
+      },
+      "inputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "link": 1447
+        }
+      ],
+      "outputs": [
+        "CLIP"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 228,
+      "type": "SetNode",
+      "title": "Set_video vae",
+      "role": "util",
+      "widgets": {
+        "Constant": "video vae"
+      },
+      "inputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "link": 1448
+        }
+      ],
+      "outputs": [
+        "VAE"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 229,
+      "type": "SetNode",
+      "title": "Set_audio vae",
+      "role": "util",
+      "widgets": {
+        "Constant": "audio vae"
+      },
+      "inputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "link": 1449
+        }
+      ],
+      "outputs": [
+        "VAE"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 243,
+      "type": "SetNode",
+      "title": "Set_视频宽度",
+      "role": "util",
+      "widgets": {
+        "Constant": "视频宽度"
+      },
+      "inputs": [
+        {
+          "name": "INT",
+          "type": "INT",
+          "link": 538
+        }
+      ],
+      "outputs": [
+        "INT"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 244,
+      "type": "SetNode",
+      "title": "Set_视频高度",
+      "role": "util",
+      "widgets": {
+        "Constant": "视频高度"
+      },
+      "inputs": [
+        {
+          "name": "INT",
+          "type": "INT",
+          "link": 539
+        }
+      ],
+      "outputs": [
+        "INT"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 411,
+      "type": "SetNode",
+      "title": "Set_放大倍率",
+      "role": "util",
+      "widgets": {
+        "Constant": "放大倍率"
+      },
+      "inputs": [
+        {
+          "name": "FLOAT",
+          "type": "FLOAT",
+          "link": 953
+        }
+      ],
+      "outputs": [
+        "FLOAT"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 5355,
+      "type": "SetNode",
+      "title": "Set_一采步数",
+      "role": "util",
+      "widgets": {
+        "Constant": "一采步数"
+      },
+      "inputs": [
+        {
+          "name": "INT",
+          "type": "INT",
+          "link": 2536
+        }
+      ],
+      "outputs": [
+        "INT"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 386,
+      "type": "Reroute",
+      "title": null,
+      "role": "util",
+      "widgets": {},
+      "inputs": [
+        {
+          "name": "",
+          "type": "*",
+          "link": 2730
+        }
+      ],
+      "outputs": [
+        ""
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 256,
+      "type": "SetNode",
+      "title": "Set_提示词",
+      "role": "util",
+      "widgets": {
+        "Constant": "提示词"
+      },
+      "inputs": [
+        {
+          "name": "*",
+          "type": "*",
+          "link": 2703
+        }
+      ],
+      "outputs": [
+        "*"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 673,
+      "type": "Note",
+      "title": "H3 Context Taper Noise 设置",
+      "role": "util",
+      "widgets": {
+        "text": "参数\t默认\t说明\ncontext_latent\t—\t上一镜的 AV latent，直接来自 H3 Motion Context Load Latent。\ntail_frames\t\"22\"\t注入的像素帧数，会换算成潜变量步。只有 5 / 22 / 39 / 56 是整步数（→ 2 / 7 / 12 / 17 步）。建议与 H3 Motion Context 的 context_length 保持一致。\nalpha\t0.45\t窗口内平坦注入强度。\nalpha_end\t0.10\t最末帧强度，必须 ≤ alpha。\nramp_steps\t2\t末尾降噪的潜变量步数（一步约等于 4 像素帧，2 步约等于像素配方里的 3 帧斜坡）。\nseed\t0\t高斯噪声种子。\nnoise_scale\tmatch_latent_std\tmatch_latent_std 让高斯按被携带窗口自身的标准差缩放，alpha 的含义与 latent 尺度无关；unit 使用原始 N(0,1)。"
+      },
+      "inputs": [],
+      "outputs": [],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 738,
+      "type": "MarkdownNote",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "text": "\n\n### 显存参考（起始建议）\n\n| 显存 | 建议 tile 大小 | 建议 chunk_length |\n|------|----------------|-------------------|\n| 8 GB | 320–384       | 34–68            |\n| 12 GB| 384–512       | 51–102           |\n| 16 GB| 512–576       | 102–153          |\n| 24 GB| 576–768       | 136–170          |\n\n尽量选最大能塞进显存的 tile/chunk，避免太小导致重叠开销过大。跑第一个 tile 时看 ComfyUI 的显存占用，再微调。或者把tile交给auto，最省事。\n\ntile数值必须是32的倍数！\nchunk数值必须是17的倍数！\n\n**两者都能有效缓解显存压力**，但机制不同：\n\n- **时间分块（Temporal Split）**：把长视频切成多个时间段（chunk），一次只处理一小段时间。适合视频**时长长**的情况，峰值显存由“单段时长”决定。\n- **空间分块（Spatial Split）**：把画面切成多个瓦片（tile），一次只处理一小块画面。适合**分辨率高**的情况，峰值显存由“单瓦片大小”决定。\n\n两者可以单独使用，也可以同时用。\n\n### 时间分块更好、空间分块容易出错\n\n| 对比项 | 时间分块 | 空间分块 |\n|--------|----------|----------|\n| **显存缓解** | 对长视频效果好 | 对高分辨率效果好 |\n| **接缝问题** | 主要是时间接缝（帧与帧之间），相对好处理 | 空间接缝（画面左右/上下），更容易出现可见痕迹 |\n| **出错风险** | 较低（时间重叠 + 锚点机制比较成熟） | 较高（瓦片重叠、fade、seam_denoise 调不好容易有接缝、色差、物体切断） |\n| **运动场景** | 通常更稳 | 快速运动物体容易在接缝处被切断或出现鬼影 |\n| **调试难度** | 相对简单 | 需要仔细调 tile 大小、重叠比例、fade、seam_denoise |\n\n- 时间分块更“干净”，接缝处理相对成熟（有 frame-0 锚点、重叠交叉淡化等）。\n- 空间分块虽然能解决高分辨率显存问题，但对参数更敏感，接缝处理是主要痛点。\n\n### 推荐策略\n1. **优先尝试只开时间分块**\n2. 如果单时间块的分辨率仍然太高导致 OOM，再加空间分块。\n3. 如果显存非常紧张，再两者一起开。"
+      },
+      "inputs": [],
+      "outputs": [],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 239,
+      "type": "GetNode",
+      "title": "Get_clip",
+      "role": "util",
+      "widgets": {
+        "Constant": "clip"
+      },
+      "inputs": [],
+      "outputs": [
+        "CLIP"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 259,
+      "type": "GetNode",
+      "title": "Get_提示词",
+      "role": "util",
+      "widgets": {
+        "Constant": "提示词"
+      },
+      "inputs": [],
+      "outputs": [
+        "*"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 240,
+      "type": "GetNode",
+      "title": "Get_video vae",
+      "role": "util",
+      "widgets": {
+        "Constant": "video vae"
+      },
+      "inputs": [],
+      "outputs": [
+        "VAE"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 5140,
+      "type": "1e83e52d-c4d4-4071-be6f-2ad81c64b715",
+      "title": null,
+      "role": "uuid_pending",
+      "widgets": {
+        "boolean": true
+      },
+      "inputs": [
+        {
+          "name": "boolean",
+          "type": "BOOLEAN",
+          "link": 2067
+        },
+        {
+          "name": "on_true",
+          "type": "*",
+          "link": 2072
+        },
+        {
+          "name": "on_false",
+          "type": "*",
+          "link": 2068
+        }
+      ],
+      "outputs": [
+        "*"
+      ],
+      "standard": null,
+      "note": "布尔任意开关（yolain/ComfyUI-Easy-Use 的 If else）；输入 boolean/on_true*/on_false* → 输出 *【已定位包】"
+    },
+    {
+      "id": 248,
+      "type": "GetNode",
+      "title": "Get_视频宽度",
+      "role": "util",
+      "widgets": {
+        "Constant": "视频宽度"
+      },
+      "inputs": [],
+      "outputs": [
+        "INT"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 5356,
+      "type": "GetNode",
+      "title": "Get_一采步数",
+      "role": "util",
+      "widgets": {
+        "Constant": "一采步数"
+      },
+      "inputs": [],
+      "outputs": [
+        "INT"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 241,
+      "type": "GetNode",
+      "title": "Get_audio vae",
+      "role": "util",
+      "widgets": {
+        "Constant": "audio vae"
+      },
+      "inputs": [],
+      "outputs": [
+        "VAE"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 249,
+      "type": "GetNode",
+      "title": "Get_视频高度",
+      "role": "util",
+      "widgets": {
+        "Constant": "视频高度"
+      },
+      "inputs": [],
+      "outputs": [
+        "INT"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 5367,
+      "type": "b38cb4d8-b7ff-4df4-990e-876cf5cb5857",
+      "title": null,
+      "role": "uuid_pending",
+      "widgets": {
+        "noise_seed": 873375719539214,
+        "steps": 8,
+        "sampler_name": 0,
+        "scheduler": "er_sde",
+        "denoise": "simple"
+      },
+      "inputs": [
+        {
+          "name": "noise_seed",
+          "type": "INT",
+          "link": 2698
+        },
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 2744
+        },
+        {
+          "name": "conditioning",
+          "type": "CONDITIONING",
+          "link": 2573
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 2574
+        },
+        {
+          "name": "steps",
+          "type": "INT",
+          "link": 2575
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 2576
+        },
+        {
+          "name": "vae_1",
+          "type": "VAE",
+          "link": 2577
+        },
+        {
+          "name": "trim_frames",
+          "type": "INT",
+          "link": 2578
+        },
+        {
+          "name": "sampler_name",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "scheduler",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "denoise",
+          "type": "FLOAT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "output",
+        "IMAGE",
+        "images",
+        "audio"
+      ],
+      "standard": null,
+      "note": "【未解析·关键】双 VAE(视频+音频)的 H3 二采采样+解码节点：输入 model/conditioning/latent_image(一采 latent)/steps/vae(视频)/vae_1(音频)/trim_frames(来自 MotionContextClipStream)/sampler_name(er_sde)/scheduler(simple)/denoise，输出 LATENT(output→3D放大+ClipBin)/IMAGE/images(视频帧)/audio(音频)。功能=二采采样并同时解码视频+音频。候选：二采 H3 生态（yichengup/ComfyUI-YCNodes-MiniMax-H3 已用于 H3SigmaRefiner、Songssx/ComfyUI-MiniMaxH3-TimelineDirector、facok/comfyui-SelfLift 已用于 SelfLiftH3Sampler、rockerBOO/h3-latent-upscaler）或作者私有群分享节点。已排除 ClipStream/IAMCCS/RunningHub/Motion-Context/Motion-Director/Easy-Use/LBH-123-AI/KJNodes/Viggle/LongTake/xiaolibai-sys/官方包（均不含此单一节点）。需源环境确认真实 class_type。"
+    },
+    {
+      "id": 5380,
+      "type": "d9bc6b7f-16bd-40f7-8c53-729f89091fea",
+      "title": null,
+      "role": "uuid_pending",
+      "widgets": {
+        "noise_seed": 13796200085181,
+        "model_name": 0,
+        "device": "minimax_h3_latent_upscaler_3d_fp16.safetensors",
+        "precision": "cuda",
+        "sampler_name": "fp16"
+      },
+      "inputs": [
+        {
+          "name": "av_latent",
+          "type": "LATENT",
+          "link": 2627
+        },
+        {
+          "name": "noise_seed",
+          "type": "INT",
+          "link": 2699
+        },
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 2745
+        },
+        {
+          "name": "conditioning",
+          "type": "CONDITIONING",
+          "link": 2630
+        },
+        {
+          "name": "sigmas",
+          "type": "SIGMAS",
+          "link": 2631
+        },
+        {
+          "name": "temporal_split_param",
+          "type": "H3_TEMPORAL_PARAM",
+          "link": 2632
+        },
+        {
+          "name": "spatial_split_param",
+          "type": "H3_SPATIAL_PARAM",
+          "link": null
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 2634
+        },
+        {
+          "name": "vae_1",
+          "type": "VAE",
+          "link": 2635
+        },
+        {
+          "name": "trim_frames",
+          "type": "INT",
+          "link": 2636
+        },
+        {
+          "name": "model_name",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "device",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "precision",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "sampler_name",
+          "type": "COMBO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "latent",
+        "latent_1",
+        "IMAGE",
+        "images",
+        "audio"
+      ],
+      "standard": null,
+      "note": "3D latent 放大+双 VAE 解码（LBH-123-AI/Comfyui_Minimax_h3_latent_Upscaler 的 MinimaxH3LatentUpscaler3D）【已定位包】"
+    },
+    {
+      "id": 5150,
+      "type": "7a522690-eadb-45bc-b4b8-4fbf5b09e1a0",
+      "title": null,
+      "role": "uuid_pending",
+      "widgets": {
+        "boolean": true
+      },
+      "inputs": [
+        {
+          "name": "boolean",
+          "type": "BOOLEAN",
+          "link": 2073
+        },
+        {
+          "name": "on_true",
+          "type": "*",
+          "link": 2076
+        },
+        {
+          "name": "on_false",
+          "type": "*",
+          "link": 2074
+        }
+      ],
+      "outputs": [
+        "*"
+      ],
+      "standard": null,
+      "note": "布尔任意开关（yolain/ComfyUI-Easy-Use 的 If else）；输入 boolean/on_true*/on_false* → 输出 *【已定位包】"
+    },
+    {
+      "id": 5418,
+      "type": "MarkdownNote",
+      "title": "标题",
+      "role": "util",
+      "widgets": {
+        "text": "\n# 视频驱动动作迁移/人物替换工作流v1\n# 作者：b站——阿喵喵Az\n# B站主页：https://space.bilibili.com/36380937?spm_id_from=333.1007.0.0\n\n# 资源链接（模型/节点/工作流）\n\n# > 网盘链接：https://pan.quark.cn/s/ca4e2a25b3e4\n"
+      },
+      "inputs": [],
+      "outputs": [],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 5421,
+      "type": "CR Text Concatenate",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "separator": ""
+      },
+      "inputs": [
+        {
+          "name": "text1",
+          "type": "STRING",
+          "link": 2701
+        },
+        {
+          "name": "text2",
+          "type": "STRING",
+          "link": 2702
+        },
+        {
+          "name": "separator",
+          "type": "STRING",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "STRING",
+        "show_help"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 5408,
+      "type": "easy showAnything",
+      "title": "分段数",
+      "role": "io",
+      "widgets": {
+        "text": "3"
+      },
+      "inputs": [
+        {
+          "name": "anything",
+          "type": "*",
+          "link": 2692
+        }
+      ],
+      "outputs": [
+        "output"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 668,
+      "type": "VRGDG_VideoCompareSlider",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "slider_position": 0.74,
+        "before_label": "一采",
+        "after_label": "二采",
+        "show_labels": true,
+        "loop": true,
+        "muted": false
+      },
+      "inputs": [
+        {
+          "name": "before_video",
+          "type": "VHS_FILENAMES",
+          "link": 1620
+        },
+        {
+          "name": "after_video",
+          "type": "VHS_FILENAMES",
+          "link": 1621
+        },
+        {
+          "name": "slider_position",
+          "type": "FLOAT",
+          "link": null
+        },
+        {
+          "name": "before_label",
+          "type": "STRING",
+          "link": null
+        },
+        {
+          "name": "after_label",
+          "type": "STRING",
+          "link": null
+        },
+        {
+          "name": "show_labels",
+          "type": "BOOLEAN",
+          "link": null
+        },
+        {
+          "name": "loop",
+          "type": "BOOLEAN",
+          "link": null
+        },
+        {
+          "name": "muted",
+          "type": "BOOLEAN",
+          "link": null
+        },
+        {
+          "name": "before_images",
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "after_images",
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "before_selected",
+          "type": "STRING",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "before_video",
+        "after_video"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 5438,
+      "type": "PrimitiveStringMultiline",
+      "title": "提示词",
+      "role": "util",
+      "widgets": {
+        "value": "subject_definitions\n\n<Subject 1> is the target character defined by <Picture 1>: light green short hair, red eyes, elf ears, dark blue scholar hat with gold ornaments, black round glasses, blue and white dress with gold details, dark blue corset, white ruffled sleeves, black bow with blue gem, white gloves, dark tights, white and blue boots. Body proportions, physique, and posture are defined by <Picture 1> and must be replicated exactly: a young girl's slender figure and youthful proportions. Facial features, hairstyle silhouette, and outfit structure are all fixed. This subject is the sole character appearance reference for the entire target video; <Picture 1> is used only for identity and appearance, not as the target video's first frame.\n\n<Subject 2> is the target scene: an outdoor fountain plaza with a stone fountain, flowing water, flower pots, warm-toned paved ground, background architecture and statues, and shallow depth of field. The character stands in front of the fountain, fully integrated with the background, with correct physical spatial logic, consistent lighting and perspective, and no layer separation. Clean and minimal.\n\n<Subject 3> is the overall visual style defined by <Picture 1>: 2D render style.\n\n<Video 1> is the source video. Only its first 8 seconds are used as the sole reference for actions, poses, hand and foot movements, body turns, action rhythm, pauses, camera movement, cuts, zoom, composition, and perspective. All actions and camera work must be replicated without modification. The body proportions, physique, and posture of the original character in <Video 1> are not used as reference; only the motion is inherited.\n\nsummary\n\n[action transfer + reference generation] The target video is generated from the first 8 seconds of <Video 1> for action transfer. The original character in <Video 1> is replaced by <Subject 1>, the scene is set to <Subject 2>, and the overall visual style is unified to <Subject 3>. All actions, poses, and camera work from <Video 1> are 100% replicated without modification. The character's body proportions, physique, and posture are taken from <Subject 1> as a young girl, not from <Video 1>. The character's facial expression is set to a blushing and shy expression with a sense of embarrassment as a user requirement, which may deviate from the source video's original expression.\n\nretention_analysis\n\n<Subject 1> (appears throughout): fully_preserved — the character's full appearance, identity, outfit, body proportions, physique, and youthful girl posture as defined are preserved consistently across all shots. <Subject 2> (scene throughout): fully_preserved — the outdoor fountain plaza with a stone fountain, flowing water, flower pots, warm-toned paved ground, background architecture and statues, and shallow depth of field is maintained consistently across all shots. <Subject 3> (visual style throughout): fully_preserved — the 2D render style is applied consistently across the entire target video. <Video 1> (first 8 seconds, action and camera structure): fully_preserved — all actions, poses, hand/foot movements, body turns, rhythm, pauses, camera movement, cuts, zoom, and composition are replicated exactly; the original character's body proportions, physique, and posture are not inherited.\n\ndetailed_description\n\nThe target video is rendered in a 2D render style as defined by <Subject 3>. <Subject 1> appears as the sole character throughout. The scene is an outdoor fountain plaza with a stone fountain, flowing water, flower pots, warm-toned paved ground, background architecture and statues, and shallow depth of field as defined by <Subject 2>. The character stands in front of the fountain, fully integrated with the background, with correct physical spatial logic, consistent lighting and perspective, and no layer separation. The character's body proportions, physique, and posture are defined by <Picture 1> as a young girl, not inherited from <Video 1>. All actions, poses, and camera work are 100% inherited from the first 8 seconds of <Video 1> without any modification. The character's facial expression is set to a blushing and shy expression with a sense of embarrassment as a user requirement, which may deviate from the source video's original expression.\n\noverall_soundscape\n\nInherited from <Video 1>'s original ambient and physical sound layers.\n\nnon_diegetic_music\n\nInherited from <Video 1>'s original background music track."
+      },
+      "inputs": [
+        {
+          "name": "value",
+          "type": "STRING",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "STRING"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 5357,
+      "type": "FloatConstant",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "value": 0.999
+      },
+      "inputs": [
+        {
+          "name": "value",
+          "type": "FLOAT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "value"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 5455,
+      "type": "LoadImage",
+      "title": "参考图4",
+      "role": "loaders",
+      "widgets": {
+        "image": "Qwen_image_2.1_00015.png",
+        "upload": "image"
+      },
+      "inputs": [
+        {
+          "name": "image",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "upload",
+          "type": "IMAGEUPLOAD",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "IMAGE",
+        "MASK"
+      ],
+      "standard": {
+        "image": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/ 或输入",
+          "meaning": "图像文件",
+          "required": true
+        },
+        "upload": {
+          "type": "BOOLEAN",
+          "default": false,
+          "range": "true/false",
+          "meaning": "上传开关",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 5456,
+      "type": "LoadImage",
+      "title": "参考图5",
+      "role": "loaders",
+      "widgets": {
+        "image": "Qwen_image_2.1_00017.png",
+        "upload": "image"
+      },
+      "inputs": [
+        {
+          "name": "image",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "upload",
+          "type": "IMAGEUPLOAD",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "IMAGE",
+        "MASK"
+      ],
+      "standard": {
+        "image": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/ 或输入",
+          "meaning": "图像文件",
+          "required": true
+        },
+        "upload": {
+          "type": "BOOLEAN",
+          "default": false,
+          "range": "true/false",
+          "meaning": "上传开关",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 5401,
+      "type": "H3 Long Video Manager",
+      "title": null,
+      "role": "upscale_long",
+      "widgets": {
+        "fps": 24,
+        "segment_duration": 9,
+        "motion_context_frames": "22",
+        "segment_id": 2,
+        "scale_percent": 60,
+        "align_to_h3_grid": true,
+        "project_name": "loli换装双人",
+        "save_enabled": true,
+        "save_preview_mp4": true,
+        "final_align": "up",
+        "person_crop": false,
+        "person_crop_expand_percent": 0,
+        "save_dtype": "int8"
+      },
+      "inputs": [
+        {
+          "name": "video",
+          "type": "IMAGE",
+          "link": 2678
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "IMAGE",
+        "AUDIO",
+        "frame_count",
+        "total_segments"
+      ],
+      "standard": {
+        "fps": {
+          "type": "INT",
+          "default": 24,
+          "range": "常见 24/30",
+          "meaning": "帧率",
+          "required": false
+        },
+        "segment_duration": {
+          "type": "FLOAT",
+          "default": 9,
+          "range": ">0（秒）",
+          "meaning": "单段时长",
+          "required": false
+        },
+        "motion_context_frames": {
+          "type": "STRING",
+          "default": "22",
+          "range": "整数",
+          "meaning": "运动上下文帧",
+          "required": false
+        },
+        "segment_id": {
+          "type": "INT",
+          "default": 2,
+          "range": "≥1",
+          "meaning": "当前段编号",
+          "required": false
+        },
+        "scale_percent": {
+          "type": "INT",
+          "default": 60,
+          "range": "1~100",
+          "meaning": "缩放百分比",
+          "required": false
+        },
+        "align_to_h3_grid": {
+          "type": "BOOLEAN",
+          "default": true,
+          "range": "true/false",
+          "meaning": "对齐 H3 网格",
+          "required": false
+        },
+        "project_name": {
+          "type": "STRING",
+          "default": "",
+          "range": "文本",
+          "meaning": "工程名",
+          "required": false
+        },
+        "save_enabled": {
+          "type": "BOOLEAN",
+          "default": true,
+          "range": "true/false",
+          "meaning": "保存开关",
+          "required": false
+        },
+        "save_preview_mp4": {
+          "type": "BOOLEAN",
+          "default": true,
+          "range": "true/false",
+          "meaning": "预览 mp4",
+          "required": false
+        },
+        "final_align": {
+          "type": "COMBO",
+          "default": "up",
+          "range": "up/down",
+          "meaning": "最终对齐方向",
+          "required": false
+        },
+        "person_crop": {
+          "type": "BOOLEAN",
+          "default": false,
+          "range": "true/false",
+          "meaning": "人物裁切",
+          "required": false
+        },
+        "person_crop_expand_percent": {
+          "type": "INT",
+          "default": 0,
+          "range": "0~100",
+          "meaning": "裁切扩展",
+          "required": false
+        },
+        "save_dtype": {
+          "type": "COMBO",
+          "default": "int8",
+          "range": "int8/fp16/bf16",
+          "meaning": "保存精度",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 5396,
+      "type": "MarkdownNote",
+      "title": "复制到任意AI",
+      "role": "util",
+      "widgets": {
+        "text": "```markdown\n# 视频角色替换提示词生成模板\n\n你是一个视频提示词格式化工具。你的唯一任务是：根据用户提供的信息，输出一段固定结构的视频生成提示词（full-reference mode 格式）。\n\n你必须严格按照下面的流程执行。不要跳步，不要自由发挥。\n\n---\n\n## 流程\n\n### Step 1：收集必要信息\n\n用户必须提供以下内容，缺一不可：\n\n| 必填项 | 说明 |\n|--------|------|\n| 角色参考图 | 一张角色设计图（正面/多视图），必须以图片附件形式提供 |\n| 角色定义 | 角色的外观描述（由参考图识别 或 用户补充） |\n| 视频时长 | 目标视频的时长（秒） |\n| 场景定义 | 保留原视频场景 或 自定义新场景 |\n\n> 源视频即为 `<Video 1>`，由用户任务环境直接提供，不需要询问或记录文件名。\n\n如果用户没有提供某项，你必须**逐项询问**，一次只问一个问题，等用户回答后再问下一个。\n\n**询问顺序（按优先级）：**\n1. 如果缺少「角色参考图」→ 问：「请提供一张角色参考图（角色设计图/三视图/正面图均可）。」\n2. 如果缺少「角色定义」→ 问：「是否完全移植参考图角色的外观？是 → 我直接识别参考图内容作为角色定义。否 → 请告诉我需要补充或修改哪些部分（例如：发型发色、眼睛颜色、耳朵/头饰、服装配色和结构、鞋子、特殊标记等）。」\n   - 用户回答「是」→ 你自己识别参考图内容，写出角色定义\n   - 用户回答「否」并给出补充 → 用用户补充的描述作为角色定义\n3. 如果缺少「视频时长」→ 问：「目标视频时长是多少秒？（注意：单段视频不能超过 10 秒）」\n4. 如果缺少「场景定义」→ 问：「场景怎么处理？A）保留源视频中的原始场景  B）自定义新场景（请描述）」\n\n**时长校验规则：**\n- 如果用户给的时长 ≤ 10s：正常继续\n- 如果用户给的时长 > 10s：**必须警告**：「⚠️ 警告：目标时长超过 10 秒。单段视频生成上限为 10 秒，超出部分可能导致生成质量下降或动作截断。建议拆分为多段。是否继续？」\n  - 用户确认继续 → 正常输出，在 summary 中注明实际时长\n  - 用户要求调整 → 回到询问\n\n### Step 2：确认信息汇总\n\n所有信息收齐后，向用户展示确认摘要：\n\n```\n📋 信息确认：\n- 角色参考图：<Picture 1> ✓\n- 角色：<Subject 1> [角色定义的关键词摘要]\n- 时长：[Xs]\n- 场景：<Subject 2> [保留原视频场景 / 自定义：xxx]\n- 风格：<Subject 3> [用户指定 or 默认 \"2D render style\"]\n\n确认无误请回复「确认」，或告诉我需要修改的内容。\n```\n\n等待用户回复「确认」后再进入 Step 3。\n\n### Step 3：输出最终提示词\n\n严格按照下面的模板输出，把 [方括号] 内容替换为实际信息，其余文字一字不改：\n\n---\n\n**【输出模板开始】**\n\n```\n## subject_definitions\n\n<Subject 1> is the target character defined by <Picture 1>: [角色定义的英文描述，包含发型、发色、眼睛颜色、耳朵/头饰、服装细节、鞋子、特殊标记（如纹身）。最后一句固定为：Facial features, hairstyle silhouette, and outfit structure are all fixed. This subject is the sole character appearance reference for the entire target video; <Picture 1> is used only for identity and appearance, not as the target video's first frame.]\n\n<Subject 2> is [场景定义]。\n[如果是保留原视频场景，写：is the background environment inherited from <Video 1>: the indoor/outdoor space, environment lighting, color palette, and depth-of-field atmosphere. Only the background and lighting are carried over; the original character in <Video 1> is not retained.]\n[如果是自定义场景，写：is the target scene: [场景英文描述]. Clean and minimal.]\n\n<Subject 3> is the overall visual style defined by <Picture 1>: [风格英文描述，例如 \"2D UNITY render style\" 或 \"anime illustration style\"].\n\n<Video 1> is the source video. Only its first [时长] seconds are used as the sole reference for actions, poses, hand and foot movements, body turns, action rhythm, pauses, camera movement, cuts, zoom, composition, and perspective. All actions and camera work must be replicated without modification.\n\n## summary\n\n[action transfer + reference generation] The target video is generated from the first [时长] seconds of <Video 1> for action transfer. The original character in <Video 1> is replaced by <Subject 1>, [如果是自定义场景加：the scene is set to <Subject 2>,] and the overall visual style is unified to <Subject 3>. All actions, poses, and camera work from <Video 1> are 100% replicated without modification.\n\n## retention_analysis\n\n<Subject 1> (appears throughout): fully_preserved — the character's full appearance, identity, and outfit as defined are preserved consistently across all shots.\n<Subject 2> (scene throughout): fully_preserved — [场景描述] is maintained consistently across all shots.\n<Subject 3> (visual style throughout): fully_preserved — the [风格] style is applied consistently across the entire target video.\n<Video 1> (first [时长] seconds, action and camera structure): fully_preserved — all actions, poses, hand/foot movements, body turns, rhythm, pauses, camera movement, cuts, zoom, and composition are replicated exactly.\n\n## detailed_description\n\nThe target video is rendered in a [风格] style as defined by <Subject 3>. <Subject 1> appears as the sole character throughout. [如果是自定义场景：The scene is [场景英文描述] as defined by <Subject 2>. 如果是保留原场景：The background and lighting follow <Subject 2>.] All actions, poses, and camera work are 100% inherited from the first [时长] seconds of <Video 1> without any modification.\n\n## overall_soundscape\n\nInherited from <Video 1>'s original ambient and physical sound layers.\n\n## non_diegetic_music\n\nInherited from <Video 1>'s original background music track.\n```\n\n**【输出模板结束】**\n\n---\n\n## 规则（必须遵守）\n\n1. **不要描写镜头内容。** detailed_description 只写绑定规则，不写具体画面。\n2. **不要修改角色描述。** 用户给什么就写什么；如果用户选择\"完全移植参考图\"，则你识别图片内容写出描述。\n3. **不要添加额外的 subject。** 固定只有 Subject 1/2/3 和 Video 1。\n4. **不要输出模板说明文字。** 只输出最终提示词本身。\n5. **所有输出为英文**，除了与用户交互的确认对话用中文。\n6. **如果用户说\"其他不变\"或\"保持不变\"**，意味着沿用上一轮已确认的参数，只修改用户指定的那一项。\n7. **风格字段**：如果用户没有明确指定风格，默认写 \"2D render style\"。\n8. **没有参考图就不能输出提示词。** 必须先确认收到了图片附件。\n9. **源视频就是 `<Video 1>`。** 不需要记录文件名、不需要询问，它是任务环境的固有输入。\n\n---\n\n## 示例对话\n\n**示例 A：用户提供参考图，选择完全移植**\n\n**用户：**\n> [附图：IMG_7271.PNG]\n> 场景：淡粉色室内\n> 时长：7s\n\n**助手：**\n> 是否完全移植参考图角色的外观？是 → 我直接识别参考图内容作为角色定义。否 → 请告诉我需要补充或修改哪些部分。\n\n**用户：**\n> 是\n\n**助手：**\n> （识别图片后）\n> 📋 信息确认：\n> - 角色参考图：<Picture 1> ✓\n> - 角色：<Subject 1> 白发双马尾，兔耳帽饰，粉红眼睛，左眼下红心纹身，红黑白和风战斗服（棋盘格纹+扑克花色），白色荷叶边裙，黑色短靴\n> - 时长：7s ✓\n> - 场景：<Subject 2> 自定义 — 淡粉色室内\n> - 风格：<Subject 3> 2D render style（默认）\n>\n> 确认无误请回复「确认」，或告诉我需要修改的内容。\n\n**用户：**\n> 确认\n\n**助手：**\n> [输出 Step 3 的最终提示词]\n\n---\n\n**示例 B：用户缺少参考图**\n\n**用户：**\n> 角色：白发兔耳粉红眼，红黑白和风服\n> 时长：5s\n> 场景：保留原视频\n\n**助手：**\n> 请提供一张角色参考图（角色设计图/三视图/正面图均可）。\n\n**用户：**\n> [附图：character_sheet.png]\n\n**助手：**\n> 是否完全移植参考图角色的外观？是 → 我直接识别参考图内容作为角色定义。否 → 请告诉我需要补充或修改哪些部分。\n\n**用户：**\n> 否，其他不变，只是眼睛改成蓝色\n\n**助手：**\n> 📋 信息确认：\n> - 角色参考图：<Picture 1> ✓\n> - 角色：<Subject 1> 白发兔耳，**蓝色眼睛**（已修改），红黑白和风服（其余按参考图）\n> - 时长：5s ✓\n> - 场景：<Subject 2> 保留原视频场景\n> - 风格：<Subject 3> 2D render style（默认）\n>\n> 确认无误请回复「确认」，或告诉我需要修改的内容。\n\n**用户：**\n> 确认\n\n**助手：**\n> [输出 Step 3 的最终提示词]\n```"
+      },
+      "inputs": [],
+      "outputs": [],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 5148,
+      "type": "easy boolean",
+      "title": "二采手动强制关闭加噪 (True=始终跳过)",
+      "role": "util",
+      "widgets": {
+        "value": true
+      },
+      "inputs": [
+        {
+          "name": "value",
+          "type": "BOOLEAN",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "boolean"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 5454,
+      "type": "LoadImage",
+      "title": "参考图3",
+      "role": "loaders",
+      "widgets": {
+        "image": "Qwen_image_2.1_00050.png",
+        "upload": "image"
+      },
+      "inputs": [
+        {
+          "name": "image",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "upload",
+          "type": "IMAGEUPLOAD",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "IMAGE",
+        "MASK"
+      ],
+      "standard": {
+        "image": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/ 或输入",
+          "meaning": "图像文件",
+          "required": true
+        },
+        "upload": {
+          "type": "BOOLEAN",
+          "default": false,
+          "range": "true/false",
+          "meaning": "上传开关",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 140,
+      "type": "MarkdownNote",
+      "title": "Note: Size Settings Reference",
+      "role": "util",
+      "widgets": {
+        "text": "| megapixels | Aspect | Output (multiple=32) |\n|---|---|---|\n| 0.2 | 16:9 | 608 x 352 |\n| 0.3 | 16:9 | 736 x 416 |\n| 0.4 | 16:9 | 864 x 480 |\n| 0.5 | 16:9 | 960 x 544 |\n| 0.6 | 16:9 | 1056 x 608 |\n| 0.7 | 16:9 | 1152 x 640 |\n| 0.8 | 16:9 | 1216 x 672 |\n| 0.9 | 16:9 | 1280 x 736 |\n| 0.98 | 16:9 | 1344 x 768 |\n| 1.0 | 16:9 | 1376 x 768 |\n| 1.2 | 16:9 | 1504 x 832 |\n| 1.5 | 16:9 | 1664 x 928 |\n| 1.8 | 16:9 | 1824 x 1024 |\n| 2.0 | 16:9 | 1920 x 1088 |\n"
+      },
+      "inputs": [],
+      "outputs": [],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 5414,
+      "type": "Note",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "text": "Load Video的force rate一定是24.\nH3 Long Video Manager的fps也一定是24.\n上述内容不要乱动。\nH3 Long Video Manager的三个开关都是true.\n其他设置跟随宝宝巴士视频看。"
+      },
+      "inputs": [],
+      "outputs": [],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 5423,
+      "type": "Text Multiline",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "text": ""
+      },
+      "inputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "STRING"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 264,
+      "type": "LoadImage",
+      "title": "参考图1",
+      "role": "loaders",
+      "widgets": {
+        "image": "Qwen_image_2.1_00012.png",
+        "upload": "image"
+      },
+      "inputs": [
+        {
+          "name": "image",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "upload",
+          "type": "IMAGEUPLOAD",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "IMAGE",
+        "MASK"
+      ],
+      "standard": {
+        "image": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/ 或输入",
+          "meaning": "图像文件",
+          "required": true
+        },
+        "upload": {
+          "type": "BOOLEAN",
+          "default": false,
+          "range": "true/false",
+          "meaning": "上传开关",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 5354,
+      "type": "INTConstant",
+      "title": "一采步数（建议4-8）",
+      "role": "util",
+      "widgets": {
+        "value": 8
+      },
+      "inputs": [
+        {
+          "name": "value",
+          "type": "INT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "value"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 5352,
+      "type": "7c0dfa74-7583-4d61-98d6-cae724dc6517",
+      "title": null,
+      "role": "uuid_pending",
+      "widgets": {},
+      "inputs": [],
+      "outputs": [
+        "SIGMAS",
+        "SIGMAS_1",
+        "SIGMAS_2",
+        "SIGMAS_3"
+      ],
+      "standard": null,
+      "note": "【未解析·关键】无输入、输出 4 路 SIGMAS(SIGMAS/SIGMAS_1/SIGMAS_2/SIGMAS_3) 的调度生成器；本工作流仅 SIGMAS_2 经 Reroute#386 接入下游（二采采样 sigma 调度）。功能=为二采多阶段采样预生成 4 条 sigma 调度、择一使用。候选：二采/多阶段 H3 采样生态（yichengup/ComfyUI-YCNodes-MiniMax-H3、Songssx/ComfyUI-MiniMaxH3-TimelineDirector、facok/comfyui-SelfLift、rockerBOO/h3-latent-upscaler）或 sigma 调度工具包；Viggle/FastH3 均指向 4 点 sigma 约定。已排除 RES4LYF/Sigmas Split、sigmas_tools、内置 SplitSigmas、MiniMaxH3ShiftSigmas（均非「无输入+4路」）。需源环境确认真实 class_type。"
+    },
+    {
+      "id": 115,
+      "type": "ResolutionSelector",
+      "title": "分辨率选择器（像素）",
+      "role": "util",
+      "widgets": {
+        "aspect_ratio": "3:4 (Portrait Standard)",
+        "megapixels": 0.6,
+        "multiple": 32
+      },
+      "inputs": [
+        {
+          "name": "aspect_ratio",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "megapixels",
+          "type": "FLOAT",
+          "link": null
+        },
+        {
+          "name": "multiple",
+          "type": "INT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "width",
+        "height"
+      ],
+      "standard": {
+        "aspect_ratio": {
+          "type": "COMBO",
+          "default": "16:9 (Widescreen)",
+          "range": "多种预设",
+          "meaning": "宽高比",
+          "required": true
+        },
+        "megapixels": {
+          "type": "FLOAT",
+          "default": 0.4,
+          "range": "0.1~2",
+          "meaning": "百万像素（决定总像素）",
+          "required": true
+        },
+        "multiple": {
+          "type": "INT",
+          "default": 32,
+          "range": "8/16/32",
+          "meaning": "对齐倍数",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 335,
+      "type": "PrimitiveFloat",
+      "title": "二采放大倍率",
+      "role": "util",
+      "widgets": {
+        "value": 1.5
+      },
+      "inputs": [
+        {
+          "name": "value",
+          "type": "FLOAT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "FLOAT"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 581,
+      "type": "UNETLoader",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "unet_name": "H3\\DasiwaMinimaxH3_dasiwaHybridV2_int8.safetensors",
+        "weight_dtype": "default"
+      },
+      "inputs": [
+        {
+          "name": "unet_name",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "weight_dtype",
+          "type": "COMBO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "MODEL"
+      ],
+      "standard": {
+        "unet_name": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/diffusion_models/ 下 .safetensors",
+          "meaning": "模型文件名；如 minimax_h3_ref2va_pruned_fp8_scaled.safetensors",
+          "required": true
+        },
+        "weight_dtype": {
+          "type": "COMBO",
+          "default": "default",
+          "range": "default / fp8_e4m3fn / fp8_e5m2 / fp16 / bf16",
+          "meaning": "加载精度；默认由文件决定，低显存可选 fp8",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 582,
+      "type": "CLIPLoader",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "clip_name": "H3\\qwen3vl_32b_minimax_h3_int8_convrot.safetensors",
+        "type": "minimax",
+        "device": "default"
+      },
+      "inputs": [
+        {
+          "name": "clip_name",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "type",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "device",
+          "type": "COMBO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "CLIP"
+      ],
+      "standard": {
+        "clip_name": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/text_encoders/ 下 .safetensors",
+          "meaning": "如 qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "required": true
+        },
+        "type": {
+          "type": "COMBO",
+          "default": "minimax",
+          "range": "minimax / ...",
+          "meaning": "编码器类型；H3 须选 minimax",
+          "required": true
+        },
+        "device": {
+          "type": "COMBO",
+          "default": "default",
+          "range": "default / cpu",
+          "meaning": "加载设备",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 583,
+      "type": "VAELoader",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "vae_name": "H3\\minimax_h3_video_vae_int8_convrot.safetensors"
+      },
+      "inputs": [
+        {
+          "name": "vae_name",
+          "type": "COMBO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "VAE"
+      ],
+      "standard": {
+        "vae_name": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/vae/ 下 .safetensors",
+          "meaning": "如 minimax_h3_video_vae_fp16.safetensors（视频）/ minimax_h3_audio_vae_fp32（音频，须 fp32）",
+          "required": true
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 5435,
+      "type": "LoraLoaderModelOnly",
+      "title": "动作优化（一采）",
+      "role": "loaders",
+      "widgets": {
+        "lora_name": "H3\\H3_Combat_V2.safetensors",
+        "strength_model": 1
+      },
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 2732
+        },
+        {
+          "name": "lora_name",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "strength_model",
+          "type": "FLOAT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "MODEL"
+      ],
+      "standard": {
+        "lora_name": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/loras/ 下 .safetensors",
+          "meaning": "LoRA 文件名",
+          "required": true
+        },
+        "strength_model": {
+          "type": "FLOAT",
+          "default": 1.0,
+          "range": "-10 ~ 10",
+          "meaning": "模型侧强度，1=原强度",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 143,
+      "type": "MiniMaxH3MemoryEfficientSageAttentionPatch",
+      "title": null,
+      "role": "perf",
+      "widgets": {},
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 1653
+        }
+      ],
+      "outputs": [
+        "model"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 5402,
+      "type": "VHS_LoadVideo",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "video": "双人Loli参考视频.mp4",
+        "force_rate": 24,
+        "custom_width": 0,
+        "custom_height": 0,
+        "frame_load_cap": 0,
+        "skip_first_frames": 0,
+        "select_every_nth": 1,
+        "format": "AnimateDiff",
+        "choose video to upload": null,
+        "videopreview": {
+          "hidden": false,
+          "paused": false,
+          "params": {
+            "filename": "双人Loli参考视频.mp4",
+            "type": "input",
+            "format": "video/mp4",
+            "force_rate": 24,
+            "custom_width": 0,
+            "custom_height": 0,
+            "frame_load_cap": 0,
+            "skip_first_frames": 0,
+            "select_every_nth": 1
+          }
+        }
+      },
+      "inputs": [
+        {
+          "name": "meta_batch",
+          "type": "VHS_BatchManager",
+          "link": null
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": null
+        },
+        {
+          "name": "video",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "force_rate",
+          "type": "FLOAT",
+          "link": null
+        },
+        {
+          "name": "custom_width",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "custom_height",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "frame_load_cap",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "skip_first_frames",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "select_every_nth",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "format",
+          "type": "COMBO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "IMAGE",
+        "frame_count",
+        "audio",
+        "video_info"
+      ],
+      "standard": {
+        "video": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "文件",
+          "meaning": "视频文件",
+          "required": true
+        },
+        "force_rate": {
+          "type": "FLOAT",
+          "default": 0,
+          "range": "0=原速",
+          "meaning": "强制帧率",
+          "required": false
+        },
+        "frame_load_cap": {
+          "type": "INT",
+          "default": 0,
+          "range": "0=不限制",
+          "meaning": "帧数上限",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 5403,
+      "type": "Fast Groups Bypasser (rgthree)",
+      "title": "切换工作",
+      "role": "util",
+      "widgets": {},
+      "inputs": [],
+      "outputs": [
+        "OPT_CONNECTION"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 5424,
+      "type": "LoadImage",
+      "title": "参考图2",
+      "role": "loaders",
+      "widgets": {
+        "image": "Qwen_image_2.1_00009.png",
+        "upload": "image"
+      },
+      "inputs": [
+        {
+          "name": "image",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "upload",
+          "type": "IMAGEUPLOAD",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "IMAGE",
+        "MASK"
+      ],
+      "standard": {
+        "image": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/ 或输入",
+          "meaning": "图像文件",
+          "required": true
+        },
+        "upload": {
+          "type": "BOOLEAN",
+          "default": false,
+          "range": "true/false",
+          "meaning": "上传开关",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 5395,
+      "type": "H3 Segment Picker",
+      "title": null,
+      "role": "upscale_long",
+      "widgets": {
+        "project_name": "loli换装双人",
+        "segment_id": 2
+      },
+      "inputs": [],
+      "outputs": [
+        "IMAGE",
+        "AUDIO",
+        "frame_count",
+        "segment_id"
+      ],
+      "standard": {
+        "project_name": {
+          "type": "STRING",
+          "default": "",
+          "range": "文本",
+          "meaning": "工程名",
+          "required": true
+        },
+        "segment_id": {
+          "type": "INT",
+          "default": 2,
+          "range": "≥1",
+          "meaning": "段编号",
+          "required": true
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 5142,
+      "type": "MiniMaxClipBinDualPicker",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "project_name": "2",
+        "mode": "Strict Chaining (严格接续，空库报错)",
+        "clip_selection": "clip_20261006_010319_457786_Shot1",
+        "custom_clip_path": ""
+      },
+      "inputs": [],
+      "outputs": [
+        "latent_一采",
+        "latent_二采",
+        "first_frame",
+        "tail_frame",
+        "clip_id",
+        "project_name",
+        "prompt"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 682,
+      "type": "MiniMaxH3SigmaShift",
+      "title": null,
+      "role": "sched_noise",
+      "widgets": {
+        "shift_video": 12,
+        "shift_audio": 3
+      },
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 1652
+        },
+        {
+          "name": "shift_video",
+          "type": "FLOAT",
+          "link": null
+        },
+        {
+          "name": "shift_audio",
+          "type": "FLOAT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "MODEL"
+      ],
+      "standard": {
+        "shift_video": {
+          "type": "FLOAT",
+          "default": 12,
+          "range": "H3 官方默认 12",
+          "meaning": "视频流 shift",
+          "required": false
+        },
+        "shift_audio": {
+          "type": "FLOAT",
+          "default": 3,
+          "range": "H3 官方默认 3",
+          "meaning": "音频流 shift",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 5400,
+      "type": "MarkdownNote",
+      "title": "低显存可开设置",
+      "role": "util",
+      "widgets": {
+        "text": "# MiniMax H3 KJNodes 显存优化节点配置表\n\n\n| 显存容量 | head_chunks | chunks | seq_threshold | 说明 |\n| ---- | ---- | ---- | ---- | ---- |\n| 8GB | 6 | 3 | 2048 | 低显存极限方案，显存占用最低，推理速度较慢 |\n| 12GB | 4 | 2 | 4096 | 通用稳妥方案，兼顾显存与速度 |\n| 16GB | 4 | 2 | 4096 | 绝大多数场景推荐，长视频稳定 |\n| 24GB+ | 2 | 1 | 4096 | 大显存全速方案，前馈不分块，速度最快 |\n\n## 参数说明\n- head_chunks：注意力头分块数。建议上限≤8，过高易出现画面伪影。\n- chunks：前馈层分块数。1=关闭分块。爆显存时上调。\n- seq_threshold：序列token阈值。超过该值才启用分块；长视频可改为2048强制开启。\n\n## 故障排查\n- CUDA out of memory：优先增大 head_chunks，其次增大 chunks\n- 画面噪点/崩坏：减小分块数值（降低head_chunks、chunks）\n"
+      },
+      "inputs": [],
+      "outputs": [],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 418,
+      "type": "ReservedVRAMSetter",
+      "title": null,
+      "role": "perf",
+      "widgets": {
+        "reserved": 0.8,
+        "mode": "manual",
+        "seed": 317446889702894,
+        "control_after_generate": "randomize",
+        "auto_max_reserved": 0,
+        "clean_gpu_before": true
+      },
+      "inputs": [
+        {
+          "name": "anything",
+          "type": "*",
+          "link": 2731
+        },
+        {
+          "name": "reserved",
+          "type": "FLOAT",
+          "link": null
+        },
+        {
+          "name": "mode",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "auto_max_reserved",
+          "type": "FLOAT",
+          "link": null
+        },
+        {
+          "name": "clean_gpu_before",
+          "type": "BOOLEAN",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "output",
+        "SEED",
+        "Reserved(GB)"
+      ],
+      "standard": {
+        "vram_gb": {
+          "type": "FLOAT",
+          "default": 2,
+          "range": ">0（GB）",
+          "meaning": "预留显存 GB",
+          "required": true
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 222,
+      "type": "SetNode",
+      "title": "Set_model",
+      "role": "util",
+      "widgets": {
+        "Constant": "model"
+      },
+      "inputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "link": 2733
+        }
+      ],
+      "outputs": [
+        "MODEL"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 5460,
+      "type": "SetNode",
+      "title": "Set_model2",
+      "role": "util",
+      "widgets": {
+        "Constant": "model2"
+      },
+      "inputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "link": 2736
+        }
+      ],
+      "outputs": [
+        "MODEL"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 5399,
+      "type": "MiniMaxChunkFeedForward",
+      "title": null,
+      "role": "sched_noise",
+      "widgets": {
+        "chunks": 2,
+        "seq_threshold": 4096
+      },
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 2674
+        },
+        {
+          "name": "chunks",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "seq_threshold",
+          "type": "INT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "model"
+      ],
+      "standard": {
+        "chunks": {
+          "type": "INT",
+          "default": 2,
+          "range": "≥1",
+          "meaning": "分块数",
+          "required": false
+        },
+        "seq_threshold": {
+          "type": "INT",
+          "default": 4096,
+          "range": "≥1",
+          "meaning": "序列阈值",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 235,
+      "type": "GetNode",
+      "title": "Get_model",
+      "role": "util",
+      "widgets": {
+        "Constant": "model"
+      },
+      "inputs": [],
+      "outputs": [
+        "MODEL"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 261,
+      "type": "MiniMaxH3ReferenceToVideo",
+      "title": null,
+      "role": "h3_main",
+      "widgets": {
+        "prompt": "",
+        "width": 1344,
+        "height": 768,
+        "length": 124,
+        "ref_image_size": "max"
+      },
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 566
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 567
+        },
+        {
+          "name": "audio_vae",
+          "type": "VAE",
+          "link": 568
+        },
+        {
+          "name": "ref_images.ref_image_0",
+          "type": "IMAGE",
+          "link": 2672
+        },
+        {
+          "name": "ref_images.ref_image_1",
+          "type": "IMAGE",
+          "link": 2704
+        },
+        {
+          "name": "ref_images.ref_image_2",
+          "type": "IMAGE",
+          "link": 2725
+        },
+        {
+          "name": "ref_images.ref_image_3",
+          "type": "IMAGE",
+          "link": 2726
+        },
+        {
+          "name": "ref_images.ref_image_4",
+          "type": "IMAGE",
+          "link": 2727
+        },
+        {
+          "name": "ref_images.ref_image_5",
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "ref_videos.ref_video_0",
+          "type": "IMAGE",
+          "link": 2688
+        },
+        {
+          "name": "ref_videos.ref_video_1",
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "ref_video_audios.ref_video_audio_0",
+          "type": "AUDIO",
+          "link": 2689
+        },
+        {
+          "name": "ref_video_audios.ref_video_audio_1",
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "ref_audios.ref_audio_0",
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "link": 569
+        },
+        {
+          "name": "width",
+          "type": "INT",
+          "link": 570
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "link": 571
+        },
+        {
+          "name": "length",
+          "type": "INT",
+          "link": 2670
+        },
+        {
+          "name": "ref_image_size",
+          "type": "COMBO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "positive",
+        "LATENT"
+      ],
+      "standard": {
+        "prompt": {
+          "type": "STRING",
+          "default": "",
+          "range": "文本",
+          "meaning": "正向提示词",
+          "required": true
+        },
+        "width": {
+          "type": "INT",
+          "default": 1344,
+          "range": "32 倍数",
+          "meaning": "宽",
+          "required": true
+        },
+        "height": {
+          "type": "INT",
+          "default": 768,
+          "range": "32 倍数",
+          "meaning": "高",
+          "required": true
+        },
+        "length": {
+          "type": "INT",
+          "default": 124,
+          "range": "帧数（H3 对齐）",
+          "meaning": "帧数",
+          "required": true
+        },
+        "ref_image_size": {
+          "type": "COMBO",
+          "default": "match",
+          "range": "match/256/512",
+          "meaning": "参考图尺寸",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 5461,
+      "type": "GetNode",
+      "title": "Get_model2",
+      "role": "util",
+      "widgets": {
+        "Constant": "model2"
+      },
+      "inputs": [],
+      "outputs": [
+        "MODEL"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 5420,
+      "type": "Seed (rgthree)",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "seed": -1,
+        "🎲 Randomize Each Time": "",
+        "🎲 New Fixed Random": "",
+        "USE_LAST_SEED": "okay"
+      },
+      "inputs": [],
+      "outputs": [
+        "SEED"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 5458,
+      "type": "LoraLoaderModelOnly",
+      "title": "动作优化（二采）",
+      "role": "loaders",
+      "widgets": {
+        "lora_name": "H3\\H3_Combat_V2.safetensors",
+        "strength_model": 1
+      },
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 2734
+        },
+        {
+          "name": "lora_name",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "strength_model",
+          "type": "FLOAT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "MODEL"
+      ],
+      "standard": {
+        "lora_name": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/loras/ 下 .safetensors",
+          "meaning": "LoRA 文件名",
+          "required": true
+        },
+        "strength_model": {
+          "type": "FLOAT",
+          "default": 1.0,
+          "range": "-10 ~ 10",
+          "meaning": "模型侧强度，1=原强度",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 138,
+      "type": "PrimitiveStringMultiline",
+      "title": "提示词",
+      "role": "util",
+      "widgets": {
+        "value": "subject_definitions:\n<Subject 1> is the silver-purple short-haired girl in <Picture 1>, with pink eyes, a large dark-blue beret decorated with a rose ornament and a small blue gem, a gold paper talisman hanging over her forehead, and a deep-purple halter-neck one-piece swimsuit whose details are a green ribbon and white lace trim at the chest, gold diamond fittings with blue-green diamond pendants at the hips, white lace at the leg openings, and a blue-white gradient semi-transparent waist drape tied behind her back.\n<Subject 2> is the white-haired girl in <Picture 2>, with red-orange eyes, a white and red-striped halo above her head, fin-shaped white ear pieces, twin side buns tied with white fluff, and a blue-and-white halter-neck one-piece swimsuit whose details are a green ribbon and white lace trim at the chest, gold diamond fittings with blue-green diamond pendants at the hips, white lace at the leg openings, and a blue-and-white lower body panel.\n<Subject 3> is the plain white studio environment seen in <Picture 3>, consisting of a seamless white backdrop, a white tile grid floor, soft shadow blobs under both figures, a few dry fallen leaves on the floor, and a thin vertical divider line splitting the frame at the center.\n<Subject 4> is the purple cat-ear and tail set generated onto <Subject 1>: fluffy purple cat ears matched to her purple swimsuit, and a single cream-white cat tail in a slim rounded rod shape that curves upward and hooks inward at the rounded tip, its base tied with a purple ribbon bow.\n<Subject 5> is the blue cat-ear and tail set generated onto <Subject 2>: fluffy blue cat ears matched to her blue swimsuit, and a single cream-white cat tail in a slim rounded rod shape that curves upward and hooks inward at the rounded tip, its base tied with a blue ribbon bow.\n<Subject 6> is the mouse cursor seen in <Picture 3>, a small white arrow pointer that performs exactly two head-click actions and stays idle at all other times.\n<Subject 7> is the opened corrugated cardboard box that appears at the end, with warm tan board, visible inner walls and folded-open flaps. Its front panel carries the unchanged line-art delivery doodle from <Picture 4> on the right side, drawn in single-color monochrome linework, and to the left of that doodle the same panel carries the light-green brand text “良良速递喵”, which is new in this segment.\n<Video 1> is the previous segment this video continues from, ending with <Subject 2> having just finished changing into her blue-and-white swimsuit while <Subject 1> watches in her purple swimsuit.\n<Picture 1> is the appearance reference for <Subject 1>, defining her exact face, hair, beret, forehead talisman and deep-purple swimsuit with its gradient waist drape.\n<Picture 2> is the appearance reference for <Subject 2>, defining her exact face, halo, ear fins, twin buns and blue-and-white swimsuit.\n<Picture 3> is the storyboard and motion-logic reference for [Shot 1], defining the fixed center-split two-character composition, the left-right identity order, the continuous smile, and the ear-then-tail generation order. It does not define the girls' appearance or their clothing.\n<Picture 4> is the reference for the box's front-panel artwork, showing the monochrome line-art girl doodle that must stay unchanged and uncolored on the box panel.\n\nsummary:\n[reference generation + keyframe completion] The target video continues directly from the end of <Video 1>, where <Subject 2> has just finished changing into her blue-and-white swimsuit. Standing side by side in <Subject 3>, <Subject 1> and <Subject 2> smile continuously for the full 8.7 seconds: <Subject 2> spins once in place, the two turn to face each other and hold hands, then return to face the camera. The mouse cursor <Subject 6> clicks above <Subject 1>'s head at 00:03.300 to generate her purple cat ears from <Subject 4>, then above <Subject 2>'s head at 00:04.000 to generate her blue cat ears from <Subject 5>. No tail exists on either girl anywhere before 00:05.500. They then turn inward into mirrored side profiles, push their hips backward into a light crouch and each pat her own bottom once, and only at the instant those pats land, at 00:05.500, two cream-white cat tails in a slim curved rod shape appear simultaneously behind their hips, each tied with a ribbon bow in its owner's swimsuit color. They then straighten, face the camera, jump upward as the background fades into soft pink with floating particles, and an opened cardboard box <Subject 7> appears beneath them with the light-green text “良良速递喵” printed on its front panel to the left of the unchanged line-art doodle, catching both as they drop inside. Throughout the entire 8.7 seconds both girls keep exactly the same swimsuits they wear in the opening frame, with no costume change at any point, including at the cat-ear and cat-tail generation moments.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1] throughout): fully_preserved - her silver-purple short hair, pink eyes, dark-blue beret, forehead talisman and deep-purple swimsuit with white lace trim and blue-white gradient waist drape stay identical in every frame; no costume change occurs at the cat-ear or cat-tail moments, and her side-facing crouch with the hips pushed back leaves the costume untouched.\n<Subject 2> (appears in [Shot 1] throughout): fully_preserved - her white hair, red-orange eyes, halo, ear fins, twin buns and blue-and-white swimsuit stay identical in every frame; no costume change occurs at the cat-ear or cat-tail moments, and her side-facing crouch with the hips pushed back leaves the costume untouched.\n<Subject 3> (appears in [Shot 1]): partially_preserved - the white backdrop and tile grid floor are kept for most of the video, then intentionally graded into a soft pink background with drifting particles in the final seconds.\n<Subject 4> (appears from 00:03.300 onward): fully_preserved - the purple ears match <Subject 1>'s swimsuit color, and her cream-white tail keeps the slim curved rod shape with a hooked tip and a purple ribbon bow at its base.\n<Subject 5> (appears from 00:04.000 onward): fully_preserved - the blue ears match <Subject 2>'s swimsuit color, and her cream-white tail keeps the slim curved rod shape with a hooked tip and a blue ribbon bow at its base.\n<Subject 6> (appears in [Shot 1]): fully_preserved - the same small white arrow cursor performs exactly two head clicks and stays idle at all other times.\n<Subject 7> (appears from 00:07.100 onward): partially_preserved - the opened tan corrugated box and its front panel are retained, the existing line-art doodle stays unchanged in place on the right, and the light-green text “良良速递喵” is newly added to the left of that doodle.\n<Picture 1> (used through [Shot 1]): fully_preserved - it supplies <Subject 1>'s complete appearance and costume.\n<Picture 2> (used through [Shot 1]): fully_preserved - it supplies <Subject 2>'s complete appearance and costume.\n<Picture 3> ([Shot 1] composition and beat anchor): fully_preserved - the center-split layout, left-right identity order, smile continuity and generation order are followed, while the clothing states shown in it are ignored.\n<Picture 4> (box front panel artwork): fully_preserved - the monochrome line-art doodle is copied onto the box panel unchanged, with no color added and no change to its drawing or position.\n<Video 1> (continuation source): partially_preserved - the video resumes from its final story state with the swimsuits retained, while all ear and tail growth is restaged for this segment.\n\ndetailed_description:\nThe target video is a clean cel-shaded anime 2D animation in a bright virtual-studio setting, presented as one continuous fixed frontal medium-full shot with no cuts and no camera movement, both girls kept fully inside the frame with a thin vertical divider line at the center.\nThe segment uses a locked costume continuity rule: both girls wear exactly the same one-piece swimsuits from the first frame to the last, with no clothing swap, no color reassignment, no added over-layer and no removed over-layer at any point in the video.\n[Shot 1] The shot begins as a direct continuation of <Video 1>. <Subject 1>, the silver-purple short-haired girl from <Picture 1> wearing her deep-purple halter-neck swimsuit, beret and forehead talisman, stands on the left half of the frame with her arms at her sides and a soft closed-mouth smile; her swimsuit keeps its white lace trim, green chest ribbon, gold hip fittings and blue-white gradient waist drape exactly as referenced. <Subject 2>, the white-haired girl from <Picture 2> wearing her blue-and-white swimsuit with halo, ear fins and twin buns, stands on the right half, just finishing the change begun in <Video 1>: she smooths the swimsuit hem once, then stands still, also smiling. Both remain inside <Subject 3>, the white seamless backdrop and tile grid floor with their soft shadows and scattered dry leaves.\nAt 00:00.400 <Subject 2> turns a full 360 degrees in place, her hair and lace hem swinging with the motion, and lands facing front again at 00:01.500 while <Subject 1> watches her and smiles. The two girls then turn toward each other, take both hands and gaze at each other face to face while swaying gently, still smiling, their swimsuits unchanged by the motion. At 00:02.800 they release hands, return to face the camera and stand upright.\nAt 00:03.300 the mouse cursor <Subject 6> glides to a stop just above <Subject 1>'s head and clicks once. A small sparkle burst appears at the click point, and a pair of fluffy purple cat ears matching her swimsuit color grows onto her head beside the beret, which stays in place. This action only adds ears: her swimsuit, its neckline, its white lace trim, its green chest ribbon, its gold hip fittings and its blue-white gradient waist drape remain exactly as they were in the opening frame, and her smile never changes. At 00:04.000 the cursor moves to just above <Subject 2>'s head and clicks once. A second sparkle burst appears and a pair of fluffy blue cat ears matching her swimsuit color grows above her head, tucked inside her ear fins without covering the halo. This action only adds ears as well: her blue-and-white swimsuit, its white lace trim, its green chest ribbon and its gold hip fittings remain exactly as in the opening frame.\nAt 00:04.500 they hold their smiles with their eyes open and pause for about half a second, ears twitching slightly, while the cursor stays idle. They then turn inward to face each other in mirrored side profiles: <Subject 1> on the left rotates so her body points toward the right, and <Subject 2> on the right rotates so her body points toward the left, leaving them chest to chest and eye to eye across the center divider line in a clear side view, with their arms lowered and their hands resting low at hip height. Neither girl faces the camera during this pose.\nAt 00:05.500, still facing each other, they push their hips further backward, away from each other and toward the camera side, so that both bottoms protrude and their backs curve into a shallow arch, and they sink into a light crouch with their knees slightly bent and both feet planted on the tiled floor. Keeping their hands low and behind their bodies, each girl reaches back with one hand and pats her own bottom once, and the two pats land at the same time; no hand is raised toward the head or face, and both keep their eyes open and smiling at each other. Only at the exact instant both pats land do two cream-white cat tails appear, one behind each girl, at the same moment. Each tail is a single slim rounded rod that curves upward and hooks inward at its rounded tip, matching in shape, length and volume; a purple ribbon bow is tied at <Subject 1>'s tail base and a blue ribbon bow at <Subject 2>'s tail base. Neither tail is fluffy or bushy, and both are smooth and compact with a clean silhouette. The tails extend backward and slightly upward from the raised hip line instead of hanging down along the legs, and both girls keep smiling as the tails settle.\nBefore 00:05.500 neither girl has any tail whatsoever: no tail is visible behind either figure at any earlier moment, and the area behind their waists and thighs is empty white background until that instant.\nAfter the tails have appeared, both girls straighten up, turn their bodies back to the front, face the camera again, bend their knees and jump upward together at 00:06.500, bodies lifting off the floor with their legs suspended and toes pointed down. From 00:07.100 the backdrop fades smoothly from white into soft pink while gently drifting light particles appear, and an opened corrugated cardboard box <Subject 7> rises into view below them. Its front panel shows the line-art delivery doodle from <Picture 4> unchanged in single-color monochrome on the right side, and to the left of that doodle the light-green text “良良速递喵” is printed clearly on the same panel and stays fully legible. Both girls drop into the box at 00:08.200 and finish seated inside with their upper bodies above the open top, hands raised and still smiling, their swimsuits identical to the opening frame, with the light-green “良良速递喵” text and the unchanged doodle both visible on the box front as the video ends at 00:08.700.\n\noverall_soundscape:\nClean studio room tone throughout, with light fabric movement during the spin and the hand-holding, soft footstep shifts as the girls turn into profile, a soft click and a brief sparkle chime at each cat-ear generation, a light double pat sound landing at the same moment at 00:05.500 followed immediately by a faint pop as both tails appear, a light jump takeoff and a soft landing thump, and a hollow cardboard resonance as the girls settle inside the box.\n\nnon_diegetic_music:\nN/A"
+      },
+      "inputs": [
+        {
+          "name": "value",
+          "type": "STRING",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "STRING"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 567,
+      "type": "ModelPreviewOverrideKJ",
+      "title": "一采",
+      "role": "perf",
+      "widgets": {
+        "max_resolution": 480,
+        "jpeg_quality": 80,
+        "suppress_default_preview": true,
+        "preview_frames": 999,
+        "preview_fps": 12,
+        "tiny_vae": "taeh3.safetensors",
+        "preview": ""
+      },
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 2739
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": null
+        },
+        {
+          "name": "max_resolution",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "jpeg_quality",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "suppress_default_preview",
+          "type": "BOOLEAN",
+          "link": null
+        },
+        {
+          "name": "preview_frames",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "preview_fps",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "tiny_vae",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "audio_vae",
+          "type": "VAE",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "MODEL"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 721,
+      "type": "MMH3TemporalSplitParams",
+      "title": null,
+      "role": "upscale_long",
+      "widgets": {
+        "chunk_length": 153,
+        "temporal_overlap": 17,
+        "anchor_strength": 0.99
+      },
+      "inputs": [
+        {
+          "name": "chunk_length",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "temporal_overlap",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "anchor_strength",
+          "type": "FLOAT",
+          "link": 2538
+        }
+      ],
+      "outputs": [
+        "temporal_split_param"
+      ],
+      "standard": {
+        "chunk_length": {
+          "type": "INT",
+          "default": 153,
+          "range": "≥1",
+          "meaning": "分段帧长",
+          "required": true
+        },
+        "temporal_overlap": {
+          "type": "INT",
+          "default": 17,
+          "range": "≥0",
+          "meaning": "时间重叠帧",
+          "required": false
+        },
+        "anchor_strength": {
+          "type": "FLOAT",
+          "default": 0.99,
+          "range": "0~1",
+          "meaning": "锚定强度",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 5464,
+      "type": "ModelPreviewOverrideKJ",
+      "title": "二采",
+      "role": "perf",
+      "widgets": {
+        "max_resolution": 1024,
+        "jpeg_quality": 80,
+        "suppress_default_preview": true,
+        "preview_frames": 1,
+        "preview_fps": 12,
+        "tiny_vae": "none",
+        "preview": ""
+      },
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 2746
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": null
+        },
+        {
+          "name": "max_resolution",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "jpeg_quality",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "suppress_default_preview",
+          "type": "BOOLEAN",
+          "link": null
+        },
+        {
+          "name": "preview_frames",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "preview_fps",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "tiny_vae",
+          "type": "COMBO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "MODEL"
+      ],
+      "standard": null,
+      "note": null
+    }
+  ]
+}

@@ -1,0 +1,2399 @@
+{
+  "workflow": "minimax_h3_ref2v_av_turbo_v1.0.0",
+  "purpose": "多参图像+音频极速生视频 Ref2VA",
+  "node_count": 62,
+  "format": "UI (ComfyUI 界面可加载)",
+  "nodes": [
+    {
+      "id": 121,
+      "type": "VAEDecodeAudio",
+      "title": null,
+      "role": "io",
+      "widgets": {},
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 249
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 221
+        }
+      ],
+      "outputs": [
+        "AUDIO"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 123,
+      "type": "KSamplerSelect",
+      "title": null,
+      "role": "samplers",
+      "widgets": {
+        "sampler_name": "ddim"
+      },
+      "inputs": [
+        {
+          "name": "sampler_name",
+          "type": "COMBO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "SAMPLER"
+      ],
+      "standard": {
+        "sampler_name": {
+          "type": "COMBO",
+          "default": "euler",
+          "range": "euler / ddim / uni_pc / res_2s / er_sde / ...",
+          "meaning": "采样器；H3 常用 ddim / er_sde",
+          "required": true
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 124,
+      "type": "BasicScheduler",
+      "title": null,
+      "role": "sched_noise",
+      "widgets": {
+        "scheduler": "simple",
+        "steps": 20,
+        "denoise": 1
+      },
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 256
+        },
+        {
+          "name": "scheduler",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "steps",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "denoise",
+          "type": "FLOAT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "SIGMAS"
+      ],
+      "standard": {
+        "scheduler": {
+          "type": "COMBO",
+          "default": "simple",
+          "range": "simple / normal / karras / ddim_uniform / sgm_uniform / beta / ...",
+          "meaning": "调度器；H3 常用 simple",
+          "required": true
+        },
+        "steps": {
+          "type": "INT",
+          "default": 20,
+          "range": "1~50（Turbo 4 步 / 8 步）",
+          "meaning": "去噪步数",
+          "required": true
+        },
+        "denoise": {
+          "type": "FLOAT",
+          "default": 1.0,
+          "range": "0~1",
+          "meaning": "降噪强度；图生视频常 <1",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 126,
+      "type": "BasicGuider",
+      "title": null,
+      "role": "samplers",
+      "widgets": {},
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 257
+        },
+        {
+          "name": "conditioning",
+          "type": "CONDITIONING",
+          "link": 336
+        }
+      ],
+      "outputs": [
+        "GUIDER"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 129,
+      "type": "RandomNoise",
+      "title": null,
+      "role": "sched_noise",
+      "widgets": {
+        "noise_seed": 1010219011590650,
+        "control_after_generate": "randomize"
+      },
+      "inputs": [
+        {
+          "name": "noise_seed",
+          "type": "INT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "NOISE"
+      ],
+      "standard": {
+        "noise_seed": {
+          "type": "INT",
+          "default": 0,
+          "range": "0~2^53",
+          "meaning": "随机种子",
+          "required": true
+        },
+        "control_after_generate": {
+          "type": "COMBO",
+          "default": "randomize",
+          "range": "randomize / fixed / increment / decrement",
+          "meaning": "生成后种子行为",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 164,
+      "type": "DF_Int_to_Float",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Value": 5
+      },
+      "inputs": [
+        {
+          "name": "Value",
+          "type": "INT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "FLOAT"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 191,
+      "type": "DF_Int_to_Float",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Value": 6
+      },
+      "inputs": [
+        {
+          "name": "Value",
+          "type": "INT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "FLOAT"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 192,
+      "type": "DF_Int_to_Float",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Value": 7
+      },
+      "inputs": [
+        {
+          "name": "Value",
+          "type": "INT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "FLOAT"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 193,
+      "type": "DF_Int_to_Float",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Value": 8
+      },
+      "inputs": [
+        {
+          "name": "Value",
+          "type": "INT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "FLOAT"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 194,
+      "type": "DF_Int_to_Float",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Value": 9
+      },
+      "inputs": [
+        {
+          "name": "Value",
+          "type": "INT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "FLOAT"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 195,
+      "type": "DF_Int_to_Float",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Value": 10
+      },
+      "inputs": [
+        {
+          "name": "Value",
+          "type": "INT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "FLOAT"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 196,
+      "type": "DF_Int_to_Float",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Value": 11
+      },
+      "inputs": [
+        {
+          "name": "Value",
+          "type": "INT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "FLOAT"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 197,
+      "type": "DF_Int_to_Float",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Value": 12
+      },
+      "inputs": [
+        {
+          "name": "Value",
+          "type": "INT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "FLOAT"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 198,
+      "type": "DF_Int_to_Float",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Value": 13
+      },
+      "inputs": [
+        {
+          "name": "Value",
+          "type": "INT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "FLOAT"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 199,
+      "type": "DF_Int_to_Float",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Value": 14
+      },
+      "inputs": [
+        {
+          "name": "Value",
+          "type": "INT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "FLOAT"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 200,
+      "type": "DF_Int_to_Float",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Value": 15
+      },
+      "inputs": [
+        {
+          "name": "Value",
+          "type": "INT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "FLOAT"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 130,
+      "type": "CreateVideo",
+      "title": null,
+      "role": "io",
+      "widgets": {
+        "fps": 24,
+        "bit_depth": 8,
+        "color_space": "sRGB"
+      },
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 231
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 232
+        },
+        {
+          "name": "fps",
+          "type": "FLOAT",
+          "link": null
+        },
+        {
+          "name": "bit_depth",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "color_space",
+          "type": "COMBO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "VIDEO"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 139,
+      "type": "LoadImage",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "image": "None",
+        "upload": "image"
+      },
+      "inputs": [
+        {
+          "name": "image",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "upload",
+          "type": "IMAGEUPLOAD",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "IMAGE",
+        "MASK"
+      ],
+      "standard": {
+        "image": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/ 或输入",
+          "meaning": "图像文件",
+          "required": true
+        },
+        "upload": {
+          "type": "BOOLEAN",
+          "default": false,
+          "range": "true/false",
+          "meaning": "上传开关",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 127,
+      "type": "UNETLoader",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "unet_name": "minimax_h3_ref2va_pruned_fp8_scaled.safetensors",
+        "weight_dtype": "default"
+      },
+      "inputs": [
+        {
+          "name": "unet_name",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "weight_dtype",
+          "type": "COMBO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "MODEL"
+      ],
+      "standard": {
+        "unet_name": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/diffusion_models/ 下 .safetensors",
+          "meaning": "模型文件名；如 minimax_h3_ref2va_pruned_fp8_scaled.safetensors",
+          "required": true
+        },
+        "weight_dtype": {
+          "type": "COMBO",
+          "default": "default",
+          "range": "default / fp8_e4m3fn / fp8_e5m2 / fp16 / bf16",
+          "meaning": "加载精度；默认由文件决定，低显存可选 fp8",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 122,
+      "type": "VAEDecode",
+      "title": null,
+      "role": "io",
+      "widgets": {},
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 248
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 222
+        }
+      ],
+      "outputs": [
+        "IMAGE"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 117,
+      "type": "MarkdownNote",
+      "title": "Note: Model Links",
+      "role": "util",
+      "widgets": {
+        "text": "## Model Links\n\n**vae**\n\n- [minimax_h3_video_vae_fp16.safetensors](https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/vae/minimax_h3_video_vae_fp16.safetensors)\n- [minimax_h3_audio_vae_fp32.safetensors](https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/vae/minimax_h3_audio_vae_fp32.safetensors)\n\n**diffusion_models**\n\n- [minimax_h3_fl2va_pruned_int8_convrot.safetensors](https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/diffusion_models/minimax_h3_fl2va_pruned_int8_convrot.safetensors)\n\n**text_encoders**\n\n- [qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors](https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/text_encoders/qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors)\n\n\n## Model Storage Location\n\n```\n📂 ComfyUI/\n├── 📂 models/\n│   ├── 📂 vae/\n│   │   ├── minimax_h3_video_vae_fp16.safetensors\n│   │   └── minimax_h3_audio_vae_fp32.safetensors\n│   ├── 📂 diffusion_models/\n│   │   └── minimax_h3_fl2va_pruned_int8_convrot.safetensors\n│   └── 📂 text_encoders/\n│       └── qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors\n```\n\n## Report Issue\n\nNote: Please update ComfyUI first ([guide](https://docs.comfy.org/installation/update_comfyui)) and prepare required models. Desktop/Cloud updates follow stable releases, so some nightly-supported models may not be available yet.\n\n- Cannot run / runtime errors: [ComfyUI/issues](https://github.com/comfyanonymous/ComfyUI/issues)\n- UI / frontend issues: [ComfyUI_frontend/issues](https://github.com/Comfy-Org/ComfyUI_frontend/issues)\n- Workflow issues: [workflow_templates/issues](https://github.com/Comfy-Org/workflow_templates/issues)\n"
+      },
+      "inputs": [],
+      "outputs": [],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 116,
+      "type": "MarkdownNote",
+      "title": "Note: MiniMax H3",
+      "role": "util",
+      "widgets": {
+        "text": "## MiniMax H3\n\n[MiniMax H3](https://www.minimax.io/blog/minimax-h3) is MiniMax's general-purpose, omni-modal generation model. It jointly understands text, image, video, and audio, and generates video with **native stereo audio**: voice, sound effects, and music are modeled jointly in a single forward pass, not layered on afterward. Output is up to 2K resolution, 24fps, and up to about 15 seconds.\n\n## ComfyUI links\n- [ComfyUI#15224](https://github.com/Comfy-Org/ComfyUI/pull/15224)\n- [🤗 Comfy-Org/MiniMax-H3](https://huggingface.co/Comfy-Org/MiniMax-H3)\n\n## About this workflow\n\n**Key inputs**\n\n- **prompt**: describe the shots, camera moves, and the accompanying audio (dialogue, SFX, music) in one block\n- **width / height**: set via Resolution Selector. H3's native canvas is a 768px short edge, capped at 768x1344 pixels, rounded to a multiple of 32\n- **duration (seconds)**: converted to a valid frame `length` by the Math Expression node, snapping up to the model's 17-frame-per-block (17k+5) grid at 24fps\n"
+      },
+      "inputs": [],
+      "outputs": [],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 222,
+      "type": "PrimitiveFloat",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "value": 0.5
+      },
+      "inputs": [
+        {
+          "name": "value",
+          "type": "FLOAT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "FLOAT"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 227,
+      "type": "ShowAnything|Mie",
+      "title": null,
+      "role": "io",
+      "widgets": {},
+      "inputs": [
+        {
+          "name": "anything",
+          "type": "*",
+          "link": 323
+        }
+      ],
+      "outputs": [
+        "STRING"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 226,
+      "type": "ShowAnything|Mie",
+      "title": null,
+      "role": "io",
+      "widgets": {},
+      "inputs": [
+        {
+          "name": "anything",
+          "type": "*",
+          "link": 322
+        }
+      ],
+      "outputs": [
+        "STRING"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 206,
+      "type": "LoadImage",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "image": "None",
+        "upload": "image"
+      },
+      "inputs": [
+        {
+          "name": "image",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "upload",
+          "type": "IMAGEUPLOAD",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "IMAGE",
+        "MASK"
+      ],
+      "standard": {
+        "image": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/ 或输入",
+          "meaning": "图像文件",
+          "required": true
+        },
+        "upload": {
+          "type": "BOOLEAN",
+          "default": false,
+          "range": "true/false",
+          "meaning": "上传开关",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 161,
+      "type": "LoadImage",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "image": "rgthree.compare._temp_ocpsj_00048_.png",
+        "upload": "image"
+      },
+      "inputs": [
+        {
+          "name": "image",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "upload",
+          "type": "IMAGEUPLOAD",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "IMAGE",
+        "MASK"
+      ],
+      "standard": {
+        "image": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/ 或输入",
+          "meaning": "图像文件",
+          "required": true
+        },
+        "upload": {
+          "type": "BOOLEAN",
+          "default": false,
+          "range": "true/false",
+          "meaning": "上传开关",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 92,
+      "type": "SaveVideo",
+      "title": null,
+      "role": "io",
+      "widgets": {
+        "filename_prefix": "video/MiniMax_H3",
+        "format": "auto",
+        "format.codec": "auto",
+        "codec": "auto"
+      },
+      "inputs": [
+        {
+          "name": "video",
+          "type": "VIDEO",
+          "link": 251
+        },
+        {
+          "name": "filename_prefix",
+          "type": "STRING",
+          "link": null
+        },
+        {
+          "name": "format",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null
+        },
+        {
+          "name": "format.codec",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null
+        },
+        {
+          "name": "codec",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "video",
+        "video"
+      ],
+      "standard": {
+        "filename_prefix": {
+          "type": "STRING",
+          "default": "ComfyUI",
+          "range": "文本",
+          "meaning": "文件名前缀",
+          "required": false
+        },
+        "fps": {
+          "type": "FLOAT",
+          "default": 24,
+          "range": ">0",
+          "meaning": "帧率",
+          "required": false
+        },
+        "lossless": {
+          "type": "BOOLEAN",
+          "default": false,
+          "range": "true/false",
+          "meaning": "无损",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 210,
+      "type": "Note",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "text": "480P（标清 SD）"
+      },
+      "inputs": [],
+      "outputs": [],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 205,
+      "type": "ImpactSwitch",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "select": 11,
+        "sel_mode": false
+      },
+      "inputs": [
+        {
+          "name": "input1",
+          "type": "*",
+          "link": 278
+        },
+        {
+          "name": "select",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "sel_mode",
+          "type": "BOOLEAN",
+          "link": null
+        },
+        {
+          "name": "input2",
+          "type": "INT",
+          "link": 279
+        },
+        {
+          "name": "input3",
+          "type": "INT",
+          "link": 280
+        },
+        {
+          "name": "input4",
+          "type": "INT",
+          "link": 281
+        },
+        {
+          "name": "input5",
+          "type": "INT",
+          "link": 282
+        },
+        {
+          "name": "input6",
+          "type": "INT",
+          "link": 283
+        },
+        {
+          "name": "input7",
+          "type": "INT",
+          "link": 284
+        },
+        {
+          "name": "input8",
+          "type": "INT",
+          "link": 285
+        },
+        {
+          "name": "input9",
+          "type": "INT",
+          "link": 286
+        },
+        {
+          "name": "input10",
+          "type": "INT",
+          "link": 287
+        },
+        {
+          "name": "input11",
+          "type": "INT",
+          "link": 288
+        },
+        {
+          "name": "input12",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input13",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input14",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input15",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input16",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input17",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input18",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input19",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input20",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input21",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input22",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input23",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input24",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input25",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input26",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input27",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input28",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input29",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input30",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input31",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input32",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input33",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input34",
+          "type": "INT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "selected_value",
+        "selected_label",
+        "selected_index"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 136,
+      "type": "EasyCache",
+      "title": null,
+      "role": "perf",
+      "widgets": {
+        "reuse_threshold": 0.20000000000000004,
+        "start_percent": 0.15,
+        "end_percent": 0.9000000000000001,
+        "verbose": false
+      },
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 366
+        },
+        {
+          "name": "reuse_threshold",
+          "type": "FLOAT",
+          "link": null
+        },
+        {
+          "name": "start_percent",
+          "type": "FLOAT",
+          "link": null
+        },
+        {
+          "name": "end_percent",
+          "type": "FLOAT",
+          "link": null
+        },
+        {
+          "name": "verbose",
+          "type": "BOOLEAN",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "MODEL"
+      ],
+      "standard": {
+        "reuse_threshold": {
+          "type": "FLOAT",
+          "default": 0.2,
+          "range": "0~1",
+          "meaning": "复用阈值",
+          "required": false
+        },
+        "start_percent": {
+          "type": "FLOAT",
+          "default": 0.15,
+          "range": "0~1",
+          "meaning": "起始百分比",
+          "required": false
+        },
+        "end_percent": {
+          "type": "FLOAT",
+          "default": 0.9,
+          "range": "0~1",
+          "meaning": "结束百分比",
+          "required": false
+        },
+        "verbose": {
+          "type": "BOOLEAN",
+          "default": false,
+          "range": "true/false",
+          "meaning": "详细日志",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 115,
+      "type": "ResolutionSelector",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "aspect_ratio": "4:3 (Standard)",
+        "megapixels": 0.5,
+        "multiple": 32
+      },
+      "inputs": [
+        {
+          "name": "aspect_ratio",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "megapixels",
+          "type": "FLOAT",
+          "link": 321
+        },
+        {
+          "name": "multiple",
+          "type": "INT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "width",
+        "height"
+      ],
+      "standard": {
+        "aspect_ratio": {
+          "type": "COMBO",
+          "default": "16:9 (Widescreen)",
+          "range": "多种预设",
+          "meaning": "宽高比",
+          "required": true
+        },
+        "megapixels": {
+          "type": "FLOAT",
+          "default": 0.4,
+          "range": "0.1~2",
+          "meaning": "百万像素（决定总像素）",
+          "required": true
+        },
+        "multiple": {
+          "type": "INT",
+          "default": 32,
+          "range": "8/16/32",
+          "meaning": "对齐倍数",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 132,
+      "type": "ComfyMathExpression",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "expression": "max(5, round(a * 24)) + (5 - (max(5, round(a * 24)) % 17)) % 17"
+      },
+      "inputs": [
+        {
+          "name": "values.a",
+          "type": "FLOAT,INT,BOOLEAN",
+          "link": 289
+        },
+        {
+          "name": "values.b",
+          "type": "FLOAT,INT,BOOLEAN",
+          "link": null
+        },
+        {
+          "name": "expression",
+          "type": "STRING",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "FLOAT",
+        "INT",
+        "BOOL"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 247,
+      "type": "LoadAudio",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "audio": "None",
+        "upload": null
+      },
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "audioUI",
+          "type": "AUDIO_UI",
+          "link": null
+        },
+        {
+          "name": "upload",
+          "type": "AUDIOUPLOAD",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "AUDIO"
+      ],
+      "standard": {
+        "audio": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "文件",
+          "meaning": "音频文件",
+          "required": true
+        },
+        "upload": {
+          "type": "BOOLEAN",
+          "default": false,
+          "range": "true/false",
+          "meaning": "上传",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 248,
+      "type": "LoadAudio",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "audio": "None",
+        "upload": null
+      },
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "audioUI",
+          "type": "AUDIO_UI",
+          "link": null
+        },
+        {
+          "name": "upload",
+          "type": "AUDIOUPLOAD",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "AUDIO"
+      ],
+      "standard": {
+        "audio": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "文件",
+          "meaning": "音频文件",
+          "required": true
+        },
+        "upload": {
+          "type": "BOOLEAN",
+          "default": false,
+          "range": "true/false",
+          "meaning": "上传",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 249,
+      "type": "LoadAudio",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "audio": "None",
+        "upload": null
+      },
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "audioUI",
+          "type": "AUDIO_UI",
+          "link": null
+        },
+        {
+          "name": "upload",
+          "type": "AUDIOUPLOAD",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "AUDIO"
+      ],
+      "standard": {
+        "audio": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "文件",
+          "meaning": "音频文件",
+          "required": true
+        },
+        "upload": {
+          "type": "BOOLEAN",
+          "default": false,
+          "range": "true/false",
+          "meaning": "上传",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 231,
+      "type": "LoadImage",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "image": "None",
+        "upload": "image"
+      },
+      "inputs": [
+        {
+          "name": "image",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "upload",
+          "type": "IMAGEUPLOAD",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "IMAGE",
+        "MASK"
+      ],
+      "standard": {
+        "image": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/ 或输入",
+          "meaning": "图像文件",
+          "required": true
+        },
+        "upload": {
+          "type": "BOOLEAN",
+          "default": false,
+          "range": "true/false",
+          "meaning": "上传开关",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 234,
+      "type": "LoadImage",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "image": "None",
+        "upload": "image"
+      },
+      "inputs": [
+        {
+          "name": "image",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "upload",
+          "type": "IMAGEUPLOAD",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "IMAGE",
+        "MASK"
+      ],
+      "standard": {
+        "image": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/ 或输入",
+          "meaning": "图像文件",
+          "required": true
+        },
+        "upload": {
+          "type": "BOOLEAN",
+          "default": false,
+          "range": "true/false",
+          "meaning": "上传开关",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 237,
+      "type": "LoadImage",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "image": "None",
+        "upload": "image"
+      },
+      "inputs": [
+        {
+          "name": "image",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "upload",
+          "type": "IMAGEUPLOAD",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "IMAGE",
+        "MASK"
+      ],
+      "standard": {
+        "image": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/ 或输入",
+          "meaning": "图像文件",
+          "required": true
+        },
+        "upload": {
+          "type": "BOOLEAN",
+          "default": false,
+          "range": "true/false",
+          "meaning": "上传开关",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 232,
+      "type": "LoadImage",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "image": "None",
+        "upload": "image"
+      },
+      "inputs": [
+        {
+          "name": "image",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "upload",
+          "type": "IMAGEUPLOAD",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "IMAGE",
+        "MASK"
+      ],
+      "standard": {
+        "image": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/ 或输入",
+          "meaning": "图像文件",
+          "required": true
+        },
+        "upload": {
+          "type": "BOOLEAN",
+          "default": false,
+          "range": "true/false",
+          "meaning": "上传开关",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 235,
+      "type": "LoadImage",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "image": "None",
+        "upload": "image"
+      },
+      "inputs": [
+        {
+          "name": "image",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "upload",
+          "type": "IMAGEUPLOAD",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "IMAGE",
+        "MASK"
+      ],
+      "standard": {
+        "image": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/ 或输入",
+          "meaning": "图像文件",
+          "required": true
+        },
+        "upload": {
+          "type": "BOOLEAN",
+          "default": false,
+          "range": "true/false",
+          "meaning": "上传开关",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 238,
+      "type": "LoadImage",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "image": "None",
+        "upload": "image"
+      },
+      "inputs": [
+        {
+          "name": "image",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "upload",
+          "type": "IMAGEUPLOAD",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "IMAGE",
+        "MASK"
+      ],
+      "standard": {
+        "image": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/ 或输入",
+          "meaning": "图像文件",
+          "required": true
+        },
+        "upload": {
+          "type": "BOOLEAN",
+          "default": false,
+          "range": "true/false",
+          "meaning": "上传开关",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 233,
+      "type": "LoadImage",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "image": "None",
+        "upload": "image"
+      },
+      "inputs": [
+        {
+          "name": "image",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "upload",
+          "type": "IMAGEUPLOAD",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "IMAGE",
+        "MASK"
+      ],
+      "standard": {
+        "image": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/ 或输入",
+          "meaning": "图像文件",
+          "required": true
+        },
+        "upload": {
+          "type": "BOOLEAN",
+          "default": false,
+          "range": "true/false",
+          "meaning": "上传开关",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 236,
+      "type": "LoadImage",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "image": "None",
+        "upload": "image"
+      },
+      "inputs": [
+        {
+          "name": "image",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "upload",
+          "type": "IMAGEUPLOAD",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "IMAGE",
+        "MASK"
+      ],
+      "standard": {
+        "image": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/ 或输入",
+          "meaning": "图像文件",
+          "required": true
+        },
+        "upload": {
+          "type": "BOOLEAN",
+          "default": false,
+          "range": "true/false",
+          "meaning": "上传开关",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 239,
+      "type": "LoadImage",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "image": "None",
+        "upload": "image"
+      },
+      "inputs": [
+        {
+          "name": "image",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "upload",
+          "type": "IMAGEUPLOAD",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "IMAGE",
+        "MASK"
+      ],
+      "standard": {
+        "image": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/ 或输入",
+          "meaning": "图像文件",
+          "required": true
+        },
+        "upload": {
+          "type": "BOOLEAN",
+          "default": false,
+          "range": "true/false",
+          "meaning": "上传开关",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 125,
+      "type": "SamplerCustomAdvanced",
+      "title": "⚡自定义采样器（高级）⚡",
+      "role": "samplers",
+      "widgets": {},
+      "inputs": [
+        {
+          "name": "noise",
+          "type": "NOISE",
+          "link": 224
+        },
+        {
+          "name": "guider",
+          "type": "GUIDER",
+          "link": 225
+        },
+        {
+          "name": "sampler",
+          "type": "SAMPLER",
+          "link": 226
+        },
+        {
+          "name": "sigmas",
+          "type": "SIGMAS",
+          "link": 227
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 337
+        }
+      ],
+      "outputs": [
+        "output",
+        "denoised_output"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 135,
+      "type": "PathchSageAttentionKJ",
+      "title": null,
+      "role": "perf",
+      "widgets": {
+        "sage_attention": "auto",
+        "allow_compile": false
+      },
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 258
+        },
+        {
+          "name": "sage_attention",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "allow_compile",
+          "type": "BOOLEAN",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "MODEL"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 128,
+      "type": "CLIPLoader",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+        "type": "minimax",
+        "device": "default"
+      },
+      "inputs": [
+        {
+          "name": "clip_name",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "type",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "device",
+          "type": "COMBO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "CLIP"
+      ],
+      "standard": {
+        "clip_name": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/text_encoders/ 下 .safetensors",
+          "meaning": "如 qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "required": true
+        },
+        "type": {
+          "type": "COMBO",
+          "default": "minimax",
+          "range": "minimax / ...",
+          "meaning": "编码器类型；H3 须选 minimax",
+          "required": true
+        },
+        "device": {
+          "type": "COMBO",
+          "default": "default",
+          "range": "default / cpu",
+          "meaning": "加载设备",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 119,
+      "type": "VAELoader",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+      },
+      "inputs": [
+        {
+          "name": "vae_name",
+          "type": "COMBO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "VAE"
+      ],
+      "standard": {
+        "vae_name": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/vae/ 下 .safetensors",
+          "meaning": "如 minimax_h3_video_vae_fp16.safetensors（视频）/ minimax_h3_audio_vae_fp32（音频，须 fp32）",
+          "required": true
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 120,
+      "type": "VAELoader",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+      },
+      "inputs": [
+        {
+          "name": "vae_name",
+          "type": "COMBO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "VAE"
+      ],
+      "standard": {
+        "vae_name": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/vae/ 下 .safetensors",
+          "meaning": "如 minimax_h3_video_vae_fp16.safetensors（视频）/ minimax_h3_audio_vae_fp32（音频，须 fp32）",
+          "required": true
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 223,
+      "type": "PrimitiveFloat",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "value": 1
+      },
+      "inputs": [
+        {
+          "name": "value",
+          "type": "FLOAT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "FLOAT"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 211,
+      "type": "Note",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "text": "720P（高清 HD）"
+      },
+      "inputs": [],
+      "outputs": [],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 230,
+      "type": "MiniMaxH3ReferenceToVideo",
+      "title": null,
+      "role": "h3_main",
+      "widgets": {
+        "prompt": "",
+        "width": 1344,
+        "height": 768,
+        "length": 124,
+        "ref_image_size": "match"
+      },
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 334
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 335
+        },
+        {
+          "name": "audio_vae",
+          "type": "VAE",
+          "link": 353
+        },
+        {
+          "name": "ref_images.ref_image_0",
+          "type": "IMAGE",
+          "link": 325
+        },
+        {
+          "name": "ref_images.ref_image_1",
+          "type": "IMAGE",
+          "link": 326
+        },
+        {
+          "name": "ref_images.ref_image_2",
+          "type": "IMAGE",
+          "link": 327
+        },
+        {
+          "name": "ref_images.ref_image_3",
+          "type": "IMAGE",
+          "link": 328
+        },
+        {
+          "name": "ref_images.ref_image_4",
+          "type": "IMAGE",
+          "link": 329
+        },
+        {
+          "name": "ref_images.ref_image_5",
+          "type": "IMAGE",
+          "link": 330
+        },
+        {
+          "name": "ref_images.ref_image_6",
+          "type": "IMAGE",
+          "link": 331
+        },
+        {
+          "name": "ref_images.ref_image_7",
+          "type": "IMAGE",
+          "link": 332
+        },
+        {
+          "name": "ref_images.ref_image_8",
+          "type": "IMAGE",
+          "link": 333
+        },
+        {
+          "name": "ref_videos.ref_video_0",
+          "type": "IMAGE",
+          "link": 355
+        },
+        {
+          "name": "ref_videos.ref_video_1",
+          "type": "IMAGE",
+          "link": 358
+        },
+        {
+          "name": "ref_videos.ref_video_2",
+          "type": "IMAGE",
+          "link": 361
+        },
+        {
+          "name": "ref_video_audios.ref_video_audio_0",
+          "type": "AUDIO",
+          "link": 356
+        },
+        {
+          "name": "ref_video_audios.ref_video_audio_1",
+          "type": "AUDIO",
+          "link": 359
+        },
+        {
+          "name": "ref_video_audios.ref_video_audio_2",
+          "type": "AUDIO",
+          "link": 362
+        },
+        {
+          "name": "ref_audios.ref_audio_0",
+          "type": "AUDIO",
+          "link": 349
+        },
+        {
+          "name": "ref_audios.ref_audio_1",
+          "type": "AUDIO",
+          "link": 350
+        },
+        {
+          "name": "ref_audios.ref_audio_2",
+          "type": "AUDIO",
+          "link": 351
+        },
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "link": 352
+        },
+        {
+          "name": "width",
+          "type": "INT",
+          "link": 338
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "link": 339
+        },
+        {
+          "name": "length",
+          "type": "INT",
+          "link": 341
+        },
+        {
+          "name": "ref_image_size",
+          "type": "COMBO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "positive",
+        "LATENT"
+      ],
+      "standard": {
+        "prompt": {
+          "type": "STRING",
+          "default": "",
+          "range": "文本",
+          "meaning": "正向提示词",
+          "required": true
+        },
+        "width": {
+          "type": "INT",
+          "default": 1344,
+          "range": "32 倍数",
+          "meaning": "宽",
+          "required": true
+        },
+        "height": {
+          "type": "INT",
+          "default": 768,
+          "range": "32 倍数",
+          "meaning": "高",
+          "required": true
+        },
+        "length": {
+          "type": "INT",
+          "default": 124,
+          "range": "帧数（H3 对齐）",
+          "meaning": "帧数",
+          "required": true
+        },
+        "ref_image_size": {
+          "type": "COMBO",
+          "default": "match",
+          "range": "match/256/512",
+          "meaning": "参考图尺寸",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 252,
+      "type": "GetVideoComponents",
+      "title": null,
+      "role": "io",
+      "widgets": {},
+      "inputs": [
+        {
+          "name": "video",
+          "type": "VIDEO",
+          "link": 354
+        }
+      ],
+      "outputs": [
+        "images",
+        "audio",
+        "fps",
+        "bit_depth",
+        "color_space"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 253,
+      "type": "GetVideoComponents",
+      "title": null,
+      "role": "io",
+      "widgets": {},
+      "inputs": [
+        {
+          "name": "video",
+          "type": "VIDEO",
+          "link": 357
+        }
+      ],
+      "outputs": [
+        "images",
+        "audio",
+        "fps",
+        "bit_depth",
+        "color_space"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 255,
+      "type": "GetVideoComponents",
+      "title": null,
+      "role": "io",
+      "widgets": {},
+      "inputs": [
+        {
+          "name": "video",
+          "type": "VIDEO",
+          "link": 360
+        }
+      ],
+      "outputs": [
+        "images",
+        "audio",
+        "fps",
+        "bit_depth",
+        "color_space"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 251,
+      "type": "LoadVideo",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "file": "None",
+        "upload": true
+      },
+      "inputs": [
+        {
+          "name": "file",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "upload",
+          "type": "IMAGEUPLOAD",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "VIDEO"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 254,
+      "type": "LoadVideo",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "file": "None",
+        "upload": true
+      },
+      "inputs": [
+        {
+          "name": "file",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "upload",
+          "type": "IMAGEUPLOAD",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "VIDEO"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 256,
+      "type": "LoadVideo",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "file": "None",
+        "upload": true
+      },
+      "inputs": [
+        {
+          "name": "file",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "upload",
+          "type": "IMAGEUPLOAD",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "VIDEO"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 225,
+      "type": "ImpactSwitch",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "select": 1,
+        "sel_mode": false
+      },
+      "inputs": [
+        {
+          "name": "input1",
+          "type": "*",
+          "link": 318
+        },
+        {
+          "name": "select",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "sel_mode",
+          "type": "BOOLEAN",
+          "link": null
+        },
+        {
+          "name": "input2",
+          "type": "INT",
+          "link": 319
+        },
+        {
+          "name": "input3",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input4",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input5",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input6",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input7",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input8",
+          "type": "INT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "selected_value",
+        "selected_label",
+        "selected_index"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 250,
+      "type": "CR Prompt Text",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "prompt": "一镜到底低空环绕滑行镜头，黏土二次元少女悬浮在蓬松黏土云海之上，长发、纱裙为蓬松黏土塑形，细碎星光黏土颗粒缓缓飘落，镜头环绕主体缓慢前移，由全景环绕拉近至人物特写，淡紫、浅蓝梦幻渐变配色，黏土云朵柔软蓬松，人物衣摆发丝轻柔飘动，立体柔光，空灵浪漫，定格画面丝滑流畅，人物样貌全程统一。"
+      },
+      "inputs": [
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "prompt",
+        "show_help"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 257,
+      "type": "LoraLoaderModelOnly",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "lora_name": "minimax_h3_ref2v_turbo_8step_v1.0_768p_comfyui_resized_avg_rank_20_bf16.safetensors",
+        "strength_model": 1
+      },
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 365
+        },
+        {
+          "name": "lora_name",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "strength_model",
+          "type": "FLOAT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "MODEL"
+      ],
+      "standard": {
+        "lora_name": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/loras/ 下 .safetensors",
+          "meaning": "LoRA 文件名",
+          "required": true
+        },
+        "strength_model": {
+          "type": "FLOAT",
+          "default": 1.0,
+          "range": "-10 ~ 10",
+          "meaning": "模型侧强度，1=原强度",
+          "required": false
+        }
+      },
+      "note": null
+    }
+  ]
+}

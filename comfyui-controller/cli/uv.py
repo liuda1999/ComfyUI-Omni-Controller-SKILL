@@ -12,7 +12,7 @@ from cli.typing_compat import PathLike
 
 
 def _run(cmd: list[str], cwd: PathLike, check: bool = True) -> subprocess.CompletedProcess[Any]:
-    return subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, check=check)
+    return subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, errors="replace", check=check)
 
 
 def _check_call(cmd: list[str], cwd: PathLike | None = None):

@@ -11,16 +11,34 @@ import json
 import os
 import re
 import urllib.request
+
+# 绕过本机代理：127.0.0.1 请求若经 HTTP_PROXY 会被拦截并返回 502（假故障），
+# 表现为“服务不可用”。本脚本只访问本机 ComfyUI，故对所有请求禁用代理。
+urllib.request.install_opener(
+    urllib.request.build_opener(urllib.request.ProxyHandler({}))
+)
 from datetime import datetime
 from collections import defaultdict, deque
 from pathlib import Path
+
+# 端口/host 解析优先级（见 SKILL.md 7.1）：命令行参数 > COMFYUI_PORT/COMFYUI_HOST 环境变量 > 默认值。
+# 默认值跟随 ComfyUI 官方约定（8188）。3198 是历史单一部署环境的端口，非通用标准；
+# 需沿用请显式设置 COMFYUI_PORT=3198。
+DEFAULT_HOST = os.environ.get("COMFYUI_HOST", "127.0.0.1")
+DEFAULT_PORT = os.environ.get("COMFYUI_PORT", "8188")
+
+# 路径解析相对项目根，不依赖运行时 CWD：技能资产在 <repo>/skills/comfyui-controller/assets/
+_SCRIPTS_DIR = os.path.dirname(os.path.abspath(__file__))
+_CC_DIR = os.path.dirname(_SCRIPTS_DIR)
+_REPO_ROOT = os.path.dirname(_CC_DIR)
+_SKILL_ASSETS = os.path.join(_REPO_ROOT, "skills", "comfyui-controller", "assets")
 
 
 # control_after_generate 标记值（UI 格式 widgets_values 中会插入）
 _CONTROL_AFTER_GENERATE_VALUES = {"fixed", "increment", "randomize", "disable"}
 
 
-def load_object_info(host="127.0.0.1", port="3198", object_info_path=None):  # comfyui-cli项目标准端口
+def load_object_info(host="127.0.0.1", port=DEFAULT_PORT, object_info_path=None):  
     """加载 object_info（节点 schema），用于 widget 名称映射。
     优先从本地文件加载，其次从服务器获取。失败时返回空字典。
     """
@@ -1155,10 +1173,10 @@ def main():
     )
     ap.add_argument("--input", default=default_workflows,
                     help="工作流目录路径 (默认从 COMFYUI_PATH 环境变量推导)")
-    ap.add_argument("--output", default=".trae/skills/comfyui-controller/assets/workflow_library.json",
+    ap.add_argument("--output", default=os.path.join(_SKILL_ASSETS, "workflow_library.json"),
                     help="资料库输出路径")
     ap.add_argument("--host", default="127.0.0.1", help="ComfyUI 服务器地址（用于获取 object_info）")
-    ap.add_argument("--port", default="3198", help="ComfyUI 服务器端口")  # comfyui-cli项目标准端口
+    ap.add_argument("--port", default=DEFAULT_PORT, help="ComfyUI 服务器端口")  
     ap.add_argument("--object-info", help="object_info 文件路径（优先于服务器）")
     ap.add_argument("--update", action="store_true", help="增量更新现有资料库（而非全量重建）")
     args = ap.parse_args()

@@ -14,7 +14,20 @@ import subprocess
 import sys
 import time
 import urllib.request
+
+# 本机 ComfyUI 位于回环地址，必须绕过 HTTP_PROXY/HTTPS_PROXY 环境变量，
+# 否则请求会被本地代理拦截并返回 502，表现为"服务不可用"的假故障。
+urllib.request.install_opener(
+    urllib.request.build_opener(urllib.request.ProxyHandler({}))
+)
+
 from pathlib import Path
+
+# 端口/host 解析优先级：命令行参数 > COMFYUI_HOST / COMFYUI_PORT 环境变量 > 默认值。
+# 默认值跟随 ComfyUI 官方约定（8188）。本项目历史上写死 3198，那是单一部署环境
+# 的端口而非通用标准——如需沿用该端口，请显式设置 COMFYUI_PORT=3198。
+DEFAULT_HOST = os.environ.get("COMFYUI_HOST", "127.0.0.1")
+DEFAULT_PORT = os.environ.get("COMFYUI_PORT", "8188")
 
 
 def get_comfyui_path():
@@ -61,7 +74,7 @@ def check_python_environment(comfy_path):
     
     # 也检查系统PATH中的python
     try:
-        result = subprocess.run(["python", "--version"], capture_output=True, text=True)
+        result = subprocess.run(["python", "--version"], capture_output=True, text=True, errors="replace")
         if result.returncode == 0:
             results["warnings"].append(f"系统Python可用: {result.stdout.strip()}")
     except:
@@ -75,7 +88,7 @@ def check_python_environment(comfy_path):
                 result = subprocess.run(
                     [candidate, "--version"],
                     capture_output=True,
-                    text=True,
+                    text=True, errors="replace",
                     timeout=10
                 )
                 if result.returncode == 0:
@@ -191,7 +204,7 @@ def check_dependencies(python_exe, comfy_path):
             result = subprocess.run(
                 [python_exe, "-c", f"import {package}"],
                 capture_output=True,
-                text=True,
+                text=True, errors="replace",
                 timeout=10,
                 cwd=comfy_path
             )
@@ -208,8 +221,9 @@ def check_dependencies(python_exe, comfy_path):
     return results
 
 
-def is_server_running(host="127.0.0.1", port="3198"):  # comfyui-cli项目标准端口
-    """检查服务器是否运行"""
+def is_server_running(host=DEFAULT_HOST, port=None):
+    """检查服务器是否运行（port 未指定时回落到 DEFAULT_PORT）"""
+    port = port or DEFAULT_PORT
     try:
         urllib.request.urlopen(f"http://{host}:{port}/queue", timeout=2)
         return True
@@ -284,7 +298,7 @@ def perform_full_check(comfy_path):
 def main():
     ap = argparse.ArgumentParser(description="启动 ComfyUI 服务器")
     ap.add_argument("--host", default="127.0.0.1")
-    ap.add_argument("--port", default="3198")  # comfyui-cli项目标准端口
+    ap.add_argument("--port", default=DEFAULT_PORT)
     ap.add_argument("--listen", action="store_true", help="监听所有接口")
     ap.add_argument("--check-only", action="store_true", help="仅检查环境")
     ap.add_argument("--verbose", action="store_true", help="详细输出")

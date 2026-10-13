@@ -1,0 +1,184 @@
+{
+  "119": {
+    "class_type": "VAELoader",
+    "inputs": {}
+  },
+  "120": {
+    "class_type": "VAELoader",
+    "inputs": {}
+  },
+  "121": {
+    "class_type": "VAEDecodeAudio",
+    "inputs": {
+      "vae": [
+        "120",
+        0
+      ],
+      "samples": [
+        "125",
+        0
+      ]
+    }
+  },
+  "122": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "vae": [
+        "119",
+        0
+      ],
+      "samples": [
+        "125",
+        0
+      ]
+    }
+  },
+  "125": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "129",
+        0
+      ],
+      "guider": [
+        "126",
+        0
+      ],
+      "sigmas": [
+        "124",
+        0
+      ],
+      "latent_image": [
+        "131",
+        1
+      ],
+      "sampler": [
+        "135",
+        0
+      ]
+    }
+  },
+  "126": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "conditioning": [
+        "131",
+        0
+      ],
+      "model": [
+        "134",
+        0
+      ]
+    }
+  },
+  "129": {
+    "class_type": "RandomNoise",
+    "inputs": {}
+  },
+  "128": {
+    "class_type": "CLIPLoader",
+    "inputs": {}
+  },
+  "127": {
+    "class_type": "UNETLoader",
+    "inputs": {}
+  },
+  "134": {
+    "class_type": "MiniMaxH3TurboLoRA",
+    "inputs": {
+      "model": [
+        "127",
+        0
+      ]
+    }
+  },
+  "130": {
+    "class_type": "CreateVideo",
+    "inputs": {
+      "images": [
+        "122",
+        0
+      ],
+      "audio": [
+        "121",
+        0
+      ]
+    }
+  },
+  "92": {
+    "class_type": "SaveVideo",
+    "inputs": {
+      "video": [
+        "130",
+        0
+      ]
+    }
+  },
+  "131": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "128",
+        0
+      ],
+      "vae": [
+        "119",
+        0
+      ],
+      "length": [
+        "132",
+        1
+      ],
+      "width": [
+        "115",
+        0
+      ],
+      "height": [
+        "115",
+        1
+      ]
+    }
+  },
+  "124": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "134",
+        0
+      ]
+    }
+  },
+  "116": {
+    "class_type": "MarkdownNote",
+    "inputs": {}
+  },
+  "117": {
+    "class_type": "MarkdownNote",
+    "inputs": {}
+  },
+  "133": {
+    "class_type": "PrimitiveFloat",
+    "inputs": {}
+  },
+  "132": {
+    "class_type": "ComfyMathExpression",
+    "inputs": {
+      "values.a": [
+        "133",
+        0
+      ]
+    }
+  },
+  "118": {
+    "class_type": "MarkdownNote",
+    "inputs": {}
+  },
+  "115": {
+    "class_type": "ResolutionSelector",
+    "inputs": {}
+  },
+  "135": {
+    "class_type": "MiniMaxH3TurboSampler",
+    "inputs": {}
+  }
+}

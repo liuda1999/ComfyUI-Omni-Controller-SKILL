@@ -1,12 +1,24 @@
 """v14段1: HIGH strength=1.0, steps=8, split_step=4"""
 import urllib.request
+
+# 绕过本机代理：127.0.0.1 请求若经 HTTP_PROXY 会被拦截并返回 502（假故障），
+# 表现为“服务不可用”。本脚本只访问本机 ComfyUI，故对所有请求禁用代理。
+urllib.request.install_opener(
+    urllib.request.build_opener(urllib.request.ProxyHandler({}))
+)
 import json
 import time
 import sys
 import os
 import subprocess
 
-COMFYUI_URL = "http://127.0.0.1:3198"
+# 端口/host 解析优先级（见 SKILL.md 7.1）：命令行参数 > COMFYUI_PORT/COMFYUI_HOST 环境变量 > 默认值。
+# 默认值跟随 ComfyUI 官方约定（8188）。3198 是历史单一部署环境的端口，非通用标准；
+# 需沿用请显式设置 COMFYUI_PORT=3198。
+DEFAULT_HOST = os.environ.get("COMFYUI_HOST", "127.0.0.1")
+DEFAULT_PORT = os.environ.get("COMFYUI_PORT", "8188")
+
+COMFYUI_URL = f"http://127.0.0.1:{DEFAULT_PORT}"
 
 # v14参数 (仅降strength + 步数8)
 WIDTH = 480
@@ -165,10 +177,10 @@ def main():
     # 提取末帧
     seg1_lf = os.path.join("E:/comfyui-cli/temp", f"c5_v14_seg1_lastframe_{int(time.time())}.png")
     cmd = ["ffmpeg", "-y", "-i", seg1_video, "-vf", "select=eq(n\\,80)", "-vframes", "1", seg1_lf]
-    r = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
+    r = subprocess.run(cmd, capture_output=True, text=True, errors="replace", timeout=60)
     if r.returncode != 0:
         cmd2 = ["ffmpeg", "-y", "-i", seg1_video, "-vf", "reverse", "-vframes", "1", seg1_lf]
-        subprocess.run(cmd2, capture_output=True, text=True, timeout=120)
+        subprocess.run(cmd2, capture_output=True, text=True, errors="replace", timeout=120)
     if os.path.exists(seg1_lf):
         seg1_lf_name = os.path.basename(seg1_lf)
         print(f"  段1末帧: {seg1_lf_name}")

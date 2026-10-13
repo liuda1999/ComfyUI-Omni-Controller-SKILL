@@ -996,7 +996,7 @@ def validate_node_for_publishing():
     try:
         # Run ruff check with security rules and --exit-zero to only warn
         cmd = [sys.executable, "-m", "ruff", "check", ".", "-q", "--select", "S102,S307,E702", "--exit-zero"]
-        result = subprocess.run(cmd, capture_output=True, text=True)
+        result = subprocess.run(cmd, capture_output=True, text=True, errors="replace")
 
         if result.stdout:
             print("[yellow]Security warnings found:[/yellow]")

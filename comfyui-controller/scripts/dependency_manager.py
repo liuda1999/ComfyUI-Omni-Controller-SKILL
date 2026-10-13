@@ -13,7 +13,19 @@ import re
 import subprocess
 import sys
 import urllib.request
+
+# 绕过本机代理：127.0.0.1 请求若经 HTTP_PROXY 会被拦截并返回 502（假故障），
+# 表现为“服务不可用”。本脚本只访问本机 ComfyUI，故对所有请求禁用代理。
+urllib.request.install_opener(
+    urllib.request.build_opener(urllib.request.ProxyHandler({}))
+)
 from urllib.parse import urlparse
+
+# 端口/host 解析优先级（见 SKILL.md 7.1）：命令行参数 > COMFYUI_PORT/COMFYUI_HOST 环境变量 > 默认值。
+# 默认值跟随 ComfyUI 官方约定（8188）。3198 是历史单一部署环境的端口，非通用标准；
+# 需沿用请显式设置 COMFYUI_PORT=3198。
+DEFAULT_HOST = os.environ.get("COMFYUI_HOST", "127.0.0.1")
+DEFAULT_PORT = os.environ.get("COMFYUI_PORT", "8188")
 
 
 # 常见模型下载源
@@ -95,7 +107,7 @@ def scan_local_models(comfyui_path):
     return models
 
 
-def get_available_nodes(host="127.0.0.1", port="3198"):  # comfyui-cli项目标准端口
+def get_available_nodes(host="127.0.0.1", port=DEFAULT_PORT):  
     """获取服务器上可用的节点类型"""
     try:
         req = urllib.request.Request(f"http://{host}:{port}/object_info", method="GET")
@@ -106,7 +118,7 @@ def get_available_nodes(host="127.0.0.1", port="3198"):  # comfyui-cli项目标�
         return []
 
 
-def get_object_info(host="127.0.0.1", port="3198"):  # comfyui-cli项目标准端口
+def get_object_info(host="127.0.0.1", port=DEFAULT_PORT):  
     """获取完整的 object_info 字典，用于 widget 映射"""
     try:
         req = urllib.request.Request(f"http://{host}:{port}/object_info", method="GET")
@@ -228,7 +240,7 @@ def smart_model_match(requested_name, available_models, local_models_by_category
     return (best_match, best_score) if best_score >= 40 else (None, 0)
 
 
-def analyze_workflow_dependencies(workflow_path, host="127.0.0.1", port="3198"):  # comfyui-cli项目标准端口
+def analyze_workflow_dependencies(workflow_path, host="127.0.0.1", port=DEFAULT_PORT):  
     """分析工作流的所有依赖"""
     with open(workflow_path, "r", encoding="utf-8") as f:
         workflow = json.load(f)
@@ -420,7 +432,7 @@ def analyze_workflow_dependencies(workflow_path, host="127.0.0.1", port="3198"):
     return report
 
 
-def fix_workflow_models(workflow_path, output_path, substitutions, host="127.0.0.1", port="3198"):  # comfyui-cli项目标准端口
+def fix_workflow_models(workflow_path, output_path, substitutions, host="127.0.0.1", port=DEFAULT_PORT):  
     """应用模型替换到工作流"""
     with open(workflow_path, "r", encoding="utf-8") as f:
         workflow = json.load(f)
@@ -536,7 +548,7 @@ def main():
     ap = argparse.ArgumentParser(description="分析并修复工作流依赖")
     ap.add_argument("--workflow", required=True, help="工作流文件路径")
     ap.add_argument("--host", default="127.0.0.1")
-    ap.add_argument("--port", default="3198")  # comfyui-cli项目标准端口
+    ap.add_argument("--port", default=DEFAULT_PORT)  
     ap.add_argument("--output", help="修复后的工作流输出路径")
     ap.add_argument("--fix", action="store_true", help="自动修复并输出工作流")
     args = ap.parse_args()

@@ -203,16 +203,16 @@ def queue(self):
 **排查步骤**：
 ```bash
 # 1. 检查服务器是否真正运行
-curl http://127.0.0.1:3198/system_stats
+curl http://127.0.0.1:${COMFYUI_PORT:-8188}/system_stats
 
 # 2. 查看当前队列状态
-curl http://127.0.0.1:3198/queue
+curl http://127.0.0.1:${COMFYUI_PORT:-8188}/queue
 
 # 3. 检查节点是否可用
-curl http://127.0.0.1:3198/object_info | findstr "WanVideo"
+curl http://127.0.0.1:${COMFYUI_PORT:-8188}/object_info | findstr "WanVideo"
 
 # 4. 强制中断当前任务
-curl -X POST http://127.0.0.1:3198/interrupt
+curl -X POST http://127.0.0.1:${COMFYUI_PORT:-8188}/interrupt
 ```
 
 ---
@@ -223,11 +223,11 @@ curl -X POST http://127.0.0.1:3198/interrupt
 
 **示例**：
 ```powershell
-Invoke-WebRequest -Uri "http://127.0.0.1:3198/object_info" -UseBasicParsing -TimeoutSec 10
+Invoke-WebRequest -Uri "http://127.0.0.1:${COMFYUI_PORT:-8188}/object_info" -UseBasicParsing -TimeoutSec 10
 ```
 
 **原因**：
-1. 服务器端口不匹配（配置了 3198，但服务器运行在其他端口）
+1. 服务器端口不匹配（`COMFYUI_PORT` / `--port` 指定的端口与 ComfyUI 实际监听端口不一致；当前默认 8188）
 2. 服务器未启动或已崩溃
 3. 防火墙/安全软件拦截
 
@@ -367,7 +367,7 @@ click.exceptions.Abort
 **原因**：`comfy install` 命令需要用户交互式确认（Y/N），在非交互环境（如脚本、AI Agent）中失败。
 
 **解决**：
-1. 使用脚本模式安装：`python scripts/start_server.py --install`
+1. 使用非交互安装：`comfy install --yes`（**注意**：`scripts/start_server.py` 没有 `--install` 参数，旧记录中的该写法不可用）
 2. 或修改 CLI 代码添加 `--yes` 标志跳过确认
 3. 或使用 `echo "Y" | comfy install` 管道输入
 
@@ -738,7 +738,7 @@ ffmpeg concat filter 拼接3段
 **路径变量约定**（本文档使用以下变量替代绝对路径）：
 - `${COMFYUI_PATH}`: ComfyUI安装目录
 - `${PROJECT_PATH}`: 本项目根目录
-- `${COMFYUI_PORT}`: ComfyUI服务端口（默认3198，可通过环境变量配置）
+- `${COMFYUI_PORT}`: ComfyUI服务端口（默认8188，ComfyUI 官方默认；可用同名环境变量覆盖）
 - `${OUTPUT_DIR}`: 视频输出目录
 - `${TEMP_DIR}`: 临时文件目录
 
@@ -900,7 +900,7 @@ python -u main.py --port ${COMFYUI_PORT} --listen 127.0.0.1 \
 | `--node-type` | 按节点类型过滤（部分匹配） | `python query_library.py --node-type KSampler` |
 | `--model` | 按模型文件名过滤（部分匹配） | `python query_library.py --model flux-2-klein` |
 
-默认仓库路径：`.trae/skills/comfyui-controller/assets/workflow_library.json`
+默认仓库路径：`skills/comfyui-controller/assets/workflow_library.json`
 
 #### 构建器 `build_workflow_library.py`
 
@@ -985,7 +985,7 @@ $json.UNETLoader.input.required.unet_name[1].options
 
 1. **模型名不可硬编码**：工作流模板记录的模型名可能因版本更迭或重命名与本地不符
 2. **执行前必查 object_info**：所有 COMBO 类型参数（模型选择）都应从 `/object_info/{NodeType}` 动态获取
-3. **`get_available_models.py` 的 type 映射不完整**：该脚本 `--type upscale` 错误映射到 CheckpointLoaderSimple，upscale 模型应直接查 `/object_info/UpscaleModelLoader`
+3. **`get_available_models.py` 的 type 键名必须写全**：映射表里的合法键是 `upscale_models`，写 `--type upscale` 不在映射表内会**静默回落**到默认的 `("CheckpointLoaderSimple", "ckpt_name")`，表现得像"映射不完整"。正确写法：`--type upscale_models`（对应 `/object_info/UpscaleModelLoader`）。
 
 ### 13.7 UI 格式转 API 格式的节点清理
 
@@ -1014,7 +1014,7 @@ $json.UNETLoader.input.required.unet_name[1].options
 | 模型 | 适用场景 | 选择建议 |
 |------|---------|---------|
 | `2x_StarSample_V2.0.safetensors` | AI 生成内容超分 | **推荐**，对 AI 生成图片细节保留好 |
-| `RealESRGAN_x2.pth` | 真实照片超分 | 不适合 AI 生成内容，产生伪影（见 9.1 节） |
+| `RealESRGAN_x2.pth` | 真实照片超分 | 不适合 AI 生成内容，产生伪影（见 §24.2.1） |
 
 #### 标准放大工作流节点链
 
@@ -1043,7 +1043,7 @@ API 格式示例：
 
 #### 经验清单
 
-1. **AI 生成图片放大选 2x_StarSample_V2.0**：RealESRGAN_x2 对 AI 生成内容产生伪影（9.1 节已记录，本次再次验证）
+1. **AI 生成图片放大选 2x_StarSample_V2.0**：RealESRGAN_x2 对 AI 生成内容产生伪影（§24.2.1 已记录，本次再次验证）
 2. **放大前需将图片复制到 input 目录**：LoadImage 节点从 `${COMFYUI_PATH}\input\` 加载，输出目录的图片需先复制
 3. **ImageUpscaleWithModel 而非 ImageUpscale**：前者使用模型超分（画质好），后者仅像素插值（画质差）
 
@@ -1415,7 +1415,7 @@ r = requests.post('http://127.0.0.1:${PORT}/upload/image', files=files)
 | anchor_samples | LATENT | 锚定 latent（首帧 VAE 编码，所有段共用） |
 | prev_samples | LATENT（可选） | 前一段末尾 latent（段间连贯的关键） |
 | length | INT | 每段帧数（81） |
-| motion_latent_count | INT | 运动 latent 数量（第一段=0，后续段=1） |
+| motion_latent_count | INT | 运动 latent 数量（**节点默认值=1**，声明 min 0 / max 128；**仅在 `prev_samples` 已连接时起作用**，未连接时取值无影响。真实可用上限为 `(length-1)//4+1-anchor_T`，length=81 时 ≤20，超限抛 `RuntimeError`。见 22.3.2 实测） |
 
 **输出**：
 - positive / negative（处理后的条件）
@@ -1424,7 +1424,7 @@ r = requests.post('http://127.0.0.1:${PORT}/upload/image', files=files)
 **关键设计**：
 1. **anchor_samples**：所有段都锚定到首帧 VAE 编码的 latent，保持角色一致性
 2. **prev_samples**：段间 latent 级别传递（非图像级别），比"末帧重新编码"更精细
-3. **motion_latent_count**：第一段=0（无运动延续），后续段=1（引入运动 latent）
+3. **motion_latent_count**：取值只在 `prev_samples` 已连接时才产生作用（详见 22.3.2 实测）
 
 ### 15.4 双阶段采样配置
 
@@ -1500,16 +1500,16 @@ SVI Pro 的段间连贯通过两个层面实现：
 - HIGH 链路：`Wan2.2_Remix_NSFW_i2v_14b_high_lighting_v2.0.safetensors` + `SVI_v2_PRO_..._HIGH_lora`（strength=1）
 - LOW 链路：`Wan2_2-I2V-A14B-LOW_fp8_e4m3fn_scaled_KJ.safetensors` + `SVI_v2_PRO_..._LOW_lora`（strength=1）
 - 优点：LOW 阶段专用模型细化细节，现实人物画质清晰
-- 缺点：两个 14B 模型（13.31GB+13.97GB=27.28GB>20GB），ComfyUI 需在 HIGH/LOW 间自动卸载/加载，增加约 5-10 分钟
+- 缺点：两个 14B 模型（13.31GiB + 13.97GiB ≈ **27.3GiB**，实测十进制 14.29GB + 15.00GB = 29.3GB，远超 20GB），ComfyUI 需在 HIGH/LOW 间自动卸载/加载，增加约 5-10 分钟
 
 **关键纠正（2026-07-24）**：之前经验错误记录"两个 UNETLoader 加载同一个 HIGH 模型"为唯一设计，实际上这只是动漫类配置。**生成现实人物必须用现实类配置（模式B），否则 LOW 阶段无法有效细化细节，导致画面模糊**。
 
 **本地可用模型文件**：
 | 文件 | 大小 | 用途 |
 |------|------|------|
-| Wan2.2_Remix_NSFW_i2v_14b_high_lighting_v2.0.safetensors | 13.31GB | HIGH 模型（两种模式共用） |
-| Wan2_2-I2V-A14B-HIGH_fp8_e4m3fn_scaled_KJ.safetensors | 13.97GB | 专用 HIGH 模型（备用） |
-| Wan2_2-I2V-A14B-LOW_fp8_e4m3fn_scaled_KJ.safetensors | 13.97GB | 专用 LOW 模型（现实类必需） |
+| Wan2.2_Remix_NSFW_i2v_14b_high_lighting_v2.0.safetensors | 13.31GiB（14.29GB） | HIGH 模型（两种模式共用） |
+| Wan2_2-I2V-A14B-HIGH_fp8_e4m3fn_scaled_KJ.safetensors | 13.97GiB（15.00GB） | 专用 HIGH 模型（备用） |
+| Wan2_2-I2V-A14B-LOW_fp8_e4m3fn_scaled_KJ.safetensors | 13.97GiB（15.00GB） | 专用 LOW 模型（现实类必需） |
 | SVI_v2_PRO_Wan2.2-I2V-A14B_HIGH_lora_rank_128_fp16.safetensors | 1170MB | HIGH LoRA |
 | SVI_v2_PRO_Wan2.2-I2V-A14B_LOW_lora_rank_128_fp16.safetensors | 1170MB | LOW LoRA（现实类必需） |
 
@@ -1548,7 +1548,7 @@ SVI Pro 的段间连贯通过两个层面实现：
 | ModelPatchTorchSettings | FP16 累加 | enable_fp16_accumulation=true |
 | Fast Groups Bypasser | 一键开关 | 可关闭加速（SAGE/Torch 报错时） |
 
-**注意**：工作流注释明确"如果出现 SAGE/Torch 类报错，或者卡采样器，按按钮关闭加速模组"。Windows 上 sageattn 依赖 Triton，可能触发权限错误（见第 14 章 14.4 节 Windows 风险说明）。
+**注意**：工作流注释明确"如果出现 SAGE/Torch 类报错，或者卡采样器，按按钮关闭加速模组"。Windows 上 sageattn 依赖 Triton，可能触发权限错误（见 §20.5 第 4 条 TRITON_CACHE_DIR 说明）。
 
 ### 15.9 与项目硬约束的对照
 
@@ -1644,11 +1644,11 @@ SVI Pro 工作流提供了一套完整的长视频（20 秒）生成方案，核
 ### 16.4 正确配置（现实类）
 
 ```
-HIGH 链路: Wan2.2_Remix_NSFW_i2v_14b_high_lighting_v2.0.safetensors (13.31GB)
+HIGH 链路: Wan2.2_Remix_NSFW_i2v_14b_high_lighting_v2.0.safetensors (13.31GiB)
          + SVI_v2_PRO_Wan2.2-I2V-A14B_HIGH_lora (strength=1.0)
          → PathchSageAttentionKJ → ModelPatchTorchSettings → HIGH KSampler
 
-LOW 链路:  Wan2_2-I2V-A14B-LOW_fp8_e4m3fn_scaled_KJ.safetensors (13.97GB)
+LOW 链路:  Wan2_2-I2V-A14B-LOW_fp8_e4m3fn_scaled_KJ.safetensors (13.97GiB)
          + SVI_v2_PRO_Wan2.2-I2V-A14B_LOW_lora (strength=1.0)
          → PathchSageAttentionKJ → ModelPatchTorchSettings → LOW KSampler
 ```
@@ -1767,7 +1767,7 @@ Prompt outputs failed validation
 | | 0.55-0.6 | 更多修正力度，构图可能轻微偏移 | SVI Pro输出严重模糊 |
 | | >0.7 | 接近文生图，背景大幅偏离 | 不推荐用于修正场景 |
 | **steps** | 20-24 | 较快修正，细节恢复有限 | 快速验证阶段 |
-| | **28-32（推荐）** | 最佳细节恢复，时间可接受 | 正式生成（v12验证） |
+| | **28-32（推荐）** | 最佳细节恢复，时间可接受（实测：比 8 步锐度 +14%、时间约 4 倍） | 正式生成（v12验证 + 2026-10-13 本机复测） |
 | | 36-40 | 边际收益递减 | 极限画质追求 |
 | **cfg** | 2.0-3.0 | 保守引导，色彩偏灰 | 原图色彩已准确 |
 | | **3.5（推荐）** | 平衡，避免img2img色彩过度饱和 | 标准场景（v12验证） |
@@ -1806,14 +1806,20 @@ C7 任务的 5 段 SVI Pro 视频需要段间无缝衔接。v12 改进版引入 
 
 **现象**：合并后的 20 秒视频在段间过渡处出现明显的暗→亮渐变，从段2开始画面逐渐变亮。
 
-**根因**：WanImageToVideoSVIPro 节点的 `motion_latent_count` 参数非 0 时，内部会将 `anchor_latent` 与 `motion_latent`（来自 prev_samples）拼接为条件 latent。当 prev_samples 与 anchor_samples 来自不同来源（修正图 vs 原图），两者的 VAE 编码分布不同，拼接后导致亮度异常。
+**根因**：`prev_samples` **已连接**且 `motion_latent_count` 非 0 时，`WanImageToVideoSVIPro` 才会把 `anchor_latent` 与 `motion_latent`（来自 prev_samples）拼接为条件 latent。当 prev_samples 与 anchor_samples 来自不同来源（修正图 vs 原图），两者的 VAE 编码分布不同，拼接后导致亮度异常。
 
-**源码逻辑**（`ComfyUI-KJNodes/nodes/nodes.py`）：
+> **前置条件补充（2026-10-13 实测）**：只调 `motion_latent_count` 而不断开 `prev_samples` 是 insufficient 的——反之亦然。
+> 二者是**与关系**：`prev_samples is not None and motion_latent_count > 0` 才触发拼接。
+> 未接 prev_samples 时把该参数从 1 改成 0 不会改变任何输出（实测逐位相同）。
+
+**源码逻辑**（`ComfyUI-KJNodes/nodes/nodes.py`，实测版本为 2026-10 本机安装的 KJNodes）：
 ```python
-if prev_samples is not None and motion_latent_count > 0:
-    # anchor_latent [B,C,1,H,W] + prev最后motion_latent_count帧 [B,C,m,H,W]
-    # = image_cond_latent [B,C,1+m,H,W] → 用于条件
+# WanImageToVideoSVIPro.execute()，等价写法：
+if prev_samples is None or motion_latent_count == 0:
+    # anchor_latent [B,C,1,H,W] 直接作为条件
     ...
+else:
+    motion_latent = prev_samples["samples"][:, :, -motion_latent_count:].clone()
 ```
 
 当 motion_latent_count=1 时，条件 latent = `concat([原图1帧, 修正图1帧])`，两者的 VAE 分布差异导致亮度信息不一致。
@@ -1829,8 +1835,8 @@ if prev_samples is not None and motion_latent_count > 0:
 |------|---------|-----------|
 | 段2-5 LoadImage | 原图 c7_1.png | 上一段 Flux2 修正图 |
 | anchor_samples | 原图 VAEEncode | 原图 VAEEncode（不变） |
-| prev_samples | 连接上一段 LOW latent | 不连接 |
-| motion_latent_count | 1 | 0 |
+| prev_samples | 连接上一段 LOW latent | **不连接（关键）** |
+| motion_latent_count | 1 | 0（真正起决定作用的是断开 prev_samples；后者变更后两者等价） |
 | 效果 | 暗→亮渐变 | 色调统一 |
 
 ### 18.3 问题 2：段2 首帧用错图片
@@ -1876,7 +1882,7 @@ Flux2修正: 段1最后帧 + 原图B图 → Flux2 img2img → 段1修正图
 ### 18.5 显存管理经验
 
 5 段视频生成涉及多次模型切换：
-- HIGH 模型（13.31GB）和 LOW 模型（13.97GB）不能同时加载
+- HIGH 模型（13.31GiB / 14.29GB）和 LOW 模型（13.97GiB / 15.00GB）不能同时加载
 - 在每段之间调用 `/free` API 释放显存：`{unload_models: true, free_memory: true}`
 - 段5 因显存未清理而导致 `execution_interrupted`，清理后成功
 
@@ -1917,10 +1923,21 @@ add_noise, noise_seed, control_after_generate, steps, cfg,
 sampler_name, scheduler, start_at_step, end_at_step, return_with_leftover_noise
 ```
 
-如果 `widgets_values` 只有 9 个值（缺少 `control_after_generate`），则后续参数全部错位：
+**本节结论正确（2026-10-13 实测复核）**：`/object_info/KSamplerAdvanced` 显示 13 个 required 项中
+4 个是 LINK（`model/positive/negative/latent_image`），9 个是 widget，其中只有 `noise_seed`
+带 `control_after_generate: true` → 前端实际 10 槽位；本机 81 个真实 UI 工作流实例的
+`widgets_values` 长度分布为 **{10: 81}**。详见 22.5.1（该节原文曾写"11 个值"，已按实测改正）。
+
+如果 `widgets_values` 缺少 `control_after_generate` 导致错位：
 - `cfg` 位置收到 `sampler_name` 字符串 → Failed to convert to FLOAT
 - `sampler_name` 位置收到 `scheduler` 字符串 → Value not in list
 - 其他参数依次错位
+
+**一处需要修正的过度断言**：原文"只要 9 个值就**全部错位**"并不总是成立。
+实测本项目 `scripts/workflow_converter.py` 会依据 `object_info` 的 `control_after_generate`
+标记做容错过滤，因此**缺失 control 标记的 9 值写法在本转换器下可能照样转对**。
+真正必然错位的是**顺序写错**（把 cfg/sampler/scheduler 排到末尾）或**把 LINK 输入写进
+widgets_values**（11 值写法）。所以规范是"写 10 值且顺序正确"，而不是"长度对了就万事大吉"。
 
 ### 19.3 解决方案
 
@@ -2076,7 +2093,10 @@ vae_list = folder_paths.get_filename_list("vae")
 **场景化建议**：
 - **场景A（速度优先）**：lightx2v加速LoRA，steps=6-8，适合快速验证和迭代
 - **场景B（质量优先）**：画质LoRA替代加速LoRA，steps=20-30，适合最终交付
-- **场景C（Flux2修正）**：steps=28-32，需要足够步数恢复被SVI Pro丢失的细节
+- **场景C（Flux2修正）**：steps=28-32，需要足够步数恢复被SVI Pro丢失的细节。
+  **2026-10-13 实测校准**：8 步与 32 步"改动画面的量"几乎相同（MAE 0.1076 vs 0.1009），
+  差别集中在**锐度**（Laplacian 方差 69.1 → 78.9），时间是 662s → 2621s（约 4 倍，CPU 实测）。
+  ⇒ 想要"锐/细"必须上 28-32；只想要"改到位/去噪"8 步就够。详见 4.16.3 节。
 - **场景D（OOM降级）**：优先降分辨率保步数，而非降步数（步数过低导致质量崩溃）
 
 **关键禁忌**：
@@ -2256,7 +2276,10 @@ vae_list = folder_paths.get_filename_list("vae")
 - **场景A（单段生成+L3档）**：blocks_to_swap=20，专用显存利用率 75%+（C8验证，非36）
 - **场景B（OOM降级）**：递增blocks_to_swap 2-4个单位，不降分辨率/步数（优先保质量）
 - **场景C（SVI Pro分段+L3档）**：段间需切换HIGH/LOW模型，L3档HIGH+LOW使用同一文件被缓存，blocks_to_swap=20-24可行
-- **场景D（双模型同时加载+L4档）**：blocks_to_swap=0（两个fp8模型各约7-8GB，24GB足够）
+- **场景D（双模型同时加载+L4档）**：blocks_to_swap=0 —— **但要注意容量前提已按实测更正**：
+  两个 Wan2.2 A14B fp8 模型各约 **13.31–13.97GiB（14.29–15.00GB）**，合计约 **27–29GiB**，
+  **24GB 显卡装不下原文说的"各约7-8GB"是错的。双模型常驻需要 ≥32GB 显存**；
+  16–24GB 档请改为串行加载（配合 blocks_to_swap），而不是假设能同时驻留。
 
 **关键禁忌**：
 - blocks_to_swap 值过高会导致专用显存闲置，转而使用共享内存（C8验证：36 导致专用显存仅用 40%）
@@ -2270,18 +2293,45 @@ vae_list = folder_paths.get_filename_list("vae")
 
 **梯度分层**：
 
-| 精度 | 模型大小 | 显存占用 | 相对速度 | 适用硬件 | 质量影响 |
+> **2026-10-13 实测校正（本机 `D:\2026-ComfyUI-V8.3\models`）**
+>
+> 原表 `bf16=14GB / fp8=7-8GB` 与本机 Wan2.2 系列实测相差约一倍，已改正。
+> 实测方法是直接解析 safetensors 头部得到**参数量**（不受单位歧义影响）：
+>
+> | 模型文件 | 参数量 | 主 dtype | 实际大小(GB) | 实际大小(GiB) |
+> |---------|-------|---------|------------|-------------|
+> | `Wan2_2-I2V-A14B-HIGH_fp8_e4m3fn_scaled_KJ.safetensors` | 14.29B | F8_E4M3 | **15.00** | 13.97 |
+> | `Wan2_2-I2V-A14B-LOW_fp8_e4m3fn_scaled_KJ.safetensors` | 14.29B | F8_E4M3 | **15.00** | 13.97 |
+> | `wan2.2_T2V_high_noise_14B_fp8_scaled.safetensors` | 14.29B | F8_E4M3 | **14.29** | 13.31 |
+> | `wan2.2_Remix_NS-FW_i2v_14b_high_lighting_v2.0.safetensors` | 14.29B | F8_E4M3 | **14.29** | 13.31 |
+> | `F2K-9b-kleinova_10FP8.safetensors`（Flux2 Klein 9B） | 9.08B | F8_E4M3 | 9.43 | 8.79 |
+> | 同权重对照：`Wan2_1_VAE_bf16` vs `Wan2_1_VAE_bf16-fp8-e5m2` | 0.13B | BF16 / F8_E5M2 | 0.254 / 0.127 | — |
+>
+> **体积公式（实测验证）**：文件字节数 ≈ 参数量 × 每参数字节数（fp8=1、bf16=2、fp32=4），
+> 头部/对齐开销 <0.1%。fp8 对照结果比值恰为 **2.000**，
+> SD1.5 fp32（1.07B 参数 → 4.27GB）同样吻合。
+> 推论：Wan2.2 A14B（14.29B 参数）bf16 应为 **≈28.6GB**，fp8 为 **≈14.3–15.0GB**。
+>
+> 本文档各处出现的"13.31GB / 13.97GB"之所以对得上实测，是因为那两个数是 **GiB**（Windows 资源管理器读数）；
+> 换算成十进制 GB 是 14.29 / 15.00。为免歧义，下文统一写成 `13.31GiB / 13.97GiB（=14.29/15.00GB）`。
+
+| 精度 | 模型大小（Wan2.2 A14B，实测/推算） | 显存占用 | 相对速度 | 适用硬件 | 质量影响 |
 |------|---------|---------|---------|---------|---------|
-| fp16_fast | 14GB | ~14GB | 1.5×基准 | L4(≥24GB) | 最佳质量 |
-| bf16 | 14GB | ~14GB | 1.0×基准 | L1/L2/L3(8-24GB) | 标准质量，已验证稳定 |
-| fp8_e4m3fn | 7-8GB | ~8GB | 1.8×基准 | L3/L4(≥16GB) | 轻微质量损失，大多数场景无感知 |
-| fp8_scaled | 7-8GB | ~8GB | 1.8×基准 | L3/L4(≥16GB) | scaled版本对某些模型更友好 |
+| fp32 | ≈57.2GB（推算，未实测） | — | 最慢 | — | 无精度损失，体积无法接受 |
+| fp16_fast | ≈28.6GB（推算） | ~28.6GB | 1.5×基准 | L4(≥32GB，非 24GB) | 最佳质量 |
+| bf16 | ≈28.6GB（推算） | ~28.6GB | 1.0×基准 | 工作站级 | 标准质量，已验证稳定 |
+| fp8_e4m3fn | **14.3–15.0GB（实测）** | ~14–15GB | 1.8×基准 | L3/L4(≥16GB，双模型需 ≥32GB) | 轻微质量损失，大多数场景无感知 |
+| fp8_scaled | **14.3–15.0GB（实测）** | ~14–15GB | 1.8×基准 | L3/L4(≥16GB) | scaled版本对某些模型更友好 |
+
+> 注：本机无可用 NVIDIA GPU（torch 2.9.1+cu128 报告 `cuda.is_available()==False`），
+> **显存占用一列是按文件体积推算，未做实机实测**，仅文件体积为实测量。
 
 **场景化建议**：
 - **场景A（追求质量+L4档）**：fp16_fast，所有其他参数可设上限
 - **场景B（标准+L2/L3档）**：bf16，已验证稳定，兼容性最好
 - **场景C（加速+L3/L4档+lightx2v）**：fp8_e4m3fn，与lightx2v蒸馏LoRA配合效果更好
-- **场景D（OOM降级+L3档）**：bf16→fp8_e4m3fn，可释放约6GB显存
+- **场景D（OOM降级+L3档）**：bf16→fp8_e4m3fn，对 Wan2.2 A14B 可释放约 **14GB**（28.6→14.3–15.0GB，实测换算），
+  而非原文所说的约6GB
 
 **关键禁忌**：
 - fp16_fast在L1/L2档(8-16GB)可能导致OOM
@@ -2476,13 +2526,34 @@ vae_list = folder_paths.get_filename_list("vae")
 
 **物理意义**：控制当前段是否携带上一段的运动状态 latent。值=0 表示不加运动延续（从静止开始），值=1 表示携带1帧上一段末尾的运动 latent。
 
+> **2026-10-13 实测裁定（冲突来源已定位）**
+>
+> 文档曾存在两种互斥说法：SKILL/README 的"段1=0，段2-5=1"与本章的"全段=0"。
+> 实测（KJNodes 真实模块 `WanImageToVideoSVIPro.execute()`，`nodes.py:2942`）：
+>
+> 源码分支是 `if prev_samples is None or motion_latent_count == 0:` → 只用 anchor；
+> 只有 `prev_samples` 已连接 **且** `motion_latent_count > 0` 时才会拼接
+> `prev_samples["samples"][:, :, -mcl:]`。
+>
+> | 实测场景 | 结果 |
+> |---------|------|
+> | 不接 prev_samples：mcl=0 vs mcl=1 | 输出 `concat_latent` **shape 相同且逐位完全相同**（`torch.equal=True`）→ 两者完全等价 |
+> | 接了 prev_samples：mcl=0 vs mcl=1 | 数值不同 → **确实触发拼接**，mcl=1 拼入 prev 最后 1 帧 |
+> | 硬边界 | `mcl` 名义 max=128，但真实上限为 `(length-1)//4 + 1 - anchor_T`；length=81 → ≤20；mcl=128 或 length=1/4 时直接抛 `RuntimeError: zeros: Dimension size must be non-negative` |
+>
+> **结论**：两派说法都对，因为它们在**不同的连线方式**下成立。
+> 决定 latent 拼接是否发生的是 **`prev_samples` 是否连接**；
+> 一旦本项目推荐的"不连 prev_samples、用 Flux2 修正图传状态"的用法成立，
+> `motion_latent_count` 填 0 或 1 对输出**没有任何区别**（字节级等价）。
+> 统一建议：始终填 **0**，既免歧义，也能防止后续误接 prev_samples 时静默引入拼接。
+
 **梯度分层**：
 
 | motion_latent_count | 适用段 | 效果 | 风险 |
 |-------------------|--------|------|------|
-| **0** | 段1（强制） + 推荐段2-5 | 每段从静止/修正图开始，无运动状态传递 | 段间动作可能有微停顿 |
-| **1** | 段2-5（可选） | 携带上一段末尾的运动状态，动作更连贯 | **高概率导致暗→亮渐变**（C7 v12验证） |
-| >1 | 不推荐 | 多帧运动 latent 叠加，增加不稳定性 | 色调漂移放大 |
+| **0**（推荐，全段） | 全部段 | 每段从静止/修正图开始，无运动状态传递 | 段间动作可能有微停顿（可用 Flux2 修正图弥补） |
+| **1** | 段2-5（**仅在明确连接 prev_samples 时才有意义**） | 携带上一段末尾的运动状态，动作更连贯 | **接了 prev_samples 时高概率导致暗→亮渐变**（C7 v12验证）；未接 prev_samples 时与 0 完全等价 |
+| >1 | 不推荐 | 多帧运动 latent 叠加，增加不稳定性 | 色调漂移放大；且极易撞 `-mcl` 的 padding 负尺寸上限 |
 
 **关键教训（C7 v12 2026-07-25）**：
 
@@ -2551,7 +2622,7 @@ motion_latent_count=1 时，anchor_latent（1帧原图）和 motion_latent（1�
 ```
 
 **容易出问题的场景**：
-- **overlap 过大（>10）**：浪费段末尾的有效帧，5段×10帧=50帧被"吃掉"，20秒视频变18秒
+- **overlap 过大（>10）**：浪费段末尾的有效帧，（5段−1）×10帧=40帧被"吃掉"，20秒视频变18秒（总帧数按 `段数×每段帧数 − (段数−1)×overlap` 计算）
 - **overlap 过小（<3）**：无法消除硬切，段间可见跳跃
 - **混合模式用 none**：等于硬拼接，失去使用此节点的意义
 
@@ -2563,29 +2634,68 @@ motion_latent_count=1 时，anchor_latent（1帧原图）和 motion_latent（1�
 
 **参数陷阱（最重要）**：
 
-#### 22.5.1 widgets_values 10值对齐陷阱
+#### 22.5.1 widgets_values 长度与顺序（2026-10-13 实测裁定）
 
-**问题**：API 格式工作流通过 key 映射参数（无顺序概念），但 UI 格式工作流通过 `widgets_values` 的 position 顺序映射参数。KSamplerAdvanced 的前端渲染有 **10 个 widget**（含隐式 widget），但常见构建只传 9 个值。
+**历史冲突**：本节原文称"11 个值"，第 19 章称"10 个值"，两者互斥且都自称已验证。
+已在 **ComfyUI 0.32.0 / frontend 1.48.7** 上实测裁定，**10 值正确、11 值必然错位**。
 
-| 位置 | widget名 | 是否显式 | 示例值 |
-|------|---------|---------|--------|
-| 0 | model | 显式 | [节点ID, output_index] |
-| 1 | add_noise | 显式 | "enable" 或 "disable" |
-| 2 | noise_seed | 显式 | 123456 |
-| 3 | **control_after_generate** | **隐式（UI独有）** | **"fixed"** / "increment" / "decrement" / "randomize" |
-| 4 | steps | 显式 | 20 |
-| 5 | start_at_step | 显式 | 0 |
-| 6 | end_at_step | 显式 | 10 |
-| 7 | return_with_leftover_noise | 显式 | "enable" |
-| 8 | cfg | 显式 | 5.0 |
-| 9 | sampler_name | 显式 | "euler" |
+**裁定依据一 —— 节点定义（`GET /object_info/KSamplerAdvanced`）**：
+
+```
+input_order.required = [model, add_noise, noise_seed, steps, cfg, sampler_name,
+                        scheduler, positive, negative, latent_image,
+                        start_at_step, end_at_step, return_with_leftover_noise]
+```
+
+其中 `model / positive / negative / latent_image` 是 LINK 类型输入（走连线），
+**不进入 `widgets_values`**；剩下 9 个是 widget 字段。
+9 个里只有 `noise_seed` 带 `control_after_generate: true`，因此前端序列化时
+seed 会多占 1 个槽位 → **9 + 1 = 10**。
+
+| 位置 | widget名 | 类型 | 显式/隐式 | 示例值 |
+|------|---------|------|----------|--------|
+| 0 | add_noise | COMBO | 显式 | "enable" / "disable" |
+| 1 | noise_seed | INT | 显式 | 123456 |
+| 2 | **control_after_generate** | — | **隐式（UI 独有）** | **"fixed"** / "increment" / "decrement" / "randomize" |
+| 3 | steps | INT | 显式 | 20 |
+| 4 | cfg | FLOAT | 显式 | 5.0 |
+| 5 | sampler_name | COMBO | 显式 | "euler" |
+| 6 | scheduler | COMBO | 显式 | "simple" |
+| 7 | start_at_step | INT | 显式 | 0 |
+| 8 | end_at_step | INT | 显式 | 10000 |
+| 9 | return_with_leftover_noise | COMBO | 显式 | "disable" |
+
+> 注意 `cfg / sampler_name / scheduler` 排在 `start_at_step` **之前**。
+> 旧版把这三个字段写到末尾的顺序是错的。
+
+**裁定依据二 —— 本机真实 UI 工作流统计**：扫描 `user/default/workflows`、
+自定义节点示例与模型内嵌 workflow，共取得 **81 个 KSamplerAdvanced 实例**，
+`widgets_values` 长度分布为 **{10: 81}**，无一例外。真实样例：
+
+```
+["enable", 214, "fixed", 3, 3, "euler", "simple", 0, 1, "enable"]
+["disable", 214, "fixed", 3, 1.5, "euler", "simple", 1, 10000, "disable"]
+```
+
+**裁定依据三 —— 用本项目 `scripts/workflow_converter.py` 实测转换**：
+（目标值 add_noise=enable, seed=20261013, steps=8, cfg=1.0, euler, simple, 0, 10000, disable）
+
+| 变体 | widgets_values | 转换结果 |
+|------|----------------|---------|
+| 10 值，本节表格顺序 | `["enable", 20261013, "fixed", 8, 1.0, "euler", "simple", 0, 10000, "disable"]` | ✅ 九个参数全部命中 |
+| 11 值，含 `model_ref` | `[[1,0], "enable", 20261013, "fixed", 8, 0, 10000, "disable", 1.0, "euler", "simple"]` | ❌ 灾难性错位：`add_noise=[1,0]`、`steps=20261013`、`cfg="fixed"`、`sampler_name="dpm_2"` |
+| 10 值，但用旧的末尾顺序 | `[[1,0], "enable", ...]` 同 11 值前 10 位 | ❌ 错位同上 |
+
+不要把 LINK 输入写进 `widgets_values` —— 这是 11 值说法的根因。
+
+**为什么"9 值也能跑通"**：本项目 `workflow_converter._filter_control_values()`
+会根据 `object_info` 中 `control_after_generate` 标记做容错过滤，因此缺位时不必然错位。
+但那是转换器的容错，**不是 UI 格式的事实**。前端保存/加载仍按 10 槽位处理，
+跨工具交换工作流时请以 10 值为准。
 
 **错误症状**：
-- API 执行正常但 Web 端报错 → 参数缺了第3位 control_after_generate
-- "Value not in list" 错误 → 参数类型错位（如把 "enable" 填到了 control_after_generate 位置）
-- "expected float but got str" 错误 → 参数顺序完全错位
-
-**修复**：始终确保 `widgets_values` 包含 `[model_ref, add_noise, seed, "fixed", steps, start, end, return_noise, cfg, sampler, scheduler]` 共 11 个值（部分版本scheduler也是独立widget）。
+- API 执行正常但 Web 端报错 → 检查 `widgets_values` 是否为 10 个、第 3 位是否为 control 标记
+- "Value not in list" / "expected float but got str" → 参数顺序错位（典型是把 cfg/sampler/scheduler 排到了末尾）
 
 **短视频 vs 长视频差异**：
 - **短视频（单段）**：2个 KSamplerAdvanced（HIGH+LOW 各1）
@@ -2986,7 +3096,7 @@ WanVideoBlockSwap(生成args) → WanVideoModelLoader(直接接收block_swap_arg
 **blocks_to_swap 选择指南**（按显存档位）：
 - **L1 入门级（8-12GB）**：40-42（激进卸载）
 - **L2 标准级（12-16GB）**：38-40
-- **L3 高性能级（16-24GB）**：20-36（推荐 20，专用显存利用率 75%+）
+- **L3 高性能级（16-24GB）**：20-24（推荐 20，专用显存利用率 75%+）。**不要写 20-36**：本节现象段已实测 `blocks_to_swap=36` 时专用显存几乎不利用、大量走共享内存，`40` 时采样器卡死；36 是被证伪的坏值，不能作为区间上界（与 §9.2 / §12.4.2 / §12.4.4 / §21.9 一致）。
 - **L4 专业级（≥24GB）**：20-24
 
 **关键原则**：在专用显存未被充分利用前，不使用共享 GPU 内存。`blocks_to_swap` 的作用是控制有多少 transformer blocks 在 CPU/GPU 间交换，值越大 GPU 保留的 block 越少。
@@ -3358,7 +3468,7 @@ LoadImage(2.png) → ImageScale(480x640) ─┘
 |------|------|--------|---------|---------|
 | `length`（SVI 每段帧数） | 81 | 49 | 单段生成帧数，影响耗时线性 | L1-L2: 25-33；L3: 49-81；L4: 81-121 |
 | `steps`（SVI 采样步数） | 6 | 3 | HIGH+LOW 总步数，蒸馏 LoRA 可低至 3 | 加速 LoRA: 3-6；画质 LoRA: 14-20；无 LoRA: 20-30 |
-| `steps`（Flux2 修正步数） | 12 | 8 | img2img 修正迭代次数 | 轻量修正: 4-6；平衡修正: 8-10；深度修正: 12-16 |
+| `steps`（Flux2 修正步数） | 12 | 8 | img2img 修正迭代次数 | 轻量修正: 4-6；平衡修正: 8-10；深度修正: 12-16。**实测补充（2026-10-13）**：降到 8 步丢的主要是锐度（-12%~14%），内容改动量几乎不变；单步耗时是 4 倍量级差异，本行的"-15%"指整条流水线 |
 | RealESRGAN | 启用 | 旁路 | 超分增加耗时但画质提升有限 | 最终输出启用；中间修正旁路 |
 
 **验证结果**：执行时间从 58 分钟降至约 22 分钟（L3 级硬件）。
@@ -4303,7 +4413,7 @@ Wan2.2 采用隐式扩散建模，首尾帧稳定性弱于中间帧，易出现�
 | 参数 | 值 | 物理意义 | 梯度建议 |
 |------|-----|---------|---------|
 | `length` | 49 | 每段生成帧数 | L1-L2: 25-33；L3: 49-81；L4: 81-121 |
-| `motion_latent_count` | 1 | 从前段携带的运动 latent 帧数 | 段1=0；段2-5=1 |
+| `motion_latent_count` | 0（推荐全段；节点默认值为 1） | 从前段携带的运动 latent 帧数 | 全段 0 最安全；仅在**明确连接 prev_samples** 且想要运动延续时才设 1，此时上限为 `(length-1)//4+1-anchor_T`（length=81 → ≤20） |
 | 总帧数 | 237 | 5段×49 - 4×1(overlap) | - |
 | 分辨率 | 480 × 848 | 9:16 竖屏 | 必须为 16 的倍数 |
 | `frame_rate` | 16 | 输出帧率 | 16: 长视频推荐；20: 源工作流默认；24: 短视频标准 |
@@ -4355,7 +4465,7 @@ Wan2.2 采用隐式扩散建模，首尾帧稳定性弱于中间帧，易出现�
 | 指标 | 结果 | 达标 |
 |------|------|------|
 | 总耗时 | 约 22 分钟 | ✅（目标 30-40 分钟） |
-| 专用显存使用率 | 76.0% (15.5GB / 20GB) | ✅ |
+| 专用显存使用率 | 77.5% (15.5GB / 20GB) | ✅ |
 | 共享 GPU 内存使用 | 未使用 | ✅ |
 | 双模型串行执行 | HIGH→PurgeVRAM→LOW | ✅ |
 | Flux2 动作保留 | 70%（denoise=0.6） | ✅ |
@@ -4376,4 +4486,336 @@ Wan2.2 采用隐式扩散建模，首尾帧稳定性弱于中间帧，易出现�
 6. **手部/肢体修复需双向提示词约束**：正向指定正确结构（"十指分明，两臂两腿"），负向禁止错误结构（"多手指，三头六臂"）
 7. **ColorMatch 的 image_ref 必须稳定**：所有节点共用同一参考图，避免使用生成帧作为参考导致二次漂移
 8. **帧率选择影响视频时长和流畅度**：16fps 适合长视频平衡，24fps 适合短视频标准
+
+***
+
+## 25. CLI 本地命令移植收尾与后台日志/机器可读输出修复（2026-10-14）
+
+> 承接「按官方 comfy-cli 更新本项目 CLI」。上半程已交付
+> `system-stats` / `free` / `download` / `upload` / `jobs` / `templates` /
+> `run-template` / `setup` / `update cli`；本程处理验收审计留下的 3 项存疑，
+> 并在实测中**又暴露 2 个真实缺陷**（25.2 / 25.3）。
+> 命令用法详见 [cli_local_commands.md](cli_local_commands.md)。
+
+### 25.1 三项存疑的处置
+
+| # | 存疑项 | 处置 |
+| - | ------ | ---- |
+| 1 | `cli/standalone.py` 残留旧包名 `comfy_cli` | `run_comfy_cli()` 改为 `run_module("cli", ...)`；`install_comfy_cli()` 非 dev 分支改为发行名 `comfyui-omni-controller`。二者为未被调用的遗留方法，仍一并修正 |
+| 2 | `docs_cli/DESIGN-uv-compile.md` 沿用上游路径 `comfy_cli/...` | 三处改为本项目实际路径 `cli/constants.py`、`cli/command/custom_nodes/cm_cli_util.py`、`cli/command/custom_nodes/command.py`（已核对存在），并加"路径约定"说明与"测试用例属上游、本项目未内联 `tests/`"的注记 |
+| 3 | `comfy logs` 缺位（此前判断"本项目不落日志文件"） | **该判断不准确**：官方 `logs` 读的正是 `comfy launch --background` 捕获的日志。已实现后台日志落盘 + `comfy logs`（见 25.4） |
+
+> `DESIGN-uv-compile.md` 的代码主张已逐条核对：`CONFIG_KEY_UV_COMPILE_DEFAULT`、
+> `execute_cm_cli(..., uv_compile=)`、`_resolve_uv_compile()`、
+> `manager uv-compile-default`、`node uv-sync` **均真实存在**，与文档一致。
+
+### 25.2 缺陷 A：rich 的 `print` 会硬换行，破坏机器可读输出
+
+**现象**：`comfy logs --json` 输出经 `json.load` 解析报
+`Invalid control character at: line 3 column 80`；目视 JSON 却"看起来正常"。
+
+**根因**：`cli/command/launch.py` 顶部有 `from rich import print`，**rich 的 `print`
+会按终端宽度（默认 80 列）硬换行**。紧凑单行 JSON 一旦超过 80 字符，就被插入真实
+换行符 → JSON 折断。（日志行回放同理：长行会被折行，回放内容与 ComfyUI 实际写入不一致。）
+
+**为什么 `system.py` / `jobs.py` / `transfer.py` 没中招**：这三个模块用的是**内置
+`print`**（只 `from rich.console import Console`），不做换行。
+
+**修复**：新增 `cli/output.py`：
+
+```python
+def emit_json(payload, *, indent=None): sys.stdout.write(json.dumps(payload, ensure_ascii=False, indent=indent) + "\n")
+def emit_raw(text):                     sys.stdout.write(text)
+```
+
+`launch.py` 中所有 JSON 输出与日志行回放改走 `emit_json` / `emit_raw`。
+
+**教训**：**机器可读输出（JSON / NDJSON / 原样回放的日志）绝不走 rich 的 `print`。**
+rich 是给人看的渲染器，会按终端宽度重排内容；一旦下游要用 `json.load`、
+`jq` 或逐行比对，必须直写 `sys.stdout`。同类风险也存在于"用 `indent=2` 打印
+JSON"的写法 —— 只要某个**字符串值**超过终端宽度就会被折断。
+
+### 25.3 缺陷 B：`launch --background` 依赖 PATH 上的 `comfy`
+
+**现象**：`python -m cli ... launch --background` 立即失败，错误面板**空白**：
+
+```
+┌──── Error log during ComfyUI execution ────┐
+│                                            │
+└────────────────────────────────────────────┘
+Execution error: failed to launch ComfyUI
+```
+
+**诊断突破口**：本轮新加的后台日志落盘把真相留在了
+`<workspace>/user/comfyui_<port>.log` —— 只有 64 字节，内容是
+`'comfy' 不是内部或外部命令，也不是可运行的程序或批处理文件。`
+
+**根因**：`background_launch()` 构造 `cmd = ["comfy", "--workspace=...", "launch"]`，
+即**依赖控制台脚本 `comfy` 在 PATH 上**。以 `python -m cli` 方式调用时脚本目录
+不在 PATH，子进程启动即失败；而失败信息被 `shell=True` 吞进 stdout 后未回传，
+于是表现为"空白错误面板 + 无任何解释"。
+
+**修复**：新增 `_cli_launch_prefix()` —— 优先 `shutil.which("comfy")`，否则回退
+`[sys.executable, "-m", "cli"]`：
+
+```python
+def _cli_launch_prefix() -> list[str]:
+    exe = shutil.which("comfy")
+    return [exe] if exe else [sys.executable, "-m", "cli"]
+```
+
+**教训**：① 自调用型子进程不要假设自己的命令行入口在 PATH 上，用
+`shutil.which` + `sys.executable -m <module>` 双保险；② **错误面板空白本身就是
+信号** —— 说明子进程压根没起来，而不是"起来了但没报错"；③ 日志落盘的最大价值，
+就是让这类"空错误面板"变成可诊断。
+
+### 25.4 后台日志落盘与 `comfy logs` 的设计
+
+对齐官方语义，但适配本项目旧架构：
+
+1. **落盘位置**：`<workspace>/user/comfyui_<port>.log`，**truncate-on-launch**
+   （每次后台启动一份新日志，端口后缀用于区分同工作区多实例）。
+2. **重定向落在子进程自己的 fd 上**（不是 monitor 线程）：`Popen(stdout=logfh, stderr=STDOUT)`，
+   随后 monitor 关闭自己的句柄。这样 **monitor 退出（成功标记）后，日志仍继续写入** ——
+   因为写日志的是子进程，不是 monitor。monitor 只**tail 同一个文件**来探测
+   `To see the GUI go to:` 成功行。
+3. **环境变量**：`PYTHONUNBUFFERED=1` 让子进程逐行 flush，成功标记才能及时落盘
+   （stdout 是文件不是 tty，否则会卡在块缓冲里）。
+4. **配置键**：`background_log` 在**启动前**就写入 config（这样启动早期崩溃也有日志可查）；
+   成功后再写 `background`（host/port/pid）。`comfy stop` **只删 `background`、保留
+   `background_log`**，这就是"stop 后仍能 `comfy logs` 看崩溃日志"的实现方式。
+5. **`logs` 解析顺序**：`recorded` → `derived_port`/`default_port` → `fallback_unsuffixed`
+   → `fallback_glob`（最新 `comfyui_*.log`，跳过 `.prev*.log`）。当 `recorded` 指向的是
+   **别的**工作区遗留路径时，会被降级到最后（避免"显示跨工作区日志"）。
+
+**已知注意事项**：
+
+- 日志为**原样回放**，可能含 ComfyUI 核心 `app/logger.py`（`ColoredFormatter`）写入的
+  ANSI 色码；在 `--json` 中表现为 `\u001b[32m` 等转义。这是与官方一致的**刻意行为**
+  （"仍展示 ComfyUI 原始输出的样子"），不是缺陷。
+- 若同时启用 **ComfyUI-Manager**，它也会写同名 `comfyui_<port>.log`（启动时 `.log`→`.prev.log`
+  轮转）。此时 CLI 的重定向写入与 Manager 的 FileHandler 会**同时写同一文件**，理论上存在
+  互相截断/干扰。本项目实测均在 `--disable-all-custom-nodes` 下进行，未触发；如需长期并存，
+  建议改为独立文件名（如 `comfyui_cli_<port>.log`）。
+
+### 25.5 本轮实测记录（无显卡，CPU）
+
+| 步骤 | 命令 | 结果 |
+| ---- | ---- | ---- |
+| 后台启动 | `comfy launch --background -- --cpu --port 8188 --disable-all-custom-nodes` | ✅ 成功；日志落盘 **23.9 KB**；config 写入 `background_log` + `background` |
+| 日志查看 | `comfy logs --tail 6` | ✅ `source=recorded`，见 `To see the GUI go to: http://127.0.0.1:8188` |
+| JSON | `comfy logs --json` | ✅ 单行合法 JSON（修复 25.2 后） |
+| 流式 | `comfy logs --follow` | ✅ 先回放末尾再持续输出，Ctrl+C 退出 |
+| 指定端口/文件 | `logs --port 8188` / `logs --path <file>` | ✅ `source=explicit_port` / `explicit_path` |
+| 服务器可达 | `comfy system-stats` | ✅ `cpu / 40.9 GiB free / ComfyUI 0.32.0` |
+| 图片生成回归 | `comfy run --workflow wf_sd15_cpu.json` | ✅ `cli_cpu_test_00003_.png`，**50.77 s** |
+| 日志是否含本次生成 | `grep "Prompt executed"` | ✅ 日志内可见 `got prompt` / `Prompt executed in 50.75 seconds` |
+| 停止 | `comfy stop` | ✅ `Background ComfyUI is stopped. (127.0.0.1:8188)`；端口释放；`background` 清除、`background_log` 保留 |
+| 停止后查日志 | `comfy logs --tail 2` | ✅ 仍解析成功（crash-log 语义） |
+
+### 25.6 综合教训清单
+
+1. **给机器看的东西不要经过给人看的渲染器**：rich `print` 按宽度重排，会静默破坏 JSON 与日志回放。
+2. **"JSON 看着对"不等于"能被解析"**：肉眼无法发现第 80 列被插入了换行，必须真的 `json.load` 一次。
+3. **空白错误面板要当成头等线索**：它通常意味着子进程根本没启动，而非"沉默的成功"。
+4. **自调用子进程的入口要双保险**：`shutil.which()` + `sys.executable -m <module>`。
+5. **日志重定向落在子进程 fd 上，而不是监控线程上**：否则监控线程退出后日志就断流。
+6. **崩溃日志的可获得性依赖"提前记录路径"**：`background_log` 必须在启动前写 config，且 stop 不清理。
+7. **文档里的路径与行号会随重命名/重构失效**：`comfy_cli` → `cli` 这类全局重命名后，务必全仓 `grep` 一次文档。
+
+***
+
+## 26. 预检环节的 MiniMax H3 适配与远程驱动修复（2026-10-14）
+
+> 背景：验收审计下半场要在远程 GPU 机（`liuda-API`，2×RTX 3080 20G）上，用工作流仓库里的
+> **MiniMax H3 工作流生成 10 秒视频**。执行前按项目指引跑"不可跳过"的预检反问
+> （`scripts/pre_task_inquiry.py`）时，暴露出 4 个问题——预检**根本走不到 H3**，且在
+> **本地驱动远程**的用法下会误判。全部已修复并实测通过。详见
+> [audit_lower_prep.md](audit_lower_prep.md)。
+
+### 26.1 问题一：预检不认识 MiniMax H3 系列（阻断）
+
+**现象**：指向远程、选 `minimax_h3_ref2va_pruned_fp8_scaled.safetensors` 后立即终止：
+
+```
+识别模型系列: 其他
+[错误] 模型系列 '其他' 无组件匹配规则，无法安全匹配 VAE/CLIP。
+       已识别系列: ['Wan2.2', 'Flux', 'Flux2', 'SD1.5', 'SDXL']
+```
+
+**根因**：`FAMILY_KEYWORDS` / `FAMILY_MATCH_RULES` 只覆盖 Wan2.2 / Flux2 / Flux / SDXL / SD1.5，
+而"工作流仓库"里明明躺着 6 个 MiniMax H3 工作流——**预检能力与自身资产清单脱节**。
+
+**修复**：新增 `MiniMaxH3` 系列（关键词置于列表最前，遵循"越具体越靠前"）：
+- `vae` → `minimax_h3_video_vae`（H3 是"视频 VAE + 音频 VAE"双 VAE；音频 VAE 由工作流
+  自身的 `VAEDecodeAudio` 加载，不属预检的单选组件）
+- `clip` → `qwen3vl_32b_minimax_h3`（H3 用 **Qwen3-VL 32B**，既不是 Wan2.2 的 t5，
+  也不是 Flux2 的 qwen3 图像 PE，**不能靠共用前缀蒙对**）
+- `clip_vision` → 空
+
+### 26.2 问题二：硬件探测测的是本机，不是目标机（阻断）
+
+`query_gpu_vram_mb()` 直接执行本机 `nvidia-smi`。本项目支持 `COMFYUI_HOST/COMFYUI_PORT`
+指向远程实例，于是就出现了**模型列表来自远程、硬件却测本地**的割裂；在无 GPU 的调度机上必然判死：
+
+```
+[错误] 无法获取 GPU 显存信息，请确认已安装 NVIDIA 显卡及驱动。
+```
+
+**讽刺之处**：同项目的 `check_status.py` 反而是 host 感知的（见 26.4），两个脚本口径不一致。
+
+**修复**：新增 `_vram_from_system_stats()` / `_ram_from_system_stats()`，让
+`query_gpu_vram_mb()` / `query_system_ram_mb()` **优先读目标服务器的 `/system_stats`**，
+服务器不可达才退回本地探测，并**打印数据来源**便于分辨：
+
+```
+[信息] 显存来源: 192.168.0.108:8188 /system_stats（目标服务器自我报告）
+GPU 显存: 20181 MB (19.7 GB)
+```
+
+多卡时取各 CUDA 设备 `vram_total` 的**最大值**——判据是"单卡须放得下主模型"，不是两卡之和。
+
+### 26.3 问题三：预检的架构与参数语义是 Wan2.2 专属
+
+1. **方案 A/B（HIGH+LOW 双采集器）是 Wan2.2 专有**。对 H3（单 DiT + Turbo LoRA）提问"要不要方案A"
+   无意义；更糟的是误选 A 会往下游传 `dual_serial`、污染显存估算。
+2. **H3 合法帧数被约束为 17k+5**。原预检按 121/241 的通用档位取帧，会产出非法帧数。
+   H3 工作流内部的换算式为：
+   ```
+   max(5, round(a*24)) + (5 - (max(5, round(a*24)) % 17)) % 17     # a = 秒
+   ```
+   即 10 秒 → 240 → 吸附 **243 帧**（10.125 s @24fps）。
+3. **H3 的 `CreateVideo` 固定 24fps**，而原预检默认 16。
+
+**修复**：非 Wan2.2 系列跳过方案 A/B（直接 `single` 并说明）；新增 `h3_align_length()` 把帧数
+吸附到最近 17k+5；H3 时 fps 默认 24；并提示"实际采样器由工作流内 `MiniMaxH3TurboSampler` 提供"，
+避免输出里 `dpmpp_sde` 造成误解。
+
+### 26.4 问题四：`check_status.py` 的"本机 / 目标机"口径歧义
+
+同一次输出里 `server_url` 指向远程、`status: online`，但顶层 `system`/`memory`/`gpu`/
+`capabilities` **描述的是本机**。远程驱动时会读到 `"os": "Windows", "cuda_available": false`，
+极易被误读成"目标机跑不了视频"。
+
+**修复**（纯增补、不改既有字段；`controller.py` 只消费 `ok` 故无影响）：新增 `target` 块，
+摘出目标机 `/system_stats` 的自我上报（os / ComfyUI 版本 / RAM / 每卡 VRAM 总量与空闲 /
+最大单卡容量）+ 口径说明。**只报事实，不臆造阈值**。
+
+### 26.5 阈值校准：为什么 H3 用 19456 MB 而不是 20480 MB
+
+`determine_vram_requirement` 若对 H3 走"其他"分支会返回 8192 MB——把一个 ~20GB 的模型
+判成 8GB 就够，**预检放行后必然 OOM**。故必须显式判定。但阈值也不能取标称 20480：
+
+| 数值 | 依据 |
+| --- | --- |
+| 18627 MiB | ref2va fp8 主 DiT 文件实际大小（≈19.5 GB），阈值须高于它 |
+| **20181 MiB** | ComfyUI `/system_stats` 在 20 GiB 卡上**实际上报**的 `vram_total`（差额为 CUDA 上下文等保留显存） |
+| 20480 MB | 卡标称容量 —— 按此比对会把**实际跑得通**的 20 GiB 卡误杀 |
+| **19456 MB** | **采用值 = 19 GiB**：高于模型文件、低于实际上报值，16 GiB 及以下单卡仍被正确拒绝 |
+
+**教训**：显存闸门的比较基准必须用"**引擎实际上报的可用量**"，而不是硬件的标称值；
+否则最该通过的那台机器（跑得通、有历史产出）反而被拦下。
+
+### 26.6 综合教训清单
+
+1. **能力清单要与自身资产对齐**：工作流仓库里有 H3 工作流，预检却不认识 H3 系列——盘点资产时，
+   必须同步检查"处理这些资产的那条代码路径"是否也支持它们。
+2. **"本地"与"目标机"必须显式区分**：凡是既接受 `--host/--port`、又探测本机硬件的脚本，
+   都要么声明自己只描述本机，要么把目标机的自我上报一并给出。混在一起必然误读。
+3. **阈值要用引擎上报值校准**：标称容量 ≠ 可用容量，差 300MB 就能把一台好机器判死。
+4. **闸门收紧要有依据、放宽更要有依据**：把 20480 降到 19456 不是"放水"，而是用模型文件大小
+   与引擎上报值双向夹逼后的结论；反之，若不显式判定 H3，默认 8192 才是真正的放水。
+5. **串行参数语义要跟系列走**：把 Wan2.2 的双采集器、121/241 帧、16fps 这些"约定"套到别的系列上，
+   会同时产出**错误的问题**与**非法的参数**。
+
+***
+
+## 27. 远程 GPU 实测复盘：MiniMax H3 生成 10 秒视频（2026-10-14）
+
+> 验收审计下半场主测试：在远程 2×RTX 3080 20G 上，用工作流仓库内的 MiniMax H3 工作流
+> 生成 10 秒视频，并核验内容是否符合提示词。**结果：达标（两轮：fp8 原配置 + Q6 量化回退）**。
+> 完整记录见 [audit_lower_prep.md](audit_lower_prep.md) §12。
+
+### 27.1 结果（客观指标）
+
+| 指标 | 第 1 轮（fp8，库内原配置） | 第 2 轮（Q6_K GGUF，经桥接加载器） |
+| --- | --- | --- |
+| 工作流 | `minimax_h3_t2v_turbo_v1.0.0`（UI 版 → UI→API 转换，18 节点） | 同上（仅换加载器节点 `UnetLoaderGGUF_H3`） |
+| 唯一参数改动 | `PrimitiveFloat#133` 5 → **10**（长度算式恒为 17k+5 → 243 帧） | 同上 |
+| 提示词 | 一只棕色柴犬在雪地里奔跑，尾巴翘起，雪花飘落，镜头侧面跟拍，白天，自然光，写实摄影 | 同上 |
+| 耗时 | `Prompt executed in 00:16:48` | `Prompt executed in 00:17:37` |
+| **时长 / 帧数 / 帧率** | **10.125000 s / 243 帧 / 24 fps** | **10.125000 s / 243 帧 / 24 fps** |
+| 分辨率 / 音轨 | 864×480 h264 + aac 32kHz 立体声 10.125 s | 同上 |
+| 内容核验 | 每 2 秒抽 1 帧目视：棕色犬 ✅ 雪地+飘雪 ✅ 奔跑位移 ✅ 侧面跟拍/日间光 ✅ | 同上 ✅ |
+| card0 峰值显存 | ~15919 MiB | ~19441~19539 MiB（见 27.2 末） |
+
+**结论**：项目"预检 → 选工作流 → 参数化 → 执行 → 取回核验"的链路可端到端跑通；
+库内 `PrimitiveFloat=秒` 的**时长语义可直接用于精确控长**（两轮均精确 10.125 s）。
+
+### 27.2 教训一：量化回退受**上游加载器的架构表**限制 —— 定位与解锁
+
+Q6 量化回退首次失败：`UnetLoaderGGUF: This model is not currently supported - (Unknown model architecture!)`。
+
+- `ComfyUI-GGUF@v2.0.0`（2026-01-12）的 `detect_arch` 只认 flux/sd3/aura/hidream/cosmos/hyvid/wan/ltxv/sdxl/sd1/lumina2，**没有 H3**；
+- 其多卡 fork（`comfyui-multigpu`）同源同缺；
+- 该 Q6 文件本体正常（GGUF v3、532 张量、前缀 `blocks.*` + `token_refiner.blocks.*`），且 **`kv_count=0`（没有架构元数据）**，架构只能靠张量名推断。
+
+**要点**：**"准备了量化模型" ≠ "量化路径可用"**。量化加载依赖加载器包对**该架构**的支持
+（arch 表 + 张量名映射）；离线/内网环境尤其要先验证这一步，不能等到跑任务时才发现。
+另注意：不同节点包可能注册**同名节点**（如 `UnetLoaderGGUF` 同时存在于 ComfyUI-GGUF 与
+comfyui-gguf-loader），**后加载者覆盖前者**，`/object_info` 的 `python_module` 才能看出真正生效的是哪个。
+
+**如何解锁（本程实际做法）**：环境里其实**已经有支持 H3 的加载器** —— `comfyui-gguf-loader`
+自带的 `tools/convert.py` 内置 `class ModelLTX2`（`arch="ltx2"`，注释明示 MiniMax-H3 按
+`ltx2` 标签经**张量名内容检测**判定为 `minimax_h3`，走"无 arch 标签"回退路径），只是它的
+加载器节点名与 `ComfyUI-GGUF` 撞名而被覆盖。因此**无需重新量化**，只需**桥接**：
+
+1. 新增一个自定义节点包（唯一名 `zz_h3_gguf_bridge`），以不冲突的名字暴露该加载器
+   （`UnetLoaderGGUF_H3`）；
+2. **延迟 import**：在 `NODE_CLASS_MAPPINGS`/`INPUT_TYPES` 被访问时再 `import comfyui-gguf-loader`
+   —— 因为自定义节点**加载顺序不确定**，模块级立即 import 可能早于目标包就绪；
+3. 重启 ComfyUI，成功证据：`loaded in compatibility mode 'sd.cpp' [arch:minimax_h3]`、
+   `gguf qtypes: F32(10), F16(102), BF16(211), Q6_K(209)`。
+
+**反直觉结论**：**Q6 未必比 fp8 更省显存** —— Q6 轮次 card0 峰值约 **19.5 GB**，而 fp8 轮次仅 **~15.9 GB**，
+因为 GGUF 以兼容模式（`sd.cpp`）加载并反量化为 `bfloat16`。Q6 的真正价值在**磁盘占用**（16.55 GB vs 18.6 GB）
+与加载灵活性，**不是显存**。"显存不足就切 Q6"这一直觉在本例中不成立。
+
+### 27.3 教训二：工作流名称 ≠ 实际配置
+
+`minimax_h3_t2v_turbo` 名为"**Turbo 4 步**快速版"，但 `BasicScheduler.steps = 20`，
+实测确实跑 20 步（`H3TURBO step 13/20`，45.7 s/步，约 15 分钟）。
+**名称/文档里的"快速版"不能当作参数依据**，必须打开 `widgets_values` 核对；
+按 4 步运行本可省约 4/5 时间。
+
+### 27.4 教训三：多卡启动参数 ≠ 显存分摊
+
+ComfyUI 以 `--cuda-device 0,1` 启动，但实测**只在 card0 承载**
+（text encoder 14956 MB + DiT 19983 MB 动态 staged），**card1 几乎闲置（~300 MB）**。
+"18GB 的 DiT 装进 19.7GB 卡"靠的是 ComfyUI 的**动态加载（Staged + 逐块换入）**，
+不是两卡分片。若要真正分摊，需换用 multi-GPU 节点（`UnetLoaderGGUF*MultiGPU` / DisTorch 系列）。
+这也解释了为何**必须先腾空另一进程的显存**：单卡空闲 3.4 GB 时极易 OOM。
+
+### 27.5 教训四：恢复被停服务前，先释放其它进程的显存
+
+测试后 `systemctl start qwen.service` 时，llama-server 无法完成加载——因为 ComfyUI
+仍缓存着模型（card0 已用 14.3 GB，仅剩 5.9 GB）。**先对 ComfyUI 执行 `POST /free`**
+（回到 347/254 MiB）后，27B 模型才成功加载、`/health` 恢复正常。
+
+**顺序：停服务 → 跑任务 → 释放任务侧显存 → 起服务 → 校验 `/health`。**
+
+> 附带观察：该 unit 是 `Restart=on-failure`。第 1 轮恢复时显存仍紧张，llama-server 首次
+> 启动 OOM 退出（`cudaMalloc failed`），systemd 在显存释放后**自动重启成功** —— 即
+> "释放显存"这一步做完，即使第一次起服务失败也可自愈，但**不能省掉**释放。
+
+### 27.6 综合教训清单
+
+1. 量化/加速路径的可用性要**提前单独验证**，不要与主任务混在一起才发现。
+2. 量化回退受阻先查**环境里是否已有支持该架构的加载器**（可能只是被同名节点覆盖）；
+   若有，用"唯一节点名 + 延迟 import"**桥接**即可，通常无需重新量化、无需改第三方包。
+3. 节点同名冲突要查 `/object_info.python_module` 确认**实际生效**的实现。
+4. 工作流名/文档描述不能替代 `widgets_values` 实读。
+5. 多卡参数不等于多卡分摊；显存预算按**单卡 + 动态加载**估算。
+6. **GGUF 量化 ≠ 省显存**（本例 Q6 反而更占，因反量化为 bf16）；量化主要省**磁盘**。
+7. 服务恢复是"停-跑-释放-起-校验"的有序过程，释放环节最容易漏。
 

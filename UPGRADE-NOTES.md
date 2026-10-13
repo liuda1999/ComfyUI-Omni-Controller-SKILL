@@ -5,9 +5,9 @@
 > 当前最新文档请查阅：
 > - 经验与参数：`comfyui-controller/docs_cli/EXPERIENCE.md`（含第21章参数梯度分析）
 > - 技能与架构：`comfyui-controller/SKILL.md`
-> - 视频任务指南：`.trae/skills/video-task-execution-guide/SKILL.md`
-> - 图片任务指南：`.trae/skills/image-task-execution-guide/SKILL.md`
-> - 项目硬约束：`c:\Users\15910\.trae-cn\memory\projects\-e-comfyui-cli\project_memory.md`
+> - 视频任务指南：`skills/video-task-execution-guide/SKILL.md`
+> - 图片任务指南：`skills/image-task-execution-guide/SKILL.md`
+> - 项目硬约束：见 `comfyui-controller/SKILL.md` 第 3 节「强制约束」
 >
 > 本文件仅保留作为 V1-V17 迭代历史记录，不做任何其他用途。
 
@@ -30,7 +30,7 @@
 > - **分段生成"不推荐"需修正**，C5验证分段生成+拼接是多图视频的有效方案（段间末帧继承+CLIP权重调整）
 > - **LoRA不仅用于加速**，还有画质增强(SVI_v2_PRO/HPS2.1)、重新打光(WanAnimate_relight)等多种类型，使用前必须检查本地已有LoRA并甄别挑选
 >
-> **请以以下文档为准**：`.trae/skills/video-task-execution-guide/SKILL.md`、`comfyui-controller/docs_cli/EXPERIENCE.md`（含第12章C5多图视频迭代经验）、`comfyui-controller/SKILL.md`、`c:\Users\15910\.trae-cn\memory\projects\-e-comfyui-cli\project_memory.md`
+> **请以以下文档为准**：`skills/video-task-execution-guide/SKILL.md`、`comfyui-controller/docs_cli/EXPERIENCE.md`（含第12章C5多图视频迭代经验）、`comfyui-controller/SKILL.md`
 >
 > 本文档保留作为历史参考，请勿将其中的参数结论用于实际任务执行。
 
@@ -163,14 +163,14 @@ D:\2026-ComfyUI-V8.3\
 
 ```bash
 # Windows（嵌入式 Python 独立版）
-.\python\python.exe -u main.py --port 3198 --listen 127.0.0.1
+.\python\python.exe -u main.py --port 8188 --listen 127.0.0.1
 
 # Linux / macOS（标准 Python 安装）
-python main.py --port 3198 --listen 127.0.0.1
+python main.py --port 8188 --listen 127.0.0.1
 ```
 
 - `-u` 无缓冲输出，便于查看日志
-- `--port 3198` 自定义端口
+- `--port 8188` 自定义端口（ComfyUI 官方默认值；本项目脚本与 CLI 均遵循 `--port` > `COMFYUI_PORT` > `8188` 的解析顺序）
 - `--listen 127.0.0.1` 仅本地监听（安全性）
 - 不依赖任何第三方 GUI 启动器（如 wangyi AI绘世启动器.exe 等）
 - **不要**加 `--lowvram`，会严重降低性能（本次实测性能下降 3-5x）
@@ -194,16 +194,16 @@ subprocess.run(["taskkill", "/F", "/IM", "python.exe"], capture_output=True)
 import socket
 sock = socket.socket()
 sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-sock.bind(('127.0.0.1', 3198))
+sock.bind(('127.0.0.1', 8188))
 sock.close()
 
 # 3. 无延迟重启
-subprocess.Popen([python_exe, "-s", "main.py", "--port", "3198", "--listen", "127.0.0.1"])
+subprocess.Popen([python_exe, "-s", "main.py", "--port", "8188", "--listen", "127.0.0.1"])
 
 # 4. 健康检查循环
 for _ in range(30):
     try:
-        urllib.request.urlopen("http://127.0.0.1:3198/system_stats", timeout=2)
+        urllib.request.urlopen("http://127.0.0.1:8188/system_stats", timeout=2)
         break
     except:
         time.sleep(2)
@@ -582,7 +582,7 @@ ESRGAN: 在高频信息充足的图像上执行上采样
 **Layer 1: Python HTTP 轮询**（用于 T2V，<3分钟任务）
 ```python
 while time.time() < deadline:
-    r = urllib.request.urlopen(f'http://127.0.0.1:3198/history/{pid}')
+    r = urllib.request.urlopen(f'http://127.0.0.1:8188/history/{pid}')
     h = json.loads(r.read())
     if h.get(pid, {}).get('status', {}).get('completed'):
         # done

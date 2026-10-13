@@ -5,6 +5,19 @@ import json
 import os
 import urllib.request
 
+# 本机 ComfyUI 位于回环地址，必须绕过 HTTP_PROXY/HTTPS_PROXY 环境变量，
+# 否则请求会被本地代理拦截并返回 502，表现为"服务不可用"的假故障。
+urllib.request.install_opener(
+    urllib.request.build_opener(urllib.request.ProxyHandler({}))
+)
+
+
+# 端口/host 解析优先级（见 SKILL.md 7.1）：命令行参数 > COMFYUI_PORT/COMFYUI_HOST 环境变量 > 默认值。
+# 默认值跟随 ComfyUI 官方约定（8188）。3198 是历史单一部署环境的端口，非通用标准；
+# 需沿用请显式设置 COMFYUI_PORT=3198。
+DEFAULT_HOST = os.environ.get("COMFYUI_HOST", "127.0.0.1")
+DEFAULT_PORT = os.environ.get("COMFYUI_PORT", "8188")
+
 
 # 模型类别 -> (节点类型, 参数名) 映射
 # 用于从 object_info 提取对应类别的可用模型列表
@@ -30,7 +43,7 @@ def http_json(url, timeout=10):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--host", default=os.environ.get("COMFYUI_HOST", "127.0.0.1"))
-    ap.add_argument("--port", default=os.environ.get("COMFYUI_PORT", "3198"))  # comfyui-cli项目标准端口
+    ap.add_argument("--port", default=DEFAULT_PORT)  
     ap.add_argument("--search", help="Search term for model names")
     ap.add_argument("--type", default="checkpoints", help="Model type: checkpoints, loras, vae, clip, controlnet, upscale_models, unet, diffusion_models")
     args = ap.parse_args()

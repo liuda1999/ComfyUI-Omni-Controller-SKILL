@@ -1,0 +1,809 @@
+{
+  "workflow": "minimax_h3_t2v_turbo_v1.0.0",
+  "purpose": "文生视频 T2V · FL2V Turbo 4 步快速版",
+  "node_count": 21,
+  "format": "UI (ComfyUI 界面可加载)",
+  "nodes": [
+    {
+      "id": 119,
+      "type": "VAELoader",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+      },
+      "inputs": [
+        {
+          "name": "vae_name",
+          "type": "COMBO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "VAE"
+      ],
+      "standard": {
+        "vae_name": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/vae/ 下 .safetensors",
+          "meaning": "如 minimax_h3_video_vae_fp16.safetensors（视频）/ minimax_h3_audio_vae_fp32（音频，须 fp32）",
+          "required": true
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 120,
+      "type": "VAELoader",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+      },
+      "inputs": [
+        {
+          "name": "vae_name",
+          "type": "COMBO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "VAE"
+      ],
+      "standard": {
+        "vae_name": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/vae/ 下 .safetensors",
+          "meaning": "如 minimax_h3_video_vae_fp16.safetensors（视频）/ minimax_h3_audio_vae_fp32（音频，须 fp32）",
+          "required": true
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 121,
+      "type": "VAEDecodeAudio",
+      "title": null,
+      "role": "io",
+      "widgets": {},
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 248
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 228
+        }
+      ],
+      "outputs": [
+        "AUDIO"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 122,
+      "type": "VAEDecode",
+      "title": null,
+      "role": "io",
+      "widgets": {},
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 247
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 229
+        }
+      ],
+      "outputs": [
+        "IMAGE"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 125,
+      "type": "SamplerCustomAdvanced",
+      "title": null,
+      "role": "samplers",
+      "widgets": {},
+      "inputs": [
+        {
+          "name": "noise",
+          "type": "NOISE",
+          "link": 231
+        },
+        {
+          "name": "guider",
+          "type": "GUIDER",
+          "link": 232
+        },
+        {
+          "name": "sampler",
+          "type": "SAMPLER",
+          "link": 252
+        },
+        {
+          "name": "sigmas",
+          "type": "SIGMAS",
+          "link": 234
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 235
+        }
+      ],
+      "outputs": [
+        "output",
+        "denoised_output"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 126,
+      "type": "BasicGuider",
+      "title": null,
+      "role": "samplers",
+      "widgets": {},
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 250
+        },
+        {
+          "name": "conditioning",
+          "type": "CONDITIONING",
+          "link": 237
+        }
+      ],
+      "outputs": [
+        "GUIDER"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 129,
+      "type": "RandomNoise",
+      "title": null,
+      "role": "sched_noise",
+      "widgets": {
+        "noise_seed": 416835429951143,
+        "control_after_generate": "randomize"
+      },
+      "inputs": [
+        {
+          "name": "noise_seed",
+          "type": "INT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "NOISE"
+      ],
+      "standard": {
+        "noise_seed": {
+          "type": "INT",
+          "default": 0,
+          "range": "0~2^53",
+          "meaning": "随机种子",
+          "required": true
+        },
+        "control_after_generate": {
+          "type": "COMBO",
+          "default": "randomize",
+          "range": "randomize / fixed / increment / decrement",
+          "meaning": "生成后种子行为",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 128,
+      "type": "CLIPLoader",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+        "type": "minimax",
+        "device": "default"
+      },
+      "inputs": [
+        {
+          "name": "clip_name",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "type",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "device",
+          "type": "COMBO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "CLIP"
+      ],
+      "standard": {
+        "clip_name": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/text_encoders/ 下 .safetensors",
+          "meaning": "如 qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "required": true
+        },
+        "type": {
+          "type": "COMBO",
+          "default": "minimax",
+          "range": "minimax / ...",
+          "meaning": "编码器类型；H3 须选 minimax",
+          "required": true
+        },
+        "device": {
+          "type": "COMBO",
+          "default": "default",
+          "range": "default / cpu",
+          "meaning": "加载设备",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 127,
+      "type": "UNETLoader",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "unet_name": "minimax_h3_ref2va_pruned_fp8_scaled.safetensors",
+        "weight_dtype": "default"
+      },
+      "inputs": [
+        {
+          "name": "unet_name",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "weight_dtype",
+          "type": "COMBO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "MODEL"
+      ],
+      "standard": {
+        "unet_name": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/diffusion_models/ 下 .safetensors",
+          "meaning": "模型文件名；如 minimax_h3_ref2va_pruned_fp8_scaled.safetensors",
+          "required": true
+        },
+        "weight_dtype": {
+          "type": "COMBO",
+          "default": "default",
+          "range": "default / fp8_e4m3fn / fp8_e5m2 / fp16 / bf16",
+          "meaning": "加载精度；默认由文件决定，低显存可选 fp8",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 134,
+      "type": "MiniMaxH3TurboLoRA",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "lora_name": "minimax_h3_fl2v_turbo_4step_v1.2_768p_comfyui_resized_avg_rank_64_bf16.safetensors",
+        "strength": 1,
+        "low_vram": false
+      },
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 249
+        },
+        {
+          "name": "lora_name",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "strength",
+          "type": "FLOAT",
+          "link": null
+        },
+        {
+          "name": "low_vram",
+          "type": "BOOLEAN",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "MODEL"
+      ],
+      "standard": {
+        "lora_name": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/loras/ 下 .safetensors",
+          "meaning": "如 minimax_h3_fl2v_turbo_4step_v1.2_768p_..._bf16.safetensors",
+          "required": true
+        },
+        "strength": {
+          "type": "FLOAT",
+          "default": 1.0,
+          "range": "0~2",
+          "meaning": "LoRA 强度",
+          "required": false
+        },
+        "low_vram": {
+          "type": "BOOLEAN",
+          "default": false,
+          "range": "true/false",
+          "meaning": "低显存模式",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 130,
+      "type": "CreateVideo",
+      "title": null,
+      "role": "io",
+      "widgets": {
+        "fps": 24,
+        "bit_depth": 8,
+        "color_space": "sRGB"
+      },
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 238
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 239
+        },
+        {
+          "name": "fps",
+          "type": "FLOAT",
+          "link": null
+        },
+        {
+          "name": "bit_depth",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "color_space",
+          "type": "COMBO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "VIDEO"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 92,
+      "type": "SaveVideo",
+      "title": null,
+      "role": "io",
+      "widgets": {
+        "filename_prefix": "video/MiniMax_H3",
+        "format": "auto",
+        "format.codec": "auto",
+        "codec": "auto"
+      },
+      "inputs": [
+        {
+          "name": "video",
+          "type": "VIDEO",
+          "link": 242
+        },
+        {
+          "name": "filename_prefix",
+          "type": "STRING",
+          "link": null
+        },
+        {
+          "name": "format",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null
+        },
+        {
+          "name": "format.codec",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null
+        },
+        {
+          "name": "codec",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "video"
+      ],
+      "standard": {
+        "filename_prefix": {
+          "type": "STRING",
+          "default": "ComfyUI",
+          "range": "文本",
+          "meaning": "文件名前缀",
+          "required": false
+        },
+        "fps": {
+          "type": "FLOAT",
+          "default": 24,
+          "range": ">0",
+          "meaning": "帧率",
+          "required": false
+        },
+        "lossless": {
+          "type": "BOOLEAN",
+          "default": false,
+          "range": "true/false",
+          "meaning": "无损",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 131,
+      "type": "MiniMaxH3ImageToVideo",
+      "title": null,
+      "role": "h3_main",
+      "widgets": {
+        "prompt": "写实摄影，恐怖电影场景，中长焦微距镜头，平视略带侧面视角，竖幅中景。器材为索尼A7 IV搭配FE 90mm f/2.8 Macro G OSS镜头，光圈f/2.8，快门1/60秒，感光度ISO 800，对焦点锁定于骷髅面骨与烛火之间，大光圈产生极浅景深，使背景墙壁完全处于散焦虚化状态，画面带有粗粝的暗黑胶片颗粒感。\n透视采用平视微仰的单点透视，镜头正对偏右前方，使骷髅骨架呈现约四分之三斜侧面的立体感。构图呈纵向居中的狭长布局，视觉重心集中于画面中央。画面左上角边缘，一根粗黑的锻铁支架从墙体中水平伸出，支架表面布满积尘与暗锈。支架上缠绕、盘绕着多股厚重的生铁锁链，铁链呈多圈堆叠状态，粗重且布满锈迹，向下垂落并连接至骷髅上方小小的金属顶盖。笼体下方垂落的细铁链与钥匙形成了一条延伸至画面底部的垂直视觉引导线。\n主体为一件被锻铁支架与锁链悬吊的骷髅头骨蜡烛灯。画面左上角伸出的铁架牢牢锚入斑驳石墙，缠满粗重铁链，一根主链条垂直向下，紧紧连接着骷髅上方小小的圆形金属顶盖。顶盖下方对称分布着四根细长的黑色雕花铁柱，构成包裹头骨的立体框架。头骨表面通体被一层厚重浓稠的陈年焦油、烟尘与油脂硬壳深深浸染，呈现黑褐色与炭黑色交织的厚重质感，油污填平骨缝并向外漫溢。眼眶与鼻腔融为深不见底的纯黑虚空，上下颌长长的尖锐獠牙被焦黑油泥紧密包裹。笼子底部边缘垂挂着数条长短不一的细铁链，链条杂乱悬坠，其中一根链身悬挂着一把锈迹斑斑的复古铁钥匙，金属表面泛着暗哑粗粝的冷光。\n主光源为下颌骨与牙齿缝隙间透出的一团橙黄色跳动烛火。火光自下而上照亮了颧骨底缘、上颌骨与金属框架的下端。受光面的焦油泛起锐利的橙黄高光，高光边缘如半凝固油脂般黏腻发亮；背光面与油污深处则迅速沉入纯黑的阴影。火光的焦暖色与头骨油污的深黑形成极端高对比，明暗落差极为强烈。整体画面以炭黑、暗褐与焦橙色为主调。\n环境为牢笼正后方一面老旧斑驳的阴暗石墙。墙体在极浅的景深下处于完全散焦状态，灰褐色与暗青色的墙面、石块的接缝、水渍与霉斑均化为朦胧的暗色色块，毫无锐利细节，仅作为压抑、潮湿、冷调的幽闭衬底存在，衬托出前景主体的阴森与惊悚感。\n下方烛火燃烧带动微小的热浪扰动，并在头骨下方的暗色空气中散逸出几缕极其微弱的淡灰色烟雾颗粒。画面的四周暗处散布着细微的灰尘，在火光边缘映射出零星的微弱焦外散景光斑。无任何超自然发光或魔法能量特效。\n写实摄影，恐怖电影，暗黑，哥特风，高对比，微距。",
+        "width": 1344,
+        "height": 768,
+        "length": 73
+      },
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 240
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 241
+        },
+        {
+          "name": "first_frame",
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "last_frame",
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "link": null
+        },
+        {
+          "name": "width",
+          "type": "INT",
+          "link": 244
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "link": 245
+        },
+        {
+          "name": "length",
+          "type": "INT",
+          "link": 243
+        }
+      ],
+      "outputs": [
+        "positive",
+        "LATENT"
+      ],
+      "standard": {
+        "prompt": {
+          "type": "STRING",
+          "default": "",
+          "range": "文本",
+          "meaning": "正向提示词",
+          "required": true
+        },
+        "width": {
+          "type": "INT",
+          "default": 1344,
+          "range": "32 的倍数，如 768/1344",
+          "meaning": "视频宽",
+          "required": true
+        },
+        "height": {
+          "type": "INT",
+          "default": 768,
+          "range": "32 的倍数，如 768/1344",
+          "meaning": "视频高",
+          "required": true
+        },
+        "length": {
+          "type": "INT",
+          "default": 124,
+          "range": "H3 网格对齐（约 4 的倍数帧）",
+          "meaning": "帧数",
+          "required": true
+        },
+        "ref_image_size": {
+          "type": "COMBO",
+          "default": "match",
+          "range": "match / 256 / 512 / ...",
+          "meaning": "参考图分辨率",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 124,
+      "type": "BasicScheduler",
+      "title": null,
+      "role": "sched_noise",
+      "widgets": {
+        "scheduler": "simple",
+        "steps": 20,
+        "denoise": 1
+      },
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 251
+        },
+        {
+          "name": "scheduler",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "steps",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "denoise",
+          "type": "FLOAT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "SIGMAS"
+      ],
+      "standard": {
+        "scheduler": {
+          "type": "COMBO",
+          "default": "simple",
+          "range": "simple / normal / karras / ddim_uniform / sgm_uniform / beta / ...",
+          "meaning": "调度器；H3 常用 simple",
+          "required": true
+        },
+        "steps": {
+          "type": "INT",
+          "default": 20,
+          "range": "1~50（Turbo 4 步 / 8 步）",
+          "meaning": "去噪步数",
+          "required": true
+        },
+        "denoise": {
+          "type": "FLOAT",
+          "default": 1.0,
+          "range": "0~1",
+          "meaning": "降噪强度；图生视频常 <1",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 116,
+      "type": "MarkdownNote",
+      "title": "Note: MiniMax H3",
+      "role": "util",
+      "widgets": {
+        "text": "## MiniMax H3\n\n[MiniMax H3](https://www.minimax.io/blog/minimax-h3) is MiniMax's general-purpose, omni-modal generation model. It jointly understands text, image, video, and audio, and generates video with **native stereo audio**: voice, sound effects, and music are modeled jointly in a single forward pass, not layered on afterward. Output is up to 2K resolution, 24fps, and up to about 15 seconds.\n\n## ComfyUI links\n- [ComfyUI#15224](https://github.com/Comfy-Org/ComfyUI/pull/15224)\n- [🤗 Comfy-Org/MiniMax-H3](https://huggingface.co/Comfy-Org/MiniMax-H3)\n\n## About this workflow\n\n**Key inputs**\n\n- **prompt**: describe the shots, camera moves, and the accompanying audio (dialogue, SFX, music) in one block\n- **width / height**: set via Resolution Selector. H3's native canvas is a 768px short edge, capped at 768x1344 pixels, rounded to a multiple of 32\n- **duration (seconds)**: converted to a valid frame `length` by the Math Expression node, snapping up to the model's 17-frame-per-block (17k+5) grid at 24fps\n"
+      },
+      "inputs": [],
+      "outputs": [],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 117,
+      "type": "MarkdownNote",
+      "title": "Note: Model Links",
+      "role": "util",
+      "widgets": {
+        "text": "## Model Links\n\n**vae**\n\n- [minimax_h3_video_vae_fp16.safetensors](https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/vae/minimax_h3_video_vae_fp16.safetensors)\n- [minimax_h3_audio_vae_fp32.safetensors](https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/vae/minimax_h3_audio_vae_fp32.safetensors)\n\n**diffusion_models**\n\n- [minimax_h3_fl2va_pruned_int8_convrot.safetensors](https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/diffusion_models/minimax_h3_fl2va_pruned_int8_convrot.safetensors)\n\n**text_encoders**\n\n- [qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors](https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/text_encoders/qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors)\n\n\n## Model Storage Location\n\n```\n📂 ComfyUI/\n├── 📂 models/\n│   ├── 📂 vae/\n│   │   ├── minimax_h3_video_vae_fp16.safetensors\n│   │   └── minimax_h3_audio_vae_fp32.safetensors\n│   ├── 📂 diffusion_models/\n│   │   └── minimax_h3_fl2va_pruned_int8_convrot.safetensors\n│   └── 📂 text_encoders/\n│       └── qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors\n```\n\n## Report Issue\n\nNote: Please update ComfyUI first ([guide](https://docs.comfy.org/installation/update_comfyui)) and prepare required models. Desktop/Cloud updates follow stable releases, so some nightly-supported models may not be available yet.\n\n- Cannot run / runtime errors: [ComfyUI/issues](https://github.com/comfyanonymous/ComfyUI/issues)\n- UI / frontend issues: [ComfyUI_frontend/issues](https://github.com/Comfy-Org/ComfyUI_frontend/issues)\n- Workflow issues: [workflow_templates/issues](https://github.com/Comfy-Org/workflow_templates/issues)\n"
+      },
+      "inputs": [],
+      "outputs": [],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 133,
+      "type": "PrimitiveFloat",
+      "title": "Float (duration)",
+      "role": "util",
+      "widgets": {
+        "value": 5
+      },
+      "inputs": [
+        {
+          "name": "value",
+          "type": "FLOAT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "FLOAT"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 132,
+      "type": "ComfyMathExpression",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "expression": "max(5, round(a * 24)) + (5 - (max(5, round(a * 24)) % 17)) % 17"
+      },
+      "inputs": [
+        {
+          "name": "values.a",
+          "type": "FLOAT,INT,BOOLEAN",
+          "link": 246
+        },
+        {
+          "name": "values.b",
+          "type": "FLOAT,INT,BOOLEAN",
+          "link": null
+        },
+        {
+          "name": "expression",
+          "type": "STRING",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "FLOAT",
+        "INT",
+        "BOOL"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 118,
+      "type": "MarkdownNote",
+      "title": "Note: Size Settings Reference",
+      "role": "util",
+      "widgets": {
+        "text": "| megapixels | Aspect | Output (multiple=32) |\n|---|---|---|\n| 0.2 | 16:9 | 608 x 352 |\n| 0.3 | 16:9 | 736 x 416 |\n| 0.4 | 16:9 | 864 x 480 |\n| 0.5 | 16:9 | 960 x 544 |\n| 0.6 | 16:9 | 1056 x 608 |\n| 0.7 | 16:9 | 1152 x 640 |\n| 0.8 | 16:9 | 1216 x 672 |\n| 0.9 | 16:9 | 1280 x 736 |\n| 0.98 | 16:9 | 1344 x 768 |\n| 1.0 | 16:9 | 1376 x 768 |\n| 1.2 | 16:9 | 1504 x 832 |\n| 1.5 | 16:9 | 1664 x 928 |\n| 1.8 | 16:9 | 1824 x 1024 |\n| 2.0 | 16:9 | 1920 x 1088 |\n"
+      },
+      "inputs": [],
+      "outputs": [],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 115,
+      "type": "ResolutionSelector",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "aspect_ratio": "16:9 (Widescreen)",
+        "megapixels": 0.4,
+        "multiple": 32
+      },
+      "inputs": [
+        {
+          "name": "aspect_ratio",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "megapixels",
+          "type": "FLOAT",
+          "link": null
+        },
+        {
+          "name": "multiple",
+          "type": "INT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "width",
+        "height"
+      ],
+      "standard": {
+        "aspect_ratio": {
+          "type": "COMBO",
+          "default": "16:9 (Widescreen)",
+          "range": "多种预设",
+          "meaning": "宽高比",
+          "required": true
+        },
+        "megapixels": {
+          "type": "FLOAT",
+          "default": 0.4,
+          "range": "0.1~2",
+          "meaning": "百万像素（决定总像素）",
+          "required": true
+        },
+        "multiple": {
+          "type": "INT",
+          "default": 32,
+          "range": "8/16/32",
+          "meaning": "对齐倍数",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 135,
+      "type": "MiniMaxH3TurboSampler",
+      "title": null,
+      "role": "samplers",
+      "widgets": {},
+      "inputs": [],
+      "outputs": [
+        "SAMPLER"
+      ],
+      "standard": [
+        "model",
+        "conditioning",
+        "latent_image",
+        "steps(可选)",
+        "vae",
+        "vae_1",
+        "sampler_name",
+        "scheduler",
+        "denoise"
+      ],
+      "note": "该节点无 widgets_values；其参数（步数/调度器/双 VAE 等）由上游连线提供，详见工作流连线。"
+    }
+  ]
+}

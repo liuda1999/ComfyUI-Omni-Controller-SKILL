@@ -1,5 +1,11 @@
 # DESIGN: Unified Dependency Resolution (--uv-compile) Implementation
 
+> **Path convention（本项目）**：本文档源自上游 comfy-cli 的设计说明。上游包名为
+> `comfy_cli`，本项目已整体重命名为 `cli`（发行名 `comfyui-omni-controller`），
+> 故文中所有源码路径均已改为本项目的实际路径（`cli/...`）。
+> 对应的实现文件已核对存在：`cli/constants.py`、
+> `cli/command/custom_nodes/cm_cli_util.py`、`cli/command/custom_nodes/command.py`。
+
 ## Architecture Decision: Pass-Through
 
 cm_cli already fully implements `--uv-compile` and `UnifiedDepResolver`, so
@@ -54,7 +60,7 @@ User CLI
 
 ## File Changes
 
-### 1. `comfy_cli/constants.py`
+### 1. `cli/constants.py`
 
 ```python
 CONFIG_KEY_UV_COMPILE_DEFAULT = "uv_compile_default"
@@ -62,7 +68,7 @@ CONFIG_KEY_UV_COMPILE_DEFAULT = "uv_compile_default"
 
 INI config key. Stored as `"True"` / `"False"` string in `[DEFAULT]` section.
 
-### 2. `comfy_cli/command/custom_nodes/cm_cli_util.py`
+### 2. `cli/command/custom_nodes/cm_cli_util.py`
 
 Added `uv_compile=False` parameter to `execute_cm_cli()`:
 
@@ -84,7 +90,7 @@ elif fast_deps or no_deps:
 function is called, the value is already resolved to a plain `bool` — no
 `None` handling needed here.
 
-### 3. `comfy_cli/command/custom_nodes/command.py`
+### 3. `cli/command/custom_nodes/command.py`
 
 #### 3.1 Tri-state flag pattern
 
@@ -251,6 +257,10 @@ execute_cm_cli(["install", "node-a"], uv_compile=False)
 ```
 
 ## Test Strategy
+
+> **注**：下表测试用例描述的是上游 PR 自带的测试套件；本项目**未**内联 `tests/`
+> 目录（参见 [TESTING-e2e.md](TESTING-e2e.md) 的状态说明），故用例名仅作设计参考，
+> 不代表本仓库可直接运行。
 
 ### Existing tests (regression)
 

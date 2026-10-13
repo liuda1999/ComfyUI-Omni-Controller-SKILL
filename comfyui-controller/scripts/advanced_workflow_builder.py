@@ -28,6 +28,12 @@ except Exception:
         return ("unknown", "unknown")
     _MODEL_FAMILY_RULES = []
 
+# 路径解析相对项目根，不依赖运行时 CWD：技能资产在 <repo>/skills/comfyui-controller/assets/
+_SCRIPTS_DIR = os.path.dirname(os.path.abspath(__file__))
+_CC_DIR = os.path.dirname(_SCRIPTS_DIR)
+_REPO_ROOT = os.path.dirname(_CC_DIR)
+_SKILL_ASSETS = os.path.join(_REPO_ROOT, "skills", "comfyui-controller", "assets")
+
 
 # 中立节点类型集合：这些节点与 model_family 无关，可在不同 family 的工作流之间借用
 # 所有 loader/sampler/encoder 节点不属于此集合，必须来自同一 model_family
@@ -4897,9 +4903,9 @@ class AdvancedWorkflowGenerator:
 def main():
     ap = argparse.ArgumentParser(description="高级工作流生成器")
     ap.add_argument("--requirement", required=True, help="工作流需求描述")
-    ap.add_argument("--object-info", default=".trae/skills/comfyui-controller/assets/object_info.json",
-                    help="object_info.json路径")
-    ap.add_argument("--library", default=".trae/skills/comfyui-controller/assets/workflow_library.json",
+    ap.add_argument("--object-info", default=os.path.join(_CC_DIR, "assets", "object_info.json"),
+                    help="object_info.json路径（默认：comfyui-controller/assets/object_info.json）")
+    ap.add_argument("--library", default=os.path.join(_SKILL_ASSETS, "workflow_library.json"),
                     help="工作流资料库路径")
     ap.add_argument("--output", help="输出工作流文件路径")
     args = ap.parse_args()

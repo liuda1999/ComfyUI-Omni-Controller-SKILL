@@ -13,9 +13,15 @@ from cli import constants, env_checker, logging_utils, tracking, ui, utils
 from cli.command import code_search, custom_nodes, pr_command
 from cli.command import generate as generate_command
 from cli.command import install as install_inner
+from cli.command import jobs as jobs_command
 from cli.command import run as run_inner
+from cli.command import setup as setup_command
+from cli.command import system as system_command
+from cli.command import templates as templates_command
+from cli.command import transfer as transfer_command
 from cli.command.install import validate_version
 from cli.command.launch import launch as launch_command
+from cli.command.launch import logs as launch_logs
 from cli.command.models import models as models_command
 from cli.config_manager import ConfigManager
 from cli.constants import GPU_OPTION, CUDAVersion, ROCmVersion
@@ -26,6 +32,18 @@ from cli.standalone import StandalonePython
 from cli.update import check_for_updates
 from cli.uv import DependencyCompiler
 from cli.workspace_manager import WorkspaceManager, check_comfy_repo
+
+# 本地 ComfyUI 绝不应经由 HTTP 代理访问。沙箱/企业环境常设置 HTTP_PROXY/HTTPS_PROXY
+# 且未设 NO_PROXY，会让 requests/urllib 把 127.0.0.1 也走代理并返回 502。
+# 这里把 loopback 加进 NO_PROXY/no_proxy，使全部命令（含 requests 与 urllib）直连本地。
+def _ensure_loopback_no_proxy() -> None:
+    for key in ("NO_PROXY", "no_proxy"):
+        existing = {h.strip() for h in os.environ.get(key, "").split(",") if h.strip()}
+        existing |= {"127.0.0.1", "localhost", "::1"}
+        os.environ[key] = ",".join(sorted(existing))
+
+
+_ensure_loopback_no_proxy()
 
 logging_utils.setup_logging()
 app = typer.Typer()
@@ -384,21 +402,35 @@ def install(
     rprint(f"ComfyUI is installed at: {comfy_path}")
 
 
-@app.command(help="Update ComfyUI Environment [all|comfy]")
+@app.command(help="Update ComfyUI Environment [all|comfy|cli]")
 @tracking.track_command()
 def update(
     target: str = typer.Argument(
         "comfy",
-        help="[all|comfy]",
-        autocompletion=utils.create_choice_completer(["all", "comfy"]),
+        help="[all|comfy|cli]",
+        autocompletion=utils.create_choice_completer(["all", "comfy", "cli"]),
     ),
 ):
-    if target not in ["all", "comfy"]:
+    if target not in ["all", "comfy", "cli"]:
         typer.echo(
-            f"Invalid target: {target}. Allowed targets are 'all', 'comfy'.",
+            f"Invalid target: {target}. Allowed targets are 'all', 'comfy', 'cli'.",
             err=True,
         )
         raise typer.Exit(code=1)
+
+    if "cli" == target:
+        # 升级 CLI 自身（对齐官方 `comfy update cli`）。本项目未发布 PyPI 包，
+        # 优先尝试 PyPI 升级，失败则从本仓库源码强制重装。
+        python = sys.executable
+        rprint("Updating Comfy CLI ...")
+        rc = subprocess.run(
+            [python, "-m", "pip", "install", "--upgrade", "comfyui-omni-controller"]
+        )
+        if rc.returncode != 0:
+            src = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+            rprint(f"[yellow]PyPI upgrade unavailable, reinstalling from source: {src}[/yellow]")
+            subprocess.run([python, "-m", "pip", "install", "--force-reinstall", src], check=True)
+        return
 
     comfy_path = workspace_manager.workspace_path
 
@@ -455,7 +487,9 @@ def run(
     ] = None,
     port: Annotated[
         int | None,
-        typer.Option(help="The port where the ComfyUI instance is running, e.g. 3198 (comfyui-cli project default)."),
+        typer.Option(help="The port where the ComfyUI instance is running. "
+                          "Defaults to $COMFYUI_PORT, else 8188 (ComfyUI upstream default). "
+                          "3198 was a single deployment's port, not a standard."),
     ] = None,
     timeout: Annotated[
         int,
@@ -537,9 +571,9 @@ def run(
                 port = bg_port
 
         if not host:
-            host = "127.0.0.1"
+            host = constants.default_host()
         if not port:
-            port = 3198  # comfyui-cli项目标准端口
+            port = int(constants.default_port())
 
         run_inner.execute(
             workflow,
@@ -596,6 +630,24 @@ def stop():
         rprint(f"[bold yellow]Background ComfyUI is stopped.[/bold yellow] ({bg_info[0]}:{bg_info[1]})")
 
     ConfigManager().remove_background()
+
+
+@app.command(help="Show the captured ComfyUI log (from `comfy launch --background`, or ComfyUI-Manager's logfile)")
+@tracking.track_command()
+def logs(
+    tail: Annotated[int, typer.Option("--tail", "-n", help="Number of trailing log lines to show")] = 200,
+    port: Annotated[
+        int | None,
+        typer.Option("--port", "-p", help="Show the log for this port instead of auto-resolving"),
+    ] = None,
+    path: Annotated[str | None, typer.Option("--path", help="Show this specific log file instead of auto-resolving")] = None,
+    follow: Annotated[
+        bool,
+        typer.Option("--follow", "-f", help="Keep printing new lines as they are written (Ctrl+C to stop)"),
+    ] = False,
+    json_output: Annotated[bool, typer.Option("--json", help="Emit a structured JSON envelope")] = False,
+):
+    launch_logs(tail=tail, port=port, path=path, follow=follow, json_output=json_output)
 
 
 @app.command(help="Launch ComfyUI: ?[--background] ?[-- <extra args ...>]")
@@ -670,6 +722,161 @@ def env():
         column_names=[":laptop_computer: Environment", "Value"],
         title="Environment Information",
     )
+
+
+def _resolve_host_port(host: str | None, port: int | None) -> tuple[str, int]:
+    """解析目标 ComfyUI 地址。优先级：显式 --host/--port > 后台实例 > 环境变量 > 默认。
+
+    与 `comfy run` 的解析逻辑保持一致，供 system-stats/free/download/upload 复用。
+    """
+    config = ConfigManager()
+    if host:
+        s = host.split(":")
+        host = s[0]
+        if not port and len(s) == 2 and s[1]:
+            port = int(s[1])
+    if config.background:
+        bg_host, bg_port = config.background[0], config.background[1]
+        if not host:
+            host = bg_host
+        if not port:
+            port = bg_port
+    if not host:
+        host = constants.default_host()
+    if not port:
+        port = int(constants.default_port())
+    return host, port
+
+
+@app.command("system-stats", help="Show ComfyUI device VRAM / system RAM stats")
+@tracking.track_command()
+def system_stats(
+    host: Annotated[str | None, typer.Option(help="ComfyUI host, e.g. 127.0.0.1")] = None,
+    port: Annotated[int | None, typer.Option(help="ComfyUI port (default $COMFYUI_PORT or 8188)")] = None,
+    json_output: Annotated[bool, typer.Option("--json", help="Emit raw /system_stats JSON")] = False,
+):
+    h, p = _resolve_host_port(host, port)
+    system_command.system_stats_execute(h, p, json_output=json_output)
+
+
+@app.command(help="Free ComfyUI memory: unload models and/or reset the executor cache")
+@tracking.track_command()
+def free(
+    host: Annotated[str | None, typer.Option(help="ComfyUI host, e.g. 127.0.0.1")] = None,
+    port: Annotated[int | None, typer.Option(help="ComfyUI port (default $COMFYUI_PORT or 8188)")] = None,
+    unload_models: Annotated[bool, typer.Option("--unload-models/--no-unload-models", help="Unload models")] = True,
+    free_memory: Annotated[bool, typer.Option("--free-memory", help="Also reset the executor cache")] = False,
+    json_output: Annotated[bool, typer.Option("--json", help="Emit a structured JSON envelope")] = False,
+):
+    h, p = _resolve_host_port(host, port)
+    system_command.free_execute(h, p, unload_models=unload_models, free_memory=free_memory, json_output=json_output)
+
+
+@app.command(help="Download a run's outputs by prompt id")
+@tracking.track_command()
+def download(
+    prompt_id: Annotated[str, typer.Argument(help="Prompt id returned by `comfy run` / POST /prompt")],
+    output: Annotated[str, typer.Option("--output", "-o", help="Output directory")] = ".",
+    host: Annotated[str | None, typer.Option(help="ComfyUI host, e.g. 127.0.0.1")] = None,
+    port: Annotated[int | None, typer.Option(help="ComfyUI port (default $COMFYUI_PORT or 8188)")] = None,
+    json_output: Annotated[bool, typer.Option("--json", help="Emit a structured JSON result")] = False,
+):
+    h, p = _resolve_host_port(host, port)
+    transfer_command.download_execute(prompt_id, output, h, p, json_output=json_output)
+
+
+@app.command(help="Upload a file to the ComfyUI server's input directory")
+@tracking.track_command()
+def upload(
+    file: Annotated[str, typer.Argument(help="Local file path to upload")],
+    host: Annotated[str | None, typer.Option(help="ComfyUI host, e.g. 127.0.0.1")] = None,
+    port: Annotated[int | None, typer.Option(help="ComfyUI port (default $COMFYUI_PORT or 8188)")] = None,
+    json_output: Annotated[bool, typer.Option("--json", help="Emit raw upload JSON")] = False,
+):
+    h, p = _resolve_host_port(host, port)
+    transfer_command.upload_execute(file, h, p, json_output=json_output)
+
+
+@jobs_command.jobs_app.command("ls", help="List running/pending jobs and recent history")
+def jobs_ls(
+    host: Annotated[str | None, typer.Option(help="ComfyUI host, e.g. 127.0.0.1")] = None,
+    port: Annotated[int | None, typer.Option(help="ComfyUI port (default $COMFYUI_PORT or 8188)")] = None,
+    json_output: Annotated[bool, typer.Option("--json", help="Emit structured JSON")] = False,
+):
+    h, p = _resolve_host_port(host, port)
+    jobs_command.jobs_ls(h, p, json_output=json_output)
+
+
+@jobs_command.jobs_app.command("status", help="Show the status of a job by prompt id")
+def jobs_status(
+    prompt_id: Annotated[str, typer.Argument(help="Prompt id")],
+    host: Annotated[str | None, typer.Option(help="ComfyUI host, e.g. 127.0.0.1")] = None,
+    port: Annotated[int | None, typer.Option(help="ComfyUI port (default $COMFYUI_PORT or 8188)")] = None,
+    json_output: Annotated[bool, typer.Option("--json", help="Emit the full history entry JSON")] = False,
+):
+    h, p = _resolve_host_port(host, port)
+    jobs_command.jobs_status(prompt_id, h, p, json_output=json_output)
+
+
+@jobs_command.jobs_app.command("wait", help="Block until a job completes")
+def jobs_wait(
+    prompt_id: Annotated[str, typer.Argument(help="Prompt id")],
+    host: Annotated[str | None, typer.Option(help="ComfyUI host, e.g. 127.0.0.1")] = None,
+    port: Annotated[int | None, typer.Option(help="ComfyUI port (default $COMFYUI_PORT or 8188)")] = None,
+    timeout: Annotated[int, typer.Option(help="Max seconds to wait")] = 600,
+    json_output: Annotated[bool, typer.Option("--json", help="Emit the final history entry JSON")] = False,
+):
+    h, p = _resolve_host_port(host, port)
+    jobs_command.jobs_wait(prompt_id, h, p, timeout=timeout, json_output=json_output)
+
+
+@jobs_command.jobs_app.command("watch", help="Poll and print job status changes")
+def jobs_watch(
+    prompt_id: Annotated[str, typer.Argument(help="Prompt id")],
+    host: Annotated[str | None, typer.Option(help="ComfyUI host, e.g. 127.0.0.1")] = None,
+    port: Annotated[int | None, typer.Option(help="ComfyUI port (default $COMFYUI_PORT or 8188)")] = None,
+    interval: Annotated[float, typer.Option(help="Poll interval in seconds")] = 1.0,
+):
+    h, p = _resolve_host_port(host, port)
+    jobs_command.jobs_watch(prompt_id, h, p, interval=interval)
+
+
+templates_app = typer.Typer(help="Browse and run official ComfyUI workflow templates.")
+
+
+@templates_app.command("ls", help="List gallery templates (name / category / description)")
+def templates_ls(
+    name: Annotated[str | None, typer.Option("--name", help="Substring match on template name")] = None,
+    limit: Annotated[int, typer.Option(help="Limit rows")] = 0,
+    refresh: Annotated[bool, typer.Option("--refresh", help="Re-fetch index.json")] = False,
+    gallery: Annotated[str | None, typer.Option(show_default=False, help="Path to a local index.json")] = None,
+    json_output: Annotated[bool, typer.Option("--json", help="Emit JSON rows")] = False,
+):
+    templates_command.templates_ls(name_sub=name, limit=limit, refresh=refresh, gallery=gallery, json_output=json_output)
+
+
+@app.command("run-template", help="Fetch an official template workflow and run it")
+def run_template(
+    name: Annotated[str, typer.Argument(help="Template name (as shown by `comfy templates ls`)")],
+    wait: Annotated[bool, typer.Option(help="Wait until execution completes")] = True,
+    verbose: Annotated[bool, typer.Option(help="Verbose execution output")] = False,
+    host: Annotated[str | None, typer.Option(help="ComfyUI host, e.g. 127.0.0.1")] = None,
+    port: Annotated[int | None, typer.Option(help="ComfyUI port (default $COMFYUI_PORT or 8188)")] = None,
+    timeout: Annotated[int, typer.Option(help="Per-event timeout (s)")] = 120,
+    json_output: Annotated[bool, typer.Option("--json", help="Emit NDJSON events")] = False,
+):
+    path = templates_command.fetch_template_workflow(name)
+    h, p = _resolve_host_port(host, port)
+    run_inner.execute(path, h, p, wait, verbose, timeout, api_key=None, json_mode=json_output, print_prompt=False)
+
+
+@app.command("setup", help="One-time environment wizard (local): python / workspace / server")
+@tracking.track_command()
+def setup(
+    where: Annotated[str, typer.Option(help="Routing target (local only for this project)")] = "local",
+    skip_verify: Annotated[bool, typer.Option("--skip-verify", help="Skip the server reachability probe")] = False,
+):
+    setup_command.setup_execute(where=where, skip_verify=skip_verify, skip_prompt=False)
 
 
 @app.command(hidden=True)
@@ -786,6 +993,9 @@ app.add_typer(custom_nodes.app, name="node", help="Manage custom nodes.")
 app.add_typer(custom_nodes.manager_app, name="manager", help="Manage ComfyUI-Manager.")
 
 app.add_typer(pr_command.app, name="pr-cache", help="Manage PR cache.")
+
+app.add_typer(jobs_command.jobs_app, name="jobs", help="Inspect and wait on ComfyUI jobs.")
+app.add_typer(templates_app, name="templates", help="Browse and run official workflow templates.")
 
 app.add_typer(code_search.app, name="code-search", help="Search code across ComfyUI repositories.")
 app.add_typer(code_search.app, name="cs", hidden=True)

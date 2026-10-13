@@ -81,7 +81,7 @@ def _detect_via_nvidia_smi() -> tuple[int, int] | None:
     try:
         output = subprocess.check_output(
             ["nvidia-smi"],
-            text=True,
+            text=True, errors="replace",
             timeout=10,
             stderr=subprocess.DEVNULL,
         )

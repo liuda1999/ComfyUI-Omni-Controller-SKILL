@@ -8,6 +8,7 @@ import sys
 import requests
 from rich.console import Console
 
+from cli import constants
 from cli.config_manager import ConfigManager
 from cli.utils import singleton
 
@@ -32,7 +33,9 @@ def format_python_version(version_info):
     return f"[bold red]{version_info.major}.{version_info.minor}.{version_info.micro}[/bold red]"
 
 
-def check_comfy_server_running(port=3198, host="localhost", timeout: float = 5.0):  # comfyui-cli项目标准端口
+def check_comfy_server_running(port=None, host="localhost", timeout: float = 5.0):
+    # 端口优先级：显式参数 > COMFYUI_PORT 环境变量 > 8188（ComfyUI 官方默认）
+    port = port if port is not None else constants.default_port()
     """
     Checks if the Comfy server is running by making a GET request to the /history endpoint.
 
@@ -43,7 +46,13 @@ def check_comfy_server_running(port=3198, host="localhost", timeout: float = 5.0
         bool: True if the Comfy server is running, False otherwise.
     """
     try:
-        response = requests.get(f"http://{host}:{port}/history", timeout=timeout)
+        # 绕过环境代理：本地 ComfyUI 不应经 HTTP(S)_PROXY（否则在有代理的环境里
+        # 会被代理拦成 502，误判为"服务未运行"）。
+        response = requests.get(
+            f"http://{host}:{port}/history",
+            timeout=timeout,
+            proxies={"http": None, "https": None},
+        )
         return response.status_code == 200
     except requests.exceptions.RequestException:
         return False
@@ -110,7 +119,7 @@ class EnvChecker:
             data.append(
                 (
                     "Comfy Server Running",
-                    "[bold green]Yes[/bold green]\nhttp://localhost:3198",  # comfyui-cli项目标准端口
+                    f"[bold green]Yes[/bold green]\nhttp://localhost:{constants.default_port()}",
                 )
             )
         else:

@@ -3,15 +3,15 @@
 > **本文件为历史存档（2026-07-08 早期记录）。切勿以本文档中的端口、启动参数指导当前任务执行。**
 >
 > 当前环境标准：
-> - 端口：**3198**
+> - 端口：**8188**（ComfyUI 官方默认；如需沿用 3198 请显式设置 `COMFYUI_PORT=3198`）
 > - 启动模式：白名单模式（`--whitelist-custom-nodes` + `--disable-all-custom-nodes`）
 > - output目录：`--output-directory E:\comfyui-cli\output`
-> - 标准启动命令：见 `.trae/skills/video-task-execution-guide/SKILL.md` 检查1
+> - 标准启动命令：见 `skills/video-task-execution-guide/SKILL.md` 检查1
 >
 > 本文档中"可用资源"一节（SAM3模型清单等）可能仍有参考价值，但环境配置和启动参数已全部过时。
 
 测试日期：2026-07-08（原始记录）
-服务器：ComfyUI v0.27.0, Python 3.12.9, 端口 8189（因 8188 被占用，**当前标准端口为 3198**）
+服务器：ComfyUI v0.27.0, Python 3.12.9, 端口 8189（因 8188 被占用；当时一度改用 3198，**现已统一回官方默认 8188**）
 启动参数：`--disable-all-custom-nodes --port 8189`（**已过时，当前使用白名单模式**）
 
 ## 环境问题（按用户要求不修改 ComfyUI，仅记录）
@@ -33,7 +33,7 @@
 
 ### 4. 端口 8188 被占用
 - **现象**：默认端口 8188 被进程 102100 (python.exe) 占用且无响应
-- **处理**：使用端口 8189 启动新实例（**当前项目标准端口为 3198**）
+- **处理**：使用端口 8189 启动新实例（3198 是当时的一台部署机端口，**现已过时**；当前默认 8188，可用 `COMFYUI_PORT` 覆盖）
 
 ## 可用资源
 - checkpoints: sam3.1_multiplex_fp16.safetensors, v1-5-pruned-emaonly.safetensors

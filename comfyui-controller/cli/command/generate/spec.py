@@ -2,7 +2,7 @@
 
 Lookup order on disk:
 1. ``~/.comfy/openapi-cache.yml`` if fresher than CACHE_TTL_DAYS
-2. The vendored copy under ``comfy_cli/command/generate/spec/openapi.yml``
+2. The vendored copy under ``cli/command/generate/spec/openapi.yml``
 
 The parsed spec is cached in-process via functools.lru_cache so repeated lookups
 inside a single CLI invocation don't re-parse the 30k-line YAML.

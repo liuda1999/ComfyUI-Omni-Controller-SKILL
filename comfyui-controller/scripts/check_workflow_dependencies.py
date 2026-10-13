@@ -18,9 +18,21 @@ import sys
 import urllib.request
 import urllib.error
 
+# 本机 ComfyUI 位于回环地址，必须绕过 HTTP_PROXY/HTTPS_PROXY 环境变量，
+# 否则请求会被本地代理拦截并返回 502，表现为"服务不可用"的假故障。
+urllib.request.install_opener(
+    urllib.request.build_opener(urllib.request.ProxyHandler({}))
+)
+
+
+# 端口/host 解析优先级（见 SKILL.md 7.1）：命令行参数 > COMFYUI_PORT/COMFYUI_HOST 环境变量 > 默认值。
+# 默认值跟随 ComfyUI 官方约定（8188）。3198 是历史单一部署环境的端口，非通用标准；
+# 需沿用请显式设置 COMFYUI_PORT=3198。
+DEFAULT_HOST = os.environ.get("COMFYUI_HOST", "127.0.0.1")
+DEFAULT_PORT = os.environ.get("COMFYUI_PORT", "8188")
+
 # 服务器地址
 DEFAULT_HOST = "127.0.0.1"
-DEFAULT_PORT = 3198  # comfyui-cli项目标准端口
 
 # 模型类别 -> (节点类型, 参数名) 映射（与 get_available_models.py 一致）
 _TYPE_MAP = {
@@ -511,14 +523,14 @@ VIDEO_REQUIRED_NODES = {
 }
 
 
-def check_video_nodes_available(base_url="http://127.0.0.1:3198"):
+def check_video_nodes_available(base_url=f"http://127.0.0.1:{DEFAULT_PORT}"):
     """检查视频生成专用节点是否全部可用
 
     通过 /object_info API 查询所有已注册节点，逐一检查视频必需节点是否存在。
     对每个节点同时检查主名称及其别名/变体，命中任意一个即视为可用。
 
     Args:
-        base_url: ComfyUI 服务器地址，默认 http://127.0.0.1:3198
+        base_url: ComfyUI 服务器地址，默认 http://127.0.0.1:{DEFAULT_PORT}
 
     Returns:
         dict: {

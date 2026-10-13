@@ -8,6 +8,19 @@ import subprocess
 import sys
 import urllib.request
 
+# 本机 ComfyUI 位于回环地址，必须绕过 HTTP_PROXY/HTTPS_PROXY 环境变量，
+# 否则请求会被本地代理拦截并返回 502，表现为"服务不可用"的假故障。
+urllib.request.install_opener(
+    urllib.request.build_opener(urllib.request.ProxyHandler({}))
+)
+
+
+# 端口/host 解析优先级（见 SKILL.md 7.1）：命令行参数 > COMFYUI_PORT/COMFYUI_HOST 环境变量 > 默认值。
+# 默认值跟随 ComfyUI 官方约定（8188）。3198 是历史单一部署环境的端口，非通用标准；
+# 需沿用请显式设置 COMFYUI_PORT=3198。
+DEFAULT_HOST = os.environ.get("COMFYUI_HOST", "127.0.0.1")
+DEFAULT_PORT = os.environ.get("COMFYUI_PORT", "8188")
+
 
 def http_json(url, timeout=10):
     req = urllib.request.Request(url, method="GET")
@@ -86,7 +99,7 @@ def get_gpu_info():
         # Try nvidia-smi first
         result = subprocess.run(
             ["nvidia-smi", "--query-gpu=name,memory.total,memory.free,memory.used", "--format=csv,noheader"],
-            capture_output=True, text=True, timeout=10
+            capture_output=True, text=True, errors="replace", timeout=10
         )
         if result.returncode == 0:
             lines = result.stdout.strip().split("\n")
@@ -235,10 +248,38 @@ def check_capabilities(system_info, memory_info, gpu_info):
     return capabilities
 
 
+def summarize_target(system_stats):
+    """把目标 ComfyUI 服务器的 /system_stats 摘要成「目标机视角」。
+
+    顶层 `system` / `memory` / `gpu` / `capabilities` 描述的是**运行本脚本的机器**。
+    一旦用 --host/--port 指向远程实例，那台机器的能力与目标机可能完全不同
+    （典型场景：无 GPU 的调度机驱动远程 GPU 机，本机 cuda_available=false 会让
+    人误以为"跑不了视频"）。这里只把目标机**自我上报的事实**摘出来，不臆造任何
+    阈值判定，由调用方/使用者自行比对。
+    """
+    system = system_stats.get("system") or {}
+    devices = system_stats.get("devices") or []
+    cuda = [d for d in devices if (d.get("type") or "").lower() == "cuda"]
+    vram_total = [round((d.get("vram_total") or 0) / 1024 ** 3, 2) for d in cuda]
+    vram_free = [round((d.get("vram_free") or 0) / 1024 ** 3, 2) for d in cuda]
+    return {
+        "note": "以下为 --host/--port 所指服务器的自我上报；顶层 system/memory/gpu 描述的是本机",
+        "os": system.get("os"),
+        "comfyui_version": system.get("comfyui_version"),
+        "ram_total_gb": round((system.get("ram_total") or 0) / 1024 ** 3, 2),
+        "ram_free_gb": round((system.get("ram_free") or 0) / 1024 ** 3, 2),
+        "gpu_count": len(cuda),
+        "gpu_names": [d.get("name") for d in cuda],
+        "gpu_vram_total_gb": vram_total,
+        "gpu_vram_free_gb": vram_free,
+        "max_gpu_vram_total_gb": max(vram_total) if vram_total else 0.0,
+    }
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--host", default=os.environ.get("COMFYUI_HOST", "127.0.0.1"))
-    ap.add_argument("--port", default=os.environ.get("COMFYUI_PORT", "3198"))  # comfyui-cli项目标准端口
+    ap.add_argument("--port", default=os.environ.get("COMFYUI_PORT", "8188"))  # ComfyUI 官方默认；历史部署端口 3198 请用 COMFYUI_PORT 显式指定
     ap.add_argument("--comfyui-path", default=os.environ.get("COMFYUI_PATH", ""))
     args = ap.parse_args()
 
@@ -276,6 +317,7 @@ def main():
             "queue_pending": len(queue.get("queue_pending", [])),
         }
         result["server_stats"] = system_stats
+        result["target"] = summarize_target(system_stats)
     except Exception as e:
         result["status"] = "offline"
         result["error"] = str(e)

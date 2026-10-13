@@ -1,12 +1,24 @@
 """v14段3执行 + 最终拼接"""
 import urllib.request
+
+# 绕过本机代理：127.0.0.1 请求若经 HTTP_PROXY 会被拦截并返回 502（假故障），
+# 表现为“服务不可用”。本脚本只访问本机 ComfyUI，故对所有请求禁用代理。
+urllib.request.install_opener(
+    urllib.request.build_opener(urllib.request.ProxyHandler({}))
+)
 import json
 import time
 import sys
 import os
 import subprocess
 
-COMFYUI_URL = "http://127.0.0.1:3198"
+# 端口/host 解析优先级（见 SKILL.md 7.1）：命令行参数 > COMFYUI_PORT/COMFYUI_HOST 环境变量 > 默认值。
+# 默认值跟随 ComfyUI 官方约定（8188）。3198 是历史单一部署环境的端口，非通用标准；
+# 需沿用请显式设置 COMFYUI_PORT=3198。
+DEFAULT_HOST = os.environ.get("COMFYUI_HOST", "127.0.0.1")
+DEFAULT_PORT = os.environ.get("COMFYUI_PORT", "8188")
+
+COMFYUI_URL = f"http://127.0.0.1:{DEFAULT_PORT}"
 
 WIDTH = 480
 HEIGHT = 640
@@ -181,7 +193,7 @@ def main():
         "-map", "[outv]", "-c:v", "libx264", "-crf", "14",
         "-pix_fmt", "yuv420p10le", "-r", "24", merged_path
     ]
-    r = subprocess.run(cmd, capture_output=True, text=True, timeout=600)
+    r = subprocess.run(cmd, capture_output=True, text=True, errors="replace", timeout=600)
     if r.returncode == 0 and os.path.exists(merged_path):
         size = os.path.getsize(merged_path) / 1048576
         print(f"\n{'='*60}")

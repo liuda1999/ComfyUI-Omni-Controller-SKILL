@@ -1,8 +1,22 @@
 #!/usr/bin/env python3
 """Convert ComfyUI web format workflow to API format."""
+import os
 import argparse
 import json
 import urllib.request
+
+# 本机 ComfyUI 位于回环地址，必须绕过 HTTP_PROXY/HTTPS_PROXY 环境变量，
+# 否则请求会被本地代理拦截并返回 502，表现为"服务不可用"的假故障。
+urllib.request.install_opener(
+    urllib.request.build_opener(urllib.request.ProxyHandler({}))
+)
+
+
+# 端口/host 解析优先级（见 SKILL.md 7.1）：命令行参数 > COMFYUI_PORT/COMFYUI_HOST 环境变量 > 默认值。
+# 默认值跟随 ComfyUI 官方约定（8188）。3198 是历史单一部署环境的端口，非通用标准；
+# 需沿用请显式设置 COMFYUI_PORT=3198。
+DEFAULT_HOST = os.environ.get("COMFYUI_HOST", "127.0.0.1")
+DEFAULT_PORT = os.environ.get("COMFYUI_PORT", "8188")
 
 # control_after_generate 标记值，这些值出现在 widgets_values 中但不是真正的输入参数
 _CONTROL_AFTER_GENERATE_VALUES = {"fixed", "increment", "randomize", "disable"}
@@ -79,7 +93,7 @@ def _filter_control_values(widgets_values, widget_names=None, widget_types=None,
     return out
 
 
-def get_object_info(host="127.0.0.1", port="3198"):  # comfyui-cli项目标准端口
+def get_object_info(host="127.0.0.1", port=DEFAULT_PORT):  
     """从 ComfyUI 服务器获取 object_info 字典"""
     try:
         req = urllib.request.Request(f"http://{host}:{port}/object_info", method="GET")
@@ -316,7 +330,7 @@ def main():
     ap.add_argument("--input", required=True, help="Input workflow JSON")
     ap.add_argument("--output", required=True, help="Output workflow JSON")
     ap.add_argument("--host", default="127.0.0.1", help="ComfyUI server host")
-    ap.add_argument("--port", default="3198", help="ComfyUI server port")  # comfyui-cli项目标准端口
+    ap.add_argument("--port", default=DEFAULT_PORT, help="ComfyUI server port")  
     args = ap.parse_args()
 
     with open(args.input, "r", encoding="utf-8") as f:

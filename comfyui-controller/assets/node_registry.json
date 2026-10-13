@@ -1,0 +1,1666 @@
+{
+  "meta": {
+    "name": "MiniMax H3 工作流节点索引",
+    "generated": "2026-10-13 (updated)",
+    "scope": "项目内 6 个 MiniMax H3 工作流所引用的 88 种节点类型（含 5 个 UUID 占位节点，其中 3 个已定位、2 个待源环境确认）",
+    "usage": "其他智能体/用户据此安装缺失节点包，再加载工作流即可运行",
+    "confirmed_count": 86,
+    "pending_count": 2
+  },
+  "packages": {
+    "ComfyUI-Core": {
+      "repo": "https://github.com/comfyanonymous/ComfyUI",
+      "install": "内置，更新 ComfyUI 至 0.30.0+ 即含 MiniMax H3 原生节点（PR #15224）",
+      "desc": "ComfyUI 官方核心节点",
+      "license": "GPL-3.0"
+    },
+    "kijai/ComfyUI-KJNodes": {
+      "repo": "https://github.com/kijai/ComfyUI-KJNodes",
+      "install": "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+      "desc": "KJ 实用节点集（图像缩放/批次/SageAttention/Set·Get 等）；GetNode/SetNode 为其中 Set/Get 节点",
+      "license": "MIT"
+    },
+    "Kosinkadink/ComfyUI-VideoHelperSuite": {
+      "repo": "https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite",
+      "install": "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt",
+      "desc": "视频加载/合成（VHS_VideoCombine 输出 MP4+音频）、视频信息",
+      "license": "GPL-3.0"
+    },
+    "rgthree/rgthree-comfy": {
+      "repo": "https://github.com/rgthree/rgthree-comfy",
+      "install": "git clone https://github.com/rgthree/rgthree-comfy.git custom_nodes/rgthree-comfy",
+      "desc": "rgthree QoL 节点（Seed/Bookmark/Reroute/Group Bypasser/Label 等）；节点名统一带 (rgthree) 后缀",
+      "license": "MIT"
+    },
+    "Derfuu/Derfuu_ComfyUI_ModdedNodes": {
+      "repo": "https://github.com/Derfuu/Derfuu_ComfyUI_ModdedNodes",
+      "install": "git clone https://github.com/Derfuu/Derfuu_ComfyUI_ModdedNodes.git",
+      "desc": "数学/类型转换节点（DF_Int_to_Float）",
+      "license": "MIT"
+    },
+    "Suzie1/ComfyUI_Comfyroll_CustomNodes": {
+      "repo": "https://github.com/Suzie1/ComfyUI_Comfyroll_CustomNodes",
+      "install": "git clone https://github.com/Suzie1/ComfyUI_Comfyroll_CustomNodes.git custom_nodes/ComfyUI_Comfyroll_CustomNodes",
+      "desc": "Comfyroll Studio 工具节点（比例/文本/开关等）；本项目用 CR Prompt Text",
+      "license": "MIT"
+    },
+    "ltdrdata/ComfyUI-Impact-Pack": {
+      "repo": "https://github.com/ltdrdata/ComfyUI-Impact-Pack",
+      "install": "git clone https://github.com/ltdrdata/ComfyUI-Impact-Pack.git",
+      "desc": "Impact 节点包（ImpactSwitch 分支开关）",
+      "license": "GPL-3.0"
+    },
+    "cubiq/ComfyUI_essentials": {
+      "repo": "https://github.com/cubiq/ComfyUI_essentials",
+      "install": "git clone https://github.com/cubiq/ComfyUI_essentials.git custom_nodes/ComfyUI_essentials",
+      "desc": "Essentials 实用节点（核心缺失的基础节点：图像/遮罩/采样/文本等），maintenance 模式",
+      "license": "MIT"
+    },
+    "yolain/ComfyUI-Easy-Use": {
+      "repo": "https://github.com/yolain/ComfyUI-Easy-Use",
+      "install": "git clone https://github.com/yolain/ComfyUI-Easy-Use.git custom_nodes/ComfyUI-Easy-Use && pip install -r custom_nodes/ComfyUI-Easy-Use/requirements.txt",
+      "desc": "Easy-Use 效率集成包（采样/提示词/条件控制/循环等），基于 TinyTerraNodes",
+      "license": "GPL-3.0"
+    },
+    "MieMieeeee/ComfyUI-MieNodes": {
+      "repo": "https://github.com/MieMieeeee/ComfyUI-MieNodes",
+      "install": "git clone https://github.com/MieMieeeee/ComfyUI-MieNodes.git",
+      "desc": "工具节点包（ShowAnything 调试显示）",
+      "license": "MIT"
+    },
+    "vrgamegirl19/comfyui-vrgamedevgirl": {
+      "repo": "https://github.com/vrgamegirl19/comfyui-vrgamedevgirl",
+      "install": "git clone https://github.com/vrgamegirl19/comfyui-vrgamedevgirl.git  &&  pip install -r requirements.txt",
+      "desc": "视频对比/增强工具（VRGDG_VideoCompareSlider 前后对比滑块）",
+      "license": "VRGameDevGirl Community/Commercial"
+    },
+    "HM-RunningHub/ComfyUI_RH_MinMaxH3": {
+      "repo": "https://github.com/HM-RunningHub/ComfyUI_RH_MinMaxH3",
+      "install": "git clone https://github.com/HM-RunningHub/ComfyUI_RH_MinMaxH3.git  &&  pip install -r ComfyUI_RH_MinMaxH3/requirements.txt",
+      "desc": "RunningHub 的 MiniMax-H3 本地音视频扩散节点（T2VA/FL2VA/Ref2VA 三路径），24GB 单卡可跑",
+      "license": "Apache-2.0（权重另循 H3 社区许可）"
+    },
+    "Larryvrh/ComfyUI-MiniMax-H3-Turbo": {
+      "repo": "https://github.com/Larryvrh/ComfyUI-MiniMax-H3-Turbo",
+      "install": "git clone https://github.com/Larryvrh/ComfyUI-MiniMax-H3-Turbo.git",
+      "desc": "4 步 Turbo LoRA + 双调度采样器（H3 加速）",
+      "license": "Apache-2.0"
+    },
+    "facok/comfyui-SelfLift": {
+      "repo": "https://github.com/facok/comfyui-SelfLift",
+      "install": "git clone https://github.com/facok/comfyui-SelfLift.git",
+      "desc": "渐进式分辨率采样（低分辨率前缀→提升→高分辨率收尾），含 H3 实验性适配",
+      "license": "见仓库"
+    },
+    "LBH-123-AI/Comfyui_Minimax_h3_latent_Upscaler": {
+      "repo": "https://github.com/LBH-123-AI/Comfyui_Minimax_h3_latent_Upscaler",
+      "install": "git clone https://github.com/LBH-123-AI/Comfyui_Minimax_h3_latent_Upscaler.git；权重 hf download LBH-123-AI/Minimax_h3_latent_Upscaler → models/latent_upscale_models/",
+      "desc": "H3 24 通道 VAE latent 的 3D 学习式放大 + MMH3 分块拼接上采样",
+      "license": "见仓库"
+    },
+    "AraneaQwQ/ComfyUI-H3-ClipStream": {
+      "repo": "https://github.com/AraneaQwQ/ComfyUI-H3-ClipStream",
+      "install": "git clone https://github.com/AraneaQwQ/ComfyUI-H3-ClipStream.git  &&  pip install -r ComfyUI-H3-ClipStream/requirements.txt（需 ComfyUI ≥ 0.34.0）",
+      "desc": "H3 长视频片段库(Clip Bin) + 运动上下文续接(Motion Context)，含双采(一采/二采)卡片管理",
+      "license": "GPL-3.0（整合 NikoDemon80 Motion-Context GPLv3 + knoic PrefixStream MIT）"
+    },
+    "NikoDemon80/ComfyUI-H3-Motion-Context": {
+      "repo": "https://github.com/NikoDemon80/ComfyUI-H3-Motion-Context",
+      "install": "git clone https://github.com/NikoDemon80/ComfyUI-H3-Motion-Context.git（需 ComfyUI ≥ 0.34.0）",
+      "desc": "H3 片段链式续接：把上一段尾部 latent 与音频钉入下一段，画面/声音真正连续",
+      "license": "GPL-3.0"
+    },
+    "knoic/ComfyUI-MiniMaxH3-PrefixStream": {
+      "repo": "https://github.com/knoic/ComfyUI-MiniMaxH3-PrefixStream",
+      "install": "git clone https://github.com/knoic/ComfyUI-MiniMaxH3-PrefixStream.git  &&  pip install -r requirements.txt",
+      "desc": "H3 片段素材池（Clip Bin Saver/Picker 带评分与预览卡片）",
+      "license": "MIT"
+    },
+    "yichengup/ComfyUI-YCNodes-MiniMax-H3": {
+      "repo": "https://github.com/yichengup/ComfyUI-YCNodes-MiniMax-H3",
+      "install": "git clone https://github.com/yichengup/ComfyUI-YCNodes-MiniMax-H3.git",
+      "desc": "H3 Sigma Refiner：在低 sigma 段加局部微雕，缓解高速运动物体边缘颗粒/闪烁",
+      "license": "见仓库"
+    },
+    "pythongosssss/ComfyUI-Custom-Scripts": {
+      "repo": "https://github.com/pythongosssss/ComfyUI-Custom-Scripts",
+      "install": "git clone https://github.com/pythongosssss/ComfyUI-Custom-Scripts.git custom_nodes/ComfyUI-Custom-Scripts",
+      "desc": "pythongosssss 实用脚本（本项目用 PlaySound 节点）",
+      "license": "MIT"
+    },
+    "ooizj/ComfyUI-H3-Long-Video": {
+      "repo": "https://github.com/ooizj/ComfyUI-H3-Long-Video",
+      "install": "git clone https://github.com/ooizj/ComfyUI-H3-Long-Video.git comfyui-h3-long-video（需 ComfyUI ≥ 0.36.0；与原版 H3 Motion Context 冲突，二者只装其一）",
+      "desc": "一句话+总时长直出 H3 长视频：自动分段、逐段续接、裁重叠、24fps 拼接（基于 H3 Motion Context 改造）",
+      "license": "见仓库"
+    },
+    "beijinren/ComfyUI-H3-Context-Noise": {
+      "repo": "https://github.com/beijinren/ComfyUI-H3-Context-Noise",
+      "install": "git clone https://github.com/beijinren/ComfyUI-H3-Context-Noise.git",
+      "desc": "H3 上下文潜空间渐隐加噪（长视频/多段续接时平滑上下文尾帧），实验性",
+      "license": "MIT"
+    },
+    "tl2012tl/TE_MAN": {
+      "repo": "https://github.com/tl2012tl/TE_MAN",
+      "install": "git clone https://github.com/tl2012tl/TE_MAN.git",
+      "desc": "文本/条件显示与调试节点（TE_text_display 等）",
+      "license": "见仓库（含 LICENSE 文件）"
+    },
+    "Windecay/ComfyUI-ReservedVRAM": {
+      "repo": "https://github.com/Windecay/ComfyUI-ReservedVRAM",
+      "install": "git clone https://github.com/Windecay/ComfyUI-ReservedVRAM.git",
+      "desc": "预留显存设置节点（ReservedVRAMSetter，低显存环境防止 OOM）",
+      "license": "见仓库"
+    },
+    "kijai/ComfyUI-WanVideoWrapper": {
+      "repo": "https://github.com/kijai/ComfyUI-WanVideoWrapper",
+      "install": "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt",
+      "desc": "Kijai 的 Wan 视频封装（WanVideo 模型/采样/编码/上下文/TE/VAE 等），Wan2.2 视频工作流主依赖",
+      "license": "Apache-2.0"
+    },
+    "kijai/ComfyUI-WanAnimatePreprocess": {
+      "repo": "https://github.com/kijai/ComfyUI-WanAnimatePreprocess",
+      "install": "git clone https://github.com/kijai/ComfyUI-WanAnimatePreprocess.git custom_nodes/ComfyUI-WanAnimatePreprocess && pip install -r custom_nodes/ComfyUI-WanAnimatePreprocess/requirements.txt",
+      "desc": "Wan Animate 输入预处理：ViTPose/YOLO 检测、人脸裁剪、姿态重定向",
+      "license": "Apache-2.0"
+    },
+    "chflame163/ComfyUI_LayerStyle": {
+      "repo": "https://github.com/chflame163/ComfyUI_LayerStyle",
+      "install": "git clone https://github.com/chflame163/ComfyUI_LayerStyle.git custom_nodes/ComfyUI_LayerStyle && (双击 install_requirements.bat 或 pip install -r custom_nodes/ComfyUI_LayerStyle/requirements.txt)",
+      "desc": "图层/遮罩合成（类 Photoshop 功能）；本项目用 LayerUtility: PurgeVRAM 释放显存",
+      "license": "MIT"
+    },
+    "wuwukaka/ComfyUI-BodyRatioMapper": {
+      "repo": "https://github.com/wuwukaka/ComfyUI-BodyRatioMapper",
+      "install": "git clone https://github.com/wuwukaka/ComfyUI-BodyRatioMapper.git custom_nodes/ComfyUI-BodyRatioMapper && pip install -r custom_nodes/ComfyUI-BodyRatioMapper/requirements.txt",
+      "desc": "基于 SDPose 的姿势对齐/人体比例映射（动作迁移预处理）；本项目用 ProportionTransfer / SDPoseRender",
+      "license": "GPL-3.0"
+    },
+    "willblaschko/ComfyUI-Unload-Models": {
+      "repo": "https://github.com/willblaschko/ComfyUI-Unload-Models",
+      "install": "git clone https://github.com/willblaschko/ComfyUI-Unload-Models.git custom_nodes/ComfyUI-Unload-Models",
+      "desc": "UnloadAllModels 等显存释放/模型卸载节点",
+      "license": "MIT"
+    },
+    "r-vage/ComfyUI_Eclipse": {
+      "repo": "https://github.com/r-vage/ComfyUI_Eclipse",
+      "install": "git clone https://github.com/r-vage/ComfyUI_Eclipse.git custom_nodes/ComfyUI_Eclipse",
+      "desc": "ComfyUI_Eclipse 工具包；本项目用 MarkdownNote（Markdown 注解节点）",
+      "license": "见仓库 LICENSE"
+    },
+    "PGCRT/CRT-Nodes": {
+      "repo": "https://github.com/PGCRT/CRT-Nodes",
+      "install": "git clone https://github.com/PGCRT/CRT-Nodes.git custom_nodes/CRT-Nodes && pip install -r custom_nodes/CRT-Nodes/requirements.txt",
+      "desc": "CRT 综合节点集（图像FX/音频/采样/Wan LoRA 选择器等）；含 MiniMax H3 AutoDL 节点。注意其 requirements 含 audio 依赖，导入失败会整包节点消失",
+      "license": "见仓库 LICENSE"
+    },
+    "shadowcz007/comfyui-mixlab-nodes": {
+      "repo": "https://github.com/shadowcz007/comfyui-mixlab-nodes",
+      "install": "git clone https://github.com/shadowcz007/comfyui-mixlab-nodes.git custom_nodes/comfyui-mixlab-nodes && pip install -r custom_nodes/comfyui-mixlab-nodes/requirements.txt",
+      "desc": "Mixlab 节点集（Workflow-to-APP/3D/语音/TTS/图像等）",
+      "license": "MIT"
+    },
+    "city96/ComfyUI-GGUF": {
+      "repo": "https://github.com/city96/ComfyUI-GGUF",
+      "install": "git clone https://github.com/city96/ComfyUI-GGUF.git custom_nodes/ComfyUI-GGUF && pip install --upgrade gguf",
+      "desc": "GGUF 量化模型加载（Unet Loader GGUF / T5 GGUF 等），低显存运行 DiT 模型",
+      "license": "MIT（个别来源标 Apache-2.0，以仓库 LICENSE 为准）"
+    },
+    "Fannovel16/ComfyUI-Frame-Interpolation": {
+      "repo": "https://github.com/Fannovel16/ComfyUI-Frame-Interpolation",
+      "install": "git clone https://github.com/Fannovel16/ComfyUI-Frame-Interpolation.git custom_nodes/ComfyUI-Frame-Interpolation && pip install -r custom_nodes/ComfyUI-Frame-Interpolation/requirements.txt",
+      "desc": "帧插值（视频补帧）节点集，基于 RIFE/IFRNET 等",
+      "license": "MIT"
+    },
+    "WASasquatch/was-node-suite-comfyui": {
+      "repo": "https://github.com/WASasquatch/was-node-suite-comfyui",
+      "install": "git clone https://github.com/WASasquatch/was-node-suite-comfyui.git custom_nodes/was-node-suite-comfyui",
+      "desc": "WAS Node Suite v3（481 节点：图像处理/滤镜/遮罩/文本/逻辑/3D/动画等），默认无 pip 依赖",
+      "license": "MIT"
+    },
+    "__UNKNOWN__/ComfyLiterals": {
+      "repo": null,
+      "install": null,
+      "desc": "未能在公共仓库定位的节点包（类名为 ComfyLiterals）。需在使用环境中用 ComfyUI-Manager 或确认其真实来源后补充",
+      "license": "未知"
+    },
+    "M1kep/ComfyLiterals": {
+      "repo": "https://github.com/M1kep/ComfyLiterals",
+      "install": "git clone https://github.com/M1kep/ComfyLiterals.git custom_nodes/ComfyLiterals",
+      "desc": "字面量常量节点（Int/Float/String/KepStringLiteral/Operation/Checkpoint/Lora）；本地 custom_nodes/ComfyLiterals 确认",
+      "license": "见仓库 LICENSE",
+      "verified_local": "D:\\2026-ComfyUI-V8.3\\custom_nodes\\ComfyLiterals"
+    },
+    "SeanScripts/ComfyUI-Unload-Model": {
+      "repo": "https://github.com/SeanScripts/ComfyUI-Unload-Model",
+      "install": "git clone https://github.com/SeanScripts/ComfyUI-Unload-Model.git custom_nodes/comfyui-unload-model",
+      "desc": "UnloadModel / UnloadAllModels 显存释放透传节点；为 willblaschko/ComfyUI-Unload-Models 的精简 fork（本地安装名 comfyui-unload-model）",
+      "license": "MIT（fork 自 willblaschko/ComfyUI-Unload-Models，LICENSE 见仓库）",
+      "verified_local": "D:\\2026-ComfyUI-V8.3\\custom_nodes\\comfyui-unload-model"
+    },
+    "weekii8282/ComfyUI-PromptSelector": {
+      "repo": "https://github.com/weekii8282/ComfyUI-PromptSelector",
+      "install": "git clone https://github.com/weekii8282/ComfyUI-PromptSelector.git custom_nodes/ComfyUI-PromptSelector",
+      "desc": "Wan2.2 结构化提示词选择/生成器（基于 Wan2.2 官方提示词指南）。此为 Wan22PromptSelector 的功能最近似公共实现（原名未能在公共源精确定位）",
+      "license": "见仓库 LICENSE",
+      "approx_for": "Wan22PromptSelector"
+    }
+  },
+  "core_nodes": [
+    "BasicGuider",
+    "BasicScheduler",
+    "CLIPLoader",
+    "ComfyMathExpression",
+    "ConditioningZeroOut",
+    "CreateVideo",
+    "FloatConstant",
+    "GetVideoComponents",
+    "INTConstant",
+    "Int",
+    "KSamplerSelect",
+    "LTXVConcatAVLatent",
+    "LTXVSeparateAVLatent",
+    "LoadAudio",
+    "LoadImage",
+    "LoadVideo",
+    "LoraLoaderModelOnly",
+    "MiniMaxH3ImageToVideo",
+    "MiniMaxH3ReferenceToVideo",
+    "MiniMaxH3SigmaShift",
+    "ModelAttentionBackend",
+    "PreviewImage",
+    "PrimitiveFloat",
+    "PrimitiveStringMultiline",
+    "RandomNoise",
+    "ResolutionSelector",
+    "SamplerCustomAdvanced",
+    "SaveVideo",
+    "SplitSigmas",
+    "Text",
+    "UNETLoader",
+    "VAEDecode",
+    "VAEDecodeAudio",
+    "VAELoader"
+  ],
+  "nodes": {
+    "VAEDecodeAudio": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "音频 VAE 解码（潜空间→立体声波形）",
+      "confirmed": true
+    },
+    "LoadAudio": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "加载音频",
+      "confirmed": true
+    },
+    "LoadVideo": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "加载视频",
+      "confirmed": true
+    },
+    "GetVideoComponents": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "拆分视频为帧/帧率/音频",
+      "confirmed": true
+    },
+    "BasicScheduler": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "基础调度器（sigma 计划）",
+      "confirmed": true
+    },
+    "BasicGuider": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "基础引导器（CFG）",
+      "confirmed": true
+    },
+    "SplitSigmas": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "拆分 sigma 计划（两阶段采样）",
+      "confirmed": true
+    },
+    "PreviewImage": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "预览图片",
+      "confirmed": true
+    },
+    "ResolutionSelector": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "分辨率选择器（16:9/32 对齐）",
+      "confirmed": true
+    },
+    "ComfyMathExpression": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "数学表达式（帧数/时长推算）",
+      "confirmed": true
+    },
+    "ModelAttentionBackend": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "注意力后端选择",
+      "confirmed": true
+    },
+    "PrimitiveStringMultiline": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "多行字符串原始值",
+      "confirmed": true
+    },
+    "FloatConstant": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "浮点常量",
+      "confirmed": true
+    },
+    "Text": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "文本",
+      "confirmed": true
+    },
+    "MiniMaxH3ImageToVideo": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "MiniMax H3 图生视频（官方原生节点）",
+      "confirmed": true
+    },
+    "MiniMaxH3ReferenceToVideo": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "MiniMax H3 参考生视频（多模态参考+AV 潜空间，官方原生节点）",
+      "confirmed": true
+    },
+    "MiniMaxH3SigmaShift": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "MiniMax H3 sigma 偏移（视频/音频双调度，官方原生节点）",
+      "confirmed": true
+    },
+    "LTXVConcatAVLatent": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "拼接 AV 潜空间",
+      "confirmed": true
+    },
+    "LTXVSeparateAVLatent": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "拆分 AV 潜空间",
+      "confirmed": true
+    },
+    "ModelPreviewOverrideKJ": {
+      "core": false,
+      "package": "kijai/ComfyUI-KJNodes",
+      "desc": "覆盖模型预览",
+      "confirmed": true,
+      "repo": "https://github.com/kijai/ComfyUI-KJNodes",
+      "install": "git clone https://github.com/kijai/ComfyUI-KJNodes.git  &&  pip install -r ComfyUI-KJNodes/requirements.txt"
+    },
+    "MiniMaxH3MemoryEfficientSageAttentionPatch": {
+      "core": false,
+      "package": "kijai/ComfyUI-KJNodes",
+      "desc": "H3 显存友好的 SageAttention 补丁",
+      "confirmed": true,
+      "repo": "https://github.com/kijai/ComfyUI-KJNodes",
+      "install": "git clone https://github.com/kijai/ComfyUI-KJNodes.git  &&  pip install -r ComfyUI-KJNodes/requirements.txt"
+    },
+    "MiniMaxLowVRAMAttention": {
+      "core": false,
+      "package": "kijai/ComfyUI-KJNodes",
+      "desc": "H3 低显存注意力（头分组）",
+      "confirmed": true,
+      "repo": "https://github.com/kijai/ComfyUI-KJNodes",
+      "install": "git clone https://github.com/kijai/ComfyUI-KJNodes.git  &&  pip install -r ComfyUI-KJNodes/requirements.txt"
+    },
+    "MiniMaxChunkFeedForward": {
+      "core": false,
+      "package": "kijai/ComfyUI-KJNodes",
+      "desc": "H3 分块前馈（降低激活峰值，输出等价）",
+      "confirmed": true,
+      "repo": "https://github.com/kijai/ComfyUI-KJNodes",
+      "install": "git clone https://github.com/kijai/ComfyUI-KJNodes.git  &&  pip install -r ComfyUI-KJNodes/requirements.txt"
+    },
+    "DF_Int_to_Float": {
+      "core": false,
+      "package": "Derfuu/Derfuu_ComfyUI_ModdedNodes",
+      "desc": "整数→浮点转换",
+      "confirmed": true,
+      "repo": "https://github.com/Derfuu/Derfuu_ComfyUI_ModdedNodes",
+      "install": "git clone https://github.com/Derfuu/Derfuu_ComfyUI_ModdedNodes.git"
+    },
+    "CR Text Concatenate": {
+      "core": false,
+      "package": "Suzie1/ComfyUI_Comfyroll_CustomNodes",
+      "desc": "文本拼接",
+      "confirmed": true,
+      "repo": "https://github.com/Suzie1/ComfyUI_Comfyroll_CustomNodes",
+      "install": "git clone https://github.com/Suzie1/ComfyUI_Comfyroll_CustomNodes.git"
+    },
+    "ImpactSwitch": {
+      "core": false,
+      "package": "ltdrdata/ComfyUI-Impact-Pack",
+      "desc": "条件分支开关",
+      "confirmed": true,
+      "repo": "https://github.com/ltdrdata/ComfyUI-Impact-Pack",
+      "install": "git clone https://github.com/ltdrdata/ComfyUI-Impact-Pack.git"
+    },
+    "ImageResize+": {
+      "core": false,
+      "package": "cubiq/ComfyUI_essentials",
+      "desc": "图片缩放",
+      "confirmed": true,
+      "repo": "https://github.com/cubiq/ComfyUI_essentials",
+      "install": "git clone https://github.com/cubiq/ComfyUI_essentials.git"
+    },
+    "easy boolean": {
+      "core": false,
+      "package": "yolain/ComfyUI-Easy-Use",
+      "desc": "布尔输入",
+      "confirmed": true,
+      "repo": "https://github.com/yolain/ComfyUI-Easy-Use",
+      "install": "git clone https://github.com/yolain/ComfyUI-Easy-Use.git"
+    },
+    "easy float": {
+      "core": false,
+      "package": "yolain/ComfyUI-Easy-Use",
+      "desc": "浮点输入",
+      "confirmed": true,
+      "repo": "https://github.com/yolain/ComfyUI-Easy-Use",
+      "install": "git clone https://github.com/yolain/ComfyUI-Easy-Use.git"
+    },
+    "easy showAnything": {
+      "core": false,
+      "package": "yolain/ComfyUI-Easy-Use",
+      "desc": "显示任意值",
+      "confirmed": true,
+      "repo": "https://github.com/yolain/ComfyUI-Easy-Use",
+      "install": "git clone https://github.com/yolain/ComfyUI-Easy-Use.git"
+    },
+    "EasyCache": {
+      "core": false,
+      "package": "yolain/ComfyUI-Easy-Use",
+      "desc": "易用缓存（加速）",
+      "confirmed": true,
+      "repo": "https://github.com/yolain/ComfyUI-Easy-Use",
+      "install": "git clone https://github.com/yolain/ComfyUI-Easy-Use.git"
+    },
+    "ShowAnything|Mie": {
+      "core": false,
+      "package": "MieMieeeee/ComfyUI-MieNodes",
+      "desc": "显示任意输入为字符串（调试）",
+      "confirmed": true,
+      "repo": "https://github.com/MieMieeeee/ComfyUI-MieNodes",
+      "install": "git clone https://github.com/MieMieeeee/ComfyUI-MieNodes.git"
+    },
+    "VRGDG_VideoCompareSlider": {
+      "core": false,
+      "package": "vrgamegirl19/comfyui-vrgamedevgirl",
+      "desc": "视频前后对比滑块",
+      "confirmed": true,
+      "repo": "https://github.com/vrgamegirl19/comfyui-vrgamedevgirl",
+      "install": "git clone https://github.com/vrgamegirl19/comfyui-vrgamedevgirl.git  &&  pip install -r requirements.txt"
+    },
+    "MiniMaxH3TurboLoRA": {
+      "core": false,
+      "package": "Larryvrh/ComfyUI-MiniMax-H3-Turbo",
+      "desc": "Turbo LoRA（4 步加速）",
+      "confirmed": true,
+      "repo": "https://github.com/Larryvrh/ComfyUI-MiniMax-H3-Turbo",
+      "install": "git clone https://github.com/Larryvrh/ComfyUI-MiniMax-H3-Turbo.git"
+    },
+    "MiniMaxH3TurboSampler": {
+      "core": false,
+      "package": "Larryvrh/ComfyUI-MiniMax-H3-Turbo",
+      "desc": "Turbo 双调度采样器",
+      "confirmed": true,
+      "repo": "https://github.com/Larryvrh/ComfyUI-MiniMax-H3-Turbo",
+      "install": "git clone https://github.com/Larryvrh/ComfyUI-MiniMax-H3-Turbo.git"
+    },
+    "SelfLiftH3Sampler": {
+      "core": false,
+      "package": "facok/comfyui-SelfLift",
+      "desc": "H3 渐进式分辨率采样（实验）",
+      "confirmed": true,
+      "repo": "https://github.com/facok/comfyui-SelfLift",
+      "install": "git clone https://github.com/facok/comfyui-SelfLift.git"
+    },
+    "MinimaxH3LatentUpscaler3D": {
+      "core": false,
+      "package": "LBH-123-AI/Comfyui_Minimax_h3_latent_Upscaler",
+      "desc": "H3 latent 3D 学习式放大",
+      "confirmed": true,
+      "repo": "https://github.com/LBH-123-AI/Comfyui_Minimax_h3_latent_Upscaler",
+      "install": "git clone https://github.com/LBH-123-AI/Comfyui_Minimax_h3_latent_Upscaler.git；权重 hf download LBH-123-AI/Minimax_h3_latent_Upscaler → models/latent_upscale_models/"
+    },
+    "MMH3TemporalSplitParams": {
+      "core": false,
+      "package": "LBH-123-AI/Comfyui_Minimax_h3_latent_Upscaler",
+      "desc": "MMH3 分块上采样-时间切分参数",
+      "confirmed": true,
+      "repo": "https://github.com/LBH-123-AI/Comfyui_Minimax_h3_latent_Upscaler",
+      "install": "git clone https://github.com/LBH-123-AI/Comfyui_Minimax_h3_latent_Upscaler.git；权重 hf download LBH-123-AI/Minimax_h3_latent_Upscaler → models/latent_upscale_models/"
+    },
+    "MiniMaxClipBinDualSaver": {
+      "core": false,
+      "package": "AraneaQwQ/ComfyUI-H3-ClipStream",
+      "desc": "双采片段入库(一采+二采)",
+      "confirmed": true,
+      "repo": "https://github.com/AraneaQwQ/ComfyUI-H3-ClipStream",
+      "install": "git clone https://github.com/AraneaQwQ/ComfyUI-H3-ClipStream.git  &&  pip install -r ComfyUI-H3-ClipStream/requirements.txt（需 ComfyUI ≥ 0.34.0）"
+    },
+    "MiniMaxClipBinDualPicker": {
+      "core": false,
+      "package": "AraneaQwQ/ComfyUI-H3-ClipStream",
+      "desc": "双采片段选择(可视化卡片)",
+      "confirmed": true,
+      "repo": "https://github.com/AraneaQwQ/ComfyUI-H3-ClipStream",
+      "install": "git clone https://github.com/AraneaQwQ/ComfyUI-H3-ClipStream.git  &&  pip install -r ComfyUI-H3-ClipStream/requirements.txt（需 ComfyUI ≥ 0.34.0）"
+    },
+    "MiniMaxH3MotionContextClipStream": {
+      "core": false,
+      "package": "AraneaQwQ/ComfyUI-H3-ClipStream",
+      "desc": "运动上下文续接（尾部 latent+音频钉入）",
+      "confirmed": true,
+      "repo": "https://github.com/AraneaQwQ/ComfyUI-H3-ClipStream",
+      "install": "git clone https://github.com/AraneaQwQ/ComfyUI-H3-ClipStream.git  &&  pip install -r ComfyUI-H3-ClipStream/requirements.txt（需 ComfyUI ≥ 0.34.0）"
+    },
+    "H3SigmaRefiner": {
+      "core": false,
+      "package": "yichengup/ComfyUI-YCNodes-MiniMax-H3",
+      "desc": "H3 sigma 精修（缓解边缘颗粒/闪烁）",
+      "confirmed": true,
+      "repo": "https://github.com/yichengup/ComfyUI-YCNodes-MiniMax-H3",
+      "install": "git clone https://github.com/yichengup/ComfyUI-YCNodes-MiniMax-H3.git"
+    },
+    "RHMiniMaxH3FL2VAModelLoader": {
+      "core": false,
+      "package": "HM-RunningHub/ComfyUI_RH_MinMaxH3",
+      "desc": "FL2VA 模型加载器（DiT）",
+      "confirmed": true,
+      "repo": "https://github.com/HM-RunningHub/ComfyUI_RH_MinMaxH3",
+      "install": "git clone https://github.com/HM-RunningHub/ComfyUI_RH_MinMaxH3.git  &&  pip install -r ComfyUI_RH_MinMaxH3/requirements.txt"
+    },
+    "RHMiniMaxH3FL2VATextEncoderLoader": {
+      "core": false,
+      "package": "HM-RunningHub/ComfyUI_RH_MinMaxH3",
+      "desc": "FL2VA Qwen3-VL 文本编码器加载器",
+      "confirmed": true,
+      "repo": "https://github.com/HM-RunningHub/ComfyUI_RH_MinMaxH3",
+      "install": "git clone https://github.com/HM-RunningHub/ComfyUI_RH_MinMaxH3.git  &&  pip install -r ComfyUI_RH_MinMaxH3/requirements.txt"
+    },
+    "RHMiniMaxH3FL2VAVAELoader": {
+      "core": false,
+      "package": "HM-RunningHub/ComfyUI_RH_MinMaxH3",
+      "desc": "FL2VA 双 VAE 加载器（视频+音频）",
+      "confirmed": true,
+      "repo": "https://github.com/HM-RunningHub/ComfyUI_RH_MinMaxH3",
+      "install": "git clone https://github.com/HM-RunningHub/ComfyUI_RH_MinMaxH3.git  &&  pip install -r ComfyUI_RH_MinMaxH3/requirements.txt"
+    },
+    "RHMiniMaxH3FL2VAEncode": {
+      "core": false,
+      "package": "HM-RunningHub/ComfyUI_RH_MinMaxH3",
+      "desc": "FL2VA 条件编码",
+      "confirmed": true,
+      "repo": "https://github.com/HM-RunningHub/ComfyUI_RH_MinMaxH3",
+      "install": "git clone https://github.com/HM-RunningHub/ComfyUI_RH_MinMaxH3.git  &&  pip install -r ComfyUI_RH_MinMaxH3/requirements.txt"
+    },
+    "RHMiniMaxH3FL2VAFirstFrameCondition": {
+      "core": false,
+      "package": "HM-RunningHub/ComfyUI_RH_MinMaxH3",
+      "desc": "FL2VA 首帧 / 首+尾帧条件",
+      "confirmed": true,
+      "repo": "https://github.com/HM-RunningHub/ComfyUI_RH_MinMaxH3",
+      "install": "git clone https://github.com/HM-RunningHub/ComfyUI_RH_MinMaxH3.git  &&  pip install -r ComfyUI_RH_MinMaxH3/requirements.txt"
+    },
+    "RHMiniMaxH3FL2VATarget": {
+      "core": false,
+      "package": "HM-RunningHub/ComfyUI_RH_MinMaxH3",
+      "desc": "FL2VA 目标（AV 潜空间初始化）",
+      "confirmed": true,
+      "repo": "https://github.com/HM-RunningHub/ComfyUI_RH_MinMaxH3",
+      "install": "git clone https://github.com/HM-RunningHub/ComfyUI_RH_MinMaxH3.git  &&  pip install -r ComfyUI_RH_MinMaxH3/requirements.txt"
+    },
+    "RHMiniMaxH3EmptyAVLatent": {
+      "core": false,
+      "package": "HM-RunningHub/ComfyUI_RH_MinMaxH3",
+      "desc": "空 AV 潜空间",
+      "confirmed": true,
+      "repo": "https://github.com/HM-RunningHub/ComfyUI_RH_MinMaxH3",
+      "install": "git clone https://github.com/HM-RunningHub/ComfyUI_RH_MinMaxH3.git  &&  pip install -r ComfyUI_RH_MinMaxH3/requirements.txt"
+    },
+    "RHMiniMaxH3DualSigmaSampler": {
+      "core": false,
+      "package": "HM-RunningHub/ComfyUI_RH_MinMaxH3",
+      "desc": "双 sigma 采样器（视频/音频独立调度）",
+      "confirmed": true,
+      "repo": "https://github.com/HM-RunningHub/ComfyUI_RH_MinMaxH3",
+      "install": "git clone https://github.com/HM-RunningHub/ComfyUI_RH_MinMaxH3.git  &&  pip install -r ComfyUI_RH_MinMaxH3/requirements.txt"
+    },
+    "RHMiniMaxH3DecodeAV": {
+      "core": false,
+      "package": "HM-RunningHub/ComfyUI_RH_MinMaxH3",
+      "desc": "解码视频 + 音频",
+      "confirmed": true,
+      "repo": "https://github.com/HM-RunningHub/ComfyUI_RH_MinMaxH3",
+      "install": "git clone https://github.com/HM-RunningHub/ComfyUI_RH_MinMaxH3.git  &&  pip install -r ComfyUI_RH_MinMaxH3/requirements.txt"
+    },
+    "Text Multiline": {
+      "core": false,
+      "package": "pythongosssss/ComfyUI-Custom-Scripts",
+      "desc": "多行文本输入",
+      "confirmed": true,
+      "repo": "https://github.com/pythongosssss/ComfyUI-Custom-Scripts",
+      "install": "git clone https://github.com/pythongosssss/ComfyUI-Custom-Scripts.git"
+    },
+    "MiniMaxH3ContextLatentTaperNoise": {
+      "core": false,
+      "package": "beijinren/ComfyUI-H3-Context-Noise",
+      "desc": "H3 上下文潜空间渐隐加噪（长视频/多段续接时平滑上下文尾帧），实验性节点",
+      "confirmed": true,
+      "repo": "https://github.com/beijinren/ComfyUI-H3-Context-Noise",
+      "install": "git clone https://github.com/beijinren/ComfyUI-H3-Context-Noise.git",
+      "license": "MIT"
+    },
+    "H3 Long Video Manager": {
+      "core": false,
+      "package": "ooizj/ComfyUI-H3-Long-Video",
+      "desc": "长视频统一编排管理器：一句话+总时长直出 H3 长视频（自动分段、逐段续接、裁重叠、拼接）",
+      "confirmed": true,
+      "repo": "https://github.com/ooizj/ComfyUI-H3-Long-Video",
+      "install": "git clone https://github.com/ooizj/ComfyUI-H3-Long-Video.git comfyui-h3-long-video（需 ComfyUI ≥ 0.36.0；与原版 H3 Motion Context 冲突，二者只装其一）",
+      "license": "见仓库"
+    },
+    "H3 Segment Picker": {
+      "core": false,
+      "package": "ooizj/ComfyUI-H3-Long-Video",
+      "desc": "长视频分段选择节点：挑选/定位已生成的分段片段",
+      "confirmed": true,
+      "repo": "https://github.com/ooizj/ComfyUI-H3-Long-Video",
+      "install": "git clone https://github.com/ooizj/ComfyUI-H3-Long-Video.git comfyui-h3-long-video（需 ComfyUI ≥ 0.36.0；与原版 H3 Motion Context 冲突，二者只装其一）",
+      "license": "见仓库"
+    },
+    "TE_text_display": {
+      "core": false,
+      "package": "tl2012tl/TE_MAN",
+      "desc": "文本/条件显示调试节点（在画布上显示文本或条件内容）",
+      "confirmed": true,
+      "repo": "https://github.com/tl2012tl/TE_MAN",
+      "install": "git clone https://github.com/tl2012tl/TE_MAN.git",
+      "license": "见仓库（含 LICENSE 文件）"
+    },
+    "ReservedVRAMSetter": {
+      "core": false,
+      "package": "Windecay/ComfyUI-ReservedVRAM",
+      "desc": "预留显存设置节点：为其他进程预留固定显存，低显存环境防止 OOM",
+      "confirmed": true,
+      "repo": "https://github.com/Windecay/ComfyUI-ReservedVRAM",
+      "install": "git clone https://github.com/Windecay/ComfyUI-ReservedVRAM.git",
+      "license": "见仓库"
+    },
+    "忽略多组孤海": {
+      "core": false,
+      "package": "rgthree/rgthree-comfy",
+      "desc": "rgthree Fast Groups Muter 的汉化/魔改重命名版（分组旁路开关，『孤海』为汉化署名）；功能等同 Fast Groups Muter / Fast Groups Bypasser",
+      "confirmed": true,
+      "repo": "https://github.com/rgthree/rgthree-comfy",
+      "install": "git clone https://github.com/rgthree/rgthree-comfy.git",
+      "license": "MIT"
+    },
+    "1e83e52d-c4d4-4071-be6f-2ad81c64b715": {
+      "core": false,
+      "package": "yolain/ComfyUI-Easy-Use",
+      "desc": "ComfyUI-Easy-Use 的 If else 布尔任意类型开关：boolean, on_true(*), on_false(*) → (*)。本工作流中 ComfyUI 因源环境缺包将其 class_type 替换为 UUID。",
+      "confirmed": true,
+      "repo": "https://github.com/yolain/ComfyUI-Easy-Use",
+      "install": "git clone https://github.com/yolain/ComfyUI-Easy-Use.git",
+      "license": "MIT",
+      "class_type": "IfElse"
+    },
+    "7a522690-eadb-45bc-b4b8-4fbf5b09e1a0": {
+      "core": false,
+      "package": "yolain/ComfyUI-Easy-Use",
+      "desc": "ComfyUI-Easy-Use 的 If else 布尔任意类型开关：boolean, on_true(*), on_false(*) → (*)。本工作流中 ComfyUI 因源环境缺包将其 class_type 替换为 UUID。",
+      "confirmed": true,
+      "repo": "https://github.com/yolain/ComfyUI-Easy-Use",
+      "install": "git clone https://github.com/yolain/ComfyUI-Easy-Use.git",
+      "license": "MIT",
+      "class_type": "IfElse"
+    },
+    "7c0dfa74-7583-4d61-98d6-cae724dc6517": {
+      "core": false,
+      "package": null,
+      "desc": "【未解析·UUID占位】无输入、输出 4 路 SIGMAS(SIGMAS/SIGMAS_1/SIGMAS_2/SIGMAS_3) 的调度生成器节点。导出环境缺节点包，ComfyUI 将真实 class_type 替换为该 UUID。",
+      "confirmed": false,
+      "io_signature": {
+        "inputs": [],
+        "outputs": [
+          "SIGMAS:SIGMAS",
+          "SIGMAS_1:SIGMAS",
+          "SIGMAS_2:SIGMAS",
+          "SIGMAS_3:SIGMAS"
+        ],
+        "widgets": null
+      },
+      "functional_role": "无输入、输出 4 路 SIGMAS 的调度生成器。本工作流仅将其 SIGMAS_2 经 Reroute#386 接入下游（应为二采采样的 sigma 调度）。功能等价于「为二采多阶段采样预生成 4 条 sigma 调度、按阶段择一使用」。",
+      "candidates": "二采/多阶段 H3 采样生态（同上列包）；或某 sigma 调度工具包（ManualSigmas 变体 / 预置多阶段 schedule 节点）。Viggle-Animate-H3 文档提及「4 sigma points」基线；FastH3 社区工作流使用「3 步二采 sigma: 0.9035/0.6316/0.3158/0.0000」—— 均指向 4 点 sigma 约定。",
+      "ruled_out": "RES4LYF/Sigmas Split（1 路）、sigmas_tools/Split-and-concatenate（2 路）、ComfyUI 内置 SplitSigmas（2 路）、rockerBOO/MiniMaxH3ShiftSigmas（1 路且需输入）—— 均不匹配「无输入 + 4 路输出」。",
+      "needs": "同上，需源环境确认真实 class_type。"
+    },
+    "b38cb4d8-b7ff-4df4-990e-876cf5cb5857": {
+      "core": false,
+      "package": null,
+      "desc": "【未解析·UUID占位·关键节点】双 VAE(视频+音频)的 H3 二采(second-pass)采样+解码节点。导出环境缺节点包，ComfyUI 将真实 class_type 替换为该 UUID。",
+      "confirmed": false,
+      "io_signature": {
+        "inputs": [
+          "model:MODEL",
+          "conditioning:CONDITIONING",
+          "latent_image:LATENT",
+          "steps:INT",
+          "vae:VAE(视频)",
+          "vae_1:VAE(音频)",
+          "trim_frames:INT",
+          "sampler_name:COMBO[er_sde]",
+          "scheduler:COMBO[simple]",
+          "denoise:FLOAT"
+        ],
+        "outputs": [
+          "output:LATENT",
+          "IMAGE:IMAGE",
+          "images:IMAGE",
+          "audio:AUDIO"
+        ],
+        "widgets": null
+      },
+      "functional_role": "本工作流核心二采节点：接收一采 latent（MiniMaxH3ReferenceToVideo#261 的 latent_image）、运动上下文条件与 trim_frames（MiniMaxH3MotionContextClipStream#5358）、双 VAE（GetNode#240 视频 VAE + #241 音频 VAE），完成 H3 联合视频/音频采样（sampler_name 默认 er_sde、scheduler 默认 simple、denoise），并同时解码输出视频帧(IMAGE/images)与音频(audio)；其 LATENT 输出 output 还接入 3D latent 放大(d9bc6b7f)与 ClipBin 双流保存。",
+      "candidates": "二采/second-pass H3 生态：yichengup/ComfyUI-YCNodes-MiniMax-H3（本工作流已用其 H3SigmaRefiner，该包专攻二采条件注入/低噪精修）、Songssx/ComfyUI-MiniMaxH3-TimelineDirector（Two-Stage Sampler）、facok/comfyui-SelfLift（本工作流已用 SelfLiftH3Sampler）、rockerBOO/h3-latent-upscaler（二采上采样）。亦可能为工作流作者自写的群分享私有节点。",
+      "ruled_out": "ClipStream / IAMCCS / RunningHub(RHMiniMaxH3*) / Motion-Context / Motion-Director / Easy-Use / LBH-123-AI / KJNodes / Viggle-Animate-H3 / ethanfel / RES4LYF / LongTake / xiaolibai-sys/ComfyUI-MiniMaxH3 / 官方 ComfyUI-MiniMax-H3 —— 均不含「双 VAE 采样+解码+trim_frames」的单一节点。",
+      "needs": "在源 ComfyUI 环境用 Manager「缺失节点」提示或列出已安装 custom_nodes 包，定位定义此 class_type 的包；或直接提供工作流作者使用的节点包名。补全后即可加载本工作流。"
+    },
+    "d9bc6b7f-16bd-40f7-8c53-729f89091fea": {
+      "core": false,
+      "package": "LBH-123-AI/Comfyui_Minimax_h3_latent_Upscaler",
+      "desc": "H3 3D latent 学习式放大 + 重采样 + 双 VAE(video+audio)解码：输入 av_latent, model, conditioning, sigmas, temporal_split_param(H3_TEMPORAL_PARAM), spatial_split_param(H3_SPATIAL_PARAM), vae, vae_1, model_name=minimax_h3_latent_upscaler_3d_fp16.safetensors, device, precision, sampler_name → 输出 latent/latent_1/IMAGE/images/audio。ComfyUI 因源环境缺包将 class_type 替换为 UUID。",
+      "confirmed": true,
+      "repo": "https://github.com/LBH-123-AI/Comfyui_Minimax_h3_latent_Upscaler",
+      "install": "git clone https://github.com/LBH-123-AI/Comfyui_Minimax_h3_latent_Upscaler.git；权重 hf download LBH-123-AI/Minimax_h3_latent_Upscaler → models/latent_upscale_models/",
+      "license": "见仓库",
+      "class_type": "MinimaxH3LatentUpscaler3D"
+    },
+    "SetNode": {
+      "core": false,
+      "package": "kijai/ComfyUI-KJNodes",
+      "desc": "KJNodes Set/Get 虚拟连接（前端 JS），按名称暂存任意类型值",
+      "confirmed": true,
+      "missing_in_project_dump": true,
+      "frontend": true
+    },
+    "GetNode": {
+      "core": false,
+      "package": "kijai/ComfyUI-KJNodes",
+      "desc": "KJNodes Set/Get 虚拟连接（前端 JS，web/js/setgetnodes.js），命名取值",
+      "confirmed": true,
+      "missing_in_project_dump": true,
+      "frontend": true
+    },
+    "WanVideoClipVisionEncode": {
+      "core": false,
+      "package": "kijai/ComfyUI-WanVideoWrapper",
+      "desc": "WanVideo ClipVisionEncode（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "WanVideoSetBlockSwap": {
+      "core": false,
+      "package": "kijai/ComfyUI-WanVideoWrapper",
+      "desc": "WanVideo SetBlockSwap（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "WanVideoLoraSelectMulti": {
+      "core": false,
+      "package": "kijai/ComfyUI-WanVideoWrapper",
+      "desc": "WanVideo LoraSelectMulti（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "WanVideoTorchCompileSettings": {
+      "core": false,
+      "package": "kijai/ComfyUI-WanVideoWrapper",
+      "desc": "WanVideo TorchCompileSettings（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "WanVideoAnimateEmbeds": {
+      "core": false,
+      "package": "kijai/ComfyUI-WanVideoWrapper",
+      "desc": "WanVideo AnimateEmbeds（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "ImageResizeKJv2": {
+      "core": false,
+      "package": "kijai/ComfyUI-KJNodes",
+      "desc": "ImageResizeKJv2（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "WanVideoSamplerSettings": {
+      "core": false,
+      "package": "kijai/ComfyUI-WanVideoWrapper",
+      "desc": "WanVideo SamplerSettings（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "INTConstant": {
+      "core": false,
+      "package": "kijai/ComfyUI-KJNodes",
+      "desc": "INTConstant（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "SDPoseKeypointExtractor": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 内置节点",
+      "confirmed": true,
+      "frontend": false
+    },
+    "VHS_VideoCombine": {
+      "core": false,
+      "package": "Kosinkadink/ComfyUI-VideoHelperSuite",
+      "desc": "VHS VideoCombine（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "WanVideoEncode": {
+      "core": false,
+      "package": "kijai/ComfyUI-WanVideoWrapper",
+      "desc": "WanVideo Encode（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "PrimitiveFloat": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 内置节点",
+      "confirmed": true,
+      "frontend": false
+    },
+    "PoseAndFaceDetection": {
+      "core": false,
+      "package": "kijai/ComfyUI-WanAnimatePreprocess",
+      "desc": "PoseAndFaceDetection（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "WanVideoUni3C_embeds": {
+      "core": false,
+      "package": "kijai/ComfyUI-WanVideoWrapper",
+      "desc": "WanVideo Uni3C_embeds（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "PrimitiveBoolean": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 内置节点",
+      "confirmed": true,
+      "frontend": false
+    },
+    "Label (rgthree)": {
+      "core": false,
+      "package": "rgthree/rgthree-comfy",
+      "desc": "rgthree 画布标签/分区注解（前端）",
+      "confirmed": true,
+      "missing_in_project_dump": true,
+      "frontend": true
+    },
+    "Note": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 内置前端注解节点（无输入/输出，仅标注）",
+      "confirmed": true,
+      "frontend": true
+    },
+    "ComfySwitchNode": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 内置节点",
+      "confirmed": true,
+      "frontend": false
+    },
+    "Seed (rgthree)": {
+      "core": false,
+      "package": "rgthree/rgthree-comfy",
+      "desc": "Seed (rgthree)（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "LoadImage": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 内置节点",
+      "confirmed": true,
+      "frontend": false
+    },
+    "WanVideoVAELoader": {
+      "core": false,
+      "package": "kijai/ComfyUI-WanVideoWrapper",
+      "desc": "WanVideo VAELoader（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "CLIPVisionLoader": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 内置节点",
+      "confirmed": true,
+      "frontend": false
+    },
+    "CheckpointLoaderSimple": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 内置节点",
+      "confirmed": true,
+      "frontend": false
+    },
+    "OnnxDetectionModelLoader": {
+      "core": false,
+      "package": "kijai/ComfyUI-WanAnimatePreprocess",
+      "desc": "OnnxDetectionModelLoader（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "WanVideoUni3C_ControlnetLoader": {
+      "core": false,
+      "package": "kijai/ComfyUI-WanVideoWrapper",
+      "desc": "WanVideo Uni3C_ControlnetLoader（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "WanVideoSetLoRAs": {
+      "core": false,
+      "package": "kijai/ComfyUI-WanVideoWrapper",
+      "desc": "WanVideo SetLoRAs（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "WanVideoDecode": {
+      "core": false,
+      "package": "kijai/ComfyUI-WanVideoWrapper",
+      "desc": "WanVideo Decode（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "WanVideoSamplerFromSettings": {
+      "core": false,
+      "package": "kijai/ComfyUI-WanVideoWrapper",
+      "desc": "WanVideo SamplerFromSettings（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "VHS_VideoInfoLoaded": {
+      "core": false,
+      "package": "Kosinkadink/ComfyUI-VideoHelperSuite",
+      "desc": "VHS VideoInfoLoaded（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "VHS_LoadVideo": {
+      "core": false,
+      "package": "Kosinkadink/ComfyUI-VideoHelperSuite",
+      "desc": "VHS LoadVideo（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "WanVideoModelLoader": {
+      "core": false,
+      "package": "kijai/ComfyUI-WanVideoWrapper",
+      "desc": "WanVideo ModelLoader（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "BodyRatioMapperSDPoseRender": {
+      "core": false,
+      "package": "wuwukaka/ComfyUI-BodyRatioMapper",
+      "desc": "将 SDPose 关键点渲染为骨架图（供 ControlNet）（后端，需安装）",
+      "confirmed": true,
+      "missing_in_project_dump": true,
+      "frontend": false
+    },
+    "BodyRatioMapperProportionTransfer": {
+      "core": false,
+      "package": "wuwukaka/ComfyUI-BodyRatioMapper",
+      "desc": "姿势对齐+人体比例映射，输出变换后关键点（后端，需安装）",
+      "confirmed": true,
+      "missing_in_project_dump": true,
+      "frontend": false
+    },
+    "LayerUtility: PurgeVRAM V2": {
+      "core": false,
+      "package": "chflame163/ComfyUI_LayerStyle",
+      "desc": "LayerUtility: PurgeVRAM V2（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "WanVideoContextOptions": {
+      "core": false,
+      "package": "kijai/ComfyUI-WanVideoWrapper",
+      "desc": "WanVideo ContextOptions（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "WanVideoBlockSwap": {
+      "core": false,
+      "package": "kijai/ComfyUI-WanVideoWrapper",
+      "desc": "WanVideo BlockSwap（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "WanVideoTextEncodeCached": {
+      "core": false,
+      "package": "kijai/ComfyUI-WanVideoWrapper",
+      "desc": "WanVideo TextEncodeCached（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "MarkdownNote": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 核心前端 Markdown 注解节点（ComfyUI_frontend noteNode.ts 注册，与 Note 同源）",
+      "confirmed": true,
+      "frontend": true
+    },
+    "CLIPTextEncode": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 内置节点",
+      "confirmed": true,
+      "frontend": false
+    },
+    "KSampler": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 内置节点",
+      "confirmed": true,
+      "frontend": false
+    },
+    "EmptyLatentImage": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 内置节点",
+      "confirmed": true,
+      "frontend": false
+    },
+    "UNETLoader": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 内置节点",
+      "confirmed": true,
+      "frontend": false
+    },
+    "CLIPLoader": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 内置节点",
+      "confirmed": true,
+      "frontend": false
+    },
+    "VAELoader": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 内置节点",
+      "confirmed": true,
+      "frontend": false
+    },
+    "VAEDecode": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 内置节点",
+      "confirmed": true,
+      "frontend": false
+    },
+    "SaveImage": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 内置节点",
+      "confirmed": true,
+      "frontend": false
+    },
+    "ConditioningZeroOut": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 内置节点",
+      "confirmed": true,
+      "frontend": false
+    },
+    "EmptyFlux2LatentImage": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 内置节点",
+      "confirmed": true,
+      "frontend": false
+    },
+    "WanVideoTextEncode": {
+      "core": false,
+      "package": "kijai/ComfyUI-WanVideoWrapper",
+      "desc": "WanVideo TextEncode（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "WanVideoSampler": {
+      "core": false,
+      "package": "kijai/ComfyUI-WanVideoWrapper",
+      "desc": "WanVideo Sampler（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "WanVideoLoraSelect": {
+      "core": false,
+      "package": "kijai/ComfyUI-WanVideoWrapper",
+      "desc": "WanVideo LoraSelect（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "LoadWanVideoT5TextEncoder": {
+      "core": false,
+      "package": "kijai/ComfyUI-WanVideoWrapper",
+      "desc": "LoadWanVideo T5TextEncoder（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "WanVideoImageToVideoEncode": {
+      "core": false,
+      "package": "kijai/ComfyUI-WanVideoWrapper",
+      "desc": "WanVideo ImageToVideoEncode（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "WanVideoEmptyEmbeds": {
+      "core": false,
+      "package": "kijai/ComfyUI-WanVideoWrapper",
+      "desc": "WanVideo EmptyEmbeds（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "UpscaleModelLoader": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 内置节点",
+      "confirmed": true,
+      "frontend": false
+    },
+    "ImageUpscaleWithModel": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 内置节点",
+      "confirmed": true,
+      "frontend": false
+    },
+    "ImageScaleToTotalPixels": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 内置节点",
+      "confirmed": true,
+      "frontend": false
+    },
+    "VAEEncode": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 内置节点",
+      "confirmed": true,
+      "frontend": false
+    },
+    "LoraLoaderModelOnly": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 内置节点",
+      "confirmed": true,
+      "frontend": false
+    },
+    "ReferenceLatent": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 内置节点",
+      "confirmed": true,
+      "frontend": false
+    },
+    "RandomNoise": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 内置节点",
+      "confirmed": true,
+      "frontend": false
+    },
+    "Flux2Scheduler": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 内置节点",
+      "confirmed": true,
+      "frontend": false
+    },
+    "CFGGuider": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 内置节点",
+      "confirmed": true,
+      "frontend": false
+    },
+    "SplitSigmasDenoise": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 内置节点",
+      "confirmed": true,
+      "frontend": false
+    },
+    "GetImageSize": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 内置节点",
+      "confirmed": true,
+      "frontend": false
+    },
+    "SamplerCustomAdvanced": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 内置节点",
+      "confirmed": true,
+      "frontend": false
+    },
+    "KSamplerSelect": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 内置节点",
+      "confirmed": true,
+      "frontend": false
+    },
+    "PathchSageAttentionKJ": {
+      "core": false,
+      "package": "kijai/ComfyUI-KJNodes",
+      "desc": "PathchSageAttentionKJ（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "ModelPatchTorchSettings": {
+      "core": false,
+      "package": "kijai/ComfyUI-KJNodes",
+      "desc": "ModelPatchTorchSettings（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "WanImageToVideoSVIPro": {
+      "core": false,
+      "package": "kijai/ComfyUI-KJNodes",
+      "desc": "WanImageToVideoSVIPro（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "KSamplerAdvanced": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 内置节点",
+      "confirmed": true,
+      "frontend": false
+    },
+    "ImageFromBatch": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 内置节点",
+      "confirmed": true,
+      "frontend": false
+    },
+    "UnloadAllModels": {
+      "core": false,
+      "package": "SeanScripts/ComfyUI-Unload-Model",
+      "desc": "卸载全部已加载模型以释放显存（后端节点，需安装）",
+      "confirmed": true,
+      "missing_in_project_dump": true,
+      "frontend": false
+    },
+    "ImageBatchExtendWithOverlap": {
+      "core": false,
+      "package": "kijai/ComfyUI-KJNodes",
+      "desc": "ImageBatchExtendWithOverlap（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "ColorMatch": {
+      "core": false,
+      "package": "kijai/ComfyUI-KJNodes",
+      "desc": "ColorMatch（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "PlaySound|pysssss": {
+      "core": false,
+      "package": "pythongosssss/ComfyUI-Custom-Scripts",
+      "desc": "PlaySound|pysssss（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "Fast Groups Bypasser (rgthree)": {
+      "core": false,
+      "package": "rgthree/rgthree-comfy",
+      "desc": "rgthree 按组快速 bypass 的前端控制节点",
+      "confirmed": true,
+      "missing_in_project_dump": true,
+      "frontend": true
+    },
+    "CR Prompt Text": {
+      "core": false,
+      "package": "Suzie1/ComfyUI_Comfyroll_CustomNodes",
+      "desc": "CR Prompt Text（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "ModelSamplingSD3": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 内置节点",
+      "confirmed": true,
+      "frontend": false
+    },
+    "CreateVideo": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 内置节点",
+      "confirmed": true,
+      "frontend": false
+    },
+    "Wan22ImageToVideoLatent": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 内置节点",
+      "confirmed": true,
+      "frontend": false
+    },
+    "SaveAnimatedWEBP": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 内置节点",
+      "confirmed": true,
+      "frontend": false
+    },
+    "SaveVideo": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 内置节点",
+      "confirmed": true,
+      "frontend": false
+    },
+    "GetImageSizeAndCount": {
+      "core": false,
+      "package": "kijai/ComfyUI-KJNodes",
+      "desc": "GetImageSizeAndCount（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "ImageFromBatch+": {
+      "core": false,
+      "package": "cubiq/ComfyUI_essentials",
+      "desc": "ImageFromBatch+（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "PrimitiveNode": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 前端 Primitive/Widget 节点（连线挂参用，无计算）",
+      "confirmed": true,
+      "frontend": true
+    },
+    "CreateCFGScheduleFloatList": {
+      "core": false,
+      "package": "kijai/ComfyUI-WanVideoWrapper",
+      "desc": "CreateCFGScheduleFloatList（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "WanVideoEasyCache": {
+      "core": false,
+      "package": "kijai/ComfyUI-WanVideoWrapper",
+      "desc": "WanVideo EasyCache（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "easy cleanGpuUsed": {
+      "core": false,
+      "package": "yolain/ComfyUI-Easy-Use",
+      "desc": "easy cleanGpuUsed（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "easy clearCacheAll": {
+      "core": false,
+      "package": "yolain/ComfyUI-Easy-Use",
+      "desc": "easy clearCacheAll（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "FancyTimerNode": {
+      "core": false,
+      "package": "PGCRT/CRT-Nodes",
+      "desc": "FancyTimerNode（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "TextInput_": {
+      "core": false,
+      "package": "shadowcz007/comfyui-mixlab-nodes",
+      "desc": "TextInput_（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "SaveLatent": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 内置节点",
+      "confirmed": true,
+      "frontend": false
+    },
+    "LoadLatent": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 内置节点",
+      "confirmed": true,
+      "frontend": false
+    },
+    "ControlNetLoader": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 内置节点",
+      "confirmed": true,
+      "frontend": false
+    },
+    "LoraLoader": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 内置节点",
+      "confirmed": true,
+      "frontend": false
+    },
+    "ControlNetApplyAdvanced": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 内置节点",
+      "confirmed": true,
+      "frontend": false
+    },
+    "LatentUpscale": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 内置节点",
+      "confirmed": true,
+      "frontend": false
+    },
+    "UnetLoaderGGUF": {
+      "core": false,
+      "package": "city96/ComfyUI-GGUF",
+      "desc": "UnetLoaderGGUF（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "SimpleToggleNode": {
+      "core": false,
+      "package": "PGCRT/CRT-Nodes",
+      "desc": "SimpleToggleNode（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "SimpleKnobNode": {
+      "core": false,
+      "package": "PGCRT/CRT-Nodes",
+      "desc": "SimpleKnobNode（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "CLIPVisionEncode": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 内置节点",
+      "confirmed": true,
+      "frontend": false
+    },
+    "WanImageToVideo": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 内置节点",
+      "confirmed": true,
+      "frontend": false
+    },
+    "Wan22PromptSelector": {
+      "core": false,
+      "package": "weekii8282/ComfyUI-PromptSelector",
+      "desc": "Wan2.2 提示词选择器；近似替代实现（原名未精确定位，后端，需安装）",
+      "confirmed": true,
+      "missing_in_project_dump": true,
+      "frontend": false
+    },
+    "LayerUtility: ImageScaleByAspectRatio V2": {
+      "core": false,
+      "package": "chflame163/ComfyUI_LayerStyle",
+      "desc": "LayerUtility: ImageScaleByAspectRatio V2（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "SimpleMath+": {
+      "core": false,
+      "package": "cubiq/ComfyUI_essentials",
+      "desc": "SimpleMath+（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "ImageScaleBy": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 内置节点",
+      "confirmed": true,
+      "frontend": false
+    },
+    "RIFE VFI": {
+      "core": false,
+      "package": "Fannovel16/ComfyUI-Frame-Interpolation",
+      "desc": "RIFE VFI（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "Text Concatenate": {
+      "core": false,
+      "package": "WASasquatch/was-node-suite-comfyui",
+      "desc": "Text Concatenate（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "CR Text": {
+      "core": false,
+      "package": "Suzie1/ComfyUI_Comfyroll_CustomNodes",
+      "desc": "CR Text（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    },
+    "EmptyHunyuanLatentVideo": {
+      "core": true,
+      "package": "ComfyUI-Core",
+      "desc": "ComfyUI 内置节点",
+      "confirmed": true,
+      "frontend": false
+    },
+    "Int": {
+      "core": false,
+      "package": "M1kep/ComfyLiterals",
+      "desc": "Int（第三方封装节点）",
+      "confirmed": true,
+      "missing_in_project_dump": false,
+      "frontend": false
+    }
+  },
+  "pending": {
+    "7c0dfa74-7583-4d61-98d6-cae724dc6517": "【未解析·UUID占位】无输入、输出 4 路 SIGMAS(SIGMAS / SIGMAS_1 / SIGMAS_2 / SIGMAS_3) 的调度/分段生成器节点。导出环境缺节点包，ComfyUI 将真实 class_type 替换为该 UUID。已排除 RES4LYF / ComfyUI 内置 SplitSigmas / sigmas_tools 等常见 SIGMAS 节点（它们均为 1~2 路输出）。需源环境确认真实 class_type 后方可加载。",
+    "b38cb4d8-b7ff-4df4-990e-876cf5cb5857": "【未解析·UUID占位】双 VAE(视频+音频)的 H3 采样器：输入 model / conditioning / latent_image / steps / vae / vae_1 / trim_frames / sampler_name(默认 er_sde) / scheduler(默认 simple) / denoise，输出 LATENT / IMAGE / images / audio。导出环境缺节点包，ComfyUI 将真实 class_type 替换为该 UUID。已排除 ClipStream / IAMCCS / RunningHub / Motion-Context / Motion-Director / Easy-Use / LBH-123-AI / KJNodes / Viggle / ethanfel 等包；疑似某 H3 自定义采样/二采流专用包。需源环境确认真实 class_type 后方可加载。"
+  }
+}

@@ -46,14 +46,14 @@
 ```bash
 # Windows（嵌入式 Python 独立版）
 cd ${COMFYUI_PATH}
-.\python\python.exe -u main.py --port 3198 --listen 127.0.0.1
+.\python\python.exe -u main.py --port 8188 --listen 127.0.0.1
 
 # Linux / macOS（标准 Python 安装，官方标准方式）
 cd ${COMFYUI_PATH}
-python main.py --listen 127.0.0.1 --port 3198
+python main.py --listen 127.0.0.1 --port 8188
 ```
 
-> - `${COMFYUI_PATH}` 通过环境变量 `COMFYUI_PATH` 指定；默认端口 `3198`（通过 `COMFYUI_PORT` 配置）
+> - `${COMFYUI_PATH}` 通过环境变量 `COMFYUI_PATH` 指定；默认端口 `8188`（ComfyUI 官方默认，可用 `COMFYUI_PORT` 覆盖）
 > - 若 ComfyUI 已安装为独立 venv，则使用 `venv/bin/python main.py`（Linux/macOS）或 `venv\Scripts\python.exe main.py`（Windows）
 > - 也可使用本项目内置 CLI 后台启动：`comfy launch --background`（前台：`comfy launch`），停止：`comfy stop`
 
@@ -68,7 +68,7 @@ python scripts/run_workflow.py --workflow workflow.json --timeout 600
 ```
 
 > - `comfy run` 同时接受 ComfyUI **API 格式**与 **UI 格式**工作流 JSON，UI 格式会自动转换后提交
-> - 执行前请先确认服务可用：`GET http://127.0.0.1:3198/system_stats` 返回 200
+> - 执行前请先确认服务可用：`GET http://127.0.0.1:8188/system_stats` 返回 200（若设置了 `COMFYUI_PORT`，端口以该变量为准）
 
 ### 3. 环境变量
 
@@ -76,7 +76,7 @@ python scripts/run_workflow.py --workflow workflow.json --timeout 600
 |------|------|--------|
 | `COMFYUI_PATH` | ComfyUI 安装目录 | 无（必填） |
 | `COMFYUI_HOST` | ComfyUI 服务地址 | `127.0.0.1` |
-| `COMFYUI_PORT` | ComfyUI 服务端口 | `3198` |
+| `COMFYUI_PORT` | ComfyUI 服务端口 | `8188`（ComfyUI 官方默认） |
 
 ***
 
@@ -212,9 +212,9 @@ python scripts/run_workflow.py --workflow workflow.json --timeout 600
 
 适用于 Trae IDE 等 AI Agent 环境，智能体自动读取技能文档并执行任务。
 
-1. **安装技能**：将项目放入工作区，智能体会自动识别 `.trae/skills/` 下的技能文档
+1. **安装技能**：将项目放入工作区，智能体会自动识别 `skills/` 下的技能文档
 
-   - `comfyui-controller`：ComfyUI 全能控制器（技能入口，完整功能映射）→ `comfyui-controller/.trae/skills/comfyui-controller/SKILL.md`
+   - `comfyui-controller`：ComfyUI 全能控制器（技能入口，完整功能映射）→ `skills/comfyui-controller/SKILL.md`
 
    - `image-task-execution-guide`：图片生成任务执行指南（5 项预检 + Flux 2 架构经验）
 
@@ -264,7 +264,7 @@ python scripts/run_workflow.py --workflow workflow.json --timeout 600
 
 - `comfyui-controller/docs_cli/INDEX.md` — **全量经验/技术文档快速索引**（主题速查 + 章节行号导航，推荐入口）
 
-- `.trae/skills/` — 技能文档（智能体读取入口，含预检指南和架构经验）
+- `skills/` — 技能文档（智能体读取入口，含预检指南和架构经验）
 
 
 - `comfyui-controller/SKILL.md` — 完整功能映射表和 ComfyUI 工作流知识库

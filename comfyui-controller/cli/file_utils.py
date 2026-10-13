@@ -345,7 +345,7 @@ def list_git_tracked_files(base_path: str | os.PathLike = ".") -> list[str]:
     try:
         result = subprocess.check_output(
             ["git", "-C", os.fspath(base_path), "ls-files"],
-            text=True,
+            text=True, errors="replace",
         )
     except (subprocess.SubprocessError, FileNotFoundError):
         return []

@@ -1,0 +1,2776 @@
+{
+  "legacy_workflow_count": 70,
+  "workflows": {
+    "animate_wan22_threeview_v1.0.0": {
+      "source_file": "animate_wan22_threeview_v1.0.0.json",
+      "format": "ui",
+      "node_count": 99,
+      "distinct_types": 40,
+      "third_party_packs": [
+        "Kosinkadink/ComfyUI-VideoHelperSuite",
+        "chflame163/ComfyUI_LayerStyle",
+        "kijai/ComfyUI-KJNodes",
+        "kijai/ComfyUI-WanAnimatePreprocess",
+        "kijai/ComfyUI-WanVideoWrapper",
+        "rgthree/rgthree-comfy",
+        "wuwukaka/ComfyUI-BodyRatioMapper"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-KJNodes": {
+          "repo": "https://github.com/kijai/ComfyUI-KJNodes",
+          "install": "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+          "license": "MIT",
+          "nodes": {
+            "SetNode": 12,
+            "GetNode": 23,
+            "ImageResizeKJv2": 4,
+            "INTConstant": 3
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "kijai/ComfyUI-WanVideoWrapper": {
+          "repo": "https://github.com/kijai/ComfyUI-WanVideoWrapper",
+          "install": "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt",
+          "license": "Apache-2.0",
+          "nodes": {
+            "WanVideoClipVisionEncode": 1,
+            "WanVideoSetBlockSwap": 1,
+            "WanVideoLoraSelectMulti": 2,
+            "WanVideoTorchCompileSettings": 1,
+            "WanVideoAnimateEmbeds": 1,
+            "WanVideoSamplerSettings": 1,
+            "WanVideoEncode": 1,
+            "WanVideoUni3C_embeds": 1,
+            "WanVideoVAELoader": 1,
+            "WanVideoUni3C_ControlnetLoader": 1,
+            "WanVideoSetLoRAs": 1,
+            "WanVideoDecode": 1,
+            "WanVideoSamplerFromSettings": 1,
+            "WanVideoModelLoader": 1,
+            "WanVideoContextOptions": 1,
+            "WanVideoBlockSwap": 1,
+            "WanVideoTextEncodeCached": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "Kosinkadink/ComfyUI-VideoHelperSuite": {
+          "repo": "https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite",
+          "install": "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt",
+          "license": "GPL-3.0",
+          "nodes": {
+            "VHS_VideoCombine": 3,
+            "VHS_VideoInfoLoaded": 1,
+            "VHS_LoadVideo": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "kijai/ComfyUI-WanAnimatePreprocess": {
+          "repo": "https://github.com/kijai/ComfyUI-WanAnimatePreprocess",
+          "install": "git clone https://github.com/kijai/ComfyUI-WanAnimatePreprocess.git custom_nodes/ComfyUI-WanAnimatePreprocess && pip install -r custom_nodes/ComfyUI-WanAnimatePreprocess/requirements.txt",
+          "license": "Apache-2.0",
+          "nodes": {
+            "PoseAndFaceDetection": 1,
+            "OnnxDetectionModelLoader": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "rgthree/rgthree-comfy": {
+          "repo": "https://github.com/rgthree/rgthree-comfy",
+          "install": "git clone https://github.com/rgthree/rgthree-comfy.git custom_nodes/rgthree-comfy",
+          "license": "MIT",
+          "nodes": {
+            "Label (rgthree)": 9,
+            "Seed (rgthree)": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "wuwukaka/ComfyUI-BodyRatioMapper": {
+          "repo": "https://github.com/wuwukaka/ComfyUI-BodyRatioMapper",
+          "install": "git clone https://github.com/wuwukaka/ComfyUI-BodyRatioMapper.git custom_nodes/ComfyUI-BodyRatioMapper && pip install -r custom_nodes/ComfyUI-BodyRatioMapper/requirements.txt",
+          "license": "GPL-3.0",
+          "nodes": {
+            "BodyRatioMapperSDPoseRender": 2,
+            "BodyRatioMapperProportionTransfer": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "chflame163/ComfyUI_LayerStyle": {
+          "repo": "https://github.com/chflame163/ComfyUI_LayerStyle",
+          "install": "git clone https://github.com/chflame163/ComfyUI_LayerStyle.git custom_nodes/ComfyUI_LayerStyle && (双击 install_requirements.bat 或 pip install -r custom_nodes/ComfyUI_LayerStyle/requirements.txt)",
+          "license": "MIT",
+          "nodes": {
+            "LayerUtility: PurgeVRAM V2": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+        "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt",
+        "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt",
+        "git clone https://github.com/kijai/ComfyUI-WanAnimatePreprocess.git custom_nodes/ComfyUI-WanAnimatePreprocess && pip install -r custom_nodes/ComfyUI-WanAnimatePreprocess/requirements.txt",
+        "git clone https://github.com/rgthree/rgthree-comfy.git custom_nodes/rgthree-comfy",
+        "git clone https://github.com/wuwukaka/ComfyUI-BodyRatioMapper.git custom_nodes/ComfyUI-BodyRatioMapper && pip install -r custom_nodes/ComfyUI-BodyRatioMapper/requirements.txt",
+        "git clone https://github.com/chflame163/ComfyUI_LayerStyle.git custom_nodes/ComfyUI_LayerStyle && (双击 install_requirements.bat 或 pip install -r custom_nodes/ComfyUI_LayerStyle/requirements.txt)"
+      ],
+      "legacy": true,
+      "archive": false,
+      "series": "animate"
+    },
+    "api-workflow": {
+      "source_file": "api-workflow.json",
+      "format": "api",
+      "node_count": 9,
+      "distinct_types": 8,
+      "third_party_packs": [],
+      "node_dependencies": {},
+      "install_all": [],
+      "legacy": true,
+      "archive": false,
+      "series": "api"
+    },
+    "default-workflow": {
+      "source_file": "default-workflow.json",
+      "format": "api",
+      "node_count": 7,
+      "distinct_types": 6,
+      "third_party_packs": [],
+      "node_dependencies": {},
+      "install_all": [],
+      "legacy": true,
+      "archive": false,
+      "series": "default"
+    },
+    "flux2_api_workflow": {
+      "source_file": "flux2_api_workflow.json",
+      "format": "api",
+      "node_count": 9,
+      "distinct_types": 9,
+      "third_party_packs": [],
+      "node_dependencies": {},
+      "install_all": [],
+      "legacy": true,
+      "archive": false,
+      "series": "flux2"
+    },
+    "i2v_wan22_kj_v1.0.0": {
+      "source_file": "i2v_wan22_kj_v1.0.0.json",
+      "format": "api",
+      "node_count": 18,
+      "distinct_types": 13,
+      "third_party_packs": [
+        "Kosinkadink/ComfyUI-VideoHelperSuite",
+        "kijai/ComfyUI-WanVideoWrapper"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-WanVideoWrapper": {
+          "repo": "https://github.com/kijai/ComfyUI-WanVideoWrapper",
+          "install": "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt",
+          "license": "Apache-2.0",
+          "nodes": {
+            "WanVideoDecode": 1,
+            "WanVideoVAELoader": 1,
+            "WanVideoSetBlockSwap": 2,
+            "WanVideoSetLoRAs": 2,
+            "WanVideoTextEncode": 1,
+            "WanVideoSampler": 2,
+            "WanVideoModelLoader": 2,
+            "WanVideoLoraSelect": 2,
+            "LoadWanVideoT5TextEncoder": 1,
+            "WanVideoImageToVideoEncode": 1,
+            "WanVideoBlockSwap": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "Kosinkadink/ComfyUI-VideoHelperSuite": {
+          "repo": "https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite",
+          "install": "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt",
+          "license": "GPL-3.0",
+          "nodes": {
+            "VHS_VideoCombine": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt",
+        "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": false,
+      "series": "i2v"
+    },
+    "i2v_wan22_v1.0.0": {
+      "source_file": "i2v_wan22_v1.0.0.json",
+      "format": "api",
+      "node_count": 11,
+      "distinct_types": 11,
+      "third_party_packs": [
+        "kijai/ComfyUI-WanVideoWrapper"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-WanVideoWrapper": {
+          "repo": "https://github.com/kijai/ComfyUI-WanVideoWrapper",
+          "install": "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt",
+          "license": "Apache-2.0",
+          "nodes": {
+            "LoadWanVideoT5TextEncoder": 1,
+            "WanVideoVAELoader": 1,
+            "WanVideoBlockSwap": 1,
+            "WanVideoModelLoader": 1,
+            "WanVideoEmptyEmbeds": 1,
+            "WanVideoTextEncode": 1,
+            "WanVideoSampler": 1,
+            "WanVideoDecode": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": false,
+      "series": "i2v"
+    },
+    "img2img_flux2_example_v1.0.0": {
+      "source_file": "img2img_flux2_example_v1.0.0.json",
+      "format": "api",
+      "node_count": 9,
+      "distinct_types": 9,
+      "third_party_packs": [],
+      "node_dependencies": {},
+      "install_all": [],
+      "legacy": true,
+      "archive": false,
+      "series": "img2img"
+    },
+    "img_gen_v1.0.0": {
+      "source_file": "img_gen_v1.0.0.json",
+      "format": "api",
+      "node_count": 11,
+      "distinct_types": 11,
+      "third_party_packs": [
+        "kijai/ComfyUI-WanVideoWrapper"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-WanVideoWrapper": {
+          "repo": "https://github.com/kijai/ComfyUI-WanVideoWrapper",
+          "install": "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt",
+          "license": "Apache-2.0",
+          "nodes": {
+            "LoadWanVideoT5TextEncoder": 1,
+            "WanVideoVAELoader": 1,
+            "WanVideoBlockSwap": 1,
+            "WanVideoModelLoader": 1,
+            "WanVideoEmptyEmbeds": 1,
+            "WanVideoTextEncode": 1,
+            "WanVideoSampler": 1,
+            "WanVideoDecode": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": false,
+      "series": "img"
+    },
+    "long_video_svi_pro_wan22_v1.0.0": {
+      "source_file": "long_video_svi_pro_wan22_v1.0.0.json",
+      "format": "ui",
+      "node_count": 178,
+      "distinct_types": 30,
+      "third_party_packs": [
+        "Kosinkadink/ComfyUI-VideoHelperSuite",
+        "SeanScripts/ComfyUI-Unload-Model",
+        "kijai/ComfyUI-KJNodes"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-KJNodes": {
+          "repo": "https://github.com/kijai/ComfyUI-KJNodes",
+          "install": "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+          "license": "MIT",
+          "nodes": {
+            "ImageResizeKJv2": 9,
+            "PathchSageAttentionKJ": 10,
+            "ModelPatchTorchSettings": 10,
+            "WanImageToVideoSVIPro": 5,
+            "ImageBatchExtendWithOverlap": 4,
+            "ColorMatch": 9
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "SeanScripts/ComfyUI-Unload-Model": {
+          "repo": "https://github.com/SeanScripts/ComfyUI-Unload-Model",
+          "install": "git clone https://github.com/SeanScripts/ComfyUI-Unload-Model.git custom_nodes/comfyui-unload-model",
+          "license": "MIT（fork 自 willblaschko/ComfyUI-Unload-Models，LICENSE 见仓库）",
+          "nodes": {
+            "UnloadAllModels": 9
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "Kosinkadink/ComfyUI-VideoHelperSuite": {
+          "repo": "https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite",
+          "install": "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt",
+          "license": "GPL-3.0",
+          "nodes": {
+            "VHS_VideoCombine": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+        "git clone https://github.com/SeanScripts/ComfyUI-Unload-Model.git custom_nodes/comfyui-unload-model",
+        "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": false,
+      "series": "long"
+    },
+    "svi_pro_long_video_v1.0.0": {
+      "source_file": "svi_pro_long_video_v1.0.0.json",
+      "format": "api",
+      "node_count": 57,
+      "distinct_types": 16,
+      "third_party_packs": [
+        "Kosinkadink/ComfyUI-VideoHelperSuite",
+        "kijai/ComfyUI-KJNodes"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-KJNodes": {
+          "repo": "https://github.com/kijai/ComfyUI-KJNodes",
+          "install": "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+          "license": "MIT",
+          "nodes": {
+            "ImageResizeKJv2": 1,
+            "PathchSageAttentionKJ": 2,
+            "ModelPatchTorchSettings": 2,
+            "WanImageToVideoSVIPro": 5,
+            "ImageBatchExtendWithOverlap": 4
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "Kosinkadink/ComfyUI-VideoHelperSuite": {
+          "repo": "https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite",
+          "install": "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt",
+          "license": "GPL-3.0",
+          "nodes": {
+            "VHS_VideoCombine": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+        "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": false,
+      "series": "svi"
+    },
+    "t2v_wan22_v1.0.0": {
+      "source_file": "t2v_wan22_v1.0.0.json",
+      "format": "api",
+      "node_count": 11,
+      "distinct_types": 11,
+      "third_party_packs": [
+        "kijai/ComfyUI-WanVideoWrapper"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-WanVideoWrapper": {
+          "repo": "https://github.com/kijai/ComfyUI-WanVideoWrapper",
+          "install": "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt",
+          "license": "Apache-2.0",
+          "nodes": {
+            "LoadWanVideoT5TextEncoder": 1,
+            "WanVideoVAELoader": 1,
+            "WanVideoBlockSwap": 1,
+            "WanVideoModelLoader": 1,
+            "WanVideoEmptyEmbeds": 1,
+            "WanVideoTextEncode": 1,
+            "WanVideoSampler": 1,
+            "WanVideoDecode": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": false,
+      "series": "t2v"
+    },
+    "wan22_i2v_workflow": {
+      "source_file": "wan22_i2v_workflow.json",
+      "format": "prompt-api",
+      "node_count": 9,
+      "distinct_types": 9,
+      "third_party_packs": [
+        "Kosinkadink/ComfyUI-VideoHelperSuite",
+        "kijai/ComfyUI-WanVideoWrapper"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-WanVideoWrapper": {
+          "repo": "https://github.com/kijai/ComfyUI-WanVideoWrapper",
+          "install": "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt",
+          "license": "Apache-2.0",
+          "nodes": {
+            "LoadWanVideoT5TextEncoder": 1,
+            "WanVideoVAELoader": 1,
+            "WanVideoModelLoader": 1,
+            "WanVideoImageToVideoEncode": 1,
+            "WanVideoTextEncode": 1,
+            "WanVideoSampler": 1,
+            "WanVideoDecode": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "Kosinkadink/ComfyUI-VideoHelperSuite": {
+          "repo": "https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite",
+          "install": "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt",
+          "license": "GPL-3.0",
+          "nodes": {
+            "VHS_VideoCombine": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt",
+        "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": false,
+      "series": "wan22"
+    },
+    "wan22_simple_t2i": {
+      "source_file": "wan22_simple_t2i.json",
+      "format": "prompt-api",
+      "node_count": 8,
+      "distinct_types": 8,
+      "third_party_packs": [
+        "kijai/ComfyUI-WanVideoWrapper"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-WanVideoWrapper": {
+          "repo": "https://github.com/kijai/ComfyUI-WanVideoWrapper",
+          "install": "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt",
+          "license": "Apache-2.0",
+          "nodes": {
+            "LoadWanVideoT5TextEncoder": 1,
+            "WanVideoVAELoader": 1,
+            "WanVideoModelLoader": 1,
+            "WanVideoEmptyEmbeds": 1,
+            "WanVideoTextEncode": 1,
+            "WanVideoSampler": 1,
+            "WanVideoDecode": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": false,
+      "series": "wan22"
+    },
+    "wan22_svi_pro_long_video": {
+      "source_file": "wan22_svi_pro_long_video.json",
+      "format": "ui",
+      "node_count": 133,
+      "distinct_types": 23,
+      "third_party_packs": [
+        "Kosinkadink/ComfyUI-VideoHelperSuite",
+        "Suzie1/ComfyUI_Comfyroll_CustomNodes",
+        "kijai/ComfyUI-KJNodes",
+        "pythongosssss/ComfyUI-Custom-Scripts",
+        "rgthree/rgthree-comfy"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-KJNodes": {
+          "repo": "https://github.com/kijai/ComfyUI-KJNodes",
+          "install": "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+          "license": "MIT",
+          "nodes": {
+            "PathchSageAttentionKJ": 2,
+            "ImageResizeKJv2": 1,
+            "INTConstant": 5,
+            "GetNode": 49,
+            "WanImageToVideoSVIPro": 5,
+            "ImageBatchExtendWithOverlap": 4,
+            "SetNode": 16,
+            "ModelPatchTorchSettings": 2
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "Kosinkadink/ComfyUI-VideoHelperSuite": {
+          "repo": "https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite",
+          "install": "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt",
+          "license": "GPL-3.0",
+          "nodes": {
+            "VHS_VideoCombine": 6
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "pythongosssss/ComfyUI-Custom-Scripts": {
+          "repo": "https://github.com/pythongosssss/ComfyUI-Custom-Scripts",
+          "install": "git clone https://github.com/pythongosssss/ComfyUI-Custom-Scripts.git custom_nodes/ComfyUI-Custom-Scripts",
+          "license": "MIT",
+          "nodes": {
+            "PlaySound|pysssss": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "rgthree/rgthree-comfy": {
+          "repo": "https://github.com/rgthree/rgthree-comfy",
+          "install": "git clone https://github.com/rgthree/rgthree-comfy.git custom_nodes/rgthree-comfy",
+          "license": "MIT",
+          "nodes": {
+            "Fast Groups Bypasser (rgthree)": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "Suzie1/ComfyUI_Comfyroll_CustomNodes": {
+          "repo": "https://github.com/Suzie1/ComfyUI_Comfyroll_CustomNodes",
+          "install": "git clone https://github.com/Suzie1/ComfyUI_Comfyroll_CustomNodes.git custom_nodes/ComfyUI_Comfyroll_CustomNodes",
+          "license": "MIT",
+          "nodes": {
+            "CR Prompt Text": 5
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+        "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt",
+        "git clone https://github.com/pythongosssss/ComfyUI-Custom-Scripts.git custom_nodes/ComfyUI-Custom-Scripts",
+        "git clone https://github.com/rgthree/rgthree-comfy.git custom_nodes/rgthree-comfy",
+        "git clone https://github.com/Suzie1/ComfyUI_Comfyroll_CustomNodes.git custom_nodes/ComfyUI_Comfyroll_CustomNodes"
+      ],
+      "legacy": true,
+      "archive": false,
+      "series": "wan22"
+    },
+    "wan22_t2v_workflow": {
+      "source_file": "wan22_t2v_workflow.json",
+      "format": "prompt-api",
+      "node_count": 8,
+      "distinct_types": 8,
+      "third_party_packs": [
+        "Kosinkadink/ComfyUI-VideoHelperSuite",
+        "kijai/ComfyUI-WanVideoWrapper"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-WanVideoWrapper": {
+          "repo": "https://github.com/kijai/ComfyUI-WanVideoWrapper",
+          "install": "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt",
+          "license": "Apache-2.0",
+          "nodes": {
+            "LoadWanVideoT5TextEncoder": 1,
+            "WanVideoVAELoader": 1,
+            "WanVideoModelLoader": 1,
+            "WanVideoEmptyEmbeds": 1,
+            "WanVideoTextEncode": 1,
+            "WanVideoSampler": 1,
+            "WanVideoDecode": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "Kosinkadink/ComfyUI-VideoHelperSuite": {
+          "repo": "https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite",
+          "install": "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt",
+          "license": "GPL-3.0",
+          "nodes": {
+            "VHS_VideoCombine": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt",
+        "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": false,
+      "series": "wan22"
+    },
+    "wan2_2_5B_ti2v": {
+      "source_file": "wan2_2_5B_ti2v.json",
+      "format": "ui",
+      "node_count": 14,
+      "distinct_types": 13,
+      "third_party_packs": [],
+      "node_dependencies": {},
+      "install_all": [],
+      "legacy": true,
+      "archive": false,
+      "series": "wan2"
+    },
+    "c6_final": {
+      "source_file": "archive/c6_final.json",
+      "format": "api",
+      "node_count": 14,
+      "distinct_types": 11,
+      "third_party_packs": [
+        "Kosinkadink/ComfyUI-VideoHelperSuite",
+        "kijai/ComfyUI-WanVideoWrapper"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-WanVideoWrapper": {
+          "repo": "https://github.com/kijai/ComfyUI-WanVideoWrapper",
+          "install": "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt",
+          "license": "Apache-2.0",
+          "nodes": {
+            "WanVideoVAELoader": 1,
+            "WanVideoModelLoader": 2,
+            "WanVideoSetBlockSwap": 2,
+            "WanVideoBlockSwap": 1,
+            "LoadWanVideoT5TextEncoder": 1,
+            "WanVideoTextEncode": 1,
+            "WanVideoImageToVideoEncode": 1,
+            "WanVideoSampler": 2,
+            "WanVideoDecode": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "Kosinkadink/ComfyUI-VideoHelperSuite": {
+          "repo": "https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite",
+          "install": "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt",
+          "license": "GPL-3.0",
+          "nodes": {
+            "VHS_VideoCombine": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt",
+        "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": true,
+      "series": "c6"
+    },
+    "c6_test_quick": {
+      "source_file": "archive/c6_test_quick.json",
+      "format": "api",
+      "node_count": 14,
+      "distinct_types": 11,
+      "third_party_packs": [
+        "Kosinkadink/ComfyUI-VideoHelperSuite",
+        "kijai/ComfyUI-WanVideoWrapper"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-WanVideoWrapper": {
+          "repo": "https://github.com/kijai/ComfyUI-WanVideoWrapper",
+          "install": "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt",
+          "license": "Apache-2.0",
+          "nodes": {
+            "WanVideoVAELoader": 1,
+            "WanVideoModelLoader": 2,
+            "WanVideoSetBlockSwap": 2,
+            "WanVideoBlockSwap": 1,
+            "LoadWanVideoT5TextEncoder": 1,
+            "WanVideoTextEncode": 1,
+            "WanVideoImageToVideoEncode": 1,
+            "WanVideoSampler": 2,
+            "WanVideoDecode": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "Kosinkadink/ComfyUI-VideoHelperSuite": {
+          "repo": "https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite",
+          "install": "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt",
+          "license": "GPL-3.0",
+          "nodes": {
+            "VHS_VideoCombine": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt",
+        "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": true,
+      "series": "c6"
+    },
+    "c6_wan22_i2v_api": {
+      "source_file": "archive/c6_wan22_i2v_api.json",
+      "format": "api",
+      "node_count": 35,
+      "distinct_types": 26,
+      "third_party_packs": [
+        "Kosinkadink/ComfyUI-VideoHelperSuite",
+        "PGCRT/CRT-Nodes",
+        "cubiq/ComfyUI_essentials",
+        "kijai/ComfyUI-KJNodes",
+        "kijai/ComfyUI-WanVideoWrapper",
+        "shadowcz007/comfyui-mixlab-nodes",
+        "yolain/ComfyUI-Easy-Use"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-KJNodes": {
+          "repo": "https://github.com/kijai/ComfyUI-KJNodes",
+          "install": "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+          "license": "MIT",
+          "nodes": {
+            "GetImageSizeAndCount": 1,
+            "INTConstant": 2
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "kijai/ComfyUI-WanVideoWrapper": {
+          "repo": "https://github.com/kijai/ComfyUI-WanVideoWrapper",
+          "install": "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt",
+          "license": "Apache-2.0",
+          "nodes": {
+            "WanVideoDecode": 1,
+            "WanVideoVAELoader": 1,
+            "WanVideoSetBlockSwap": 2,
+            "WanVideoSetLoRAs": 2,
+            "WanVideoTextEncode": 1,
+            "WanVideoSampler": 2,
+            "CreateCFGScheduleFloatList": 1,
+            "WanVideoModelLoader": 2,
+            "WanVideoLoraSelect": 2,
+            "WanVideoEasyCache": 2,
+            "WanVideoBlockSwap": 1,
+            "LoadWanVideoT5TextEncoder": 1,
+            "WanVideoImageToVideoEncode": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "cubiq/ComfyUI_essentials": {
+          "repo": "https://github.com/cubiq/ComfyUI_essentials",
+          "install": "git clone https://github.com/cubiq/ComfyUI_essentials.git custom_nodes/ComfyUI_essentials",
+          "license": "MIT",
+          "nodes": {
+            "ImageFromBatch+": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "yolain/ComfyUI-Easy-Use": {
+          "repo": "https://github.com/yolain/ComfyUI-Easy-Use",
+          "install": "git clone https://github.com/yolain/ComfyUI-Easy-Use.git custom_nodes/ComfyUI-Easy-Use && pip install -r custom_nodes/ComfyUI-Easy-Use/requirements.txt",
+          "license": "GPL-3.0",
+          "nodes": {
+            "easy cleanGpuUsed": 2,
+            "easy clearCacheAll": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "PGCRT/CRT-Nodes": {
+          "repo": "https://github.com/PGCRT/CRT-Nodes",
+          "install": "git clone https://github.com/PGCRT/CRT-Nodes.git custom_nodes/CRT-Nodes && pip install -r custom_nodes/CRT-Nodes/requirements.txt",
+          "license": "见仓库 LICENSE",
+          "nodes": {
+            "FancyTimerNode": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "shadowcz007/comfyui-mixlab-nodes": {
+          "repo": "https://github.com/shadowcz007/comfyui-mixlab-nodes",
+          "install": "git clone https://github.com/shadowcz007/comfyui-mixlab-nodes.git custom_nodes/comfyui-mixlab-nodes && pip install -r custom_nodes/comfyui-mixlab-nodes/requirements.txt",
+          "license": "MIT",
+          "nodes": {
+            "TextInput_": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "Kosinkadink/ComfyUI-VideoHelperSuite": {
+          "repo": "https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite",
+          "install": "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt",
+          "license": "GPL-3.0",
+          "nodes": {
+            "VHS_VideoCombine": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+        "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt",
+        "git clone https://github.com/cubiq/ComfyUI_essentials.git custom_nodes/ComfyUI_essentials",
+        "git clone https://github.com/yolain/ComfyUI-Easy-Use.git custom_nodes/ComfyUI-Easy-Use && pip install -r custom_nodes/ComfyUI-Easy-Use/requirements.txt",
+        "git clone https://github.com/PGCRT/CRT-Nodes.git custom_nodes/CRT-Nodes && pip install -r custom_nodes/CRT-Nodes/requirements.txt",
+        "git clone https://github.com/shadowcz007/comfyui-mixlab-nodes.git custom_nodes/comfyui-mixlab-nodes && pip install -r custom_nodes/comfyui-mixlab-nodes/requirements.txt",
+        "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": true,
+      "series": "c6"
+    },
+    "c6_x2": {
+      "source_file": "archive/c6_x2.json",
+      "format": "api",
+      "node_count": 4,
+      "distinct_types": 4,
+      "third_party_packs": [
+        "Kosinkadink/ComfyUI-VideoHelperSuite"
+      ],
+      "node_dependencies": {
+        "Kosinkadink/ComfyUI-VideoHelperSuite": {
+          "repo": "https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite",
+          "install": "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt",
+          "license": "GPL-3.0",
+          "nodes": {
+            "VHS_LoadVideo": 1,
+            "VHS_VideoCombine": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": true,
+      "series": "c6"
+    },
+    "c7_svi_merge": {
+      "source_file": "archive/c7_svi_merge.json",
+      "format": "api",
+      "node_count": 10,
+      "distinct_types": 3,
+      "third_party_packs": [
+        "Kosinkadink/ComfyUI-VideoHelperSuite",
+        "kijai/ComfyUI-KJNodes"
+      ],
+      "node_dependencies": {
+        "Kosinkadink/ComfyUI-VideoHelperSuite": {
+          "repo": "https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite",
+          "install": "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt",
+          "license": "GPL-3.0",
+          "nodes": {
+            "VHS_LoadVideo": 5,
+            "VHS_VideoCombine": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "kijai/ComfyUI-KJNodes": {
+          "repo": "https://github.com/kijai/ComfyUI-KJNodes",
+          "install": "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+          "license": "MIT",
+          "nodes": {
+            "ImageBatchExtendWithOverlap": 4
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt",
+        "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": true,
+      "series": "c7"
+    },
+    "c7_svi_seg1": {
+      "source_file": "archive/c7_svi_seg1.json",
+      "format": "api",
+      "node_count": 21,
+      "distinct_types": 15,
+      "third_party_packs": [
+        "Kosinkadink/ComfyUI-VideoHelperSuite",
+        "kijai/ComfyUI-KJNodes"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-KJNodes": {
+          "repo": "https://github.com/kijai/ComfyUI-KJNodes",
+          "install": "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+          "license": "MIT",
+          "nodes": {
+            "PathchSageAttentionKJ": 2,
+            "ModelPatchTorchSettings": 2,
+            "ImageResizeKJv2": 1,
+            "WanImageToVideoSVIPro": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "Kosinkadink/ComfyUI-VideoHelperSuite": {
+          "repo": "https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite",
+          "install": "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt",
+          "license": "GPL-3.0",
+          "nodes": {
+            "VHS_VideoCombine": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+        "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": true,
+      "series": "c7"
+    },
+    "c7_svi_seg1_high": {
+      "source_file": "archive/c7_svi_seg1_high.json",
+      "format": "api",
+      "node_count": 14,
+      "distinct_types": 13,
+      "third_party_packs": [
+        "kijai/ComfyUI-KJNodes"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-KJNodes": {
+          "repo": "https://github.com/kijai/ComfyUI-KJNodes",
+          "install": "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+          "license": "MIT",
+          "nodes": {
+            "PathchSageAttentionKJ": 1,
+            "ModelPatchTorchSettings": 1,
+            "ImageResizeKJv2": 1,
+            "WanImageToVideoSVIPro": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": true,
+      "series": "c7"
+    },
+    "c7_svi_seg1_low": {
+      "source_file": "archive/c7_svi_seg1_low.json",
+      "format": "api",
+      "node_count": 13,
+      "distinct_types": 12,
+      "third_party_packs": [
+        "Kosinkadink/ComfyUI-VideoHelperSuite",
+        "kijai/ComfyUI-KJNodes"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-KJNodes": {
+          "repo": "https://github.com/kijai/ComfyUI-KJNodes",
+          "install": "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+          "license": "MIT",
+          "nodes": {
+            "PathchSageAttentionKJ": 1,
+            "ModelPatchTorchSettings": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "Kosinkadink/ComfyUI-VideoHelperSuite": {
+          "repo": "https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite",
+          "install": "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt",
+          "license": "GPL-3.0",
+          "nodes": {
+            "VHS_VideoCombine": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+        "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": true,
+      "series": "c7"
+    },
+    "c7_svi_seg2": {
+      "source_file": "archive/c7_svi_seg2.json",
+      "format": "api",
+      "node_count": 22,
+      "distinct_types": 16,
+      "third_party_packs": [
+        "Kosinkadink/ComfyUI-VideoHelperSuite",
+        "kijai/ComfyUI-KJNodes"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-KJNodes": {
+          "repo": "https://github.com/kijai/ComfyUI-KJNodes",
+          "install": "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+          "license": "MIT",
+          "nodes": {
+            "PathchSageAttentionKJ": 2,
+            "ModelPatchTorchSettings": 2,
+            "ImageResizeKJv2": 1,
+            "WanImageToVideoSVIPro": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "Kosinkadink/ComfyUI-VideoHelperSuite": {
+          "repo": "https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite",
+          "install": "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt",
+          "license": "GPL-3.0",
+          "nodes": {
+            "VHS_VideoCombine": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+        "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": true,
+      "series": "c7"
+    },
+    "c7_svi_seg2_high": {
+      "source_file": "archive/c7_svi_seg2_high.json",
+      "format": "api",
+      "node_count": 15,
+      "distinct_types": 14,
+      "third_party_packs": [
+        "kijai/ComfyUI-KJNodes"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-KJNodes": {
+          "repo": "https://github.com/kijai/ComfyUI-KJNodes",
+          "install": "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+          "license": "MIT",
+          "nodes": {
+            "PathchSageAttentionKJ": 1,
+            "ModelPatchTorchSettings": 1,
+            "ImageResizeKJv2": 1,
+            "WanImageToVideoSVIPro": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": true,
+      "series": "c7"
+    },
+    "c7_svi_seg2_low": {
+      "source_file": "archive/c7_svi_seg2_low.json",
+      "format": "api",
+      "node_count": 13,
+      "distinct_types": 12,
+      "third_party_packs": [
+        "Kosinkadink/ComfyUI-VideoHelperSuite",
+        "kijai/ComfyUI-KJNodes"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-KJNodes": {
+          "repo": "https://github.com/kijai/ComfyUI-KJNodes",
+          "install": "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+          "license": "MIT",
+          "nodes": {
+            "PathchSageAttentionKJ": 1,
+            "ModelPatchTorchSettings": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "Kosinkadink/ComfyUI-VideoHelperSuite": {
+          "repo": "https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite",
+          "install": "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt",
+          "license": "GPL-3.0",
+          "nodes": {
+            "VHS_VideoCombine": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+        "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": true,
+      "series": "c7"
+    },
+    "c7_svi_seg3": {
+      "source_file": "archive/c7_svi_seg3.json",
+      "format": "api",
+      "node_count": 22,
+      "distinct_types": 16,
+      "third_party_packs": [
+        "Kosinkadink/ComfyUI-VideoHelperSuite",
+        "kijai/ComfyUI-KJNodes"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-KJNodes": {
+          "repo": "https://github.com/kijai/ComfyUI-KJNodes",
+          "install": "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+          "license": "MIT",
+          "nodes": {
+            "PathchSageAttentionKJ": 2,
+            "ModelPatchTorchSettings": 2,
+            "ImageResizeKJv2": 1,
+            "WanImageToVideoSVIPro": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "Kosinkadink/ComfyUI-VideoHelperSuite": {
+          "repo": "https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite",
+          "install": "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt",
+          "license": "GPL-3.0",
+          "nodes": {
+            "VHS_VideoCombine": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+        "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": true,
+      "series": "c7"
+    },
+    "c7_svi_seg3_high": {
+      "source_file": "archive/c7_svi_seg3_high.json",
+      "format": "api",
+      "node_count": 15,
+      "distinct_types": 14,
+      "third_party_packs": [
+        "kijai/ComfyUI-KJNodes"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-KJNodes": {
+          "repo": "https://github.com/kijai/ComfyUI-KJNodes",
+          "install": "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+          "license": "MIT",
+          "nodes": {
+            "PathchSageAttentionKJ": 1,
+            "ModelPatchTorchSettings": 1,
+            "ImageResizeKJv2": 1,
+            "WanImageToVideoSVIPro": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": true,
+      "series": "c7"
+    },
+    "c7_svi_seg3_low": {
+      "source_file": "archive/c7_svi_seg3_low.json",
+      "format": "api",
+      "node_count": 13,
+      "distinct_types": 12,
+      "third_party_packs": [
+        "Kosinkadink/ComfyUI-VideoHelperSuite",
+        "kijai/ComfyUI-KJNodes"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-KJNodes": {
+          "repo": "https://github.com/kijai/ComfyUI-KJNodes",
+          "install": "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+          "license": "MIT",
+          "nodes": {
+            "PathchSageAttentionKJ": 1,
+            "ModelPatchTorchSettings": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "Kosinkadink/ComfyUI-VideoHelperSuite": {
+          "repo": "https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite",
+          "install": "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt",
+          "license": "GPL-3.0",
+          "nodes": {
+            "VHS_VideoCombine": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+        "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": true,
+      "series": "c7"
+    },
+    "c7_svi_seg4": {
+      "source_file": "archive/c7_svi_seg4.json",
+      "format": "api",
+      "node_count": 22,
+      "distinct_types": 16,
+      "third_party_packs": [
+        "Kosinkadink/ComfyUI-VideoHelperSuite",
+        "kijai/ComfyUI-KJNodes"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-KJNodes": {
+          "repo": "https://github.com/kijai/ComfyUI-KJNodes",
+          "install": "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+          "license": "MIT",
+          "nodes": {
+            "PathchSageAttentionKJ": 2,
+            "ModelPatchTorchSettings": 2,
+            "ImageResizeKJv2": 1,
+            "WanImageToVideoSVIPro": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "Kosinkadink/ComfyUI-VideoHelperSuite": {
+          "repo": "https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite",
+          "install": "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt",
+          "license": "GPL-3.0",
+          "nodes": {
+            "VHS_VideoCombine": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+        "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": true,
+      "series": "c7"
+    },
+    "c7_svi_seg4_high": {
+      "source_file": "archive/c7_svi_seg4_high.json",
+      "format": "api",
+      "node_count": 15,
+      "distinct_types": 14,
+      "third_party_packs": [
+        "kijai/ComfyUI-KJNodes"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-KJNodes": {
+          "repo": "https://github.com/kijai/ComfyUI-KJNodes",
+          "install": "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+          "license": "MIT",
+          "nodes": {
+            "PathchSageAttentionKJ": 1,
+            "ModelPatchTorchSettings": 1,
+            "ImageResizeKJv2": 1,
+            "WanImageToVideoSVIPro": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": true,
+      "series": "c7"
+    },
+    "c7_svi_seg4_low": {
+      "source_file": "archive/c7_svi_seg4_low.json",
+      "format": "api",
+      "node_count": 13,
+      "distinct_types": 12,
+      "third_party_packs": [
+        "Kosinkadink/ComfyUI-VideoHelperSuite",
+        "kijai/ComfyUI-KJNodes"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-KJNodes": {
+          "repo": "https://github.com/kijai/ComfyUI-KJNodes",
+          "install": "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+          "license": "MIT",
+          "nodes": {
+            "PathchSageAttentionKJ": 1,
+            "ModelPatchTorchSettings": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "Kosinkadink/ComfyUI-VideoHelperSuite": {
+          "repo": "https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite",
+          "install": "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt",
+          "license": "GPL-3.0",
+          "nodes": {
+            "VHS_VideoCombine": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+        "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": true,
+      "series": "c7"
+    },
+    "c7_svi_seg5": {
+      "source_file": "archive/c7_svi_seg5.json",
+      "format": "api",
+      "node_count": 21,
+      "distinct_types": 15,
+      "third_party_packs": [
+        "Kosinkadink/ComfyUI-VideoHelperSuite",
+        "kijai/ComfyUI-KJNodes"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-KJNodes": {
+          "repo": "https://github.com/kijai/ComfyUI-KJNodes",
+          "install": "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+          "license": "MIT",
+          "nodes": {
+            "PathchSageAttentionKJ": 2,
+            "ModelPatchTorchSettings": 2,
+            "ImageResizeKJv2": 1,
+            "WanImageToVideoSVIPro": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "Kosinkadink/ComfyUI-VideoHelperSuite": {
+          "repo": "https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite",
+          "install": "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt",
+          "license": "GPL-3.0",
+          "nodes": {
+            "VHS_VideoCombine": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+        "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": true,
+      "series": "c7"
+    },
+    "c7_svi_seg5_high": {
+      "source_file": "archive/c7_svi_seg5_high.json",
+      "format": "api",
+      "node_count": 15,
+      "distinct_types": 14,
+      "third_party_packs": [
+        "kijai/ComfyUI-KJNodes"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-KJNodes": {
+          "repo": "https://github.com/kijai/ComfyUI-KJNodes",
+          "install": "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+          "license": "MIT",
+          "nodes": {
+            "PathchSageAttentionKJ": 1,
+            "ModelPatchTorchSettings": 1,
+            "ImageResizeKJv2": 1,
+            "WanImageToVideoSVIPro": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": true,
+      "series": "c7"
+    },
+    "c7_svi_seg5_low": {
+      "source_file": "archive/c7_svi_seg5_low.json",
+      "format": "api",
+      "node_count": 13,
+      "distinct_types": 12,
+      "third_party_packs": [
+        "Kosinkadink/ComfyUI-VideoHelperSuite",
+        "kijai/ComfyUI-KJNodes"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-KJNodes": {
+          "repo": "https://github.com/kijai/ComfyUI-KJNodes",
+          "install": "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+          "license": "MIT",
+          "nodes": {
+            "PathchSageAttentionKJ": 1,
+            "ModelPatchTorchSettings": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "Kosinkadink/ComfyUI-VideoHelperSuite": {
+          "repo": "https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite",
+          "install": "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt",
+          "license": "GPL-3.0",
+          "nodes": {
+            "VHS_VideoCombine": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+        "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": true,
+      "series": "c7"
+    },
+    "c7_test_41f": {
+      "source_file": "archive/c7_test_41f.json",
+      "format": "api",
+      "node_count": 20,
+      "distinct_types": 14,
+      "third_party_packs": [
+        "Kosinkadink/ComfyUI-VideoHelperSuite",
+        "kijai/ComfyUI-KJNodes"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-KJNodes": {
+          "repo": "https://github.com/kijai/ComfyUI-KJNodes",
+          "install": "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+          "license": "MIT",
+          "nodes": {
+            "PathchSageAttentionKJ": 2,
+            "ModelPatchTorchSettings": 2,
+            "ImageResizeKJv2": 1,
+            "WanImageToVideoSVIPro": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "Kosinkadink/ComfyUI-VideoHelperSuite": {
+          "repo": "https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite",
+          "install": "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt",
+          "license": "GPL-3.0",
+          "nodes": {
+            "VHS_VideoCombine": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+        "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": true,
+      "series": "c7"
+    },
+    "c7_x2_upscale": {
+      "source_file": "archive/c7_x2_upscale.json",
+      "format": "api",
+      "node_count": 4,
+      "distinct_types": 4,
+      "third_party_packs": [
+        "Kosinkadink/ComfyUI-VideoHelperSuite"
+      ],
+      "node_dependencies": {
+        "Kosinkadink/ComfyUI-VideoHelperSuite": {
+          "repo": "https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite",
+          "install": "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt",
+          "license": "GPL-3.0",
+          "nodes": {
+            "VHS_LoadVideo": 1,
+            "VHS_VideoCombine": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": true,
+      "series": "c7"
+    },
+    "galaxy_bottle_base": {
+      "source_file": "archive/galaxy_bottle_base.json",
+      "format": "api",
+      "node_count": 7,
+      "distinct_types": 6,
+      "third_party_packs": [],
+      "node_dependencies": {},
+      "install_all": [],
+      "legacy": true,
+      "archive": true,
+      "series": "galaxy"
+    },
+    "galaxy_bottle_final": {
+      "source_file": "archive/galaxy_bottle_final.json",
+      "format": "api",
+      "node_count": 7,
+      "distinct_types": 6,
+      "third_party_packs": [],
+      "node_dependencies": {},
+      "install_all": [],
+      "legacy": true,
+      "archive": true,
+      "series": "galaxy"
+    },
+    "galaxy_bottle_flux2_ui": {
+      "source_file": "archive/galaxy_bottle_flux2_ui.json",
+      "format": "ui",
+      "node_count": 13,
+      "distinct_types": 11,
+      "third_party_packs": [],
+      "node_dependencies": {},
+      "install_all": [],
+      "legacy": true,
+      "archive": true,
+      "series": "galaxy"
+    },
+    "galaxy_bottle_x2_api": {
+      "source_file": "archive/galaxy_bottle_x2_api.json",
+      "format": "api",
+      "node_count": 4,
+      "distinct_types": 4,
+      "third_party_packs": [],
+      "node_dependencies": {},
+      "install_all": [],
+      "legacy": true,
+      "archive": true,
+      "series": "galaxy"
+    },
+    "generated_complex_workflow": {
+      "source_file": "archive/generated_complex_workflow.json",
+      "format": "ui",
+      "node_count": 18,
+      "distinct_types": 13,
+      "third_party_packs": [],
+      "node_dependencies": {},
+      "install_all": [],
+      "legacy": true,
+      "archive": true,
+      "series": "generated"
+    },
+    "task1_api_workflow": {
+      "source_file": "archive/task1_api_workflow.json",
+      "format": "api",
+      "node_count": 11,
+      "distinct_types": 10,
+      "third_party_packs": [],
+      "node_dependencies": {},
+      "install_all": [],
+      "legacy": true,
+      "archive": true,
+      "series": "task1"
+    },
+    "task1_final": {
+      "source_file": "archive/task1_final.json",
+      "format": "api",
+      "node_count": 11,
+      "distinct_types": 10,
+      "third_party_packs": [
+        "city96/ComfyUI-GGUF"
+      ],
+      "node_dependencies": {
+        "city96/ComfyUI-GGUF": {
+          "repo": "https://github.com/city96/ComfyUI-GGUF",
+          "install": "git clone https://github.com/city96/ComfyUI-GGUF.git custom_nodes/ComfyUI-GGUF && pip install --upgrade gguf",
+          "license": "MIT（个别来源标 Apache-2.0，以仓库 LICENSE 为准）",
+          "nodes": {
+            "UnetLoaderGGUF": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/city96/ComfyUI-GGUF.git custom_nodes/ComfyUI-GGUF && pip install --upgrade gguf"
+      ],
+      "legacy": true,
+      "archive": true,
+      "series": "task1"
+    },
+    "task1_flux_workflow": {
+      "source_file": "archive/task1_flux_workflow.json",
+      "format": "api",
+      "node_count": 9,
+      "distinct_types": 9,
+      "third_party_packs": [],
+      "node_dependencies": {},
+      "install_all": [],
+      "legacy": true,
+      "archive": true,
+      "series": "task1"
+    },
+    "task1_img_workflow": {
+      "source_file": "archive/task1_img_workflow.json",
+      "format": "api",
+      "node_count": 12,
+      "distinct_types": 10,
+      "third_party_packs": [],
+      "node_dependencies": {},
+      "install_all": [],
+      "legacy": true,
+      "archive": true,
+      "series": "task1"
+    },
+    "task1_v2_final": {
+      "source_file": "archive/task1_v2_final.json",
+      "format": "api",
+      "node_count": 11,
+      "distinct_types": 11,
+      "third_party_packs": [
+        "kijai/ComfyUI-WanVideoWrapper"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-WanVideoWrapper": {
+          "repo": "https://github.com/kijai/ComfyUI-WanVideoWrapper",
+          "install": "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt",
+          "license": "Apache-2.0",
+          "nodes": {
+            "LoadWanVideoT5TextEncoder": 1,
+            "WanVideoVAELoader": 1,
+            "WanVideoBlockSwap": 1,
+            "WanVideoModelLoader": 1,
+            "WanVideoEmptyEmbeds": 1,
+            "WanVideoTextEncode": 1,
+            "WanVideoSampler": 1,
+            "WanVideoDecode": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": true,
+      "series": "task1"
+    },
+    "task1_wan22_img_workflow": {
+      "source_file": "archive/task1_wan22_img_workflow.json",
+      "format": "api",
+      "node_count": 11,
+      "distinct_types": 10,
+      "third_party_packs": [],
+      "node_dependencies": {},
+      "install_all": [],
+      "legacy": true,
+      "archive": true,
+      "series": "task1"
+    },
+    "task1_wan22_native": {
+      "source_file": "archive/task1_wan22_native.json",
+      "format": "api",
+      "node_count": 8,
+      "distinct_types": 8,
+      "third_party_packs": [
+        "kijai/ComfyUI-WanVideoWrapper"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-WanVideoWrapper": {
+          "repo": "https://github.com/kijai/ComfyUI-WanVideoWrapper",
+          "install": "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt",
+          "license": "Apache-2.0",
+          "nodes": {
+            "LoadWanVideoT5TextEncoder": 1,
+            "WanVideoVAELoader": 1,
+            "WanVideoModelLoader": 1,
+            "WanVideoEmptyEmbeds": 1,
+            "WanVideoTextEncode": 1,
+            "WanVideoSampler": 1,
+            "WanVideoDecode": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": true,
+      "series": "task1"
+    },
+    "task1_wan22_workflow": {
+      "source_file": "archive/task1_wan22_workflow.json",
+      "format": "api",
+      "node_count": 27,
+      "distinct_types": 22,
+      "third_party_packs": [
+        "Kosinkadink/ComfyUI-VideoHelperSuite",
+        "PGCRT/CRT-Nodes",
+        "kijai/ComfyUI-KJNodes",
+        "kijai/ComfyUI-WanVideoWrapper",
+        "shadowcz007/comfyui-mixlab-nodes",
+        "yolain/ComfyUI-Easy-Use"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-WanVideoWrapper": {
+          "repo": "https://github.com/kijai/ComfyUI-WanVideoWrapper",
+          "install": "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt",
+          "license": "Apache-2.0",
+          "nodes": {
+            "CreateCFGScheduleFloatList": 1,
+            "LoadWanVideoT5TextEncoder": 1,
+            "WanVideoVAELoader": 1,
+            "WanVideoEasyCache": 2,
+            "WanVideoModelLoader": 2,
+            "WanVideoDecode": 1,
+            "WanVideoSampler": 2,
+            "WanVideoLoraSelect": 2,
+            "WanVideoTextEncode": 1,
+            "WanVideoEmptyEmbeds": 1,
+            "WanVideoBlockSwap": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "kijai/ComfyUI-KJNodes": {
+          "repo": "https://github.com/kijai/ComfyUI-KJNodes",
+          "install": "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+          "license": "MIT",
+          "nodes": {
+            "INTConstant": 2,
+            "GetImageSizeAndCount": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "yolain/ComfyUI-Easy-Use": {
+          "repo": "https://github.com/yolain/ComfyUI-Easy-Use",
+          "install": "git clone https://github.com/yolain/ComfyUI-Easy-Use.git custom_nodes/ComfyUI-Easy-Use && pip install -r custom_nodes/ComfyUI-Easy-Use/requirements.txt",
+          "license": "GPL-3.0",
+          "nodes": {
+            "easy cleanGpuUsed": 1,
+            "easy clearCacheAll": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "Kosinkadink/ComfyUI-VideoHelperSuite": {
+          "repo": "https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite",
+          "install": "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt",
+          "license": "GPL-3.0",
+          "nodes": {
+            "VHS_VideoCombine": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "shadowcz007/comfyui-mixlab-nodes": {
+          "repo": "https://github.com/shadowcz007/comfyui-mixlab-nodes",
+          "install": "git clone https://github.com/shadowcz007/comfyui-mixlab-nodes.git custom_nodes/comfyui-mixlab-nodes && pip install -r custom_nodes/comfyui-mixlab-nodes/requirements.txt",
+          "license": "MIT",
+          "nodes": {
+            "TextInput_": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "PGCRT/CRT-Nodes": {
+          "repo": "https://github.com/PGCRT/CRT-Nodes",
+          "install": "git clone https://github.com/PGCRT/CRT-Nodes.git custom_nodes/CRT-Nodes && pip install -r custom_nodes/CRT-Nodes/requirements.txt",
+          "license": "见仓库 LICENSE",
+          "nodes": {
+            "SimpleToggleNode": 1,
+            "SimpleKnobNode": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt",
+        "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+        "git clone https://github.com/yolain/ComfyUI-Easy-Use.git custom_nodes/ComfyUI-Easy-Use && pip install -r custom_nodes/ComfyUI-Easy-Use/requirements.txt",
+        "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt",
+        "git clone https://github.com/shadowcz007/comfyui-mixlab-nodes.git custom_nodes/comfyui-mixlab-nodes && pip install -r custom_nodes/comfyui-mixlab-nodes/requirements.txt",
+        "git clone https://github.com/PGCRT/CRT-Nodes.git custom_nodes/CRT-Nodes && pip install -r custom_nodes/CRT-Nodes/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": true,
+      "series": "task1"
+    },
+    "task2_api": {
+      "source_file": "archive/task2_api.json",
+      "format": "prompt-api",
+      "node_count": 9,
+      "distinct_types": 9,
+      "third_party_packs": [
+        "kijai/ComfyUI-WanVideoWrapper"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-WanVideoWrapper": {
+          "repo": "https://github.com/kijai/ComfyUI-WanVideoWrapper",
+          "install": "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt",
+          "license": "Apache-2.0",
+          "nodes": {
+            "LoadWanVideoT5TextEncoder": 1,
+            "WanVideoVAELoader": 1,
+            "WanVideoModelLoader": 1,
+            "WanVideoImageToVideoEncode": 1,
+            "WanVideoTextEncode": 1,
+            "WanVideoSampler": 1,
+            "WanVideoDecode": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": true,
+      "series": "task2"
+    },
+    "task2_fast": {
+      "source_file": "archive/task2_fast.json",
+      "format": "prompt-api",
+      "node_count": 12,
+      "distinct_types": 12,
+      "third_party_packs": [
+        "kijai/ComfyUI-WanVideoWrapper"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-WanVideoWrapper": {
+          "repo": "https://github.com/kijai/ComfyUI-WanVideoWrapper",
+          "install": "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt",
+          "license": "Apache-2.0",
+          "nodes": {
+            "LoadWanVideoT5TextEncoder": 1,
+            "WanVideoVAELoader": 1,
+            "WanVideoBlockSwap": 1,
+            "WanVideoModelLoader": 1,
+            "WanVideoImageToVideoEncode": 1,
+            "WanVideoTextEncode": 1,
+            "WanVideoSampler": 1,
+            "WanVideoDecode": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": true,
+      "series": "task2"
+    },
+    "task2_final": {
+      "source_file": "archive/task2_final.json",
+      "format": "api",
+      "node_count": 31,
+      "distinct_types": 23,
+      "third_party_packs": [
+        "Kosinkadink/ComfyUI-VideoHelperSuite",
+        "cubiq/ComfyUI_essentials",
+        "kijai/ComfyUI-KJNodes",
+        "kijai/ComfyUI-WanVideoWrapper",
+        "shadowcz007/comfyui-mixlab-nodes",
+        "yolain/ComfyUI-Easy-Use"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-WanVideoWrapper": {
+          "repo": "https://github.com/kijai/ComfyUI-WanVideoWrapper",
+          "install": "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt",
+          "license": "Apache-2.0",
+          "nodes": {
+            "WanVideoModelLoader": 2,
+            "WanVideoSetBlockSwap": 2,
+            "WanVideoSetLoRAs": 2,
+            "WanVideoVAELoader": 1,
+            "WanVideoDecode": 1,
+            "WanVideoLoraSelect": 2,
+            "LoadWanVideoT5TextEncoder": 1,
+            "WanVideoImageToVideoEncode": 1,
+            "WanVideoTextEncode": 1,
+            "WanVideoSampler": 2,
+            "CreateCFGScheduleFloatList": 1,
+            "WanVideoEasyCache": 2,
+            "WanVideoBlockSwap": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "kijai/ComfyUI-KJNodes": {
+          "repo": "https://github.com/kijai/ComfyUI-KJNodes",
+          "install": "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+          "license": "MIT",
+          "nodes": {
+            "GetImageSizeAndCount": 1,
+            "INTConstant": 3
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "Kosinkadink/ComfyUI-VideoHelperSuite": {
+          "repo": "https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite",
+          "install": "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt",
+          "license": "GPL-3.0",
+          "nodes": {
+            "VHS_VideoCombine": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "cubiq/ComfyUI_essentials": {
+          "repo": "https://github.com/cubiq/ComfyUI_essentials",
+          "install": "git clone https://github.com/cubiq/ComfyUI_essentials.git custom_nodes/ComfyUI_essentials",
+          "license": "MIT",
+          "nodes": {
+            "ImageFromBatch+": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "yolain/ComfyUI-Easy-Use": {
+          "repo": "https://github.com/yolain/ComfyUI-Easy-Use",
+          "install": "git clone https://github.com/yolain/ComfyUI-Easy-Use.git custom_nodes/ComfyUI-Easy-Use && pip install -r custom_nodes/ComfyUI-Easy-Use/requirements.txt",
+          "license": "GPL-3.0",
+          "nodes": {
+            "easy cleanGpuUsed": 1,
+            "easy clearCacheAll": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "shadowcz007/comfyui-mixlab-nodes": {
+          "repo": "https://github.com/shadowcz007/comfyui-mixlab-nodes",
+          "install": "git clone https://github.com/shadowcz007/comfyui-mixlab-nodes.git custom_nodes/comfyui-mixlab-nodes && pip install -r custom_nodes/comfyui-mixlab-nodes/requirements.txt",
+          "license": "MIT",
+          "nodes": {
+            "TextInput_": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt",
+        "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+        "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt",
+        "git clone https://github.com/cubiq/ComfyUI_essentials.git custom_nodes/ComfyUI_essentials",
+        "git clone https://github.com/yolain/ComfyUI-Easy-Use.git custom_nodes/ComfyUI-Easy-Use && pip install -r custom_nodes/ComfyUI-Easy-Use/requirements.txt",
+        "git clone https://github.com/shadowcz007/comfyui-mixlab-nodes.git custom_nodes/comfyui-mixlab-nodes && pip install -r custom_nodes/comfyui-mixlab-nodes/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": true,
+      "series": "task2"
+    },
+    "task2_i2v_480x660_highquality": {
+      "source_file": "archive/task2_i2v_480x660_highquality.json",
+      "format": "api",
+      "node_count": 31,
+      "distinct_types": 23,
+      "third_party_packs": [
+        "Kosinkadink/ComfyUI-VideoHelperSuite",
+        "cubiq/ComfyUI_essentials",
+        "kijai/ComfyUI-KJNodes",
+        "kijai/ComfyUI-WanVideoWrapper",
+        "shadowcz007/comfyui-mixlab-nodes",
+        "yolain/ComfyUI-Easy-Use"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-WanVideoWrapper": {
+          "repo": "https://github.com/kijai/ComfyUI-WanVideoWrapper",
+          "install": "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt",
+          "license": "Apache-2.0",
+          "nodes": {
+            "WanVideoModelLoader": 2,
+            "WanVideoSetBlockSwap": 2,
+            "WanVideoSetLoRAs": 2,
+            "WanVideoVAELoader": 1,
+            "WanVideoDecode": 1,
+            "WanVideoLoraSelect": 2,
+            "LoadWanVideoT5TextEncoder": 1,
+            "WanVideoImageToVideoEncode": 1,
+            "WanVideoTextEncode": 1,
+            "WanVideoSampler": 2,
+            "CreateCFGScheduleFloatList": 1,
+            "WanVideoEasyCache": 2,
+            "WanVideoBlockSwap": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "kijai/ComfyUI-KJNodes": {
+          "repo": "https://github.com/kijai/ComfyUI-KJNodes",
+          "install": "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+          "license": "MIT",
+          "nodes": {
+            "GetImageSizeAndCount": 1,
+            "INTConstant": 3
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "Kosinkadink/ComfyUI-VideoHelperSuite": {
+          "repo": "https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite",
+          "install": "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt",
+          "license": "GPL-3.0",
+          "nodes": {
+            "VHS_VideoCombine": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "cubiq/ComfyUI_essentials": {
+          "repo": "https://github.com/cubiq/ComfyUI_essentials",
+          "install": "git clone https://github.com/cubiq/ComfyUI_essentials.git custom_nodes/ComfyUI_essentials",
+          "license": "MIT",
+          "nodes": {
+            "ImageFromBatch+": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "yolain/ComfyUI-Easy-Use": {
+          "repo": "https://github.com/yolain/ComfyUI-Easy-Use",
+          "install": "git clone https://github.com/yolain/ComfyUI-Easy-Use.git custom_nodes/ComfyUI-Easy-Use && pip install -r custom_nodes/ComfyUI-Easy-Use/requirements.txt",
+          "license": "GPL-3.0",
+          "nodes": {
+            "easy cleanGpuUsed": 1,
+            "easy clearCacheAll": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "shadowcz007/comfyui-mixlab-nodes": {
+          "repo": "https://github.com/shadowcz007/comfyui-mixlab-nodes",
+          "install": "git clone https://github.com/shadowcz007/comfyui-mixlab-nodes.git custom_nodes/comfyui-mixlab-nodes && pip install -r custom_nodes/comfyui-mixlab-nodes/requirements.txt",
+          "license": "MIT",
+          "nodes": {
+            "TextInput_": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt",
+        "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+        "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt",
+        "git clone https://github.com/cubiq/ComfyUI_essentials.git custom_nodes/ComfyUI_essentials",
+        "git clone https://github.com/yolain/ComfyUI-Easy-Use.git custom_nodes/ComfyUI-Easy-Use && pip install -r custom_nodes/ComfyUI-Easy-Use/requirements.txt",
+        "git clone https://github.com/shadowcz007/comfyui-mixlab-nodes.git custom_nodes/comfyui-mixlab-nodes && pip install -r custom_nodes/comfyui-mixlab-nodes/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": true,
+      "series": "task2"
+    },
+    "task2_i2v_480x660_video": {
+      "source_file": "archive/task2_i2v_480x660_video.json",
+      "format": "api",
+      "node_count": 31,
+      "distinct_types": 23,
+      "third_party_packs": [
+        "Kosinkadink/ComfyUI-VideoHelperSuite",
+        "cubiq/ComfyUI_essentials",
+        "kijai/ComfyUI-KJNodes",
+        "kijai/ComfyUI-WanVideoWrapper",
+        "shadowcz007/comfyui-mixlab-nodes",
+        "yolain/ComfyUI-Easy-Use"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-WanVideoWrapper": {
+          "repo": "https://github.com/kijai/ComfyUI-WanVideoWrapper",
+          "install": "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt",
+          "license": "Apache-2.0",
+          "nodes": {
+            "WanVideoModelLoader": 2,
+            "WanVideoSetBlockSwap": 2,
+            "WanVideoSetLoRAs": 2,
+            "WanVideoVAELoader": 1,
+            "WanVideoDecode": 1,
+            "WanVideoLoraSelect": 2,
+            "LoadWanVideoT5TextEncoder": 1,
+            "WanVideoImageToVideoEncode": 1,
+            "WanVideoTextEncode": 1,
+            "WanVideoSampler": 2,
+            "CreateCFGScheduleFloatList": 1,
+            "WanVideoEasyCache": 2,
+            "WanVideoBlockSwap": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "kijai/ComfyUI-KJNodes": {
+          "repo": "https://github.com/kijai/ComfyUI-KJNodes",
+          "install": "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+          "license": "MIT",
+          "nodes": {
+            "GetImageSizeAndCount": 1,
+            "INTConstant": 3
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "Kosinkadink/ComfyUI-VideoHelperSuite": {
+          "repo": "https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite",
+          "install": "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt",
+          "license": "GPL-3.0",
+          "nodes": {
+            "VHS_VideoCombine": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "cubiq/ComfyUI_essentials": {
+          "repo": "https://github.com/cubiq/ComfyUI_essentials",
+          "install": "git clone https://github.com/cubiq/ComfyUI_essentials.git custom_nodes/ComfyUI_essentials",
+          "license": "MIT",
+          "nodes": {
+            "ImageFromBatch+": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "yolain/ComfyUI-Easy-Use": {
+          "repo": "https://github.com/yolain/ComfyUI-Easy-Use",
+          "install": "git clone https://github.com/yolain/ComfyUI-Easy-Use.git custom_nodes/ComfyUI-Easy-Use && pip install -r custom_nodes/ComfyUI-Easy-Use/requirements.txt",
+          "license": "GPL-3.0",
+          "nodes": {
+            "easy cleanGpuUsed": 1,
+            "easy clearCacheAll": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "shadowcz007/comfyui-mixlab-nodes": {
+          "repo": "https://github.com/shadowcz007/comfyui-mixlab-nodes",
+          "install": "git clone https://github.com/shadowcz007/comfyui-mixlab-nodes.git custom_nodes/comfyui-mixlab-nodes && pip install -r custom_nodes/comfyui-mixlab-nodes/requirements.txt",
+          "license": "MIT",
+          "nodes": {
+            "TextInput_": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt",
+        "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+        "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt",
+        "git clone https://github.com/cubiq/ComfyUI_essentials.git custom_nodes/ComfyUI_essentials",
+        "git clone https://github.com/yolain/ComfyUI-Easy-Use.git custom_nodes/ComfyUI-Easy-Use && pip install -r custom_nodes/ComfyUI-Easy-Use/requirements.txt",
+        "git clone https://github.com/shadowcz007/comfyui-mixlab-nodes.git custom_nodes/comfyui-mixlab-nodes && pip install -r custom_nodes/comfyui-mixlab-nodes/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": true,
+      "series": "task2"
+    },
+    "task2_input_image": {
+      "source_file": "archive/task2_input_image.json",
+      "format": "api",
+      "node_count": 9,
+      "distinct_types": 8,
+      "third_party_packs": [
+        "city96/ComfyUI-GGUF"
+      ],
+      "node_dependencies": {
+        "city96/ComfyUI-GGUF": {
+          "repo": "https://github.com/city96/ComfyUI-GGUF",
+          "install": "git clone https://github.com/city96/ComfyUI-GGUF.git custom_nodes/ComfyUI-GGUF && pip install --upgrade gguf",
+          "license": "MIT（个别来源标 Apache-2.0，以仓库 LICENSE 为准）",
+          "nodes": {
+            "UnetLoaderGGUF": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/city96/ComfyUI-GGUF.git custom_nodes/ComfyUI-GGUF && pip install --upgrade gguf"
+      ],
+      "legacy": true,
+      "archive": true,
+      "series": "task2"
+    },
+    "task2_light": {
+      "source_file": "archive/task2_light.json",
+      "format": "prompt-api",
+      "node_count": 10,
+      "distinct_types": 10,
+      "third_party_packs": [
+        "kijai/ComfyUI-WanVideoWrapper"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-WanVideoWrapper": {
+          "repo": "https://github.com/kijai/ComfyUI-WanVideoWrapper",
+          "install": "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt",
+          "license": "Apache-2.0",
+          "nodes": {
+            "LoadWanVideoT5TextEncoder": 1,
+            "WanVideoVAELoader": 1,
+            "WanVideoBlockSwap": 1,
+            "WanVideoModelLoader": 1,
+            "WanVideoImageToVideoEncode": 1,
+            "WanVideoTextEncode": 1,
+            "WanVideoSampler": 1,
+            "WanVideoDecode": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": true,
+      "series": "task2"
+    },
+    "task2_optimized": {
+      "source_file": "archive/task2_optimized.json",
+      "format": "prompt-api",
+      "node_count": 10,
+      "distinct_types": 10,
+      "third_party_packs": [
+        "kijai/ComfyUI-WanVideoWrapper"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-WanVideoWrapper": {
+          "repo": "https://github.com/kijai/ComfyUI-WanVideoWrapper",
+          "install": "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt",
+          "license": "Apache-2.0",
+          "nodes": {
+            "LoadWanVideoT5TextEncoder": 1,
+            "WanVideoVAELoader": 1,
+            "WanVideoBlockSwap": 1,
+            "WanVideoModelLoader": 1,
+            "WanVideoImageToVideoEncode": 1,
+            "WanVideoTextEncode": 1,
+            "WanVideoSampler": 1,
+            "WanVideoDecode": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": true,
+      "series": "task2"
+    },
+    "task2_t2v_final": {
+      "source_file": "archive/task2_t2v_final.json",
+      "format": "api",
+      "node_count": 11,
+      "distinct_types": 11,
+      "third_party_packs": [
+        "kijai/ComfyUI-WanVideoWrapper"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-WanVideoWrapper": {
+          "repo": "https://github.com/kijai/ComfyUI-WanVideoWrapper",
+          "install": "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt",
+          "license": "Apache-2.0",
+          "nodes": {
+            "LoadWanVideoT5TextEncoder": 1,
+            "WanVideoVAELoader": 1,
+            "WanVideoBlockSwap": 1,
+            "WanVideoModelLoader": 1,
+            "WanVideoEmptyEmbeds": 1,
+            "WanVideoTextEncode": 1,
+            "WanVideoSampler": 1,
+            "WanVideoDecode": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": true,
+      "series": "task2"
+    },
+    "task2_v2_final": {
+      "source_file": "archive/task2_v2_final.json",
+      "format": "api",
+      "node_count": 11,
+      "distinct_types": 11,
+      "third_party_packs": [
+        "kijai/ComfyUI-WanVideoWrapper"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-WanVideoWrapper": {
+          "repo": "https://github.com/kijai/ComfyUI-WanVideoWrapper",
+          "install": "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt",
+          "license": "Apache-2.0",
+          "nodes": {
+            "LoadWanVideoT5TextEncoder": 1,
+            "WanVideoVAELoader": 1,
+            "WanVideoBlockSwap": 1,
+            "WanVideoModelLoader": 1,
+            "WanVideoEmptyEmbeds": 1,
+            "WanVideoTextEncode": 1,
+            "WanVideoSampler": 1,
+            "WanVideoDecode": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": true,
+      "series": "task2"
+    },
+    "task2_v3_final": {
+      "source_file": "archive/task2_v3_final.json",
+      "format": "api",
+      "node_count": 11,
+      "distinct_types": 11,
+      "third_party_packs": [
+        "kijai/ComfyUI-WanVideoWrapper"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-WanVideoWrapper": {
+          "repo": "https://github.com/kijai/ComfyUI-WanVideoWrapper",
+          "install": "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt",
+          "license": "Apache-2.0",
+          "nodes": {
+            "LoadWanVideoT5TextEncoder": 1,
+            "WanVideoVAELoader": 1,
+            "WanVideoBlockSwap": 1,
+            "WanVideoModelLoader": 1,
+            "WanVideoEmptyEmbeds": 1,
+            "WanVideoTextEncode": 1,
+            "WanVideoSampler": 1,
+            "WanVideoDecode": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": true,
+      "series": "task2"
+    },
+    "task2_workflow_webui": {
+      "source_file": "archive/task2_workflow_webui.json",
+      "format": "ui",
+      "node_count": 35,
+      "distinct_types": 24,
+      "third_party_packs": [
+        "Fannovel16/ComfyUI-Frame-Interpolation",
+        "Kosinkadink/ComfyUI-VideoHelperSuite",
+        "Suzie1/ComfyUI_Comfyroll_CustomNodes",
+        "WASasquatch/was-node-suite-comfyui",
+        "chflame163/ComfyUI_LayerStyle",
+        "cubiq/ComfyUI_essentials",
+        "kijai/ComfyUI-KJNodes",
+        "weekii8282/ComfyUI-PromptSelector",
+        "yolain/ComfyUI-Easy-Use"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-KJNodes": {
+          "repo": "https://github.com/kijai/ComfyUI-KJNodes",
+          "install": "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+          "license": "MIT",
+          "nodes": {
+            "PathchSageAttentionKJ": 2,
+            "ModelPatchTorchSettings": 2,
+            "INTConstant": 2
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "weekii8282/ComfyUI-PromptSelector": {
+          "repo": "https://github.com/weekii8282/ComfyUI-PromptSelector",
+          "install": "git clone https://github.com/weekii8282/ComfyUI-PromptSelector.git custom_nodes/ComfyUI-PromptSelector",
+          "license": "见仓库 LICENSE",
+          "nodes": {
+            "Wan22PromptSelector": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "chflame163/ComfyUI_LayerStyle": {
+          "repo": "https://github.com/chflame163/ComfyUI_LayerStyle",
+          "install": "git clone https://github.com/chflame163/ComfyUI_LayerStyle.git custom_nodes/ComfyUI_LayerStyle && (双击 install_requirements.bat 或 pip install -r custom_nodes/ComfyUI_LayerStyle/requirements.txt)",
+          "license": "MIT",
+          "nodes": {
+            "LayerUtility: ImageScaleByAspectRatio V2": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "cubiq/ComfyUI_essentials": {
+          "repo": "https://github.com/cubiq/ComfyUI_essentials",
+          "install": "git clone https://github.com/cubiq/ComfyUI_essentials.git custom_nodes/ComfyUI_essentials",
+          "license": "MIT",
+          "nodes": {
+            "SimpleMath+": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "yolain/ComfyUI-Easy-Use": {
+          "repo": "https://github.com/yolain/ComfyUI-Easy-Use",
+          "install": "git clone https://github.com/yolain/ComfyUI-Easy-Use.git custom_nodes/ComfyUI-Easy-Use && pip install -r custom_nodes/ComfyUI-Easy-Use/requirements.txt",
+          "license": "GPL-3.0",
+          "nodes": {
+            "easy cleanGpuUsed": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "Fannovel16/ComfyUI-Frame-Interpolation": {
+          "repo": "https://github.com/Fannovel16/ComfyUI-Frame-Interpolation",
+          "install": "git clone https://github.com/Fannovel16/ComfyUI-Frame-Interpolation.git custom_nodes/ComfyUI-Frame-Interpolation && pip install -r custom_nodes/ComfyUI-Frame-Interpolation/requirements.txt",
+          "license": "MIT",
+          "nodes": {
+            "RIFE VFI": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "WASasquatch/was-node-suite-comfyui": {
+          "repo": "https://github.com/WASasquatch/was-node-suite-comfyui",
+          "install": "git clone https://github.com/WASasquatch/was-node-suite-comfyui.git custom_nodes/was-node-suite-comfyui",
+          "license": "MIT",
+          "nodes": {
+            "Text Concatenate": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "Suzie1/ComfyUI_Comfyroll_CustomNodes": {
+          "repo": "https://github.com/Suzie1/ComfyUI_Comfyroll_CustomNodes",
+          "install": "git clone https://github.com/Suzie1/ComfyUI_Comfyroll_CustomNodes.git custom_nodes/ComfyUI_Comfyroll_CustomNodes",
+          "license": "MIT",
+          "nodes": {
+            "CR Text": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "Kosinkadink/ComfyUI-VideoHelperSuite": {
+          "repo": "https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite",
+          "install": "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt",
+          "license": "GPL-3.0",
+          "nodes": {
+            "VHS_VideoCombine": 2
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+        "git clone https://github.com/weekii8282/ComfyUI-PromptSelector.git custom_nodes/ComfyUI-PromptSelector",
+        "git clone https://github.com/chflame163/ComfyUI_LayerStyle.git custom_nodes/ComfyUI_LayerStyle && (双击 install_requirements.bat 或 pip install -r custom_nodes/ComfyUI_LayerStyle/requirements.txt)",
+        "git clone https://github.com/cubiq/ComfyUI_essentials.git custom_nodes/ComfyUI_essentials",
+        "git clone https://github.com/yolain/ComfyUI-Easy-Use.git custom_nodes/ComfyUI-Easy-Use && pip install -r custom_nodes/ComfyUI-Easy-Use/requirements.txt",
+        "git clone https://github.com/Fannovel16/ComfyUI-Frame-Interpolation.git custom_nodes/ComfyUI-Frame-Interpolation && pip install -r custom_nodes/ComfyUI-Frame-Interpolation/requirements.txt",
+        "git clone https://github.com/WASasquatch/was-node-suite-comfyui.git custom_nodes/was-node-suite-comfyui",
+        "git clone https://github.com/Suzie1/ComfyUI_Comfyroll_CustomNodes.git custom_nodes/ComfyUI_Comfyroll_CustomNodes",
+        "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": true,
+      "series": "task2"
+    },
+    "task3_api_raw": {
+      "source_file": "archive/task3_api_raw.json",
+      "format": "api",
+      "node_count": 20,
+      "distinct_types": 12,
+      "third_party_packs": [
+        "Kosinkadink/ComfyUI-VideoHelperSuite",
+        "M1kep/ComfyLiterals",
+        "kijai/ComfyUI-KJNodes"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-KJNodes": {
+          "repo": "https://github.com/kijai/ComfyUI-KJNodes",
+          "install": "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+          "license": "MIT",
+          "nodes": {
+            "PathchSageAttentionKJ": 2,
+            "INTConstant": 2
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "Kosinkadink/ComfyUI-VideoHelperSuite": {
+          "repo": "https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite",
+          "install": "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt",
+          "license": "GPL-3.0",
+          "nodes": {
+            "VHS_VideoCombine": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        },
+        "M1kep/ComfyLiterals": {
+          "repo": "https://github.com/M1kep/ComfyLiterals",
+          "install": "git clone https://github.com/M1kep/ComfyLiterals.git custom_nodes/ComfyLiterals",
+          "license": "见仓库 LICENSE",
+          "nodes": {
+            "Int": 3
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-KJNodes.git custom_nodes/ComfyUI-KJNodes && pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt",
+        "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git custom_nodes/ComfyUI-VideoHelperSuite && pip install -r custom_nodes/ComfyUI-VideoHelperSuite/requirements.txt",
+        "git clone https://github.com/M1kep/ComfyLiterals.git custom_nodes/ComfyLiterals"
+      ],
+      "legacy": true,
+      "archive": true,
+      "series": "task3"
+    },
+    "task3_api_workflow": {
+      "source_file": "archive/task3_api_workflow.json",
+      "format": "api",
+      "node_count": 14,
+      "distinct_types": 13,
+      "third_party_packs": [],
+      "node_dependencies": {},
+      "install_all": [],
+      "legacy": true,
+      "archive": true,
+      "series": "task3"
+    },
+    "task3_final": {
+      "source_file": "archive/task3_final.json",
+      "format": "api",
+      "node_count": 11,
+      "distinct_types": 11,
+      "third_party_packs": [
+        "kijai/ComfyUI-WanVideoWrapper"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-WanVideoWrapper": {
+          "repo": "https://github.com/kijai/ComfyUI-WanVideoWrapper",
+          "install": "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt",
+          "license": "Apache-2.0",
+          "nodes": {
+            "LoadWanVideoT5TextEncoder": 1,
+            "WanVideoVAELoader": 1,
+            "WanVideoBlockSwap": 1,
+            "WanVideoModelLoader": 1,
+            "WanVideoEmptyEmbeds": 1,
+            "WanVideoTextEncode": 1,
+            "WanVideoSampler": 1,
+            "WanVideoDecode": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": true,
+      "series": "task3"
+    },
+    "task3_t2v_480x960": {
+      "source_file": "archive/task3_t2v_480x960.json",
+      "format": "api",
+      "node_count": 11,
+      "distinct_types": 11,
+      "third_party_packs": [
+        "kijai/ComfyUI-WanVideoWrapper"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-WanVideoWrapper": {
+          "repo": "https://github.com/kijai/ComfyUI-WanVideoWrapper",
+          "install": "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt",
+          "license": "Apache-2.0",
+          "nodes": {
+            "LoadWanVideoT5TextEncoder": 1,
+            "WanVideoVAELoader": 1,
+            "WanVideoBlockSwap": 1,
+            "WanVideoModelLoader": 1,
+            "WanVideoEmptyEmbeds": 1,
+            "WanVideoTextEncode": 1,
+            "WanVideoSampler": 1,
+            "WanVideoDecode": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": true,
+      "series": "task3"
+    },
+    "task3_t2v_720x1440": {
+      "source_file": "archive/task3_t2v_720x1440.json",
+      "format": "api",
+      "node_count": 11,
+      "distinct_types": 11,
+      "third_party_packs": [
+        "kijai/ComfyUI-WanVideoWrapper"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-WanVideoWrapper": {
+          "repo": "https://github.com/kijai/ComfyUI-WanVideoWrapper",
+          "install": "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt",
+          "license": "Apache-2.0",
+          "nodes": {
+            "LoadWanVideoT5TextEncoder": 1,
+            "WanVideoVAELoader": 1,
+            "WanVideoBlockSwap": 1,
+            "WanVideoModelLoader": 1,
+            "WanVideoEmptyEmbeds": 1,
+            "WanVideoTextEncode": 1,
+            "WanVideoSampler": 1,
+            "WanVideoDecode": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": true,
+      "series": "task3"
+    },
+    "task3_v2_final": {
+      "source_file": "archive/task3_v2_final.json",
+      "format": "api",
+      "node_count": 11,
+      "distinct_types": 11,
+      "third_party_packs": [
+        "kijai/ComfyUI-WanVideoWrapper"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-WanVideoWrapper": {
+          "repo": "https://github.com/kijai/ComfyUI-WanVideoWrapper",
+          "install": "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt",
+          "license": "Apache-2.0",
+          "nodes": {
+            "LoadWanVideoT5TextEncoder": 1,
+            "WanVideoVAELoader": 1,
+            "WanVideoBlockSwap": 1,
+            "WanVideoModelLoader": 1,
+            "WanVideoEmptyEmbeds": 1,
+            "WanVideoTextEncode": 1,
+            "WanVideoSampler": 1,
+            "WanVideoDecode": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": true,
+      "series": "task3"
+    },
+    "task3_v3_final": {
+      "source_file": "archive/task3_v3_final.json",
+      "format": "api",
+      "node_count": 11,
+      "distinct_types": 11,
+      "third_party_packs": [
+        "kijai/ComfyUI-WanVideoWrapper"
+      ],
+      "node_dependencies": {
+        "kijai/ComfyUI-WanVideoWrapper": {
+          "repo": "https://github.com/kijai/ComfyUI-WanVideoWrapper",
+          "install": "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt",
+          "license": "Apache-2.0",
+          "nodes": {
+            "LoadWanVideoT5TextEncoder": 1,
+            "WanVideoVAELoader": 1,
+            "WanVideoBlockSwap": 1,
+            "WanVideoModelLoader": 1,
+            "WanVideoEmptyEmbeds": 1,
+            "WanVideoTextEncode": 1,
+            "WanVideoSampler": 1,
+            "WanVideoDecode": 1
+          },
+          "confirmed": true,
+          "missing_in_project_dump": false
+        }
+      },
+      "install_all": [
+        "git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git custom_nodes/ComfyUI-WanVideoWrapper && pip install -r custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt"
+      ],
+      "legacy": true,
+      "archive": true,
+      "series": "task3"
+    }
+  }
+}

@@ -12,20 +12,38 @@ import random
 import sys
 import urllib.request
 
+# 绕过本机代理：127.0.0.1 请求若经 HTTP_PROXY 会被拦截并返回 502（假故障），
+# 表现为“服务不可用”。本脚本只访问本机 ComfyUI，故对所有请求禁用代理。
+urllib.request.install_opener(
+    urllib.request.build_opener(urllib.request.ProxyHandler({}))
+)
+
+# 端口/host 解析优先级（见 SKILL.md 7.1）：命令行参数 > COMFYUI_PORT/COMFYUI_HOST 环境变量 > 默认值。
+# 默认值跟随 ComfyUI 官方约定（8188）。3198 是历史单一部署环境的端口，非通用标准；
+# 需沿用请显式设置 COMFYUI_PORT=3198。
+DEFAULT_HOST = os.environ.get("COMFYUI_HOST", "127.0.0.1")
+DEFAULT_PORT = os.environ.get("COMFYUI_PORT", "8188")
+
 # 引入高级工作流组装相关模块（同目录下）
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from advanced_workflow_builder import WorkflowAssembler
 from pattern_extractor import load_patterns
 from build_workflow_library import load_object_info
 
+# 路径解析相对项目根，不依赖运行时 CWD：技能资产在 <repo>/skills/comfyui-controller/assets/
+_SCRIPTS_DIR = os.path.dirname(os.path.abspath(__file__))
+_CC_DIR = os.path.dirname(_SCRIPTS_DIR)
+_REPO_ROOT = os.path.dirname(_CC_DIR)
+_SKILL_ASSETS = os.path.join(_REPO_ROOT, "skills", "comfyui-controller", "assets")
 
-def load_library(path=".trae/skills/comfyui-controller/assets/workflow_library.json"):
+
+def load_library(path=os.path.join(_SKILL_ASSETS, "workflow_library.json")):
     """加载工作流资料库"""
     with open(path, 'r', encoding='utf-8') as f:
         return json.load(f)
 
 
-def get_available_nodes(host="127.0.0.1", port="3198"):  # comfyui-cli项目标准端口
+def get_available_nodes(host="127.0.0.1", port=DEFAULT_PORT):  
     """获取服务器上可用的节点类型"""
     try:
         req = urllib.request.Request(f"http://{host}:{port}/object_info", method="GET")
@@ -356,9 +374,7 @@ def generate_new_workflow_json(library, task_description, params=None, patterns=
     """
     # 1. 加载默认模式库（若未提供）
     if patterns is None:
-        default_patterns_path = os.path.join(
-            ".trae", "skills", "comfyui-controller", "assets", "workflow_patterns.json"
-        )
+        default_patterns_path = os.path.join(_SKILL_ASSETS, "workflow_patterns.json")
         try:
             patterns = load_patterns(default_patterns_path)
         except Exception:
@@ -421,11 +437,11 @@ def generate_new_workflow_json(library, task_description, params=None, patterns=
 
 def main():
     ap = argparse.ArgumentParser(description="工作流生成器")
-    ap.add_argument("--library", default=".trae/skills/comfyui-controller/assets/workflow_library.json",
+    ap.add_argument("--library", default=os.path.join(_SKILL_ASSETS, "workflow_library.json"),
                     help="资料库路径")
     ap.add_argument("--task", required=True, help="任务描述，例如：'生成一个文生图工作流'")
     ap.add_argument("--host", default="127.0.0.1", help="ComfyUI服务器地址")
-    ap.add_argument("--port", default="3198", help="ComfyUI服务器端口")  # comfyui-cli项目标准端口
+    ap.add_argument("--port", default=DEFAULT_PORT, help="ComfyUI服务器端口")  
     ap.add_argument("--check-deps", action="store_true", help="检查依赖可用性")
     ap.add_argument("--model-family", help="指定大模型系列（如 SD1.5/SDXL/Flux/Wan2.2），不同系列工作流不能混用")
     ap.add_argument("--output", help="输出工作流JSON路径")

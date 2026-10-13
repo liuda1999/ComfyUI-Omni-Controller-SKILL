@@ -9,11 +9,11 @@
     "class_type": "KSampler",
     "inputs": {
       "seed": 119562114804876,
-      "steps": "randomize",
-      "cfg": 20,
-      "sampler_name": 1,
-      "scheduler": "euler",
-      "denoise": "simple",
+      "steps": 30,
+      "cfg": 1.0,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1.0,
       "model": [
         "78",
         0
@@ -87,10 +87,6 @@
       "weight_dtype": "default"
     }
   },
-  "81": {
-    "class_type": "MarkdownNote",
-    "inputs": {}
-  },
   "64": {
     "class_type": "CLIPTextEncode",
     "inputs": {
@@ -99,27 +95,6 @@
         "79",
         0
       ]
-    }
-  },
-  "96": {
-    "class_type": "LoadImage",
-    "inputs": {
-      "image": "2f7a9ded457bd318d6048e17db47e4e1e4495468f2e3917f9e54b0ffe1153eff.png",
-      "upload": "image"
-    }
-  },
-  "97": {
-    "class_type": "LoadImage",
-    "inputs": {
-      "image": "10dea12eab0762dab4c8534147e9e22247d1a5f15e4dc4944f99f7837a094b7a.jpg",
-      "upload": "image"
-    }
-  },
-  "98": {
-    "class_type": "LoadImage",
-    "inputs": {
-      "image": "0374c24bf9f089685ab3dba4576d57dec5dbab4ceb588df0780429f15551a78a.jpg",
-      "upload": "image"
     }
   }
 }

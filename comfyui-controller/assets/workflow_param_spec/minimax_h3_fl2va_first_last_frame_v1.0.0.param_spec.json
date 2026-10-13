@@ -1,0 +1,1544 @@
+{
+  "workflow": "minimax_h3_fl2va_first_last_frame_v1.0.0",
+  "purpose": "首/尾帧参考生视频 FL2VA · 开源版",
+  "node_count": 35,
+  "format": "UI (ComfyUI 界面可加载)",
+  "nodes": [
+    {
+      "id": 14,
+      "type": "MarkdownNote",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "text": "# 素材可以在链接里找\nhttps://vrfi1sk8a0.feishu.cn/wiki/FIWjwgL33ipnkekzk30crmKUnIh\n\n- 打开manual-velocity可加速"
+      },
+      "inputs": [],
+      "outputs": [],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 3,
+      "type": "RHMiniMaxH3FL2VAVAELoader",
+      "title": "FL2VA Dual VAE Loader",
+      "role": "loaders",
+      "widgets": {
+        "model_root": "MiniMax-H3",
+        "video_vae_path": "MiniMax-H3-video_vae.safetensors",
+        "audio_vae_path": "MiniMax-H3-audio_vae.safetensors"
+      },
+      "inputs": [
+        {
+          "name": "model_root",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "video_vae_path",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "audio_vae_path",
+          "type": "COMBO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "h3_vae_bundle"
+      ],
+      "standard": {
+        "model_root": {
+          "type": "STRING",
+          "default": "MiniMax-H3",
+          "range": "模型根目录",
+          "meaning": "根目录名",
+          "required": true
+        },
+        "video_vae_path": {
+          "type": "STRING",
+          "default": "MiniMax-H3-video_vae.safetensors",
+          "range": "视频 VAE 文件名",
+          "meaning": "视频 VAE",
+          "required": true
+        },
+        "audio_vae_path": {
+          "type": "STRING",
+          "default": "MiniMax-H3-audio_vae.safetensors",
+          "range": "音频 VAE 文件名",
+          "meaning": "音频 VAE（须 fp32）",
+          "required": true
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 7,
+      "type": "RHMiniMaxH3FL2VATarget",
+      "title": null,
+      "role": "h3_main",
+      "widgets": {
+        "aspect_ratio": "4:3",
+        "duration_seconds": 5,
+        "width": 832,
+        "height": 480
+      },
+      "inputs": [
+        {
+          "name": "keyframes",
+          "type": "MINIMAX_H3_FL_KEYFRAMES",
+          "link": 8
+        },
+        {
+          "name": "aspect_ratio",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "duration_seconds",
+          "type": "FLOAT",
+          "link": null
+        },
+        {
+          "name": "width",
+          "type": "INT",
+          "link": 47
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "link": 48
+        }
+      ],
+      "outputs": [
+        "target",
+        "shape_info"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 8,
+      "type": "RHMiniMaxH3FL2VAEncode",
+      "title": null,
+      "role": "h3_main",
+      "widgets": {
+        "prompt": "0-2s: medium wide shot, the boy raises hand to adjust aviator cap, dusk wilderness background at high altitude\n2-5s: camera steadily pushes to facial close-up, arms lean forward gazing afar, clothes and hair sway softly, light slowly covers the face."
+      },
+      "inputs": [
+        {
+          "name": "h3_text_encoder",
+          "type": "MINIMAX_H3_TEXT_ENCODER",
+          "link": 10
+        },
+        {
+          "name": "h3_vae_bundle",
+          "type": "MINIMAX_H3_VAE_BUNDLE",
+          "link": 11
+        },
+        {
+          "name": "target",
+          "type": "MINIMAX_H3_TARGET",
+          "link": 12
+        },
+        {
+          "name": "keyframes",
+          "type": "MINIMAX_H3_FL_KEYFRAMES",
+          "link": 9
+        },
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "conditioning"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 9,
+      "type": "RHMiniMaxH3EmptyAVLatent",
+      "title": "Empty AV Latent",
+      "role": "h3_main",
+      "widgets": {},
+      "inputs": [
+        {
+          "name": "target",
+          "type": "MINIMAX_H3_TARGET",
+          "link": 13
+        }
+      ],
+      "outputs": [
+        "av_latent"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 2,
+      "type": "RHMiniMaxH3FL2VAModelLoader",
+      "title": "FL2VA DiT Loader",
+      "role": "loaders",
+      "widgets": {
+        "model_root": "MiniMax-H3",
+        "dtype": "auto",
+        "transformer_path": "MiniMax-H3-FL2VA-int8_convrot.safetensors"
+      },
+      "inputs": [
+        {
+          "name": "model_root",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "dtype",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "transformer_path",
+          "type": "COMBO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "h3_model"
+      ],
+      "standard": {
+        "model_root": {
+          "type": "STRING",
+          "default": "MiniMax-H3",
+          "range": "模型根目录（相对 models/）",
+          "meaning": "根目录名",
+          "required": true
+        },
+        "dtype": {
+          "type": "COMBO",
+          "default": "auto",
+          "range": "auto / fp16 / bf16 / fp8",
+          "meaning": "精度",
+          "required": false
+        },
+        "transformer_path": {
+          "type": "STRING",
+          "default": "MiniMax-H3-FL2VA-int8_convrot.safetensors",
+          "range": "DiT 文件名",
+          "meaning": "权重文件",
+          "required": true
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 1,
+      "type": "RHMiniMaxH3FL2VATextEncoderLoader",
+      "title": "FL2VA Qwen3-VL Loader",
+      "role": "loaders",
+      "widgets": {
+        "model_root": "MiniMax-H3",
+        "dtype": "auto",
+        "text_encoder_path": "qwen3-vl-32b-int8_convrot.safetensors"
+      },
+      "inputs": [
+        {
+          "name": "model_root",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "dtype",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "text_encoder_path",
+          "type": "COMBO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "h3_text_encoder"
+      ],
+      "standard": {
+        "model_root": {
+          "type": "STRING",
+          "default": "MiniMax-H3",
+          "range": "根目录",
+          "meaning": "根目录名",
+          "required": true
+        },
+        "dtype": {
+          "type": "COMBO",
+          "default": "auto",
+          "range": "auto/fp16/bf16/int8",
+          "meaning": "精度",
+          "required": false
+        },
+        "text_encoder_path": {
+          "type": "STRING",
+          "default": "qwen3-vl-32b-int8_convrot.safetensors",
+          "range": "编码器文件名",
+          "meaning": "权重",
+          "required": true
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 11,
+      "type": "RHMiniMaxH3DecodeAV",
+      "title": "Decode Video + Audio",
+      "role": "h3_main",
+      "widgets": {},
+      "inputs": [
+        {
+          "name": "h3_vae_bundle",
+          "type": "MINIMAX_H3_VAE_BUNDLE",
+          "link": 16
+        },
+        {
+          "name": "sampled_av_latent",
+          "type": "MINIMAX_H3_AV_LATENT",
+          "link": 4
+        }
+      ],
+      "outputs": [
+        "frames",
+        "audio"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 12,
+      "type": "CreateVideo",
+      "title": null,
+      "role": "io",
+      "widgets": {
+        "fps": 24,
+        "bit_depth": 8,
+        "color_space": "sRGB"
+      },
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 5
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 6
+        },
+        {
+          "name": "fps",
+          "type": "FLOAT",
+          "link": null
+        },
+        {
+          "name": "bit_depth",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "color_space",
+          "type": "COMBO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "VIDEO"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 15,
+      "type": "Int",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Number": 640
+      },
+      "inputs": [
+        {
+          "name": "Number",
+          "type": "STRING",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "INT"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 16,
+      "type": "Int",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Number": 576
+      },
+      "inputs": [
+        {
+          "name": "Number",
+          "type": "STRING",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "INT"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 17,
+      "type": "Int",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Number": 768
+      },
+      "inputs": [
+        {
+          "name": "Number",
+          "type": "STRING",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "INT"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 18,
+      "type": "Int",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Number": 768
+      },
+      "inputs": [
+        {
+          "name": "Number",
+          "type": "STRING",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "INT"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 19,
+      "type": "Int",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Number": 576
+      },
+      "inputs": [
+        {
+          "name": "Number",
+          "type": "STRING",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "INT"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 20,
+      "type": "Int",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Number": 432
+      },
+      "inputs": [
+        {
+          "name": "Number",
+          "type": "STRING",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "INT"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 21,
+      "type": "Int",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Number": 768
+      },
+      "inputs": [
+        {
+          "name": "Number",
+          "type": "STRING",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "INT"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 22,
+      "type": "Int",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Number": 640
+      },
+      "inputs": [
+        {
+          "name": "Number",
+          "type": "STRING",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "INT"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 25,
+      "type": "Note",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "text": "图像比例\n数字1-----1:1\n数字2-----3:4\n数字3-----4:3\n数字4-----9:16\n数字5-----16:9"
+      },
+      "inputs": [],
+      "outputs": [],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 26,
+      "type": "Int",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Number": 432
+      },
+      "inputs": [
+        {
+          "name": "Number",
+          "type": "STRING",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "INT"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 27,
+      "type": "Int",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Number": 768
+      },
+      "inputs": [
+        {
+          "name": "Number",
+          "type": "STRING",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "INT"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 28,
+      "type": "Int",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Number": 768
+      },
+      "inputs": [
+        {
+          "name": "Number",
+          "type": "STRING",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "INT"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 29,
+      "type": "Int",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Number": 432
+      },
+      "inputs": [
+        {
+          "name": "Number",
+          "type": "STRING",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "INT"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 31,
+      "type": "Reroute",
+      "title": null,
+      "role": "util",
+      "widgets": {},
+      "inputs": [
+        {
+          "name": "",
+          "type": "*",
+          "link": 35
+        }
+      ],
+      "outputs": [
+        ""
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 34,
+      "type": "PreviewImage",
+      "title": null,
+      "role": "io",
+      "widgets": {},
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 39
+        }
+      ],
+      "outputs": [
+        "images",
+        "images"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 6,
+      "type": "LoadImage",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "image": "0ef234cfae9a607e3b3f9e33ee518f952ad2eaac0fb7dc8e24e2a3ccb13fbfc2.png",
+        "upload": "image"
+      },
+      "inputs": [
+        {
+          "name": "image",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "upload",
+          "type": "IMAGEUPLOAD",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "IMAGE",
+        "MASK"
+      ],
+      "standard": {
+        "image": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/ 或输入",
+          "meaning": "图像文件",
+          "required": true
+        },
+        "upload": {
+          "type": "BOOLEAN",
+          "default": false,
+          "range": "true/false",
+          "meaning": "上传开关",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 4,
+      "type": "LoadImage",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "image": "a90b99d9fe38257cd05c1ccc05b6604e323e1bc48a9a1ad5bd548ae7f5bcc5b3.png",
+        "upload": "image"
+      },
+      "inputs": [
+        {
+          "name": "image",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "upload",
+          "type": "IMAGEUPLOAD",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "IMAGE",
+        "MASK"
+      ],
+      "standard": {
+        "image": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/ 或输入",
+          "meaning": "图像文件",
+          "required": true
+        },
+        "upload": {
+          "type": "BOOLEAN",
+          "default": false,
+          "range": "true/false",
+          "meaning": "上传开关",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 24,
+      "type": "ImpactSwitch",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "select": 3,
+        "sel_mode": false
+      },
+      "inputs": [
+        {
+          "name": "input1",
+          "type": "*",
+          "link": 26
+        },
+        {
+          "name": "select",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "sel_mode",
+          "type": "BOOLEAN",
+          "link": null
+        },
+        {
+          "name": "input2",
+          "type": "INT",
+          "link": 27
+        },
+        {
+          "name": "input3",
+          "type": "INT",
+          "link": 28
+        },
+        {
+          "name": "input4",
+          "type": "INT",
+          "link": 29
+        },
+        {
+          "name": "input5",
+          "type": "INT",
+          "link": 30
+        },
+        {
+          "name": "input6",
+          "type": "INT",
+          "link": 31
+        },
+        {
+          "name": "input7",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input8",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input9",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input10",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input11",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input12",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input13",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input14",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input15",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input16",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input17",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input18",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input19",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input20",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input21",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input22",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input23",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input24",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input25",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input26",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input27",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input28",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input29",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input30",
+          "type": "INT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "selected_value",
+        "selected_label",
+        "selected_index"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 23,
+      "type": "ImpactSwitch",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "select": 1,
+        "sel_mode": false
+      },
+      "inputs": [
+        {
+          "name": "input1",
+          "type": "*",
+          "link": 19
+        },
+        {
+          "name": "select",
+          "type": "INT",
+          "link": 20
+        },
+        {
+          "name": "sel_mode",
+          "type": "BOOLEAN",
+          "link": null
+        },
+        {
+          "name": "input2",
+          "type": "INT",
+          "link": 21
+        },
+        {
+          "name": "input3",
+          "type": "INT",
+          "link": 22
+        },
+        {
+          "name": "input4",
+          "type": "INT",
+          "link": 23
+        },
+        {
+          "name": "input5",
+          "type": "INT",
+          "link": 24
+        },
+        {
+          "name": "input6",
+          "type": "INT",
+          "link": 25
+        },
+        {
+          "name": "input7",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input8",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input9",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input10",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input11",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input12",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input13",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input14",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input15",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input16",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input17",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input18",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input19",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input20",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input21",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input22",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input23",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input24",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input25",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input26",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input27",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input28",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input29",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "input30",
+          "type": "INT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "selected_value",
+        "selected_label",
+        "selected_index"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 5,
+      "type": "RHMiniMaxH3FL2VAFirstFrameCondition",
+      "title": "First / First+Last",
+      "role": "h3_main",
+      "widgets": {},
+      "inputs": [
+        {
+          "name": "first_frame",
+          "type": "IMAGE",
+          "link": 41
+        },
+        {
+          "name": "last_frame",
+          "type": "IMAGE",
+          "link": 46
+        }
+      ],
+      "outputs": [
+        "keyframes"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 13,
+      "type": "SaveVideo",
+      "title": null,
+      "role": "io",
+      "widgets": {
+        "filename_prefix": "minimax_h3/fl2va_first_last_frame",
+        "format": "mp4",
+        "format.codec": "h264",
+        "format.codec.encoding": "auto",
+        "codec": "auto"
+      },
+      "inputs": [
+        {
+          "name": "video",
+          "type": "VIDEO",
+          "link": 7
+        },
+        {
+          "name": "filename_prefix",
+          "type": "STRING",
+          "link": null
+        },
+        {
+          "name": "format",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null
+        },
+        {
+          "name": "format.codec",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null
+        },
+        {
+          "name": "format.codec.encoding",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null
+        },
+        {
+          "name": "codec",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "video",
+        "video"
+      ],
+      "standard": {
+        "filename_prefix": {
+          "type": "STRING",
+          "default": "ComfyUI",
+          "range": "文本",
+          "meaning": "文件名前缀",
+          "required": false
+        },
+        "fps": {
+          "type": "FLOAT",
+          "default": 24,
+          "range": ">0",
+          "meaning": "帧率",
+          "required": false
+        },
+        "lossless": {
+          "type": "BOOLEAN",
+          "default": false,
+          "range": "true/false",
+          "meaning": "无损",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 30,
+      "type": "ImageResize+",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "width": 832,
+        "height": 832,
+        "interpolation": "nearest",
+        "method": "keep proportion",
+        "condition": "always",
+        "multiple_of": 32
+      },
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 40
+        },
+        {
+          "name": "width",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "interpolation",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "method",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "condition",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "multiple_of",
+          "type": "INT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "IMAGE",
+        "width",
+        "height"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 35,
+      "type": "ImageResize+",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "width": 832,
+        "height": 832,
+        "interpolation": "nearest",
+        "method": "keep proportion",
+        "condition": "always",
+        "multiple_of": 32
+      },
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 42
+        },
+        {
+          "name": "width",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "interpolation",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "method",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "condition",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "multiple_of",
+          "type": "INT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "IMAGE",
+        "width",
+        "height"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 33,
+      "type": "ImageResize+",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "width": 832,
+        "height": 832,
+        "interpolation": "nearest",
+        "method": "fill / crop",
+        "condition": "always",
+        "multiple_of": 32
+      },
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 36
+        },
+        {
+          "name": "width",
+          "type": "INT",
+          "link": 37
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "link": 38
+        },
+        {
+          "name": "interpolation",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "method",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "condition",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "multiple_of",
+          "type": "INT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "IMAGE",
+        "width",
+        "height"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 36,
+      "type": "ImageResize+",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "width": 832,
+        "height": 832,
+        "interpolation": "nearest",
+        "method": "fill / crop",
+        "condition": "always",
+        "multiple_of": 32
+      },
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 43
+        },
+        {
+          "name": "width",
+          "type": "INT",
+          "link": 44
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "link": 45
+        },
+        {
+          "name": "interpolation",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "method",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "condition",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "multiple_of",
+          "type": "INT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "IMAGE",
+        "width",
+        "height"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 10,
+      "type": "RHMiniMaxH3DualSigmaSampler",
+      "title": "Dual Sigma Sampler",
+      "role": "samplers",
+      "widgets": {
+        "seed": 42,
+        "control_after_generate": "fixed",
+        "sigma_points": 50,
+        "video_shift": 12,
+        "audio_shift": 3,
+        "accel": "manual-velocity",
+        "denoise_video": true,
+        "cache_dit_rdt": 0.12,
+        "cache_dit_mc": 2,
+        "cache_dit_warmup": 4,
+        "velocity_stride": 4,
+        "sampler_mode": "euler",
+        "allow_accel_with_res_multistep": false
+      },
+      "inputs": [
+        {
+          "name": "h3_model",
+          "type": "MINIMAX_H3_DIRECT_MODEL",
+          "link": 14
+        },
+        {
+          "name": "conditioning",
+          "type": "MINIMAX_H3_CONDITIONING",
+          "link": 15
+        },
+        {
+          "name": "av_latent",
+          "type": "MINIMAX_H3_AV_LATENT",
+          "link": 3
+        },
+        {
+          "name": "sampler_config",
+          "type": "MINIMAX_H3_SAMPLER_CONFIG",
+          "link": null
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "sigma_points",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "video_shift",
+          "type": "FLOAT",
+          "link": null
+        },
+        {
+          "name": "audio_shift",
+          "type": "FLOAT",
+          "link": null
+        },
+        {
+          "name": "accel",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "denoise_video",
+          "type": "BOOLEAN",
+          "link": null
+        },
+        {
+          "name": "cache_dit_rdt",
+          "type": "FLOAT",
+          "link": null
+        },
+        {
+          "name": "cache_dit_mc",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "cache_dit_warmup",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "velocity_stride",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "sampler_mode",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "allow_accel_with_res_multistep",
+          "type": "BOOLEAN",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "sampled_av_latent"
+      ],
+      "standard": null,
+      "note": null
+    }
+  ]
+}

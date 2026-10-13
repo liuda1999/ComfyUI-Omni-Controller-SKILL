@@ -130,7 +130,7 @@ def pip_install_manager(repo_dir, python=sys.executable):
         cwd=repo_dir,
         check=False,
         capture_output=True,
-        text=True,
+        text=True, errors="replace",
     )
     if result.returncode != 0:
         rprint("[bold red]Failed to install ComfyUI-Manager.[/bold red]")
@@ -463,7 +463,7 @@ def _resolve_latest_tag_from_local(repo_dir: str) -> tuple[str | None, bool]:
         completed = subprocess.run(
             ["git", "-C", repo_dir, "fetch", "--tags", "--quiet"],
             capture_output=True,
-            text=True,
+            text=True, errors="replace",
             timeout=30,
         )
         fetch_ok = completed.returncode == 0
@@ -475,7 +475,7 @@ def _resolve_latest_tag_from_local(repo_dir: str) -> tuple[str | None, bool]:
         result = subprocess.run(
             ["git", "-C", repo_dir, "tag", "--list"],
             capture_output=True,
-            text=True,
+            text=True, errors="replace",
             check=True,
             timeout=10,
         )
@@ -825,7 +825,7 @@ def _print_npm_not_found_help(node_version: str) -> None:
 def verify_node_tools() -> bool:
     """Verify that Node.js, npm, and pnpm are available for frontend building"""
     try:
-        node_result = subprocess.run(["node", "--version"], capture_output=True, text=True, check=False)
+        node_result = subprocess.run(["node", "--version"], capture_output=True, text=True, errors="replace", check=False)
     except FileNotFoundError:
         rprint("[bold red]Node.js is not installed or not found in PATH.[/bold red]")
         rprint("[yellow]To use --frontend-pr, please install Node.js first:[/yellow]")
@@ -853,7 +853,7 @@ def verify_node_tools() -> bool:
         rprint("[green]Found Node.js[/green]")
 
     try:
-        npm_result = subprocess.run(["npm", "--version"], capture_output=True, text=True, check=False)
+        npm_result = subprocess.run(["npm", "--version"], capture_output=True, text=True, errors="replace", check=False)
     except FileNotFoundError:
         _print_npm_not_found_help(node_version)
         return False
@@ -869,7 +869,7 @@ def verify_node_tools() -> bool:
         rprint("[green]Found npm[/green]")
 
     try:
-        pnpm_result = subprocess.run(["pnpm", "--version"], capture_output=True, text=True, check=False)
+        pnpm_result = subprocess.run(["pnpm", "--version"], capture_output=True, text=True, errors="replace", check=False)
         if pnpm_result.returncode == 0:
             pnpm_version = pnpm_result.stdout.strip()
             if pnpm_version:
@@ -892,7 +892,7 @@ def verify_node_tools() -> bool:
         return False
 
     rprint("[yellow]Installing pnpm...[/yellow]")
-    install_result = subprocess.run(["npm", "install", "-g", "pnpm"], capture_output=True, text=True, check=False)
+    install_result = subprocess.run(["npm", "install", "-g", "pnpm"], capture_output=True, text=True, errors="replace", check=False)
 
     if install_result.returncode != 0:
         rprint("[bold red]Failed to install pnpm automatically.[/bold red]")
@@ -901,7 +901,7 @@ def verify_node_tools() -> bool:
         return False
 
     try:
-        verify_result = subprocess.run(["pnpm", "--version"], capture_output=True, text=True, check=False)
+        verify_result = subprocess.run(["pnpm", "--version"], capture_output=True, text=True, errors="replace", check=False)
     except FileNotFoundError:
         rprint("[bold red]pnpm installation succeeded but pnpm was not found on PATH.[/bold red]")
         rprint(
@@ -998,14 +998,14 @@ def handle_temporary_frontend_pr(frontend_pr: str) -> str | None:
 
         # Run pnpm install
         rprint("Running pnpm install...")
-        pnpm_install = subprocess.run(["pnpm", "install"], capture_output=True, text=True, check=False)
+        pnpm_install = subprocess.run(["pnpm", "install"], capture_output=True, text=True, errors="replace", check=False)
         if pnpm_install.returncode != 0:
             rprint(f"[bold red]pnpm install failed:[/bold red]\n{pnpm_install.stderr}")
             return None
 
         # Build with vite
         rprint("Building with vite...")
-        vite_build = subprocess.run(["npx", "vite", "build"], capture_output=True, text=True, check=False)
+        vite_build = subprocess.run(["npx", "vite", "build"], capture_output=True, text=True, errors="replace", check=False)
         if vite_build.returncode != 0:
             rprint(f"[bold red]vite build failed:[/bold red]\n{vite_build.stderr}")
             return None

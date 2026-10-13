@@ -5,7 +5,7 @@
 从 workflow_library.json 工作流仓库中按类别、模型系列、节点类型、模型等条件查询工作流，
 并支持输出仓库统计信息和完整列表。
 
-默认仓库路径：.trae/skills/comfyui-controller/assets/workflow_library.json
+默认仓库路径：<repo>/skills/comfyui-controller/assets/workflow_library.json
 
 数据结构（已扩展）：
   workflows:
@@ -25,7 +25,13 @@ import unicodedata
 from collections import defaultdict
 
 
-DEFAULT_LIBRARY = ".trae/skills/comfyui-controller/assets/workflow_library.json"
+# 路径解析相对项目根，不依赖运行时 CWD：技能资产在 <repo>/skills/comfyui-controller/assets/
+_SCRIPTS_DIR = os.path.dirname(os.path.abspath(__file__))
+_CC_DIR = os.path.dirname(_SCRIPTS_DIR)
+_REPO_ROOT = os.path.dirname(_CC_DIR)
+_SKILL_ASSETS = os.path.join(_REPO_ROOT, "skills", "comfyui-controller", "assets")
+
+DEFAULT_LIBRARY = os.path.join(_SKILL_ASSETS, "workflow_library.json")
 
 # 表格列宽（显示宽度），打印前按数据动态调整
 _WIDTHS = {"name": 22, "path": 45, "count": 8, "family": 10}

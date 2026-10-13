@@ -171,10 +171,14 @@ class StandalonePython:
         if dev:
             self.uv_install(str(_here.parent))
         else:
-            self.uv_install("comfy_cli")
+            # NOTE: the package import name is `cli` and the distribution name is
+            # `comfyui-omni-controller` (see pyproject.toml). The upstream
+            # `comfy_cli` name must not be used here.
+            self.uv_install("comfyui-omni-controller")
 
     def run_comfy_cli(self, *args: str):
-        self.run_module("comfy_cli", *args)
+        # Run this project's own CLI module (`python -m cli ...`), not `comfy_cli`.
+        self.run_module("cli", *args)
 
     def install_comfy(self, *args: str, gpu_arg: str = "--nvidia"):
         self.run_comfy_cli("--here", "--skip-prompt", "install", "--fast-deps", gpu_arg, *args)

@@ -3,7 +3,7 @@
 ComfyUI 全能控制器 —— 一站式 ComfyUI 命令行与自动化控制工具。
 
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/)
-[![License](https://img.shields.io/badge/license-Apache--2.0-green)](LICENSE)
+[![License](https://img.shields.io/badge/license-Apache--2.0-green)](../LICENSE)
 
 ---
 
@@ -147,12 +147,12 @@ pip install -e .
 # Windows
 set COMFYUI_PATH=D:\ComfyUI
 set COMFYUI_HOST=127.0.0.1
-set COMFYUI_PORT=3198
+set COMFYUI_PORT=8188
 
 # Linux/Mac
 export COMFYUI_PATH=/home/user/ComfyUI
 export COMFYUI_HOST=127.0.0.1
-export COMFYUI_PORT=3198
+export COMFYUI_PORT=8188
 ```
 
 ---
@@ -175,10 +175,11 @@ comfy env
 
 ```bash
 # CLI 模式（推荐首次安装）
-comfy install --gpu --fast-deps
+# 注意：`--gpu` 不是有效参数，按显卡厂商选择：NVIDIA / AMD / Apple Silicon / 纯 CPU
+comfy install --nvidia --fast-deps
 
-# 或者脚本模式
-python scripts/start_server.py --install --port 3198
+# 或者：ComfyUI 已存在时直接用官方方式启动（start_server.py 无 --install 参数）
+python scripts/start_server.py --port 8188
 ```
 
 ### 3. 启动服务器
@@ -188,11 +189,11 @@ python scripts/start_server.py --install --port 3198
 > ```bash
 > # Windows（嵌入式 Python 独立版）
 > cd ${COMFYUI_PATH}
-> .\python\python.exe -u main.py --port 3198 --listen 127.0.0.1
+> .\python\python.exe -u main.py --port 8188 --listen 127.0.0.1
 >
 > # Linux / macOS（标准 Python 安装）
 > cd ${COMFYUI_PATH}
-> python main.py --listen 127.0.0.1 --port 3198
+> python main.py --listen 127.0.0.1 --port 8188
 > ```
 
 ```bash
@@ -200,17 +201,20 @@ python scripts/start_server.py --install --port 3198
 comfy launch --background
 
 # 脚本模式（前台）
-python scripts/start_server.py --port 3198
+python scripts/start_server.py --port 8188
 ```
 
 ### 4. 执行工作流
 
 ```bash
-# 脚本模式
+# 脚本模式（--wait 为兼容保留的空操作，脚本默认就会等待完成）
 python scripts/run_workflow.py --workflow workflow.json --wait --timeout 600
 
-# CLI 模式
-comfy run workflow.json --json
+# 脚本模式：下载产物到本地目录
+python scripts/run_workflow.py --workflow workflow.json --timeout 600 --output-dir ./my_output
+
+# CLI 模式（注意：run 只接受 --workflow，没有位置参数）
+comfy run --workflow workflow.json --json
 ```
 
 ### 5. 停止服务器
@@ -234,13 +238,13 @@ python scripts/controller.py stop
 python scripts/controller.py status
 
 # 启动服务器
-python scripts/start_server.py --port 3198
+python scripts/start_server.py --port 8188
 
 # 停止服务器
 python scripts/controller.py stop
 
-# 等待服务器就绪
-python scripts/controller.py wait --timeout 120
+# 检查服务器状态（controller 的合法动作为 start/stop/status/run/edit/download/models，没有 wait）
+python scripts/controller.py status
 ```
 
 ### 工作流执行
@@ -357,8 +361,8 @@ python scripts/video_task_runner.py --task img2vid --image input.png --prompt "a
 
 - anchor_samples：每段锁定首帧VAE编码，维持角色外观一致性
 - prev_samples：前段末帧VAE编码传递（非整段latent），避免累积误差
-- motion_latent_count=0（段2+）：避免anchor与motion拼接导致暗→亮渐变
-- Flux2修正工作流：ReferenceLatent单图(B图)注入 + denoise=0.5 + steps=32
+- motion_latent_count=0（全段，实测推荐）：实际决定拼接的是 prev_samples 是否连接；不连 prev_samples 时 0/1 输出完全相同，统一写 0 最安全（2026-10-13 实测，EXPERIENCE.md 22.3.2）
+- Flux2修正工作流：ReferenceLatent单图(B图)注入 + denoise=0.5 + steps=32（交付级画质；轻量批量档可用 8 步，代价是锐度 -12%~14%，实测见 SKILL.md §4.16.3）
 
 #### 预检反问环节（强制不可跳过）
 
@@ -477,8 +481,8 @@ CLI 模式的 `--json` 标志输出 NDJSON（Newline Delimited JSON），适合�
 |------|------|--------|
 | `COMFYUI_PATH` | ComfyUI 安装路径 | `~/ComfyUI` |
 | `COMFYUI_HOST` | 服务器主机 | `127.0.0.1` |
-| `COMFYUI_PORT` | 服务器端口 | `3198` |
-| `COMFYUI_OUTPUT_DIR` | 输出目录 | `ComfyUI/output` |
+| `COMFYUI_PORT` | 服务器端口 | `8188`（ComfyUI 官方默认）。曾用默认值 `3198` 是单一部署环境的端口，需沿用请显式设置本变量 |
+| `COMFYUI_OUTPUT_DIR` | `run_workflow.py` / `controller.py run` 的产物下载目录 | 未设置则不下载，仅返回 `/view` 链接 |
 
 ### CLI 配置文件
 
@@ -570,7 +574,7 @@ if __name__ == "__main__":
 
 ```python
 import typer
-from comfy_cli.command.custom_nodes.command import custom_node_manager
+from cli.command.custom_nodes.command import custom_node_manager
 
 app = typer.Typer()
 
@@ -638,7 +642,7 @@ pytest tests/uv_compile/ -v
 
 | 文档 | 说明 |
 |------|------|
-| `.trae/skills/comfyui-controller/SKILL.md` | **技能入口**（安装为 Trae/Agent 技能时加载，含快速导航与路径） |
+| `skills/comfyui-controller/SKILL.md` | **技能入口**（安装为 Trae/Agent 技能时加载，含快速导航与路径） |
 | `SKILL.md` | 技能模式完整文档（AI Agent 使用，主文档） |
 | `README.md` | 项目 README（本文件） |
 | `docs_cli/INDEX.md` | **全量经验/技术文档快速索引**（主题速查 + 章节行号导航） |
@@ -665,7 +669,7 @@ pytest tests/uv_compile/ -v
 
 ## 许可证
 
-本项目采用 [Apache-2.0](LICENSE) 许可证。
+本项目采用 [Apache-2.0](../LICENSE) 许可证。
 
 - 本项目融合了 `comfy-cli`（ComfyUI 官方 CLI）和 `comfyui-controller`（社区自动化工具）的功能
 - `comfy-cli` 相关代码遵循其原始许可证

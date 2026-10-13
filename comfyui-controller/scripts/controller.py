@@ -9,6 +9,12 @@ import os
 import subprocess
 import sys
 
+# 端口/host 解析优先级（见 SKILL.md 7.1）：命令行参数 > COMFYUI_PORT/COMFYUI_HOST 环境变量 > 默认值。
+# 默认值跟随 ComfyUI 官方约定（8188）。3198 是历史单一部署环境的端口，非通用标准；
+# 需沿用请显式设置 COMFYUI_PORT=3198。
+DEFAULT_HOST = os.environ.get("COMFYUI_HOST", "127.0.0.1")
+DEFAULT_PORT = os.environ.get("COMFYUI_PORT", "8188")
+
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 ASSETS_DIR = os.path.join(os.path.dirname(SCRIPT_DIR), "assets")
 
@@ -17,7 +23,7 @@ def run_script(script_name, args_list):
     """Run a sub-script and return its JSON output."""
     script_path = os.path.join(SCRIPT_DIR, script_name)
     cmd = [sys.executable, script_path] + args_list
-    result = subprocess.run(cmd, capture_output=True, text=True)
+    result = subprocess.run(cmd, capture_output=True, text=True, errors="replace")
     try:
         return json.loads(result.stdout)
     except json.JSONDecodeError:
@@ -44,7 +50,9 @@ def main():
     ap.add_argument("--url", help="Model download URL")
     ap.add_argument("--subfolder", help="Model subfolder")
     ap.add_argument("--host", default=os.environ.get("COMFYUI_HOST", "127.0.0.1"))
-    ap.add_argument("--port", default=os.environ.get("COMFYUI_PORT", "3198"))  # comfyui-cli项目标准端口
+    ap.add_argument("--port", default=os.environ.get("COMFYUI_PORT", "8188"))  # ComfyUI 官方默认；历史部署端口 3198 请用 COMFYUI_PORT 显式指定
+    ap.add_argument("--output-dir", default=os.environ.get("COMFYUI_OUTPUT_DIR"),
+                    help="下载产物到该目录（透传给 run_workflow.py，等价 --output-dir）")
     args = ap.parse_args()
 
     if args.action == "start":
@@ -114,9 +122,10 @@ def main():
             else:
                 run_path = workflow_path
 
-            run_result = run_script("run_workflow.py", [
-                "--host", args.host, "--port", args.port, "--workflow", run_path
-            ])
+            run_args = ["--host", args.host, "--port", args.port, "--workflow", run_path]
+            if args.output_dir:
+                run_args += ["--output-dir", args.output_dir]
+            run_result = run_script("run_workflow.py", run_args)
             all_results.append(run_result)
 
         print(json.dumps({"ok": True, "runs": all_results}))

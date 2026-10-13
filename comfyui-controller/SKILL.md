@@ -60,7 +60,9 @@ description: "ComfyUI 全能控制器。支持安装/启动/工作流执行/节�
 
 1. [scripts/build\_workflow\_library.py](scripts/build_workflow_library.py) — 构建/更新工作流库
 2. [scripts/query\_library.py](scripts/query_library.py) — 6 种维度查询
-3. [EXPERIENCE.md 13.4 节](docs_cli/EXPERIENCE.md) — 工作流仓库管理功能验证
+3. [scripts/pattern\_extractor.py](scripts/pattern_extractor.py) — 按 (任务类别 × 模型系列) 提取可复用模式
+4. [scripts/workflow\_generator.py](scripts/workflow_generator.py) — 基于模式库按需求生成工作流
+5. [EXPERIENCE.md 13.4 节](docs_cli/EXPERIENCE.md) — 工作流仓库管理功能验证
 
 ### 0.3 文档关系图谱
 
@@ -83,9 +85,9 @@ SKILL.md (本文件) — 主入口
   │   └── 长视频排错 → 本文件 8.8节 + EXPERIENCE.md 第24章
   │
   └── 关联技能文件:
-      ├── .trae/skills/video-task-execution-guide/SKILL.md  —— 视频任务6项强制预检
-      ├── .trae/skills/image-task-execution-guide/SKILL.md  —— 图片任务5项强制预检+LoRA选择
-      └── .trae/skills/comfyui-controller/SKILL.md —— 本技能包入口（快速导航 + 安装为技能）
+      ├── skills/video-task-execution-guide/SKILL.md  —— 视频任务6项强制预检
+      ├── skills/image-task-execution-guide/SKILL.md  —— 图片任务5项强制预检+LoRA选择
+      └── skills/comfyui-controller/SKILL.md —— 本技能包入口（快速导航 + 安装为技能）
       （本机 Agent 硬约束另存于 IDE 记忆/项目 memory 中，不随仓库分发）
 
 docs_cli/ 技术文档（统一入口 → docs_cli/INDEX.md 快速索引）:
@@ -200,7 +202,9 @@ comfyui-controller/
 │   ├── check_workflow_dependencies.py # 依赖检查（含视频专用节点校验）
 │   ├── workflow_analyzer.py          # 工作流深度分析器
 │   ├── build_workflow_library.py     # 工作流资源库构建器
-│   └── workflow_generator.py         # 工作流生成建议器
+│   ├── query_library.py              # 工作流库查询器（6 种维度）
+│   ├── pattern_extractor.py          # 工作流模式提取器（任务类别 × 模型系列）
+│   └── workflow_generator.py         # 工作流生成建议器（基于模式库）
 ├── cli/                              # CLI 模式工具（comfy-cli 移植）
 │   ├── cmdline.py                    # CLI 入口
 │   ├── command/                      # CLI 命令子模块
@@ -247,6 +251,8 @@ comfyui-controller/
 
 - `get_gpu_info()`: 获取 GPU 信息
 
+- **`run` 动作的 `--output-dir`**：透传给 `run_workflow.py`，让 `controller.py run` 也能把产物下载落地（默认同样取 `COMFYUI_OUTPUT_DIR`；不透传时只返回 `/view` 链接）
+
 #### 3.1.2 start\_server.py - 服务器启动脚本
 
 - 支持 `--install` 自动安装 ComfyUI
@@ -269,15 +275,27 @@ comfyui-controller/
 
   - `--workflow`：工作流 JSON 文件路径（必填）
 
-  - `--host`：服务器主机（默认 127.0.0.1）
+  - `--host`：服务器主机（默认取环境变量 `COMFYUI_HOST`，未设置则为 `127.0.0.1`）
 
-  - `--port`：服务器端口（默认 3198，可通过环境变量 `COMFYUI_PORT` 覆盖）
+  - `--port`：服务器端口。优先级 **`--port` 参数 > `COMFYUI_PORT` 环境变量 > `8188`**（ComfyUI 官方默认端口）
+
+    > 本项目历史上写死 `3198`，那是**单一部署环境曾使用的端口，并非通用标准**。若你的 ComfyUI 跑在 3198，请显式设置 `COMFYUI_PORT=3198`（或每次传 `--port 3198`），不要用改过的默认值为难他人环境
 
   - `--timeout`：超时秒数（默认 300，视频任务建议设为 900+）
 
   - `--poll`：轮询间隔秒数（默认 1.5）
 
-- **输出识别**：脚本默认解析 `images` 字段；视频任务输出在 `gifs` 字段（VHS\_VideoCombine 节点特性），需额外查询 `/history/{prompt_id}` 确认
+  - `--output-dir`：输出下载目录。指定后脚本会通过 `/view` 端点把每个产物下载到该目录（自动创建 `subfolder` 子目录），输出中的每项附带 `path`（本地绝对路径）。未指定时回退到环境变量 `COMFYUI_OUTPUT_DIR`；两者都没有则不下载，仅返回元数据（旧行为）
+
+  - `--wait`：**已废弃但保留**（默认行为即为等待完成，无需显式传入）。仅为兼容历史文档中的调用写法
+
+- **输出识别**：遍历 `/history/{prompt_id}` 中 `outputs` 的**全部 category**（开放集：除 `images`/`gifs`/`videos` 外还可能有 `audio`/`3d` 等）。三个已知字段**必须同时检查**——视频输出落在 `gifs` 字段（VHS\_VideoCombine 节点特性，即使实际产物是 mp4），只查 `images` 会漏判
+
+- **输出对象字段**（对齐 `cli/command/run.py` 与 `docs_cli/json-output.md` 的 Output 契约）：`category`、`node_id`、`class_type`、`title`、`filename`、`subfolder`、`type`、`url`。其中 `url` 是 `/view` 链接，为**唯一契约约定的取字节方式**（曾尝试过 `local_path` 字段，因无法可靠解析 ComfyUI 实际 output 目录而移除，故不要依赖本地路径推断）
+
+- **路径安全**：服务端返回的 `filename`/`subfolder` 是不可信输入（自定义保存节点可产生任意路径），下载时会被压平到 `--output-dir` 内，拒绝任何逃逸行为
+
+- **下载容错**：单个产物下载失败不会中断整批，失败项记入 `warnings` 数组
 
 - **错误处理**：通过 `/history` 的 `status.messages` 提取 `execution_error`，返回节点 ID、类型、异常信息
 
@@ -471,9 +489,39 @@ comfyui-controller/
 
 - `comfy env`: 打印环境信息
 
-- `comfy update`: 更新 ComfyUI 或节点
+- `comfy update`: 更新 ComfyUI 或节点（`all|comfy|cli`，`cli` 为升级 CLI 自身）
 
 - `comfy github`（未实现；GitHub PR 由 `comfy install` 处理）: GitHub PR 信息
+
+#### 3.2.8 运维 / 日志 / 传输（本地命令，2026-10 按官方语义原生移植）
+
+> 详见 [docs_cli/cli_local_commands.md](docs_cli/cli_local_commands.md)。纯云端子系统
+> （`cloud`/`auth`/`build`/`deploy`/`assets`/`agent`/`skills`/`knowledge`/`preview` 等）不在移植范围。
+
+- `comfy system-stats`: 设备 VRAM / 系统内存（`GET /system_stats`，`--json` 原样透传）
+
+- `comfy free`: 释放显存 / 卸载模型（`POST /free`，不中断运行中任务）
+
+- `comfy logs`: 查看被捕获的 ComfyUI 日志 ⭐
+
+  - `comfy launch --background` 会把子进程输出落盘到 `<workspace>/user/comfyui_<port>.log`（每次启动截断重写）
+
+  - 解析顺序：config `background_log` → 端口派生 → `user/comfyui.log` → 最新 `user/comfyui_*.log`（跳过 `.prev*.log`）
+
+  - `-n/--tail` / `-p/--port` / `--path` / `-f/--follow` / `--json`
+
+  - **启动失败时优先用它排查**：`--background` 失败会给出空白错误面板，真正原因只写在该日志里
+
+- `comfy download <prompt_id>`: 按 prompt id 下载该次运行的产物
+
+- `comfy upload <file>`: 上传到服务器 input 目录
+
+- `comfy jobs ls/status/wait/watch`: 本地作业查看与等待（`/queue` + `/history`，不依赖 websocket）
+
+- `comfy templates ls` / `comfy run-template <name>`: 列出 / 直接运行官方模板画廊
+  （`raw.githubusercontent.com/Comfy-Org/workflow_templates`）
+
+- `comfy setup`: 环境向导（本地版：Python / 工作区 / 服务检查）
 
 ## 4. ComfyUI 图片与视频生成工作流知识
 
@@ -772,13 +820,48 @@ WanVideoBlockSwap(生成args) → WanVideoModelLoader(直接接收block_swap_arg
 
 | 参数             | 说明      | 推荐值                   | 备注                              |
 | -------------- | ------- | --------------------- | ------------------------------- |
-| `steps`        | 采样步数    | 20-30                 | 高画质建议 30 步                      |
-| `cfg`          | 引导系数    | 1.0                   | Distill 模型特性，cfg=1              |
+| `steps`        | 采样步数    | 质量优先 20-30；快速档 8-12（代价见下表）      | 实测校准见"§4.4.2 Flux2 Klein 步数实测"         |
+| `cfg`          | 引导系数    | 1.0                   | Distill 模型特性，cfg=1；**cfg≠1 会使采样耗时翻倍**（见下） |
 | `sampler_name` | 采样器     | `euler`               | -                               |
 | `scheduler`    | 调度器     | `simple`              | -                               |
 | `model`        | UNET 模型 | 按本地实际文件名              | 执行前必查 `/object_info/UNETLoader` |
 | `clip`         | 文本编码器   | qwen\_3\_8b 系列        | type=flux2（必填）                  |
 | `vae`          | VAE     | flux2-vae.safetensors | -                               |
+
+**§4.4.2 Flux2 Klein 步数实测（2026-10-13）**
+
+本机 Flux2 Klein 9B（fp8）512×512 文生图，同一 seed / prompt，
+`euler` + `simple` + `cfg=1.0`，五档实跑出图，以 steps=30 为基准：
+
+| steps | 服务端纯执行时间 | 相对 30 步 PSNR | SSIM | MAE | 边际耗时/步 |
+|-------|----------------|----------------|------|-----|-----------|
+| 4  | 223.5s | 22.49 dB | 0.9203 | 0.0522 | — |
+| 8  | 384.8s | 25.93 dB | 0.9621 | 0.0303 | 40.3s |
+| 12 | 552.6s | 29.53 dB | 0.9829 | 0.0179 | 41.9s |
+| 20 | 907.0s | 35.44 dB | 0.9956 | 0.0066 | 44.3s |
+| 30 | 1436.0s | 基准 | 1.0000 | 0 | 52.9s |
+
+结论：
+- **Klein 并不是 4-8 步就收敛的**：8 步相对 30 步仍有 MAE 0.030（约 3% 像素强度差），
+  画面结构在 **12 步**（SSIM 0.983）基本成型，**20 步**（PSNR 35.4dB）才进入"肉眼难辨"区间。
+  → §4.4.2 原本写"20-30 步"与实测吻合，作为质量优先档是正确的。
+- 8-12 步可作为快速预览/批量换皮档，但**必须知道它在丢东西**，不是"蒸馏模型就够了"。
+- 时间 vs 质量是线性换取的：本机 CPU 约 40-53 s/步，**加一倍步数就是加一倍采样时间**。
+- 边际耗时随步数上升（40→53 s/步）是本机长时负载现象，不代表 GPU 上的表现。
+
+> ⚠️ 本机无可用 GPU（torch 2.9.1+cu128 `cuda.is_available()==False`，全程 CPU），
+> 上表**只用于横向比较步数之间的相对关系与时间斜率**，绝对耗时按 NVIDIA GPU 应显著更短。
+
+**关于 `denoise` 的常见误解（已实证）**：`denoise=0.5` **不会**把
+`steps=32` 变成 16 步。源码 `comfy/samplers.py:1431 set_steps()`：
+`new_steps=int(steps/denoise)` 只是把 sigma 表**起点**后移，仍执行 `steps` 次迭代。
+本机验证：提交 `steps=6, denoise=0.5`，服务端 tqdm 进度条为 `0/6 → 6/6`，执行 321.8s，
+与"6 步"的耗时模型吻合（若只跑 3 步应约 180s）。
+→ 因此 §4.16.3 的 `steps=32` 是**实打实 32 步**的成本，"用了 denoise=0.5 所以便宜一半"是错的。
+
+**关于 `cfg` 的性能代价**：`cfg=1.0` 时 ComfyUI 走 `disable_cfg1_optimization` 单分支推理；
+`cfg≠1`（如 §4.16.3 的 3.5）每步要算 cond + uncond **两份**前向。
+本机实测同一模型：`cfg=1.0` 约 45-53 s/步，`cfg=3.5` 约 88 s/步 —— **接近翻倍**。
 
 **Flux 2 节点链架构（与 Flux 1 完全不同，禁止混用）**：
 
@@ -944,7 +1027,7 @@ FFN激活值 ≈ (帧数 × 宽 × 高 / 4096) × 20480 × 2bytes
 3. **工作流格式**：优先使用 API 格式，UI 格式需转换
 4. **输出目录**：视频输出到 `output/`，文件名包含版本号
 5. **错误处理**：OOM 时优先降分辨率或降精度，而非降帧数（详见 4.5.3 节硬约束）
-6. **端口约定**：`run_workflow.py` 默认端口为 3198（硬编码），可通过 `--port` 参数或 `COMFYUI_PORT` 环境变量覆盖；启动 ComfyUI 时必须使用相同端口
+6. **端口约定**：端口解析优先级为 `--port` 参数 > `COMFYUI_PORT` 环境变量 > `8188`（ComfyUI 官方默认）。**勾选默认 Port 时不再写死 3198**——那是某一台部署机曾用的端口。启动 ComfyUI 与执行工作流必须使用同一端口，推荐使用环境变量统一注入
 
 ### 4.8 模型匹配规则
 
@@ -1220,7 +1303,11 @@ python scripts/video_task_runner.py img2vid --image input.png --prompt "a girl s
 
 - `length`（INT）：帧数（默认 81）
 
-- `motion_latent_count`（INT）：从前段携带的 motion latent 数（段1=0，段2-5=1）
+- `motion_latent_count`（INT）：从前段携带的 motion latent 数（**节点默认值=1**，min 0 / max 128）。
+  推荐全段填 **0**。实测（见 EXPERIENCE.md 22.3.2）：该值只在 `prev_samples` **已连接**时才起作用；
+  未连接时填 0 与 1 的输出**逐位完全相同**。
+  若确实要携带运动延续（连接了 prev_samples），取值上限为 `(length-1)//4+1-anchor_T`
+  （length=81 时 ≤20），超过会直接抛 RuntimeError。
 
 **内部逻辑**：
 
@@ -1374,12 +1461,32 @@ SplitSigmasDenoise(denoise=0.5) → KSampler(cfg=3.5, steps=32) → VAEDecode �
 | 参数                | 推荐值          | 说明                       |
 | ----------------- | ------------ | ------------------------ |
 | denoise           | 0.5          | 0.4 过低导致修正不足，0.5 平衡保真与修正 |
-| steps             | 32           | 28-32 步获取最佳细节恢复          |
+| steps             | 32           | 28-32 步获取最佳细节恢复（2026-10-13 实测：相对 8 步锐度 +14%，耗时约 4 倍）          |
 | cfg               | 3.5          | 3.5 避免 img2img 色彩过度饱和    |
 | LoRA ColorTone    | 0.4          | 降低暖色叠加，防止偏黄              |
 | LoRA Skin         | 0.6          | 增强皮肤质感恢复                 |
 | LoRA Detail       | 1.0          | 最大化细节增强                  |
 | sampler/scheduler | euler/simple | Flux2 标准配置               |
+
+**§4.16.3 步数的实测校准（2026-10-13）**
+
+本节推荐 32 步，而 §4.18.4 / EXPERIENCE §3361 又建议降到 8 步 —— 两组都实测过，
+差别在于**它们各自省掉/买到的东西不是同一件**。本机同一参考图、同一 seed、`denoise=0.5`
+跑 0/8/32 步三档（服务端执行时间 7.3s / 662s / 2621s）：
+
+| 指标 | base0（0步，VAE往返重建） | steps=8 | steps=32 |
+|------|--------------------------|---------|----------|
+| 相对原图改了多少（MAE vs base0） | — | 0.1076 | 0.1009 |
+| 锐度（Laplacian 方差×1e4） | 45.7 | 69.1 | **78.9（+14%）** |
+| 执行时间 | 7.3s | 662s | **2621s（约 4 倍）** |
+
+结论：**8 步与 32 步改动画面的量几乎相同，差别只在锐度**。
+画面主体在前几步就定型了，后面的步数主要增加高频细节。
+所以：批量换皮/去噪/快速验证用 8 步没问题；单帧交付级画质修正才需要 28-32 步，并接受约 4 倍时间。
+
+> 这组数据在 CPU 上取得（本机无可用 GPU），**时间比例成立、绝对耗时不成立**。
+> 另外注意 §4.18.4 写的"12→8 步，整体耗时 -15%"指的是**整条视频流水线**的降幅，
+> 不是 Flux2 这一步本身的降幅 —— 这一步是 4 倍量级，别拿 -15% 去估算它。
 
 #### 4.16.4 关键禁忌
 
@@ -1408,7 +1515,20 @@ widgets_values: [add_noise, noise_seed, control_after_generate, steps, cfg, samp
 
 **control\_after\_generate 可选值**：`"fixed"`, `"increment"`, `"decrement"`, `"randomize"`
 
-**常见错误**：只有 9 个值（缺少 control\_after\_generate）→ 参数全部错位 → `Value not in list` / `Failed to convert`
+**实测依据（2026-10-13，ComfyUI 0.32.0 / frontend 1.48.7）**：
+- `/object_info/KSamplerAdvanced` 的 `input_order.required` 共 13 项，其中
+  `model / positive / negative / latent_image` 是 LINK 输入、**不进 widgets\_values**；
+  余下 9 个 widget 字段中只有 `noise_seed` 带 `control_after_generate: true` → **9 + 1 = 10 槽位**。
+- 扫描本机 81 个真实 UI 工作流的 KSamplerAdvanced 实例，`widgets_values` 长度分布 **{10: 81}**。
+- 用 `scripts/workflow_converter.py` 转换验证：10 值（上表顺序）九个参数全部命中；
+  含 `model_ref` 的 11 值写法会整体错位（`add_noise=[1,0]`、`steps=20261013`、`cfg="fixed"`）。
+- 详见 `EXPERIENCE.md` 22.5.1。
+
+**注意字段顺序**：`cfg / sampler_name / scheduler` 在 `start_at_step / end_at_step` **之前**，
+写成 `[steps, start, end, return_noise, cfg, sampler, scheduler]`（旧写法）会错位。
+
+**常见错误**：只有 9 个值（缺少 control\_after\_generate）→ 参数全部错位 → `Value not in list` / `Failed to convert`。
+本项目的转换器带容错，9 值可能侥幸转对，但下发到前端或其他工具仍会错位。
 
 #### 4.17.3 文件操作最佳实践
 
@@ -1533,7 +1653,7 @@ Flux2 段N ImageResize 输出 → ColorMatch_N → 下游节点
 | 优先级 | 优化项           | 参数                 | 影响维度              | 画质影响             |
 | --- | ------------- | ------------------ | ----------------- | ---------------- |
 | 1   | 旁路超分节点        | RealESRGAN         | 耗时 -20%           | 中间修正无影响，最终输出可再启用 |
-| 2   | 降低 Flux2 修正步数 | `steps` 12→8       | 耗时 -15%           | 轻微，修正力度略降        |
+| 2   | 降低 Flux2 修正步数 | `steps` 12→8       | 耗时 -15%（整条流水线） | 轻微，修正力度略降；实测单这一步 8→32 是约 4 倍时间差，差别主要在锐度 |
 | 3   | 降低 SVI 采样步数   | `steps` 6→3        | 耗时 -30%           | 蒸馏 LoRA 下可接受     |
 | 4   | 降低每段帧数        | `length` 81→49     | 耗时 -25% + 时长 -25% | 需配合帧率调整保时长       |
 | 5   | 降低帧率          | `frame_rate` 20→16 | 时长 +25%           | 流畅度略降            |
@@ -1866,7 +1986,8 @@ Flux2 段N ImageResize 输出 → ColorMatch_N → 下游节点
 python main.py --listen 127.0.0.1 --port ${COMFYUI_PORT}
 ```
 
-- 端口默认 `3198`（`COMFYUI_PORT` 环境变量可覆盖），`--listen 127.0.0.1` 仅本地监听
+- 端口未指定时为 `8188`（ComfyUI 官方默认，可用 `COMFYUI_PORT` 覆盖）；脚本 `--port` 默认同样解析 `COMFYUI_PORT`，**启动与执行端口天然一致**
+- `--listen 127.0.0.1` 仅本地监听（对外暴露请改 `--listen 0.0.0.0`，注意安全风险）
 - 也可用内置 CLI 后台启动：`comfy launch --background`（停止：`comfy stop`）
 - 启动成功标志：`GET http://127.0.0.1:${COMFYUI_PORT}/system_stats` 返回 200
 
@@ -2026,7 +2147,8 @@ comfy stop
 │  关键参数:                                                       │
 │  - --timeout: 超时时间（秒），视频建议 900+                       │
 │  - --poll: 轮询间隔（秒，默认 1.5）                               │
-│  - --port: 服务器端口（默认 3198）                                │
+│  - --port: 服务器端口（默认取 COMFYUI_PORT，未设则为 8188）        │
+│  - --output-dir: 下载产物（可选，也可用 COMFYUI_OUTPUT_DIR）       │
 │  注: run_workflow.py 默认等待完成，无需 --wait 参数               │
 └──────────────────────────────────┬───────────────────────────────┘
                                    ▼
@@ -2099,6 +2221,7 @@ comfy stop
 | `/object_info/{NodeType}` | GET      | 查询特定节点的必需输入和枚举值（COMBO 参数必查）                                             |
 | `/system_stats`           | GET      | 获取系统状态（GPU 等）                                                           |
 | `/upload/image`           | POST     | 上传文件到 input 目录（跨盘/权限受限时使用，multipart/form-data）                          |
+| `/view`                   | GET      | **下载（读取）输出字节**，参数 `filename`/`subfolder`/`type`。这是获取产物内容的**唯一契约途径**（本地/远程/云均适用）；`run_workflow.py --output-dir` 基于此端点实现               |
 | `/free`                   | POST     | 释放模型缓存和显存（`{unload_models: true, free_memory: true}`）                   |
 
 ### 6.4 常见问题快速诊断
@@ -2134,9 +2257,11 @@ curl -X POST http://127.0.0.1:${COMFYUI_PORT}/interrupt
 
 - `COMFYUI_HOST`: 服务器主机（默认 127.0.0.1）
 
-- `COMFYUI_PORT`: 服务器端口（`run_workflow.py` 默认 3198；启动 ComfyUI 和执行工作流时端口必须一致）
+- `COMFYUI_PORT`: 服务器端口。解析优先级 `--port` > 该环境变量 > `8188`（ComfyUI 官方默认）。历史上本项目默认写死 `3198`（单一部署环境端口），已改为可由环境变量驱动；沿用旧端口请显式设置 `COMFYUI_PORT=3198`。**启动 ComfyUI 和执行工作流时端口必须一致**
 
-- `COMFYUI_OUTPUT_DIR`: 输出目录
+- `COMFYUI_OUTPUT_DIR`: 客户端输出下载目录。`run_workflow.py` 用它作为 `--output-dir` 的默认值；未设置且不传 `--output-dir` 时不下载产物，仅返回 `/view` 链接
+
+  - 注意与服务端 `--output-directory` 区分：那是 ComfyUI **启动参数**（服务端写入位置），本变量是**客户端下载位置**
 
 ### 7.2 配置文件（CLI 模式）
 
@@ -2176,7 +2301,7 @@ curl -X POST http://127.0.0.1:${COMFYUI_PORT}/interrupt
 4. 降精度（fp16\_fast → bf16）
 5. 分段生成+拼接（保持总时长，禁止直接降帧数）
 6. 最后手段：启用 CPU offload
-7. **禁止**：直接降帧数（如 81→41→21），违反硬约束"禁止降级时长"
+7. **禁止**：**未经用户授权**直接降帧数（如 81→41→21），违反硬约束"禁止降级时长"。确需降帧数/帧率时按 §8.8.4 第 4 步的授权流程执行（先与用户确认目标时长可接受）
 
 ### 8.3 显存管理排错思路（C8 任务验证）
 
@@ -2194,7 +2319,7 @@ curl -X POST http://127.0.0.1:${COMFYUI_PORT}/interrupt
 
    - L2（12-16GB）：38-40
 
-   - L3（16-24GB）：20-36（推荐 20，专用显存利用率 75%+）
+   - L3（16-24GB）：20-24（推荐 20，专用显存利用率 75%+；**不是 36**——36 会导致专用显存闲置、转而吃共享 GPU 内存，见 EXPERIENCE §23.5.6）
 
    - L4（≥24GB）：20-24
 
@@ -2233,7 +2358,7 @@ curl -X POST http://127.0.0.1:${COMFYUI_PORT}/interrupt
 | ----- | ---------- | ----------------- | ---- | ------------------- |
 | 正常计算  | 100%       | 接近满载（如 313W/320W） | 稳定   | 继续等待                |
 | 真正卡死  | 0% 或波动大    | 低                 | 持续不变 | 终止任务                |
-| 内存碎片化 | 100% 但进度极慢 | 接近满载              | 持续增长 | 降低 `blocks_to_swap` |
+| 内存碎片化 | 100% 但进度极慢 | 接近满载              | 持续增长 | 增大 `blocks_to_swap`（每次 +2~4；值越小 GPU 常驻 block 越多） |
 
 **等待超时阈值**：单个采样步骤超过 5 分钟无进度更新才判定为卡死。
 
@@ -2298,7 +2423,8 @@ LoadImage(2.png) → ImageScale ─┘
 
 **根本原因**：误认为描述越详细生成质量越高，实际相反，冗长的提示词会让模型困惑。
 
-**解决方案**：精简到 60 字符以内，遵循图生视频公式：`运动 + 运镜`。
+**解决方案**：精简到合理长度（图生视频 ≤100 字，文生视频 ≤200 字，与 EXPERIENCE §24.7.7 一致），遵循图生视频公式：`运动 + 运镜`。
+> 注：早期"60 字符以内"的口径已被证伪——EXPERIENCE §23.12.6 验证成功的正面提示词约 87 字。
 
 **Wan2.2 提示词公式**：
 
@@ -2468,7 +2594,7 @@ LoadImage(2.png) → ImageScale ─┘
 
 2. **检查 overlap 值合理性**：
 
-   - `overlap` 过高会损失过多帧数（5 段 × overlap 5 = 损失 20 帧）
+   - `overlap` 过高会损失过多帧数（（5 段 − 1）× overlap 5 = 损失 20 帧）
 
    - `cut` 模式下 `overlap=1` 等同直接拼接
 
@@ -2487,7 +2613,10 @@ LoadImage(2.png) → ImageScale ─┘
 **排查步骤**（按优化优先级）：
 
 1. **旁路超分节点**：RealESRGAN 等超分节点在中间修正阶段旁路，最终输出再启用
-2. **降低 Flux2 修正步数**：`steps` 从 12 降至 8（轻量修正）
+2. **降低 Flux2 修正步数**：`steps` 从 12 降至 8（**轻量批量换皮档**）。若为单帧高质量画质修正，按 §4.16.3 的 28-32 步执行——本节的 8 步与 §4.16.3 的 32 步属不同场景，不可混用。
+   **实测依据（2026-10-13）**：8 步与 32 步对画面的"改动量"几乎相同（MAE 0.1076 vs 0.1009），
+   8 步丢掉的是**锐度**（69.1 vs 78.9，-12%～14%）而不是内容，换来约 **4 倍**的单步提速。
+   表中"耗时 -15%"是**整条流水线**的降幅，不是 Flux2 这一步的降幅。
 3. **降低 SVI 采样步数**：`steps` 从 6 降至 3（蒸馏 LoRA 下可接受）
 4. **调整帧数/帧率（需用户确认目标时长）**：`length` 从 81 降至 49，`frame_rate` 从 20 降至 16
 

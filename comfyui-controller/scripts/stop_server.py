@@ -13,7 +13,8 @@
 
 支持参数:
   --force       强制终止(KILL 而非 TERM)
-  --host/--port 指定 ComfyUI HTTP 端点(用于优雅退出尝试,默认 127.0.0.1:3198)
+  --host/--port 指定 ComfyUI HTTP 端点(用于优雅退出尝试,默认 127.0.0.1:8188,
+  可用 COMFYUI_HOST / COMFYUI_PORT 覆盖)
   --dry-run     仅列出将终止的进程,不实际终止
 """
 import argparse
@@ -25,9 +26,18 @@ import subprocess
 import sys
 import time
 
-# 项目标准端口(与 start_server.py / run_workflow.py 保持一致)
-DEFAULT_PORT = 3198
-DEFAULT_HOST = "127.0.0.1"
+# 端口/host 解析优先级：命令行参数 > COMFYUI_HOST / COMFYUI_PORT 环境变量 > 默认值。
+# 默认值跟随 ComfyUI 官方约定（8188）。历史部署曾用 3198，需用该端口请显式设置
+# COMFYUI_PORT=3198。
+DEFAULT_PORT = os.environ.get("COMFYUI_PORT", "8188")
+DEFAULT_HOST = os.environ.get("COMFYUI_HOST", "127.0.0.1")
+
+# 本机 ComfyUI 位于回环地址，必须绕过 HTTP_PROXY/HTTPS_PROXY 环境变量，
+# 否则 /interrupt 请求会被本地代理拦截并返回 502（优雅退出静默失效）。
+import urllib.request
+urllib.request.install_opener(
+    urllib.request.build_opener(urllib.request.ProxyHandler({}))
+)
 
 # ComfyUI 进程的识别规则(多条件组合,避免单一关键词导致误报)
 # 必须同时满足:
@@ -115,7 +125,7 @@ def find_comfyui_processes_via_platform():
             result = subprocess.run(
                 ["wmic", "process", "where", "name='python.exe' or name='pythonw.exe'",
                  "get", "ProcessId,CommandLine", "/format:csv"],
-                capture_output=True, text=True, timeout=15
+                capture_output=True, text=True, errors="replace", timeout=15
             )
             if result.returncode == 0 and result.stdout:
                 lines = [ln.strip() for ln in result.stdout.splitlines() if ln.strip()]
@@ -141,7 +151,7 @@ def find_comfyui_processes_via_platform():
         else:
             result = subprocess.run(
                 ["pgrep", "-af", "main.py"],
-                capture_output=True, text=True, timeout=15
+                capture_output=True, text=True, errors="replace", timeout=15
             )
             if result.returncode == 0 and result.stdout:
                 for ln in result.stdout.strip().splitlines():
@@ -206,14 +216,22 @@ def kill_process(pid, force=False):
     system = platform.system()
     try:
         if system == "Windows":
-            # 修复原代码 bug: 空字符串参数导致 taskkill 报错
-            cmd = ["taskkill", "/PID", str(pid), "/T"]
-            if force:
-                cmd.insert(1, "/F")
-            result = subprocess.run(cmd, capture_output=True, text=True, timeout=15)
-            if result.returncode == 0:
+            def _taskkill(force_flag):
+                _cmd = ["taskkill"] + (["/F"] if force_flag else []) + ["/PID", str(pid), "/T"]
+                _r = subprocess.run(_cmd, capture_output=True, text=True, errors="replace", timeout=15)
+                return _r.returncode, (_r.stderr or "").strip()
+
+            if not force:
+                rc, err = _taskkill(False)
+                if rc == 0:
+                    return True, ""
+                # 控制台进程（如 python.exe 启动的 ComfyUI）不响应不带 /F 的
+                # taskkill（返回 255：“只能强制终止此进程”）。此处自动降级为
+                # /F，避免出现“退出码非 0 但界面仍认为成功 / 服务停不掉”的假失败。
+            rc, err = _taskkill(True)
+            if rc == 0:
                 return True, ""
-            return False, f"taskkill exit={result.returncode}: {result.stderr.strip()}"
+            return False, f"taskkill /F exit={rc}: {err or '(无 stderr 输出)'}"
         else:
             sig = signal.SIGKILL if force else signal.SIGTERM
             os.kill(pid, sig)

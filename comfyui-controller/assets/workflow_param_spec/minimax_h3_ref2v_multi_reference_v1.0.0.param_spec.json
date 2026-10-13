@@ -1,0 +1,3609 @@
+{
+  "workflow": "minimax_h3_ref2v_multi_reference_v1.0.0",
+  "purpose": "多参考生视频优化版（含 latent 3D 放大二采）",
+  "node_count": 119,
+  "format": "UI (ComfyUI 界面可加载)",
+  "nodes": [
+    {
+      "id": 40,
+      "type": "SetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "Audio_VAE"
+      },
+      "inputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "link": 29
+        }
+      ],
+      "outputs": [
+        "VAE"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 19,
+      "type": "LoadImage",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "image": "None",
+        "upload": "image"
+      },
+      "inputs": [
+        {
+          "name": "image",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "upload",
+          "type": "IMAGEUPLOAD",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "IMAGE",
+        "MASK"
+      ],
+      "standard": {
+        "image": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/ 或输入",
+          "meaning": "图像文件",
+          "required": true
+        },
+        "upload": {
+          "type": "BOOLEAN",
+          "default": false,
+          "range": "true/false",
+          "meaning": "上传开关",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 23,
+      "type": "LoadImage",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "image": "None",
+        "upload": "image"
+      },
+      "inputs": [
+        {
+          "name": "image",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "upload",
+          "type": "IMAGEUPLOAD",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "IMAGE",
+        "MASK"
+      ],
+      "standard": {
+        "image": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/ 或输入",
+          "meaning": "图像文件",
+          "required": true
+        },
+        "upload": {
+          "type": "BOOLEAN",
+          "default": false,
+          "range": "true/false",
+          "meaning": "上传开关",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 36,
+      "type": "VAELoader",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+      },
+      "inputs": [
+        {
+          "name": "vae_name",
+          "type": "COMBO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "VAE"
+      ],
+      "standard": {
+        "vae_name": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/vae/ 下 .safetensors",
+          "meaning": "如 minimax_h3_video_vae_fp16.safetensors（视频）/ minimax_h3_audio_vae_fp32（音频，须 fp32）",
+          "required": true
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 37,
+      "type": "VAELoader",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+      },
+      "inputs": [
+        {
+          "name": "vae_name",
+          "type": "COMBO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "VAE"
+      ],
+      "standard": {
+        "vae_name": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/vae/ 下 .safetensors",
+          "meaning": "如 minimax_h3_video_vae_fp16.safetensors（视频）/ minimax_h3_audio_vae_fp32（音频，须 fp32）",
+          "required": true
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 6,
+      "type": "SetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "图像2"
+      },
+      "inputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "link": 227
+        }
+      ],
+      "outputs": [
+        "IMAGE"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 5,
+      "type": "SetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "图像1"
+      },
+      "inputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "link": 226
+        }
+      ],
+      "outputs": [
+        "IMAGE"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 17,
+      "type": "SetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "图像4"
+      },
+      "inputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "link": 229
+        }
+      ],
+      "outputs": [
+        "IMAGE"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 20,
+      "type": "SetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "图像5"
+      },
+      "inputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "link": 230
+        }
+      ],
+      "outputs": [
+        "IMAGE"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 7,
+      "type": "SetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "图像3"
+      },
+      "inputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "link": 228
+        }
+      ],
+      "outputs": [
+        "IMAGE"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 26,
+      "type": "VHS_LoadVideo",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "video": "",
+        "force_rate": 0,
+        "custom_width": 0,
+        "custom_height": 0,
+        "frame_load_cap": 0,
+        "skip_first_frames": 0,
+        "select_every_nth": 1,
+        "format": "AnimateDiff",
+        "choose video to upload": null,
+        "videopreview": {
+          "paused": false,
+          "hidden": false,
+          "params": {
+            "custom_height": 0,
+            "force_rate": 0,
+            "custom_width": 0,
+            "select_every_nth": 1,
+            "frame_load_cap": 0,
+            "skip_first_frames": 0
+          }
+        }
+      },
+      "inputs": [
+        {
+          "name": "meta_batch",
+          "type": "VHS_BatchManager",
+          "link": null
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": null
+        },
+        {
+          "name": "video",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "force_rate",
+          "type": "FLOAT",
+          "link": null
+        },
+        {
+          "name": "custom_width",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "custom_height",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "frame_load_cap",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "skip_first_frames",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "select_every_nth",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "format",
+          "type": "COMBO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "IMAGE",
+        "frame_count",
+        "audio",
+        "video_info"
+      ],
+      "standard": {
+        "video": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "文件",
+          "meaning": "视频文件",
+          "required": true
+        },
+        "force_rate": {
+          "type": "FLOAT",
+          "default": 0,
+          "range": "0=原速",
+          "meaning": "强制帧率",
+          "required": false
+        },
+        "frame_load_cap": {
+          "type": "INT",
+          "default": 0,
+          "range": "0=不限制",
+          "meaning": "帧数上限",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 13,
+      "type": "SetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "参考视频3"
+      },
+      "inputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "link": 13
+        }
+      ],
+      "outputs": [
+        "IMAGE"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 12,
+      "type": "SetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "参考视频2"
+      },
+      "inputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "link": 12
+        }
+      ],
+      "outputs": [
+        "IMAGE"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 11,
+      "type": "SetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "参考视频1"
+      },
+      "inputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "link": 11
+        }
+      ],
+      "outputs": [
+        "IMAGE"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 27,
+      "type": "VHS_LoadVideo",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "video": "",
+        "force_rate": 0,
+        "custom_width": 0,
+        "custom_height": 0,
+        "frame_load_cap": 0,
+        "skip_first_frames": 0,
+        "select_every_nth": 1,
+        "format": "AnimateDiff",
+        "choose video to upload": null,
+        "videopreview": {
+          "paused": false,
+          "hidden": false,
+          "params": {
+            "custom_height": 0,
+            "force_rate": 0,
+            "custom_width": 0,
+            "select_every_nth": 1,
+            "frame_load_cap": 0,
+            "skip_first_frames": 0
+          }
+        }
+      },
+      "inputs": [
+        {
+          "name": "meta_batch",
+          "type": "VHS_BatchManager",
+          "link": null
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": null
+        },
+        {
+          "name": "video",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "force_rate",
+          "type": "FLOAT",
+          "link": null
+        },
+        {
+          "name": "custom_width",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "custom_height",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "frame_load_cap",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "skip_first_frames",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "select_every_nth",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "format",
+          "type": "COMBO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "IMAGE",
+        "frame_count",
+        "audio",
+        "video_info"
+      ],
+      "standard": {
+        "video": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "文件",
+          "meaning": "视频文件",
+          "required": true
+        },
+        "force_rate": {
+          "type": "FLOAT",
+          "default": 0,
+          "range": "0=原速",
+          "meaning": "强制帧率",
+          "required": false
+        },
+        "frame_load_cap": {
+          "type": "INT",
+          "default": 0,
+          "range": "0=不限制",
+          "meaning": "帧数上限",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 25,
+      "type": "VHS_LoadVideo",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "video": "",
+        "force_rate": 0,
+        "custom_width": 0,
+        "custom_height": 0,
+        "frame_load_cap": 0,
+        "skip_first_frames": 0,
+        "select_every_nth": 1,
+        "format": "AnimateDiff",
+        "choose video to upload": null,
+        "videopreview": {
+          "paused": false,
+          "hidden": false,
+          "params": {
+            "custom_height": 0,
+            "force_rate": 0,
+            "custom_width": 0,
+            "select_every_nth": 1,
+            "frame_load_cap": 0,
+            "skip_first_frames": 0
+          }
+        }
+      },
+      "inputs": [
+        {
+          "name": "meta_batch",
+          "type": "VHS_BatchManager",
+          "link": null
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": null
+        },
+        {
+          "name": "video",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "force_rate",
+          "type": "FLOAT",
+          "link": null
+        },
+        {
+          "name": "custom_width",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "custom_height",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "frame_load_cap",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "skip_first_frames",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "select_every_nth",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "format",
+          "type": "COMBO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "IMAGE",
+        "frame_count",
+        "audio",
+        "video_info"
+      ],
+      "standard": {
+        "video": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "文件",
+          "meaning": "视频文件",
+          "required": true
+        },
+        "force_rate": {
+          "type": "FLOAT",
+          "default": 0,
+          "range": "0=原速",
+          "meaning": "强制帧率",
+          "required": false
+        },
+        "frame_load_cap": {
+          "type": "INT",
+          "default": 0,
+          "range": "0=不限制",
+          "meaning": "帧数上限",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 1,
+      "type": "SetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "CLIP"
+      },
+      "inputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "link": 1
+        }
+      ],
+      "outputs": [
+        "CLIP"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 22,
+      "type": "SetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "图像6"
+      },
+      "inputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "link": 231
+        }
+      ],
+      "outputs": [
+        "IMAGE"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 199,
+      "type": "LoadImage",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "image": "None",
+        "upload": "image"
+      },
+      "inputs": [
+        {
+          "name": "image",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "upload",
+          "type": "IMAGEUPLOAD",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "IMAGE",
+        "MASK"
+      ],
+      "standard": {
+        "image": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/ 或输入",
+          "meaning": "图像文件",
+          "required": true
+        },
+        "upload": {
+          "type": "BOOLEAN",
+          "default": false,
+          "range": "true/false",
+          "meaning": "上传开关",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 200,
+      "type": "LoadImage",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "image": "None",
+        "upload": "image"
+      },
+      "inputs": [
+        {
+          "name": "image",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "upload",
+          "type": "IMAGEUPLOAD",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "IMAGE",
+        "MASK"
+      ],
+      "standard": {
+        "image": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/ 或输入",
+          "meaning": "图像文件",
+          "required": true
+        },
+        "upload": {
+          "type": "BOOLEAN",
+          "default": false,
+          "range": "true/false",
+          "meaning": "上传开关",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 201,
+      "type": "LoadImage",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "image": "None",
+        "upload": "image"
+      },
+      "inputs": [
+        {
+          "name": "image",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "upload",
+          "type": "IMAGEUPLOAD",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "IMAGE",
+        "MASK"
+      ],
+      "standard": {
+        "image": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/ 或输入",
+          "meaning": "图像文件",
+          "required": true
+        },
+        "upload": {
+          "type": "BOOLEAN",
+          "default": false,
+          "range": "true/false",
+          "meaning": "上传开关",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 202,
+      "type": "SetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "图像7"
+      },
+      "inputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "link": 288
+        }
+      ],
+      "outputs": [
+        "IMAGE"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 203,
+      "type": "SetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "图像8"
+      },
+      "inputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "link": 289
+        }
+      ],
+      "outputs": [
+        "IMAGE"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 204,
+      "type": "SetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "图像9"
+      },
+      "inputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "link": 290
+        }
+      ],
+      "outputs": [
+        "IMAGE"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 59,
+      "type": "Note",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "text": "混合限制‌：\n所有素材（图 + 视频 + 音频）混合输入时，总数不得超过‌12 个‌！！"
+      },
+      "inputs": [],
+      "outputs": [],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 24,
+      "type": "Note",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "text": "参考图像最多只能接入9张图像，如果不接入就用开关关掉"
+      },
+      "inputs": [],
+      "outputs": [],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 114,
+      "type": "GetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "Audio_VAE"
+      },
+      "inputs": [],
+      "outputs": [
+        "VAE"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 51,
+      "type": "LoadImage",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "image": "c715baaee3fa989a7a8c94643fb7945e36f943b91a5a28182e44c895c565eec3.jpg",
+        "upload": "image"
+      },
+      "inputs": [
+        {
+          "name": "image",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "upload",
+          "type": "IMAGEUPLOAD",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "IMAGE",
+        "MASK"
+      ],
+      "standard": {
+        "image": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/ 或输入",
+          "meaning": "图像文件",
+          "required": true
+        },
+        "upload": {
+          "type": "BOOLEAN",
+          "default": false,
+          "range": "true/false",
+          "meaning": "上传开关",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 49,
+      "type": "LoadImage",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "image": "0fbb787fb39ffa24b5da3f3e6575b54b3d8a65320977dd2a07f2bc6123aeffd1.jpg",
+        "upload": "image"
+      },
+      "inputs": [
+        {
+          "name": "image",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "upload",
+          "type": "IMAGEUPLOAD",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "IMAGE",
+        "MASK"
+      ],
+      "standard": {
+        "image": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/ 或输入",
+          "meaning": "图像文件",
+          "required": true
+        },
+        "upload": {
+          "type": "BOOLEAN",
+          "default": false,
+          "range": "true/false",
+          "meaning": "上传开关",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 50,
+      "type": "LoadImage",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "image": "5d71adebf3aaa447f8a50300f75ee521b8f63af71fc8a1d8deb352cb290d7750.jpg",
+        "upload": "image"
+      },
+      "inputs": [
+        {
+          "name": "image",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "upload",
+          "type": "IMAGEUPLOAD",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "IMAGE",
+        "MASK"
+      ],
+      "standard": {
+        "image": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/ 或输入",
+          "meaning": "图像文件",
+          "required": true
+        },
+        "upload": {
+          "type": "BOOLEAN",
+          "default": false,
+          "range": "true/false",
+          "meaning": "上传开关",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 35,
+      "type": "SetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "Video_VAE"
+      },
+      "inputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "link": 27
+        }
+      ],
+      "outputs": [
+        "VAE"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 53,
+      "type": "LoraLoaderModelOnly",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "lora_name": "minimax_h3_turbo_v4_step600_ema_pruned_comfyui.safetensors",
+        "strength_model": 1.0000000000000002
+      },
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 166
+        },
+        {
+          "name": "lora_name",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "strength_model",
+          "type": "FLOAT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "MODEL"
+      ],
+      "standard": {
+        "lora_name": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/loras/ 下 .safetensors",
+          "meaning": "LoRA 文件名",
+          "required": true
+        },
+        "strength_model": {
+          "type": "FLOAT",
+          "default": 1.0,
+          "range": "-10 ~ 10",
+          "meaning": "模型侧强度，1=原强度",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 38,
+      "type": "CLIPLoader",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+        "type": "minimax",
+        "device": "default"
+      },
+      "inputs": [
+        {
+          "name": "clip_name",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "type",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "device",
+          "type": "COMBO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "CLIP"
+      ],
+      "standard": {
+        "clip_name": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/text_encoders/ 下 .safetensors",
+          "meaning": "如 qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "required": true
+        },
+        "type": {
+          "type": "COMBO",
+          "default": "minimax",
+          "range": "minimax / ...",
+          "meaning": "编码器类型；H3 须选 minimax",
+          "required": true
+        },
+        "device": {
+          "type": "COMBO",
+          "default": "default",
+          "range": "default / cpu",
+          "meaning": "加载设备",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 220,
+      "type": "Reroute",
+      "title": null,
+      "role": "util",
+      "widgets": {},
+      "inputs": [
+        {
+          "name": "",
+          "type": "*",
+          "link": 374
+        }
+      ],
+      "outputs": [
+        ""
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 221,
+      "type": "Reroute",
+      "title": null,
+      "role": "util",
+      "widgets": {},
+      "inputs": [
+        {
+          "name": "",
+          "type": "*",
+          "link": 325
+        }
+      ],
+      "outputs": [
+        ""
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 242,
+      "type": "GetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "Audio_VAE"
+      },
+      "inputs": [],
+      "outputs": [
+        "VAE"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 243,
+      "type": "GetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "Video_VAE"
+      },
+      "inputs": [],
+      "outputs": [
+        "VAE"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 244,
+      "type": "GetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "CLIP"
+      },
+      "inputs": [],
+      "outputs": [
+        "CLIP"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 246,
+      "type": "GetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "Video_VAE"
+      },
+      "inputs": [],
+      "outputs": [
+        "VAE"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 247,
+      "type": "GetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "Audio_VAE"
+      },
+      "inputs": [],
+      "outputs": [
+        "VAE"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 254,
+      "type": "VAEDecodeAudio",
+      "title": null,
+      "role": "io",
+      "widgets": {},
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 368
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 351
+        }
+      ],
+      "outputs": [
+        "AUDIO"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 253,
+      "type": "VAEDecode",
+      "title": null,
+      "role": "io",
+      "widgets": {},
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 367
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 349
+        }
+      ],
+      "outputs": [
+        "IMAGE"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 241,
+      "type": "GetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "图像1"
+      },
+      "inputs": [],
+      "outputs": [
+        "IMAGE"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 239,
+      "type": "GetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "图像2"
+      },
+      "inputs": [],
+      "outputs": [
+        "IMAGE"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 240,
+      "type": "GetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "图像3"
+      },
+      "inputs": [],
+      "outputs": [
+        "IMAGE"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 238,
+      "type": "GetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "图像4"
+      },
+      "inputs": [],
+      "outputs": [
+        "IMAGE"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 237,
+      "type": "GetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "图像5"
+      },
+      "inputs": [],
+      "outputs": [
+        "IMAGE"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 236,
+      "type": "GetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "图像6"
+      },
+      "inputs": [],
+      "outputs": [
+        "IMAGE"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 235,
+      "type": "GetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "图像7"
+      },
+      "inputs": [],
+      "outputs": [
+        "IMAGE"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 234,
+      "type": "GetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "图像8"
+      },
+      "inputs": [],
+      "outputs": [
+        "IMAGE"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 233,
+      "type": "GetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "图像9"
+      },
+      "inputs": [],
+      "outputs": [
+        "IMAGE"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 228,
+      "type": "GetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "参考视频2"
+      },
+      "inputs": [],
+      "outputs": [
+        "IMAGE"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 227,
+      "type": "GetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "参考视频3"
+      },
+      "inputs": [],
+      "outputs": [
+        "IMAGE"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 229,
+      "type": "GetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "参考音频1"
+      },
+      "inputs": [],
+      "outputs": [
+        "AUDIO"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 230,
+      "type": "GetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "参考音频2"
+      },
+      "inputs": [],
+      "outputs": [
+        "AUDIO"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 232,
+      "type": "GetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "参考音频3"
+      },
+      "inputs": [],
+      "outputs": [
+        "AUDIO"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 267,
+      "type": "GetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "提示词"
+      },
+      "inputs": [],
+      "outputs": [
+        "STRING"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 272,
+      "type": "GetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "宽度"
+      },
+      "inputs": [],
+      "outputs": [
+        "INT"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 273,
+      "type": "GetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "高度"
+      },
+      "inputs": [],
+      "outputs": [
+        "INT"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 270,
+      "type": "SetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "宽度"
+      },
+      "inputs": [
+        {
+          "name": "INT",
+          "type": "INT",
+          "link": 402
+        }
+      ],
+      "outputs": [
+        "INT"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 271,
+      "type": "SetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "高度"
+      },
+      "inputs": [
+        {
+          "name": "INT",
+          "type": "INT",
+          "link": 403
+        }
+      ],
+      "outputs": [
+        "INT"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 278,
+      "type": "GetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "时长"
+      },
+      "inputs": [],
+      "outputs": [
+        "INT"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 231,
+      "type": "GetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "参考视频1"
+      },
+      "inputs": [],
+      "outputs": [
+        "IMAGE"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 265,
+      "type": "MiniMaxH3ReferenceToVideo",
+      "title": null,
+      "role": "h3_main",
+      "widgets": {
+        "prompt": "",
+        "width": 1344,
+        "height": 768,
+        "length": 124,
+        "ref_image_size": "max"
+      },
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 375
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 376
+        },
+        {
+          "name": "audio_vae",
+          "type": "VAE",
+          "link": 377
+        },
+        {
+          "name": "ref_images.ref_image_0",
+          "type": "IMAGE",
+          "link": 378
+        },
+        {
+          "name": "ref_images.ref_image_1",
+          "type": "IMAGE",
+          "link": 379
+        },
+        {
+          "name": "ref_images.ref_image_2",
+          "type": "IMAGE",
+          "link": 380
+        },
+        {
+          "name": "ref_images.ref_image_3",
+          "type": "IMAGE",
+          "link": 381
+        },
+        {
+          "name": "ref_images.ref_image_4",
+          "type": "IMAGE",
+          "link": 382
+        },
+        {
+          "name": "ref_images.ref_image_5",
+          "type": "IMAGE",
+          "link": 383
+        },
+        {
+          "name": "ref_images.ref_image_6",
+          "type": "IMAGE",
+          "link": 384
+        },
+        {
+          "name": "ref_images.ref_image_7",
+          "type": "IMAGE",
+          "link": 385
+        },
+        {
+          "name": "ref_images.ref_image_8",
+          "type": "IMAGE",
+          "link": 386
+        },
+        {
+          "name": "ref_videos.ref_video_0",
+          "type": "IMAGE",
+          "link": 388
+        },
+        {
+          "name": "ref_videos.ref_video_1",
+          "type": "IMAGE",
+          "link": 389
+        },
+        {
+          "name": "ref_videos.ref_video_2",
+          "type": "IMAGE",
+          "link": 390
+        },
+        {
+          "name": "ref_video_audios.ref_video_audio_0",
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "ref_audios.ref_audio_0",
+          "type": "AUDIO",
+          "link": 391
+        },
+        {
+          "name": "ref_audios.ref_audio_1",
+          "type": "AUDIO",
+          "link": 392
+        },
+        {
+          "name": "ref_audios.ref_audio_2",
+          "type": "AUDIO",
+          "link": 393
+        },
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "link": 399
+        },
+        {
+          "name": "width",
+          "type": "INT",
+          "link": 404
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "link": 405
+        },
+        {
+          "name": "length",
+          "type": "INT",
+          "link": 412
+        },
+        {
+          "name": "ref_image_size",
+          "type": "COMBO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "positive",
+        "LATENT"
+      ],
+      "standard": {
+        "prompt": {
+          "type": "STRING",
+          "default": "",
+          "range": "文本",
+          "meaning": "正向提示词",
+          "required": true
+        },
+        "width": {
+          "type": "INT",
+          "default": 1344,
+          "range": "32 倍数",
+          "meaning": "宽",
+          "required": true
+        },
+        "height": {
+          "type": "INT",
+          "default": 768,
+          "range": "32 倍数",
+          "meaning": "高",
+          "required": true
+        },
+        "length": {
+          "type": "INT",
+          "default": 124,
+          "range": "帧数（H3 对齐）",
+          "meaning": "帧数",
+          "required": true
+        },
+        "ref_image_size": {
+          "type": "COMBO",
+          "default": "match",
+          "range": "match/256/512",
+          "meaning": "参考图尺寸",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 286,
+      "type": "SetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "二采倍数"
+      },
+      "inputs": [
+        {
+          "name": "FLOAT",
+          "type": "FLOAT",
+          "link": 415
+        }
+      ],
+      "outputs": [
+        "FLOAT"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 250,
+      "type": "ComfyMathExpression",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "expression": "max(5, round(a * 24)) + (5 - (max(5, round(a * 24)) % 17)) % 17"
+      },
+      "inputs": [
+        {
+          "name": "values.a",
+          "type": "FLOAT,INT,BOOLEAN",
+          "link": 409
+        },
+        {
+          "name": "values.b",
+          "type": "FLOAT,INT,BOOLEAN",
+          "link": null
+        },
+        {
+          "name": "expression",
+          "type": "STRING",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "FLOAT",
+        "INT",
+        "BOOL"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 277,
+      "type": "SetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "时长"
+      },
+      "inputs": [
+        {
+          "name": "INT",
+          "type": "INT",
+          "link": 411
+        }
+      ],
+      "outputs": [
+        "INT"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 226,
+      "type": "SamplerCustomAdvanced",
+      "title": null,
+      "role": "samplers",
+      "widgets": {},
+      "inputs": [
+        {
+          "name": "noise",
+          "type": "NOISE",
+          "link": 332
+        },
+        {
+          "name": "guider",
+          "type": "GUIDER",
+          "link": 333
+        },
+        {
+          "name": "sampler",
+          "type": "SAMPLER",
+          "link": 334
+        },
+        {
+          "name": "sigmas",
+          "type": "SIGMAS",
+          "link": 454
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 336
+        }
+      ],
+      "outputs": [
+        "output",
+        "denoised_output"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 292,
+      "type": "SetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "噪波"
+      },
+      "inputs": [
+        {
+          "name": "NOISE",
+          "type": "NOISE",
+          "link": 421
+        }
+      ],
+      "outputs": [
+        "NOISE"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 223,
+      "type": "BasicGuider",
+      "title": null,
+      "role": "samplers",
+      "widgets": {},
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 327
+        },
+        {
+          "name": "conditioning",
+          "type": "CONDITIONING",
+          "link": 373
+        }
+      ],
+      "outputs": [
+        "GUIDER"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 293,
+      "type": "SetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "引导"
+      },
+      "inputs": [
+        {
+          "name": "GUIDER",
+          "type": "GUIDER",
+          "link": 422
+        }
+      ],
+      "outputs": [
+        "GUIDER"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 294,
+      "type": "SetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "采样器"
+      },
+      "inputs": [
+        {
+          "name": "SAMPLER",
+          "type": "SAMPLER",
+          "link": 423
+        }
+      ],
+      "outputs": [
+        "SAMPLER"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 291,
+      "type": "SetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "一采Latent"
+      },
+      "inputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "link": 420
+        }
+      ],
+      "outputs": [
+        "LATENT"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 116,
+      "type": "VAEDecode",
+      "title": null,
+      "role": "io",
+      "widgets": {},
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 431
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 220
+        }
+      ],
+      "outputs": [
+        "IMAGE"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 115,
+      "type": "VAEDecodeAudio",
+      "title": null,
+      "role": "io",
+      "widgets": {},
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 432
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 221
+        }
+      ],
+      "outputs": [
+        "AUDIO"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 121,
+      "type": "GetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "Video_VAE"
+      },
+      "inputs": [],
+      "outputs": [
+        "VAE"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 142,
+      "type": "LTXVConcatAVLatent",
+      "title": null,
+      "role": "util",
+      "widgets": {},
+      "inputs": [
+        {
+          "name": "video_latent",
+          "type": "LATENT",
+          "link": 162
+        },
+        {
+          "name": "audio_latent",
+          "type": "LATENT",
+          "link": 144
+        }
+      ],
+      "outputs": [
+        "latent"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 287,
+      "type": "GetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "二采倍数"
+      },
+      "inputs": [],
+      "outputs": [
+        "FLOAT"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 248,
+      "type": "MarkdownNote",
+      "title": "分辨率示例",
+      "role": "util",
+      "widgets": {
+        "text": "| megapixels | Aspect | Output (multiple=32) |\n|---|---|---|\n| 0.2 | 16:9 | 608 x 352 |\n| 0.3 | 16:9 | 736 x 416 |\n| 0.4 | 16:9 | 864 x 480 |\n| 0.5 | 16:9 | 960 x 544 |\n| 0.6 | 16:9 | 1056 x 608 |\n| 0.7 | 16:9 | 1152 x 640 |\n| 0.8 | 16:9 | 1216 x 672 |\n| 0.9 | 16:9 | 1280 x 736 |\n| 0.98 | 16:9 | 1344 x 768 |\n| 1.0 | 16:9 | 1376 x 768 |\n| 1.2 | 16:9 | 1504 x 832 |\n| 1.5 | 16:9 | 1664 x 928 |\n| 1.8 | 16:9 | 1824 x 1024 |\n| 2.0 | 16:9 | 1920 x 1088 |\n"
+      },
+      "inputs": [],
+      "outputs": [],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 144,
+      "type": "SamplerCustomAdvanced",
+      "title": null,
+      "role": "samplers",
+      "widgets": {},
+      "inputs": [
+        {
+          "name": "noise",
+          "type": "NOISE",
+          "link": 427
+        },
+        {
+          "name": "guider",
+          "type": "GUIDER",
+          "link": 428
+        },
+        {
+          "name": "sampler",
+          "type": "SAMPLER",
+          "link": 429
+        },
+        {
+          "name": "sigmas",
+          "type": "SIGMAS",
+          "link": 437
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 159
+        }
+      ],
+      "outputs": [
+        "output",
+        "denoised_output"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 297,
+      "type": "GetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "引导"
+      },
+      "inputs": [],
+      "outputs": [
+        "GUIDER"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 298,
+      "type": "GetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "采样器"
+      },
+      "inputs": [],
+      "outputs": [
+        "SAMPLER"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 296,
+      "type": "GetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "噪波"
+      },
+      "inputs": [],
+      "outputs": [
+        "NOISE"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 299,
+      "type": "GetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "low_sigmas"
+      },
+      "inputs": [],
+      "outputs": [
+        "SIGMAS"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 295,
+      "type": "GetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "一采Latent"
+      },
+      "inputs": [],
+      "outputs": [
+        "LATENT"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 139,
+      "type": "LTXVSeparateAVLatent",
+      "title": null,
+      "role": "util",
+      "widgets": {},
+      "inputs": [
+        {
+          "name": "av_latent",
+          "type": "LATENT",
+          "link": 426
+        }
+      ],
+      "outputs": [
+        "video_latent",
+        "audio_latent"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 309,
+      "type": "忽略多组孤海",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "_positional": [
+          ""
+        ]
+      },
+      "inputs": [],
+      "outputs": [],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 308,
+      "type": "忽略多组孤海",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "_positional": [
+          ""
+        ]
+      },
+      "inputs": [],
+      "outputs": [],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 46,
+      "type": "Note",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "text": "支持最多‌3 段音频‌（需与图像或视频搭配，总时长不超 15 秒），用于设置节奏、对白或环境声。\n支持最多‌3 段视频‌（每段 2-15 秒，总时长不超过 15 秒），用于定义运镜风格或动作逻辑。"
+      },
+      "inputs": [],
+      "outputs": [],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 48,
+      "type": "LoadAudio",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "audio": "None",
+        "upload": null
+      },
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "audioUI",
+          "type": "AUDIO_UI",
+          "link": null
+        },
+        {
+          "name": "upload",
+          "type": "AUDIOUPLOAD",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "AUDIO"
+      ],
+      "standard": {
+        "audio": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "文件",
+          "meaning": "音频文件",
+          "required": true
+        },
+        "upload": {
+          "type": "BOOLEAN",
+          "default": false,
+          "range": "true/false",
+          "meaning": "上传",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 10,
+      "type": "SetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "参考音频1"
+      },
+      "inputs": [
+        {
+          "name": "AUDIO",
+          "type": "AUDIO",
+          "link": 10
+        }
+      ],
+      "outputs": [
+        "AUDIO"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 14,
+      "type": "LoadAudio",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "audio": "None",
+        "upload": null
+      },
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "audioUI",
+          "type": "AUDIO_UI",
+          "link": null
+        },
+        {
+          "name": "upload",
+          "type": "AUDIOUPLOAD",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "AUDIO"
+      ],
+      "standard": {
+        "audio": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "文件",
+          "meaning": "音频文件",
+          "required": true
+        },
+        "upload": {
+          "type": "BOOLEAN",
+          "default": false,
+          "range": "true/false",
+          "meaning": "上传",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 9,
+      "type": "SetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "参考音频2"
+      },
+      "inputs": [
+        {
+          "name": "AUDIO",
+          "type": "AUDIO",
+          "link": 9
+        }
+      ],
+      "outputs": [
+        "AUDIO"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 15,
+      "type": "LoadAudio",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "audio": "None",
+        "upload": null
+      },
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "audioUI",
+          "type": "AUDIO_UI",
+          "link": null
+        },
+        {
+          "name": "upload",
+          "type": "AUDIOUPLOAD",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "AUDIO"
+      ],
+      "standard": {
+        "audio": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "文件",
+          "meaning": "音频文件",
+          "required": true
+        },
+        "upload": {
+          "type": "BOOLEAN",
+          "default": false,
+          "range": "true/false",
+          "meaning": "上传",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 8,
+      "type": "SetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "参考音频3"
+      },
+      "inputs": [
+        {
+          "name": "AUDIO",
+          "type": "AUDIO",
+          "link": 8
+        }
+      ],
+      "outputs": [
+        "AUDIO"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 311,
+      "type": "Note",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "text": "基础调度器上的步数为总步数，分离sigmas上的为一采步数（不能低于6）总步数减去一采的步数就等于二采的步数（不要低于4），例如：总步数为12步，Sigmas填了8步，那8步就为一采步数，剩下4步就是二采的步数。总为10，Sigmas为6，那么一采为6步，二采为4步。傻逼都能懂！\n\nPS: 一采最少6步，想要音质好一点就8步。"
+      },
+      "inputs": [],
+      "outputs": [],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 256,
+      "type": "RandomNoise",
+      "title": null,
+      "role": "sched_noise",
+      "widgets": {
+        "noise_seed": 629900698231524,
+        "control_after_generate": "randomize"
+      },
+      "inputs": [
+        {
+          "name": "noise_seed",
+          "type": "INT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "NOISE"
+      ],
+      "standard": {
+        "noise_seed": {
+          "type": "INT",
+          "default": 0,
+          "range": "0~2^53",
+          "meaning": "随机种子",
+          "required": true
+        },
+        "control_after_generate": {
+          "type": "COMBO",
+          "default": "randomize",
+          "range": "randomize / fixed / increment / decrement",
+          "meaning": "生成后种子行为",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 310,
+      "type": "忽略多组孤海",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "_positional": [
+          ""
+        ]
+      },
+      "inputs": [],
+      "outputs": [],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 255,
+      "type": "KSamplerSelect",
+      "title": null,
+      "role": "samplers",
+      "widgets": {
+        "sampler_name": "euler"
+      },
+      "inputs": [
+        {
+          "name": "sampler_name",
+          "type": "COMBO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "SAMPLER"
+      ],
+      "standard": {
+        "sampler_name": {
+          "type": "COMBO",
+          "default": "euler",
+          "range": "euler / ddim / uni_pc / res_2s / er_sde / ...",
+          "meaning": "采样器；H3 常用 ddim / er_sde",
+          "required": true
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 192,
+      "type": "UNETLoader",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "unet_name": "minimax_h3_hybrid_fl2va_ref2va_b25-49-int8.safetensors",
+        "weight_dtype": "default"
+      },
+      "inputs": [
+        {
+          "name": "unet_name",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "weight_dtype",
+          "type": "COMBO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "MODEL"
+      ],
+      "standard": {
+        "unet_name": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/diffusion_models/ 下 .safetensors",
+          "meaning": "模型文件名；如 minimax_h3_ref2va_pruned_fp8_scaled.safetensors",
+          "required": true
+        },
+        "weight_dtype": {
+          "type": "COMBO",
+          "default": "default",
+          "range": "default / fp8_e4m3fn / fp8_e5m2 / fp16 / bf16",
+          "meaning": "加载精度；默认由文件决定，低显存可选 fp8",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 290,
+      "type": "SetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "low_sigmas"
+      },
+      "inputs": [
+        {
+          "name": "SIGMAS",
+          "type": "SIGMAS",
+          "link": 453
+        }
+      ],
+      "outputs": [
+        "SIGMAS"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 251,
+      "type": "GetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "模型"
+      },
+      "inputs": [],
+      "outputs": [
+        "MODEL"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 39,
+      "type": "SetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "模型"
+      },
+      "inputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "link": 323
+        }
+      ],
+      "outputs": [
+        "MODEL"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 58,
+      "type": "MiniMaxH3MemoryEfficientSageAttentionPatch",
+      "title": null,
+      "role": "perf",
+      "widgets": {},
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 458
+        }
+      ],
+      "outputs": [
+        "model"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 264,
+      "type": "VHS_VideoCombine",
+      "title": null,
+      "role": "io",
+      "widgets": {
+        "frame_rate": 24,
+        "loop_count": 0,
+        "filename_prefix": "YZ_H3_一采",
+        "format": "video/h264-mp4",
+        "pix_fmt": "yuv420p",
+        "crf": 19,
+        "save_metadata": true,
+        "trim_to_audio": false,
+        "pingpong": false,
+        "save_output": false,
+        "videopreview": {
+          "paused": false,
+          "hidden": false,
+          "params": {
+            "score": 8,
+            "filename": "YZ_H3_一采_00002_p86-audio_leshp_1788078284.mp4",
+            "cos_url": "https://rh-images.xiaoyaoyou.com//0bda426bcfea2b97ff263ebac2036b97/temp/YZ_H3_一采_00002_p86-audio_leshp_1788078284.mp4",
+            "workflow": "YZ_H3_一采_00002_p86.png",
+            "fullpath": "/data/ComfyUI/personal/0bda426bcfea2b97ff263ebac2036b97/temp/YZ_H3_一采_00002_p86-audio.mp4",
+            "format": "video/h264-mp4",
+            "subfolder": "",
+            "label": "Normal",
+            "type": "temp",
+            "frame_rate": 24
+          }
+        }
+      },
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 360
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 361
+        },
+        {
+          "name": "meta_batch",
+          "type": "VHS_BatchManager",
+          "link": null
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": null
+        },
+        {
+          "name": "frame_rate",
+          "type": "FLOAT",
+          "link": null
+        },
+        {
+          "name": "loop_count",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "filename_prefix",
+          "type": "STRING",
+          "link": null
+        },
+        {
+          "name": "format",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "pingpong",
+          "type": "BOOLEAN",
+          "link": null
+        },
+        {
+          "name": "save_output",
+          "type": "BOOLEAN",
+          "link": null
+        },
+        {
+          "name": "pix_fmt",
+          "type": [
+            "yuv420p",
+            "yuv420p10le"
+          ],
+          "link": null
+        },
+        {
+          "name": "crf",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "save_metadata",
+          "type": "BOOLEAN",
+          "link": null
+        },
+        {
+          "name": "trim_to_audio",
+          "type": "BOOLEAN",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "Filenames"
+      ],
+      "standard": {
+        "frame_rate": {
+          "type": "FLOAT",
+          "default": 24,
+          "range": ">0",
+          "meaning": "帧率",
+          "required": false
+        },
+        "filename_prefix": {
+          "type": "STRING",
+          "default": "AnimateDiff",
+          "range": "文本",
+          "meaning": "前缀",
+          "required": false
+        },
+        "format": {
+          "type": "COMBO",
+          "default": "image/gif",
+          "range": "video/mp4 / image/gif / ...",
+          "meaning": "格式",
+          "required": false
+        },
+        "lossless": {
+          "type": "BOOLEAN",
+          "default": false,
+          "range": "true/false",
+          "meaning": "无损",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 322,
+      "type": "LoraLoaderModelOnly",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "lora_name": "wushu_spatial_physics_v2_1000_pruned.safetensors",
+        "strength_model": 0.30000000000000004
+      },
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 459
+        },
+        {
+          "name": "lora_name",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "strength_model",
+          "type": "FLOAT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "MODEL"
+      ],
+      "standard": {
+        "lora_name": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/loras/ 下 .safetensors",
+          "meaning": "LoRA 文件名",
+          "required": true
+        },
+        "strength_model": {
+          "type": "FLOAT",
+          "default": 1.0,
+          "range": "-10 ~ 10",
+          "meaning": "模型侧强度，1=原强度",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 128,
+      "type": "LoraLoaderModelOnly",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "lora_name": "MysticXXX_MMH3-V1.safetensors",
+        "strength_model": 0.5000000000000001
+      },
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 460
+        },
+        {
+          "name": "lora_name",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "strength_model",
+          "type": "FLOAT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "MODEL"
+      ],
+      "standard": {
+        "lora_name": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/loras/ 下 .safetensors",
+          "meaning": "LoRA 文件名",
+          "required": true
+        },
+        "strength_model": {
+          "type": "FLOAT",
+          "default": 1.0,
+          "range": "-10 ~ 10",
+          "meaning": "模型侧强度，1=原强度",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 261,
+      "type": "BasicScheduler",
+      "title": null,
+      "role": "sched_noise",
+      "widgets": {
+        "scheduler": "beta",
+        "steps": 12,
+        "denoise": 1
+      },
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 358
+        },
+        {
+          "name": "scheduler",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "steps",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "denoise",
+          "type": "FLOAT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "SIGMAS"
+      ],
+      "standard": {
+        "scheduler": {
+          "type": "COMBO",
+          "default": "simple",
+          "range": "simple / normal / karras / ddim_uniform / sgm_uniform / beta / ...",
+          "meaning": "调度器；H3 常用 simple",
+          "required": true
+        },
+        "steps": {
+          "type": "INT",
+          "default": 20,
+          "range": "1~50（Turbo 4 步 / 8 步）",
+          "meaning": "去噪步数",
+          "required": true
+        },
+        "denoise": {
+          "type": "FLOAT",
+          "default": 1.0,
+          "range": "0~1",
+          "meaning": "降噪强度；图生视频常 <1",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 289,
+      "type": "SplitSigmas",
+      "title": null,
+      "role": "sched_noise",
+      "widgets": {
+        "step": 8
+      },
+      "inputs": [
+        {
+          "name": "sigmas",
+          "type": "SIGMAS",
+          "link": 417
+        },
+        {
+          "name": "step",
+          "type": "INT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "high_sigmas",
+        "low_sigmas"
+      ],
+      "standard": {
+        "split_at": {
+          "type": "FLOAT",
+          "default": 0,
+          "range": "0~1",
+          "meaning": "拆分位置（sigma 比例）",
+          "required": true
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 259,
+      "type": "PrimitiveFloat",
+      "title": "视频时长（秒）",
+      "role": "util",
+      "widgets": {
+        "value": 10
+      },
+      "inputs": [
+        {
+          "name": "value",
+          "type": "FLOAT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "FLOAT"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 252,
+      "type": "ResolutionSelector",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "aspect_ratio": "16:9 (Widescreen)",
+        "megapixels": 0.5,
+        "multiple": 32
+      },
+      "inputs": [
+        {
+          "name": "aspect_ratio",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "megapixels",
+          "type": "FLOAT",
+          "link": null
+        },
+        {
+          "name": "multiple",
+          "type": "INT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "width",
+        "height"
+      ],
+      "standard": {
+        "aspect_ratio": {
+          "type": "COMBO",
+          "default": "16:9 (Widescreen)",
+          "range": "多种预设",
+          "meaning": "宽高比",
+          "required": true
+        },
+        "megapixels": {
+          "type": "FLOAT",
+          "default": 0.4,
+          "range": "0.1~2",
+          "meaning": "百万像素（决定总像素）",
+          "required": true
+        },
+        "multiple": {
+          "type": "INT",
+          "default": 32,
+          "range": "8/16/32",
+          "meaning": "对齐倍数",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 214,
+      "type": "VHS_VideoCombine",
+      "title": null,
+      "role": "io",
+      "widgets": {
+        "frame_rate": 24,
+        "loop_count": 0,
+        "filename_prefix": "YZ_H3_二采",
+        "format": "video/h264-mp4",
+        "pix_fmt": "yuv420p",
+        "crf": 19,
+        "save_metadata": true,
+        "trim_to_audio": false,
+        "pingpong": false,
+        "save_output": true,
+        "videopreview": {
+          "paused": false,
+          "hidden": false,
+          "params": {
+            "score": 12,
+            "filename": "YZ_H3_二采_00002_p86-audio_pipxz_1788078881.mp4",
+            "cos_url": "https://rh-images.xiaoyaoyou.com//0bda426bcfea2b97ff263ebac2036b97/output/YZ_H3_二采_00002_p86-audio_pipxz_1788078881.mp4",
+            "workflow": "YZ_H3_二采_00002_p86.png",
+            "fullpath": "/data/ComfyUI/personal/0bda426bcfea2b97ff263ebac2036b97/output/YZ_H3_二采_00002_p86-audio.mp4",
+            "format": "video/h264-mp4",
+            "subfolder": "",
+            "label": "Normal",
+            "type": "output",
+            "frame_rate": 24
+          }
+        }
+      },
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 304
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 305
+        },
+        {
+          "name": "meta_batch",
+          "type": "VHS_BatchManager",
+          "link": null
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": null
+        },
+        {
+          "name": "frame_rate",
+          "type": "FLOAT",
+          "link": null
+        },
+        {
+          "name": "loop_count",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "filename_prefix",
+          "type": "STRING",
+          "link": null
+        },
+        {
+          "name": "format",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "pingpong",
+          "type": "BOOLEAN",
+          "link": null
+        },
+        {
+          "name": "save_output",
+          "type": "BOOLEAN",
+          "link": null
+        },
+        {
+          "name": "pix_fmt",
+          "type": [
+            "yuv420p",
+            "yuv420p10le"
+          ],
+          "link": null
+        },
+        {
+          "name": "crf",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "save_metadata",
+          "type": "BOOLEAN",
+          "link": null
+        },
+        {
+          "name": "trim_to_audio",
+          "type": "BOOLEAN",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "Filenames"
+      ],
+      "standard": {
+        "frame_rate": {
+          "type": "FLOAT",
+          "default": 24,
+          "range": ">0",
+          "meaning": "帧率",
+          "required": false
+        },
+        "filename_prefix": {
+          "type": "STRING",
+          "default": "AnimateDiff",
+          "range": "文本",
+          "meaning": "前缀",
+          "required": false
+        },
+        "format": {
+          "type": "COMBO",
+          "default": "image/gif",
+          "range": "video/mp4 / image/gif / ...",
+          "meaning": "格式",
+          "required": false
+        },
+        "lossless": {
+          "type": "BOOLEAN",
+          "default": false,
+          "range": "true/false",
+          "meaning": "无损",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 263,
+      "type": "Text",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "text": "subject_definitions:\n<Subject 1> is the female doctor from <Picture 1>.\n<Subject 2> is the male patient from <Picture 2>.\n<Subject 3> is the consultation-room environment from <Picture 3>.\n\nsummary:\nThe target video is a short Chinese sitcom-style comedic consultation fragment set in <Subject 3>, where <Subject 1> and <Subject 2> play out a dry, sharp-tongued humorous doctor-patient exchange.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1], [Shot 2], [Shot 3], [Shot 4]): fully_preserved - the female doctor from <Picture 1>, white coat with a stethoscope and neat low bun, retained as the consulting physician.\n<Subject 2> (appears in [Shot 1], [Shot 2], [Shot 3], [Shot 4]): fully_preserved - the male patient from <Picture 2>, grey sweater over a light blue shirt with navy trousers, retained as the visiting patient.\n<Subject 3> (appears in [Shot 1], [Shot 2], [Shot 3], [Shot 4]): fully_preserved - the bright consultation-room setting from <Picture 3> retained as the scene environment.\n\ndetailed_description:\nThe target video uses a clean, lightly comedic Chinese-sitcom style with bright clinical lighting and a steady, conversational pace.\n[Shot 1] A medium two-shot opens inside <Subject 3>, the consultation room. <Subject 1>, the female doctor from <Picture 1>, sits behind the desk in her white coat with a stethoscope around her neck, casually raises her head to look toward the male patient, and asks in a dry, offhand voice, <d>[Chinese] 哪里不好？</d>\n[Shot 2] At 00:02.000, the shot cuts to a medium close-up of <Subject 2> (S2). He leans forward, hands clasped and resting on the office desk, deadpan and a little weary, and replies in a flat drawl, <d>[Chinese] 都说我太油腻了，我这么年轻为什么会油腻啊？</d>\n[Shot 3] At 00:05.000, the shot cuts back to a medium close-up of <Subject 1> (S1). She sets down the pen and delivers the punchline in a calm, deadpan clinical tone, <d>[Chinese] 因为你太想要结果了，本来要跑40步，你8步就跑完了，能不油吗。</d>\n[Shot 4] At 00:10.000, the shot cuts to a full-bodied wide shot from the side of the room, the doctor looking back at him calmly, while <Subject 2> (S2) blinks in utter confusion and lets out a baffled, <d>[Chinese] 啊？</d> holding the befuddled comedic beat through the final frame.\n\noverall_soundscape:\nQuiet consultation-room tone with soft HVAC hum and faint paper-handling rustle, rising to a brief burst of canned sitcom laughter after the punchline.\n\nnon_diegetic_music:\nA light, bouncy comedic underscore with playful pizzicato strings and a plucky bassline at a moderate tempo, staying low under the dialogue and punctuated by a short laugh-track sting at the punchline."
+      },
+      "inputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "STRING"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 266,
+      "type": "SetNode",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "Constant": "提示词"
+      },
+      "inputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "link": 464
+        }
+      ],
+      "outputs": [
+        "STRING"
+      ],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 307,
+      "type": "忽略多组孤海",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "_positional": [
+          ""
+        ]
+      },
+      "inputs": [],
+      "outputs": [],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 43,
+      "type": "LoadImage",
+      "title": null,
+      "role": "loaders",
+      "widgets": {
+        "image": "None",
+        "upload": "image"
+      },
+      "inputs": [
+        {
+          "name": "image",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "upload",
+          "type": "IMAGEUPLOAD",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "IMAGE",
+        "MASK"
+      ],
+      "standard": {
+        "image": {
+          "type": "COMBO",
+          "default": "-",
+          "range": "models/ 或输入",
+          "meaning": "图像文件",
+          "required": true
+        },
+        "upload": {
+          "type": "BOOLEAN",
+          "default": false,
+          "range": "true/false",
+          "meaning": "上传开关",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 140,
+      "type": "MinimaxH3LatentUpscaler3D",
+      "title": null,
+      "role": "upscale_long",
+      "widgets": {
+        "model_name": "minimax_h3_latent_upscaler_3d_fp16.safetensors",
+        "mode": "scale by multiplier",
+        "mode.scale": 1.5000000000000002,
+        "align": 32,
+        "keep_proportion": "cuda",
+        "device": "fp16",
+        "precision": false,
+        "offload_after_upscale": false
+      },
+      "inputs": [
+        {
+          "name": "latent",
+          "type": "*",
+          "link": 141
+        },
+        {
+          "name": "model_name",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "mode",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null
+        },
+        {
+          "name": "mode.scale",
+          "type": "FLOAT",
+          "link": 467
+        },
+        {
+          "name": "align",
+          "type": "INT",
+          "link": null
+        },
+        {
+          "name": "keep_proportion",
+          "type": "BOOLEAN",
+          "link": null
+        },
+        {
+          "name": "device",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "precision",
+          "type": "COMBO",
+          "link": null
+        },
+        {
+          "name": "offload_after_upscale",
+          "type": "BOOLEAN",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "latent"
+      ],
+      "standard": {
+        "model_name": {
+          "type": "COMBO",
+          "default": "minimax_h3_latent_upscaler_3d_fp16.safetensors",
+          "range": "models/latent_upscale_models/",
+          "meaning": "放大模型",
+          "required": true
+        },
+        "mode": {
+          "type": "COMBO",
+          "default": "scale by multiplier",
+          "range": "scale by multiplier / ...",
+          "meaning": "放大模式",
+          "required": true
+        },
+        "mode.scale": {
+          "type": "FLOAT",
+          "default": 1.5,
+          "range": ">1",
+          "meaning": "放大倍数",
+          "required": true
+        },
+        "align": {
+          "type": "INT",
+          "default": 32,
+          "range": "16/32",
+          "meaning": "对齐网格",
+          "required": false
+        },
+        "keep_proportion": {
+          "type": "COMBO",
+          "default": "cuda",
+          "range": "cuda / ...",
+          "meaning": "比例保持",
+          "required": false
+        },
+        "device": {
+          "type": "COMBO",
+          "default": "fp16",
+          "range": "fp16 / fp32",
+          "meaning": "计算精度",
+          "required": false
+        },
+        "precision": {
+          "type": "BOOLEAN",
+          "default": false,
+          "range": "true/false",
+          "meaning": "高精度开关",
+          "required": false
+        },
+        "offload_after_upscale": {
+          "type": "BOOLEAN",
+          "default": false,
+          "range": "true/false",
+          "meaning": "放大后卸载",
+          "required": false
+        }
+      },
+      "note": null
+    },
+    {
+      "id": 300,
+      "type": "Note",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "text": "分辨率示例里的megapixels值是上面分辨率选择里的参考值，而不是二采倍数的参考值，二采倍数需要自己去计算，例如一采我选择0.5Mp--960X544的分辨率，二采倍数我填的1.5倍，那就是960X544的1.5倍就是1440X816。如果二采倍数我填2倍，那就是960X544的2倍就是1920X1088。傻逼都能懂！"
+      },
+      "inputs": [],
+      "outputs": [],
+      "standard": null,
+      "note": null
+    },
+    {
+      "id": 283,
+      "type": "easy float",
+      "title": null,
+      "role": "util",
+      "widgets": {
+        "value": 1.5000000000000002
+      },
+      "inputs": [
+        {
+          "name": "value",
+          "type": "FLOAT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        "float"
+      ],
+      "standard": null,
+      "note": null
+    }
+  ]
+}

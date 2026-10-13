@@ -15,7 +15,26 @@ class PROC(str, Enum):
 
 COMFY_GITHUB_URL = "https://github.com/comfyanonymous/ComfyUI"
 
-MANAGER_REQUIREMENTS_FILE = "manager_requirements.txt"
+# 服务连接默认值。优先级：命令行参数 > COMFYUI_HOST/COMFYUI_PORT 环境变量 > 官方默认值。
+# 官方默认端口 8188（ComfyUI upstream）。本项目历史上写死 3198，那是单一部署环境
+# 曾使用的端口，不是通用标准；需沿用请显式设置 COMFYUI_PORT=3198。
+DEFAULT_HOST = "127.0.0.1"
+DEFAULT_PORT = "8188"
+
+
+def default_host() -> str:
+    """解析 host：环境变量 COMFYUI_HOST > DEFAULT_HOST。"""
+    return os.environ.get("COMFYUI_HOST", DEFAULT_HOST)
+
+
+def default_port() -> str:
+    """解析 port：环境变量 COMFYUI_PORT > DEFAULT_PORT。"""
+    return os.environ.get("COMFYUI_PORT", DEFAULT_PORT)
+
+
+def default_base_url() -> str:
+    return f"http://{default_host()}:{default_port()}"
+
 
 DEFAULT_COMFY_MODEL_PATH = "models"
 DEFAULT_COMFY_WORKSPACE = {
@@ -41,6 +60,7 @@ CONFIG_KEY_ENABLE_TRACKING = "enable_tracking"
 CONFIG_KEY_USER_ID = "user_id"
 CONFIG_KEY_INSTALL_EVENT_TRIGGERED = "install_event_triggered"
 CONFIG_KEY_BACKGROUND = "background"
+CONFIG_KEY_BACKGROUND_LOG = "background_log"  # workspace logfile path captured by `launch --background`
 CONFIG_KEY_MANAGER_GUI_ENABLED = "manager_gui_enabled"  # Legacy, kept for backward compatibility
 CONFIG_KEY_MANAGER_GUI_MODE = "manager_gui_mode"  # Valid: "disable", "enable-gui", "disable-gui", "enable-legacy-gui"
 CONFIG_KEY_UV_COMPILE_DEFAULT = "uv_compile_default"

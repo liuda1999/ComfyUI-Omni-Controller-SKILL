@@ -14,6 +14,12 @@ import sys
 import urllib.request
 from urllib.parse import unquote
 
+# 端口/host 解析优先级（见 SKILL.md 7.1）：命令行参数 > COMFYUI_PORT/COMFYUI_HOST 环境变量 > 默认值。
+# 默认值跟随 ComfyUI 官方约定（8188）。3198 是历史单一部署环境的端口，非通用标准；
+# 需沿用请显式设置 COMFYUI_PORT=3198。
+DEFAULT_HOST = os.environ.get("COMFYUI_HOST", "127.0.0.1")
+DEFAULT_PORT = os.environ.get("COMFYUI_PORT", "8188")
+
 # 添加模块搜索路径以便导入 build_workflow_library
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from build_workflow_library import build_node_annotations, build_execution_flow, load_object_info
@@ -319,7 +325,7 @@ def main():
     ap = argparse.ArgumentParser(description="深度分析 ComfyUI 工作流")
     ap.add_argument("--workflow", required=True, help="工作流文件路径")
     ap.add_argument("--host", default="127.0.0.1")
-    ap.add_argument("--port", default="3198")  # comfyui-cli项目标准端口
+    ap.add_argument("--port", default=DEFAULT_PORT)  
     default_path = os.path.expanduser(os.environ.get("COMFYUI_PATH", ""))
     ap.add_argument("--comfyui-path", default=default_path,
                     help="ComfyUI 安装路径 (默认从 COMFYUI_PATH 环境变量读取)")

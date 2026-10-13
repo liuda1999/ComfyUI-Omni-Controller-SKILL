@@ -57,11 +57,11 @@ description: "视频生成任务执行前的强制检查与准备指南。当用
 **路径变量约定**（本指南使用以下变量替代绝对路径）：
 - `${COMFYUI_PATH}`: ComfyUI安装目录
 - `${PROJECT_PATH}`: 本项目根目录
-- `${COMFYUI_PORT}`: ComfyUI服务端口（默认3198，可通过环境变量配置）
+- `${COMFYUI_PORT}`: ComfyUI服务端口（默认8188，ComfyUI 官方默认；可用同名环境变量覆盖）
 - `${OUTPUT_DIR}`: 视频输出目录
 - `${TEMP_DIR}`: 临时文件目录
 
-**端口约定**：ComfyUI 服务运行在端口 `${COMFYUI_PORT}`（默认3198，可通过环境变量配置）。
+**端口约定**：ComfyUI 服务运行在端口 `${COMFYUI_PORT}`（默认8188，ComfyUI 官方默认；可用同名环境变量覆盖）。端口解析顺序为 `--port` > `COMFYUI_PORT` > `8188`，启动服务与调用脚本必须使用同一端口。
 
 ## 6项强制检查
 

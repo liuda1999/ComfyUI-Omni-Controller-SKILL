@@ -5,14 +5,26 @@ C2视频生成任务 - V19架构
 规格：5秒，20fps，480p (480x848)
 """
 import urllib.request
+
+# 绕过本机代理：127.0.0.1 请求若经 HTTP_PROXY 会被拦截并返回 502（假故障），
+# 表现为“服务不可用”。本脚本只访问本机 ComfyUI，故对所有请求禁用代理。
+urllib.request.install_opener(
+    urllib.request.build_opener(urllib.request.ProxyHandler({}))
+)
 import urllib.parse
 import json
 import time
 import sys
 import os
 
-COMFYUI_URL = "http://127.0.0.1:3198"
-SERVER_ADDRESS = "127.0.0.1:3198"
+# 端口/host 解析优先级（见 SKILL.md 7.1）：命令行参数 > COMFYUI_PORT/COMFYUI_HOST 环境变量 > 默认值。
+# 默认值跟随 ComfyUI 官方约定（8188）。3198 是历史单一部署环境的端口，非通用标准；
+# 需沿用请显式设置 COMFYUI_PORT=3198。
+DEFAULT_HOST = os.environ.get("COMFYUI_HOST", "127.0.0.1")
+DEFAULT_PORT = os.environ.get("COMFYUI_PORT", "8188")
+
+COMFYUI_URL = f"http://127.0.0.1:{DEFAULT_PORT}"
+SERVER_ADDRESS = f"127.0.0.1:{DEFAULT_PORT}"
 
 # V19验证参数
 WIDTH = 480

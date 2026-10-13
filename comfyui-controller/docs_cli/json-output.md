@@ -5,6 +5,15 @@ is to give agents and automation a stable, parseable view of a workflow
 execution — independent of the human-readable Rich-formatted output that
 `comfy run` emits by default.
 
+> **Scope.** This file governs **only the CLI layer** — `comfy run --json`
+> (implementation: `cli/command/run.py`).
+>
+> It does **not** describe the script layer. `scripts/run_workflow.py` prints a
+> single-line JSON envelope (not NDJSON) whose shape differs; see
+> [Appendix: script-layer envelope](#appendix-script-layer-envelope). Where the
+> two layers share the *Output object*, this document is authoritative for the
+> field names and types.
+
 ## Overview
 
 When `--json` is passed, `comfy run` switches into a strict
@@ -306,7 +315,7 @@ cached output-bearing node also emits `node_executed` (in addition to
       "filename": "banana_test_00001_.png",
       "subfolder": "",
       "type": "output",
-      "url": "http://127.0.0.1:3198/view?filename=banana_test_00001_.png&subfolder=&type=output"
+      "url": "http://127.0.0.1:8188/view?filename=banana_test_00001_.png&subfolder=&type=output"
     }
   ]
 }
@@ -412,7 +421,7 @@ cannot be assigned without a `client_id`).
   "filename": "banana_test_00001_.png",
   "subfolder": "",
   "type": "output",
-  "url": "http://127.0.0.1:3198/view?filename=..."
+  "url": "http://127.0.0.1:8188/view?filename=..."
 }
 ```
 
@@ -436,11 +445,36 @@ talking to Cloud. For the local case, a loopback HTTP fetch from a
 ComfyUI on the same box is cheap — the agent's HTTP client reads
 through the kernel loopback in the same way it'd read a local file.
 
-An earlier draft of v1 also emitted a `local_path` field for the
-same-machine case; it was removed because resolving ComfyUI's actual
-output directory reliably (across manual launches, alternate install
+An earlier draft of v1 also emitted a `local_path` field that was **inferred
+by guessing ComfyUI's own output directory**; it was removed because
+resolving that directory reliably (across manual launches, alternate install
 paths, multi-install machines, bind-mounted volumes) wasn't feasible.
-Agents should rely on `url` exclusively.
+**Agents must not infer local paths from the server — use `url`.**
+
+An explicitly requested download is a different matter: see
+[Paths and downloads](#paths-and-downloads).
+
+## Paths and downloads
+
+The CLI layer emits `url` and **never** writes files, so `path` never appears
+in `comfy run --json` output.
+
+The script layer can write files when the caller asks for it
+(`run_workflow.py --output-dir`, or `$COMFYUI_OUTPUT_DIR`). Each successfully
+downloaded entry then gains one extra field:
+
+| Field  | Type | Description |
+| ------ | ---- | ----------- |
+| `path` | str  | Absolute local filesystem path the bytes were written to. **Only present in the script layer's `downloaded[]`**, and only when the caller requested a download and that item succeeded. Failed downloads never carry `path` — they appear in `warnings[]`. |
+
+`path` is derived from the output directory the *caller* supplied, which is
+exactly what the removed `local_path` field could not provide. Adding it does
+not reinstate `local_path`.
+
+For both layers: filenames and subfolders reported by the server are
+untrusted input (custom save nodes can emit arbitrary paths). The script layer
+flattens anything that would escape `--output-dir`; agents must not assume a
+server-supplied name maps to any particular location.
 
 ## Error object
 
@@ -587,8 +621,8 @@ trailing entries.
 {"event":"node_progress","schema_version":1,"node_id":"1","class_type":"GeminiNanoBanana2","title":"Nano Banana 2","value":1,"max":4}
 {"event":"node_progress","schema_version":1,"node_id":"1","class_type":"GeminiNanoBanana2","title":"Nano Banana 2","value":4,"max":4}
 {"event":"node_executing","schema_version":1,"node_id":"2","class_type":"SaveImage","title":"Save Image"}
-{"event":"node_executed","schema_version":1,"node_id":"2","class_type":"SaveImage","title":"Save Image","outputs":[{"category":"images","node_id":"2","class_type":"SaveImage","title":"Save Image","filename":"banana_test_00001_.png","subfolder":"","type":"output","url":"http://127.0.0.1:3198/view?filename=banana_test_00001_.png&subfolder=&type=output"}]}
-{"event":"completed","schema_version":1,"prompt_id":"9b1c…","client_id":"fe2a…","elapsed_seconds":8.342,"outputs":[{"category":"images","node_id":"2","class_type":"SaveImage","title":"Save Image","filename":"banana_test_00001_.png","subfolder":"","type":"output","url":"http://127.0.0.1:3198/view?filename=banana_test_00001_.png&subfolder=&type=output"}],"cached_node_ids":[],"executed_node_ids":["1","2"]}
+{"event":"node_executed","schema_version":1,"node_id":"2","class_type":"SaveImage","title":"Save Image","outputs":[{"category":"images","node_id":"2","class_type":"SaveImage","title":"Save Image","filename":"banana_test_00001_.png","subfolder":"","type":"output","url":"http://127.0.0.1:8188/view?filename=banana_test_00001_.png&subfolder=&type=output"}]}
+{"event":"completed","schema_version":1,"prompt_id":"9b1c…","client_id":"fe2a…","elapsed_seconds":8.342,"outputs":[{"category":"images","node_id":"2","class_type":"SaveImage","title":"Save Image","filename":"banana_test_00001_.png","subfolder":"","type":"output","url":"http://127.0.0.1:8188/view?filename=banana_test_00001_.png&subfolder=&type=output"}],"cached_node_ids":[],"executed_node_ids":["1","2"]}
 ```
 
 Exit code: `0`.
@@ -700,3 +734,40 @@ extensible discriminator — agents dispatch on it; the exit code is
 just a coarse "did we succeed?" signal. Granular exit codes can be
 introduced later for non-`--json` callers in a separate,
 evidence-driven change without breaking the JSON contract.
+
+---
+
+## Appendix: script-layer envelope
+
+`scripts/run_workflow.py` is not covered by the NDJSON contract above. It
+prints **one** JSON object to stdout on completion:
+
+```json
+{
+  "prompt_id": "…",
+  "outputs": [ {Output object}, … ],
+  "images":   [ {Output object}, … ],
+  "output_dir": "/abs/path or null",
+  "downloaded": [ {Output object, plus "path"}, … ],
+  "warnings": ["human-readable string", …]
+}
+```
+
+| Field        | Type       | Description |
+| ------------ | ---------- | ----------- |
+| `prompt_id`  | str        | Server-assigned job id |
+| `outputs`    | array      | Every output emitted, all categories (open set) |
+| `images`     | array      | **Deprecated alias of `outputs`.** Kept so existing callers reading `result["images"]` keep working; new code should read `outputs`. Same objects, not a separate copy semantics. |
+| `output_dir` | str\|null  | Absolute directory outputs were written to; `null` when no download was requested |
+| `downloaded` | array      | Subset of `outputs` successfully written to disk; each carries `path`. Empty when no download was requested |
+| `warnings`   | array[str] | Non-fatal diagnostics: absent-but-expected categories, per-item download failures |
+
+The Output objects inside use the same field names and types as
+[§ Output object](#output-object), including the `title` fallback rule
+(`_meta.title` → `class_type` → `node_id`) and `class_type` defaulting to `""`.
+
+Differences from the CLI layer that agents must be aware of:
+
+- Completion is detected by **polling `/history/{prompt_id}`**, not WebSocket.
+- There is **no NDJSON progress stream**; the single JSON object is printed once, at the end.
+- Errors exit non-zero with a **plain-text message on stderr**, not a structured `failed` event — do not attempt to parse them as JSON.

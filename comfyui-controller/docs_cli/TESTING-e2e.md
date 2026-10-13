@@ -1,5 +1,8 @@
 # E2E Testing Guide
 
+> ⚠️ **状态说明（2026-10-14 审计）**：本文档描述的 `tests/e2e/` 目录与 `test_e2e.py` / `test_e2e_uv_compile.py`
+> **当前仓库中并不存在**（未随仓库分发）。以下命令为设计参考；如需运行 E2E，请先补齐测试用例或参见仓库 CI 配置。
+
 E2E tests perform real `comfy install`, `comfy launch`, and `comfy node` operations.
 They are **disabled by default** and must be explicitly enabled.
 

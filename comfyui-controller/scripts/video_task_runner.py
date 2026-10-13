@@ -13,12 +13,25 @@ import time
 import urllib.request
 import urllib.error
 
+# 本机 ComfyUI 位于回环地址，必须绕过 HTTP_PROXY/HTTPS_PROXY 环境变量，
+# 否则请求会被本地代理拦截并返回 502，表现为"服务不可用"的假故障。
+urllib.request.install_opener(
+    urllib.request.build_opener(urllib.request.ProxyHandler({}))
+)
+
+
+# 端口/host 解析优先级（见 SKILL.md 7.1）：命令行参数 > COMFYUI_PORT/COMFYUI_HOST 环境变量 > 默认值。
+# 默认值跟随 ComfyUI 官方约定（8188）。3198 是历史单一部署环境的端口，非通用标准；
+# 需沿用请显式设置 COMFYUI_PORT=3198。
+DEFAULT_HOST = os.environ.get("COMFYUI_HOST", "127.0.0.1")
+DEFAULT_PORT = os.environ.get("COMFYUI_PORT", "8188")
+
 # 添加scripts目录到path，确保能导入同目录模块
 SCRIPTS_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, SCRIPTS_DIR)
 
 # ComfyUI 服务器地址
-BASE_URL = "http://127.0.0.1:3198"  # comfyui-cli项目标准端口
+BASE_URL = f"http://127.0.0.1:{DEFAULT_PORT}"  
 
 # 预检环节返回的 ratio 为整数(1=9:16, 2=16:9, 3=1:1)，
 # 工作流构建器需要字符串比例，此处做映射

@@ -1,0 +1,1241 @@
+{
+  "UNETLoader": {
+    "desc": "加载 H3 DiT 扩散模型（diffusion_models）",
+    "repo": "ComfyUI 核心",
+    "params": {
+      "unet_name": {
+        "type": "COMBO",
+        "default": "-",
+        "range": "models/diffusion_models/ 下 .safetensors",
+        "meaning": "模型文件名；如 minimax_h3_ref2va_pruned_fp8_scaled.safetensors",
+        "required": true
+      },
+      "weight_dtype": {
+        "type": "COMBO",
+        "default": "default",
+        "range": "default / fp8_e4m3fn / fp8_e5m2 / fp16 / bf16",
+        "meaning": "加载精度；默认由文件决定，低显存可选 fp8",
+        "required": false
+      }
+    },
+    "note": null
+  },
+  "CLIPLoader": {
+    "desc": "加载 Qwen3-VL 文本编码器",
+    "repo": "ComfyUI 核心",
+    "params": {
+      "clip_name": {
+        "type": "COMBO",
+        "default": "-",
+        "range": "models/text_encoders/ 下 .safetensors",
+        "meaning": "如 qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+        "required": true
+      },
+      "type": {
+        "type": "COMBO",
+        "default": "minimax",
+        "range": "minimax / ...",
+        "meaning": "编码器类型；H3 须选 minimax",
+        "required": true
+      },
+      "device": {
+        "type": "COMBO",
+        "default": "default",
+        "range": "default / cpu",
+        "meaning": "加载设备",
+        "required": false
+      }
+    },
+    "note": null
+  },
+  "VAELoader": {
+    "desc": "加载 VAE（视频或音频）",
+    "repo": "ComfyUI 核心",
+    "params": {
+      "vae_name": {
+        "type": "COMBO",
+        "default": "-",
+        "range": "models/vae/ 下 .safetensors",
+        "meaning": "如 minimax_h3_video_vae_fp16.safetensors（视频）/ minimax_h3_audio_vae_fp32（音频，须 fp32）",
+        "required": true
+      }
+    },
+    "note": null
+  },
+  "LoraLoaderModelOnly": {
+    "desc": "仅作用于模型的 LoRA 加载（不接 CLIP）",
+    "repo": "ComfyUI 核心",
+    "params": {
+      "lora_name": {
+        "type": "COMBO",
+        "default": "-",
+        "range": "models/loras/ 下 .safetensors",
+        "meaning": "LoRA 文件名",
+        "required": true
+      },
+      "strength_model": {
+        "type": "FLOAT",
+        "default": 1.0,
+        "range": "-10 ~ 10",
+        "meaning": "模型侧强度，1=原强度",
+        "required": false
+      }
+    },
+    "note": null
+  },
+  "MiniMaxH3TurboLoRA": {
+    "desc": "H3 Turbo 加速 LoRA 注入",
+    "repo": "Larryvrh/ComfyUI-MiniMax-H3-Turbo",
+    "params": {
+      "lora_name": {
+        "type": "COMBO",
+        "default": "-",
+        "range": "models/loras/ 下 .safetensors",
+        "meaning": "如 minimax_h3_fl2v_turbo_4step_v1.2_768p_..._bf16.safetensors",
+        "required": true
+      },
+      "strength": {
+        "type": "FLOAT",
+        "default": 1.0,
+        "range": "0~2",
+        "meaning": "LoRA 强度",
+        "required": false
+      },
+      "low_vram": {
+        "type": "BOOLEAN",
+        "default": false,
+        "range": "true/false",
+        "meaning": "低显存模式",
+        "required": false
+      }
+    },
+    "note": null
+  },
+  "BasicScheduler": {
+    "desc": "生成采样 sigma 序列",
+    "repo": "ComfyUI 核心",
+    "params": {
+      "scheduler": {
+        "type": "COMBO",
+        "default": "simple",
+        "range": "simple / normal / karras / ddim_uniform / sgm_uniform / beta / ...",
+        "meaning": "调度器；H3 常用 simple",
+        "required": true
+      },
+      "steps": {
+        "type": "INT",
+        "default": 20,
+        "range": "1~50（Turbo 4 步 / 8 步）",
+        "meaning": "去噪步数",
+        "required": true
+      },
+      "denoise": {
+        "type": "FLOAT",
+        "default": 1.0,
+        "range": "0~1",
+        "meaning": "降噪强度；图生视频常 <1",
+        "required": false
+      }
+    },
+    "note": null
+  },
+  "BasicGuider": {
+    "desc": "用条件与模型构造引导器",
+    "repo": "ComfyUI 核心",
+    "params": {},
+    "note": null
+  },
+  "RandomNoise": {
+    "desc": "随机噪声源",
+    "repo": "ComfyUI 核心",
+    "params": {
+      "noise_seed": {
+        "type": "INT",
+        "default": 0,
+        "range": "0~2^53",
+        "meaning": "随机种子",
+        "required": true
+      },
+      "control_after_generate": {
+        "type": "COMBO",
+        "default": "randomize",
+        "range": "randomize / fixed / increment / decrement",
+        "meaning": "生成后种子行为",
+        "required": false
+      }
+    },
+    "note": null
+  },
+  "SamplerCustomAdvanced": {
+    "desc": "自定义采样（guider+sampler+sigmas+noise→latent）",
+    "repo": "ComfyUI 核心",
+    "params": {},
+    "note": null
+  },
+  "KSamplerSelect": {
+    "desc": "选择采样器算法",
+    "repo": "ComfyUI 核心",
+    "params": {
+      "sampler_name": {
+        "type": "COMBO",
+        "default": "euler",
+        "range": "euler / ddim / uni_pc / res_2s / er_sde / ...",
+        "meaning": "采样器；H3 常用 ddim / er_sde",
+        "required": true
+      }
+    },
+    "note": null
+  },
+  "SplitSigmas": {
+    "desc": "将 sigma 序列按阈值拆分",
+    "repo": "ComfyUI 核心",
+    "params": {
+      "split_at": {
+        "type": "FLOAT",
+        "default": 0,
+        "range": "0~1",
+        "meaning": "拆分位置（sigma 比例）",
+        "required": true
+      }
+    },
+    "note": null
+  },
+  "MiniMaxH3SigmaShift": {
+    "desc": "H3 专用 sigma 偏移（视频/音频分别）",
+    "repo": "ComfyUI 原生 (>=0.30.0)",
+    "params": {
+      "shift_video": {
+        "type": "FLOAT",
+        "default": 12,
+        "range": "H3 官方默认 12",
+        "meaning": "视频流 shift",
+        "required": false
+      },
+      "shift_audio": {
+        "type": "FLOAT",
+        "default": 3,
+        "range": "H3 官方默认 3",
+        "meaning": "音频流 shift",
+        "required": false
+      }
+    },
+    "note": null
+  },
+  "MiniMaxH3ContextLatentTaperNoise": {
+    "desc": "首尾帧/长视频噪声锥度（H3 长视频关键节点）",
+    "repo": "beijinren/ComfyUI-H3-Context-Noise",
+    "params": {
+      "tail_frames": {
+        "type": "STRING",
+        "default": "22",
+        "range": "整数",
+        "meaning": "尾部锥度帧数",
+        "required": true
+      },
+      "alpha": {
+        "type": "FLOAT",
+        "default": 0.45,
+        "range": "0~1",
+        "meaning": "起始噪声混合比例",
+        "required": false
+      },
+      "alpha_end": {
+        "type": "FLOAT",
+        "default": 0.1,
+        "range": "0~1",
+        "meaning": "结束噪声混合比例",
+        "required": false
+      },
+      "ramp_steps": {
+        "type": "INT",
+        "default": 2,
+        "range": "≥1",
+        "meaning": "锥度过渡步数",
+        "required": false
+      },
+      "seed": {
+        "type": "INT",
+        "default": 0,
+        "range": "0~2^53",
+        "meaning": "种子",
+        "required": true
+      },
+      "control_after_generate": {
+        "type": "COMBO",
+        "default": "randomize",
+        "range": "randomize/fixed/...",
+        "meaning": "种子行为",
+        "required": false
+      },
+      "noise_scale": {
+        "type": "COMBO",
+        "default": "match_latent_std",
+        "range": "match_latent_std / ...",
+        "meaning": "噪声缩放方式",
+        "required": false
+      }
+    },
+    "note": null
+  },
+  "MiniMaxH3ImageToVideo": {
+    "desc": "H3 文/图生视频主节点（含首尾帧）",
+    "repo": "ComfyUI 原生 (>=0.30.0)",
+    "params": {
+      "prompt": {
+        "type": "STRING",
+        "default": "",
+        "range": "文本",
+        "meaning": "正向提示词",
+        "required": true
+      },
+      "width": {
+        "type": "INT",
+        "default": 1344,
+        "range": "32 的倍数，如 768/1344",
+        "meaning": "视频宽",
+        "required": true
+      },
+      "height": {
+        "type": "INT",
+        "default": 768,
+        "range": "32 的倍数，如 768/1344",
+        "meaning": "视频高",
+        "required": true
+      },
+      "length": {
+        "type": "INT",
+        "default": 124,
+        "range": "H3 网格对齐（约 4 的倍数帧）",
+        "meaning": "帧数",
+        "required": true
+      },
+      "ref_image_size": {
+        "type": "COMBO",
+        "default": "match",
+        "range": "match / 256 / 512 / ...",
+        "meaning": "参考图分辨率",
+        "required": false
+      }
+    },
+    "note": null
+  },
+  "MiniMaxH3ReferenceToVideo": {
+    "desc": "H3 多参考图生视频主节点",
+    "repo": "ComfyUI 原生 (>=0.30.0)",
+    "params": {
+      "prompt": {
+        "type": "STRING",
+        "default": "",
+        "range": "文本",
+        "meaning": "正向提示词",
+        "required": true
+      },
+      "width": {
+        "type": "INT",
+        "default": 1344,
+        "range": "32 倍数",
+        "meaning": "宽",
+        "required": true
+      },
+      "height": {
+        "type": "INT",
+        "default": 768,
+        "range": "32 倍数",
+        "meaning": "高",
+        "required": true
+      },
+      "length": {
+        "type": "INT",
+        "default": 124,
+        "range": "帧数（H3 对齐）",
+        "meaning": "帧数",
+        "required": true
+      },
+      "ref_image_size": {
+        "type": "COMBO",
+        "default": "match",
+        "range": "match/256/512",
+        "meaning": "参考图尺寸",
+        "required": false
+      }
+    },
+    "note": null
+  },
+  "MiniMaxH3TurboSampler": {
+    "desc": "H3 Turbo 采样器（无 widget，参数经连线输入）",
+    "repo": "Larryvrh/ComfyUI-MiniMax-H3-Turbo",
+    "inputs": [
+      "model",
+      "conditioning",
+      "latent_image",
+      "steps(可选)",
+      "vae",
+      "vae_1",
+      "sampler_name",
+      "scheduler",
+      "denoise"
+    ],
+    "note": "该节点无 widgets_values；其参数（步数/调度器/双 VAE 等）由上游连线提供，详见工作流连线。"
+  },
+  "SelfLiftH3Sampler": {
+    "desc": "Self-Lift 自提升采样器（含 latent 放大）",
+    "repo": "facok/comfyui-SelfLift",
+    "params": {
+      "seed": {
+        "type": "INT",
+        "default": 0,
+        "range": "0~2^53",
+        "meaning": "种子",
+        "required": true
+      },
+      "control_after_generate": {
+        "type": "COMBO",
+        "default": "randomize",
+        "range": "randomize/fixed",
+        "meaning": "种子行为",
+        "required": false
+      },
+      "cfg": {
+        "type": "FLOAT",
+        "default": 1,
+        "range": "1~10（H3 常取 1）",
+        "meaning": "分类器自由引导",
+        "required": false
+      },
+      "transition_step": {
+        "type": "INT",
+        "default": 8,
+        "range": "≥0",
+        "meaning": "转换步",
+        "required": false
+      },
+      "lowres_scale": {
+        "type": "FLOAT",
+        "default": 0.4,
+        "range": "0~1",
+        "meaning": "低分辨率比例",
+        "required": false
+      },
+      "rho": {
+        "type": "FLOAT",
+        "default": 0,
+        "range": "≥0",
+        "meaning": "rho",
+        "required": false
+      },
+      "w_min": {
+        "type": "FLOAT",
+        "default": 0.2,
+        "range": "0~1",
+        "meaning": "权重下限",
+        "required": false
+      },
+      "w_max": {
+        "type": "FLOAT",
+        "default": 1,
+        "range": "0~1",
+        "meaning": "权重上限",
+        "required": false
+      },
+      "upscaler_model": {
+        "type": "COMBO",
+        "default": "minimax_h3_latent_upscaler_3d_fp16.safetensors",
+        "range": "models/latent_upscale_models/",
+        "meaning": "放大模型",
+        "required": false
+      },
+      "highres_tiling": {
+        "type": "BOOLEAN",
+        "default": true,
+        "range": "true/false",
+        "meaning": "高分块处理",
+        "required": false
+      }
+    },
+    "note": null
+  },
+  "H3SigmaRefiner": {
+    "desc": "H3 sigma 精修（在指定 sigma 区间额外步数）",
+    "repo": "yichengup/ComfyUI-YCNodes-MiniMax-H3",
+    "params": {
+      "extra_steps": {
+        "type": "INT",
+        "default": 1,
+        "range": "≥0",
+        "meaning": "额外步数",
+        "required": false
+      },
+      "start_at_sigma": {
+        "type": "FLOAT",
+        "default": 0.7,
+        "range": "0~1",
+        "meaning": "起始 sigma",
+        "required": false
+      },
+      "end_at_sigma": {
+        "type": "FLOAT",
+        "default": 0,
+        "range": "0~1",
+        "meaning": "结束 sigma",
+        "required": false
+      },
+      "spacing": {
+        "type": "COMBO",
+        "default": "cosine",
+        "range": "cosine / linear / ...",
+        "meaning": "间距方式",
+        "required": false
+      }
+    },
+    "note": null
+  },
+  "MMH3TemporalSplitParams": {
+    "desc": "H3 时间维分块参数（长视频分段）",
+    "repo": "LBH-123-AI/Comfyui_Minimax_h3_latent_Upscaler",
+    "params": {
+      "chunk_length": {
+        "type": "INT",
+        "default": 153,
+        "range": "≥1",
+        "meaning": "分段帧长",
+        "required": true
+      },
+      "temporal_overlap": {
+        "type": "INT",
+        "default": 17,
+        "range": "≥0",
+        "meaning": "时间重叠帧",
+        "required": false
+      },
+      "anchor_strength": {
+        "type": "FLOAT",
+        "default": 0.99,
+        "range": "0~1",
+        "meaning": "锚定强度",
+        "required": false
+      }
+    },
+    "note": null
+  },
+  "MinimaxH3LatentUpscaler3D": {
+    "desc": "H3 latent 3D 放大（双 VAE 解码）",
+    "repo": "LBH-123-AI/Comfyui_Minimax_h3_latent_Upscaler",
+    "params": {
+      "model_name": {
+        "type": "COMBO",
+        "default": "minimax_h3_latent_upscaler_3d_fp16.safetensors",
+        "range": "models/latent_upscale_models/",
+        "meaning": "放大模型",
+        "required": true
+      },
+      "mode": {
+        "type": "COMBO",
+        "default": "scale by multiplier",
+        "range": "scale by multiplier / ...",
+        "meaning": "放大模式",
+        "required": true
+      },
+      "mode.scale": {
+        "type": "FLOAT",
+        "default": 1.5,
+        "range": ">1",
+        "meaning": "放大倍数",
+        "required": true
+      },
+      "align": {
+        "type": "INT",
+        "default": 32,
+        "range": "16/32",
+        "meaning": "对齐网格",
+        "required": false
+      },
+      "keep_proportion": {
+        "type": "COMBO",
+        "default": "cuda",
+        "range": "cuda / ...",
+        "meaning": "比例保持",
+        "required": false
+      },
+      "device": {
+        "type": "COMBO",
+        "default": "fp16",
+        "range": "fp16 / fp32",
+        "meaning": "计算精度",
+        "required": false
+      },
+      "precision": {
+        "type": "BOOLEAN",
+        "default": false,
+        "range": "true/false",
+        "meaning": "高精度开关",
+        "required": false
+      },
+      "offload_after_upscale": {
+        "type": "BOOLEAN",
+        "default": false,
+        "range": "true/false",
+        "meaning": "放大后卸载",
+        "required": false
+      }
+    },
+    "note": null
+  },
+  "RHMiniMaxH3FL2VAModelLoader": {
+    "desc": "FL2VA DiT 加载器（RunningHub 包）",
+    "repo": "RunningHub/ComfyUI-MiniMax-H3-FL2VA",
+    "params": {
+      "model_root": {
+        "type": "STRING",
+        "default": "MiniMax-H3",
+        "range": "模型根目录（相对 models/）",
+        "meaning": "根目录名",
+        "required": true
+      },
+      "dtype": {
+        "type": "COMBO",
+        "default": "auto",
+        "range": "auto / fp16 / bf16 / fp8",
+        "meaning": "精度",
+        "required": false
+      },
+      "transformer_path": {
+        "type": "STRING",
+        "default": "MiniMax-H3-FL2VA-int8_convrot.safetensors",
+        "range": "DiT 文件名",
+        "meaning": "权重文件",
+        "required": true
+      }
+    },
+    "note": null
+  },
+  "RHMiniMaxH3FL2VAVAELoader": {
+    "desc": "FL2VA 双 VAE（视频+音频）加载器",
+    "repo": "RunningHub/ComfyUI-MiniMax-H3-FL2VA",
+    "params": {
+      "model_root": {
+        "type": "STRING",
+        "default": "MiniMax-H3",
+        "range": "模型根目录",
+        "meaning": "根目录名",
+        "required": true
+      },
+      "video_vae_path": {
+        "type": "STRING",
+        "default": "MiniMax-H3-video_vae.safetensors",
+        "range": "视频 VAE 文件名",
+        "meaning": "视频 VAE",
+        "required": true
+      },
+      "audio_vae_path": {
+        "type": "STRING",
+        "default": "MiniMax-H3-audio_vae.safetensors",
+        "range": "音频 VAE 文件名",
+        "meaning": "音频 VAE（须 fp32）",
+        "required": true
+      }
+    },
+    "note": null
+  },
+  "RHMiniMaxH3FL2VATextEncoderLoader": {
+    "desc": "FL2VA Qwen3-VL 文本编码器加载器",
+    "repo": "RunningHub/ComfyUI-MiniMax-H3-FL2VA",
+    "params": {
+      "model_root": {
+        "type": "STRING",
+        "default": "MiniMax-H3",
+        "range": "根目录",
+        "meaning": "根目录名",
+        "required": true
+      },
+      "dtype": {
+        "type": "COMBO",
+        "default": "auto",
+        "range": "auto/fp16/bf16/int8",
+        "meaning": "精度",
+        "required": false
+      },
+      "text_encoder_path": {
+        "type": "STRING",
+        "default": "qwen3-vl-32b-int8_convrot.safetensors",
+        "range": "编码器文件名",
+        "meaning": "权重",
+        "required": true
+      }
+    },
+    "note": null
+  },
+  "RHMiniMaxH3EmptyAVLatent": {
+    "desc": "生成空 AV latent（视频+音频占位）",
+    "repo": "RunningHub/ComfyUI-MiniMax-H3-FL2VA",
+    "params": {},
+    "note": null
+  },
+  "RHMiniMaxH3FL2VAEncode": {
+    "desc": "首/尾帧编码为 AV latent",
+    "repo": "RunningHub/ComfyUI-MiniMax-H3-FL2VA",
+    "params": {},
+    "note": null
+  },
+  "RHMiniMaxH3FL2VAFirstFrameCondition": {
+    "desc": "首帧条件",
+    "repo": "RunningHub/ComfyUI-MiniMax-H3-FL2VA",
+    "params": {},
+    "note": null
+  },
+  "RHMiniMaxH3FL2VATarget": {
+    "desc": "FL2VA 目标帧条件",
+    "repo": "RunningHub/ComfyUI-MiniMax-H3-FL2VA",
+    "params": {},
+    "note": null
+  },
+  "RHMiniMaxH3DecodeAV": {
+    "desc": "AV latent 解码为视频+音频",
+    "repo": "RunningHub/ComfyUI-MiniMax-H3-FL2VA",
+    "params": {},
+    "note": null
+  },
+  "RHMiniMaxH3DualSigmaSampler": {
+    "desc": "双 sigma 采样（视频+音频分别调度）",
+    "repo": "RunningHub/ComfyUI-MiniMax-H3-FL2VA",
+    "params": {},
+    "note": null
+  },
+  "H3 Long Video Manager": {
+    "desc": "H3 长视频分段管理器（输出/拼接/对齐）",
+    "repo": "ooizj/ComfyUI-H3-Long-Video",
+    "params": {
+      "fps": {
+        "type": "INT",
+        "default": 24,
+        "range": "常见 24/30",
+        "meaning": "帧率",
+        "required": false
+      },
+      "segment_duration": {
+        "type": "FLOAT",
+        "default": 9,
+        "range": ">0（秒）",
+        "meaning": "单段时长",
+        "required": false
+      },
+      "motion_context_frames": {
+        "type": "STRING",
+        "default": "22",
+        "range": "整数",
+        "meaning": "运动上下文帧",
+        "required": false
+      },
+      "segment_id": {
+        "type": "INT",
+        "default": 2,
+        "range": "≥1",
+        "meaning": "当前段编号",
+        "required": false
+      },
+      "scale_percent": {
+        "type": "INT",
+        "default": 60,
+        "range": "1~100",
+        "meaning": "缩放百分比",
+        "required": false
+      },
+      "align_to_h3_grid": {
+        "type": "BOOLEAN",
+        "default": true,
+        "range": "true/false",
+        "meaning": "对齐 H3 网格",
+        "required": false
+      },
+      "project_name": {
+        "type": "STRING",
+        "default": "",
+        "range": "文本",
+        "meaning": "工程名",
+        "required": false
+      },
+      "save_enabled": {
+        "type": "BOOLEAN",
+        "default": true,
+        "range": "true/false",
+        "meaning": "保存开关",
+        "required": false
+      },
+      "save_preview_mp4": {
+        "type": "BOOLEAN",
+        "default": true,
+        "range": "true/false",
+        "meaning": "预览 mp4",
+        "required": false
+      },
+      "final_align": {
+        "type": "COMBO",
+        "default": "up",
+        "range": "up/down",
+        "meaning": "最终对齐方向",
+        "required": false
+      },
+      "person_crop": {
+        "type": "BOOLEAN",
+        "default": false,
+        "range": "true/false",
+        "meaning": "人物裁切",
+        "required": false
+      },
+      "person_crop_expand_percent": {
+        "type": "INT",
+        "default": 0,
+        "range": "0~100",
+        "meaning": "裁切扩展",
+        "required": false
+      },
+      "save_dtype": {
+        "type": "COMBO",
+        "default": "int8",
+        "range": "int8/fp16/bf16",
+        "meaning": "保存精度",
+        "required": false
+      }
+    },
+    "note": null
+  },
+  "H3 Segment Picker": {
+    "desc": "选择长视频中的某一段",
+    "repo": "ooizj/ComfyUI-H3-Long-Video",
+    "params": {
+      "project_name": {
+        "type": "STRING",
+        "default": "",
+        "range": "文本",
+        "meaning": "工程名",
+        "required": true
+      },
+      "segment_id": {
+        "type": "INT",
+        "default": 2,
+        "range": "≥1",
+        "meaning": "段编号",
+        "required": true
+      }
+    },
+    "note": null
+  },
+  "MiniMaxH3MotionContextClipStream": {
+    "desc": "H3 运动上下文 Clip 流（片段级上下文）",
+    "repo": "AraneaQwQ/ComfyUI-H3-ClipStream",
+    "params": {
+      "context_length": {
+        "type": "STRING",
+        "default": "22",
+        "range": "整数（视频上下文帧）",
+        "meaning": "视频上下文长度",
+        "required": false
+      },
+      "audio_context_length": {
+        "type": "INT",
+        "default": 24,
+        "range": "≥1（音频上下文帧）",
+        "meaning": "音频上下文长度",
+        "required": false
+      },
+      "enable_audio_context": {
+        "type": "BOOLEAN",
+        "default": false,
+        "range": "true/false",
+        "meaning": "启用音频上下文",
+        "required": false
+      }
+    },
+    "note": null
+  },
+  "MiniMaxClipBinDualSaver": {
+    "desc": "Clip 双流保存（视频+音频成片入库）",
+    "repo": "AraneaQwQ/ComfyUI-H3-ClipStream",
+    "params": {
+      "project_name": {
+        "type": "STRING",
+        "default": "Default_Project",
+        "range": "文本",
+        "meaning": "工程名",
+        "required": false
+      },
+      "shot_tag": {
+        "type": "COMBO",
+        "default": "Auto (自动编号)",
+        "range": "Auto/自定义",
+        "meaning": "镜头标签",
+        "required": false
+      },
+      "prompt": {
+        "type": "STRING",
+        "default": "",
+        "range": "文本",
+        "meaning": "提示词备注",
+        "required": false
+      },
+      "parent_clip_id": {
+        "type": "STRING",
+        "default": "",
+        "range": "文本",
+        "meaning": "父片段 ID",
+        "required": false
+      },
+      "save_video": {
+        "type": "BOOLEAN",
+        "default": false,
+        "range": "true/false",
+        "meaning": "是否保存视频",
+        "required": false
+      }
+    },
+    "note": null
+  },
+  "MiniMaxClipBinDualPicker": {
+    "desc": "Clip 双流拾取（选择已存片段）",
+    "repo": "AraneaQwQ/ComfyUI-H3-ClipStream",
+    "params": {},
+    "note": null
+  },
+  "MiniMaxH3MemoryEfficientSageAttentionPatch": {
+    "desc": "H3 SageAttention 显存优化补丁",
+    "repo": "ComfyUI 原生 / MiniMax",
+    "params": {},
+    "note": null
+  },
+  "MiniMaxLowVRAMAttention": {
+    "desc": "低显存注意力（分块）",
+    "repo": "ComfyUI 原生 / MiniMax",
+    "params": {
+      "head_chunks": {
+        "type": "INT",
+        "default": 4,
+        "range": "≥1",
+        "meaning": "头分块数",
+        "required": false
+      }
+    },
+    "note": null
+  },
+  "MiniMaxChunkFeedForward": {
+    "desc": "Chunk 前馈（长序列分块）",
+    "repo": "ComfyUI 原生 / MiniMax",
+    "params": {
+      "chunks": {
+        "type": "INT",
+        "default": 2,
+        "range": "≥1",
+        "meaning": "分块数",
+        "required": false
+      },
+      "seq_threshold": {
+        "type": "INT",
+        "default": 4096,
+        "range": "≥1",
+        "meaning": "序列阈值",
+        "required": false
+      }
+    },
+    "note": null
+  },
+  "ModelAttentionBackend": {
+    "desc": "选择注意力后端",
+    "repo": "ComfyUI 核心 / KJ",
+    "params": {
+      "attention": {
+        "type": "COMBO",
+        "default": "comfy kitchen attention",
+        "range": "comfy kitchen attention / sage / flash",
+        "meaning": "后端",
+        "required": true
+      }
+    },
+    "note": null
+  },
+  "PathchSageAttentionKJ": {
+    "desc": "KJ 版 SageAttention 补丁",
+    "repo": "KJNodes",
+    "params": {},
+    "note": null
+  },
+  "EasyCache": {
+    "desc": "采样缓存加速（复用相近潜变量）",
+    "repo": "yolain/ComfyUI-Easy-Use",
+    "params": {
+      "reuse_threshold": {
+        "type": "FLOAT",
+        "default": 0.2,
+        "range": "0~1",
+        "meaning": "复用阈值",
+        "required": false
+      },
+      "start_percent": {
+        "type": "FLOAT",
+        "default": 0.15,
+        "range": "0~1",
+        "meaning": "起始百分比",
+        "required": false
+      },
+      "end_percent": {
+        "type": "FLOAT",
+        "default": 0.9,
+        "range": "0~1",
+        "meaning": "结束百分比",
+        "required": false
+      },
+      "verbose": {
+        "type": "BOOLEAN",
+        "default": false,
+        "range": "true/false",
+        "meaning": "详细日志",
+        "required": false
+      }
+    },
+    "note": null
+  },
+  "ReservedVRAMSetter": {
+    "desc": "预留显存（防止 OOM）",
+    "repo": "Windecay/ComfyUI-ReservedVRAM",
+    "params": {
+      "vram_gb": {
+        "type": "FLOAT",
+        "default": 2,
+        "range": ">0（GB）",
+        "meaning": "预留显存 GB",
+        "required": true
+      }
+    },
+    "note": null
+  },
+  "ResolutionSelector": {
+    "desc": "按宽高比/百万像素选择分辨率",
+    "repo": "KJNodes",
+    "params": {
+      "aspect_ratio": {
+        "type": "COMBO",
+        "default": "16:9 (Widescreen)",
+        "range": "多种预设",
+        "meaning": "宽高比",
+        "required": true
+      },
+      "megapixels": {
+        "type": "FLOAT",
+        "default": 0.4,
+        "range": "0.1~2",
+        "meaning": "百万像素（决定总像素）",
+        "required": true
+      },
+      "multiple": {
+        "type": "INT",
+        "default": 32,
+        "range": "8/16/32",
+        "meaning": "对齐倍数",
+        "required": false
+      }
+    },
+    "note": null
+  },
+  "SaveVideo": {
+    "desc": "保存视频（ComfyUI 原生）",
+    "repo": "ComfyUI 核心",
+    "params": {
+      "filename_prefix": {
+        "type": "STRING",
+        "default": "ComfyUI",
+        "range": "文本",
+        "meaning": "文件名前缀",
+        "required": false
+      },
+      "fps": {
+        "type": "FLOAT",
+        "default": 24,
+        "range": ">0",
+        "meaning": "帧率",
+        "required": false
+      },
+      "lossless": {
+        "type": "BOOLEAN",
+        "default": false,
+        "range": "true/false",
+        "meaning": "无损",
+        "required": false
+      }
+    },
+    "note": null
+  },
+  "CreateVideo": {
+    "desc": "创建视频（容器）",
+    "repo": "ComfyUI 核心",
+    "params": {},
+    "note": null
+  },
+  "VAEDecode": {
+    "desc": "VAE 解码（视频帧→图像序列）",
+    "repo": "ComfyUI 核心",
+    "params": {},
+    "note": null
+  },
+  "VAEDecodeAudio": {
+    "desc": "VAE 解码（音频 latent→波形）",
+    "repo": "ComfyUI 核心",
+    "params": {},
+    "note": null
+  },
+  "VHS_VideoCombine": {
+    "desc": "VHS 视频合成/保存",
+    "repo": "VideoHelperSuite",
+    "params": {
+      "frame_rate": {
+        "type": "FLOAT",
+        "default": 24,
+        "range": ">0",
+        "meaning": "帧率",
+        "required": false
+      },
+      "filename_prefix": {
+        "type": "STRING",
+        "default": "AnimateDiff",
+        "range": "文本",
+        "meaning": "前缀",
+        "required": false
+      },
+      "format": {
+        "type": "COMBO",
+        "default": "image/gif",
+        "range": "video/mp4 / image/gif / ...",
+        "meaning": "格式",
+        "required": false
+      },
+      "lossless": {
+        "type": "BOOLEAN",
+        "default": false,
+        "range": "true/false",
+        "meaning": "无损",
+        "required": false
+      }
+    },
+    "note": null
+  },
+  "VHS_LoadVideo": {
+    "desc": "VHS 加载视频",
+    "repo": "VideoHelperSuite",
+    "params": {
+      "video": {
+        "type": "COMBO",
+        "default": "-",
+        "range": "文件",
+        "meaning": "视频文件",
+        "required": true
+      },
+      "force_rate": {
+        "type": "FLOAT",
+        "default": 0,
+        "range": "0=原速",
+        "meaning": "强制帧率",
+        "required": false
+      },
+      "frame_load_cap": {
+        "type": "INT",
+        "default": 0,
+        "range": "0=不限制",
+        "meaning": "帧数上限",
+        "required": false
+      }
+    },
+    "note": null
+  },
+  "LoadVideo": {
+    "desc": "加载视频（原生）",
+    "repo": "ComfyUI 核心",
+    "params": {},
+    "note": null
+  },
+  "LoadImage": {
+    "desc": "加载图像（参考图/首尾帧）",
+    "repo": "ComfyUI 核心",
+    "params": {
+      "image": {
+        "type": "COMBO",
+        "default": "-",
+        "range": "models/ 或输入",
+        "meaning": "图像文件",
+        "required": true
+      },
+      "upload": {
+        "type": "BOOLEAN",
+        "default": false,
+        "range": "true/false",
+        "meaning": "上传开关",
+        "required": false
+      }
+    },
+    "note": null
+  },
+  "LoadAudio": {
+    "desc": "加载音频（参考/驱动）",
+    "repo": "ComfyUI 核心",
+    "params": {
+      "audio": {
+        "type": "COMBO",
+        "default": "-",
+        "range": "文件",
+        "meaning": "音频文件",
+        "required": true
+      },
+      "upload": {
+        "type": "BOOLEAN",
+        "default": false,
+        "range": "true/false",
+        "meaning": "上传",
+        "required": false
+      }
+    },
+    "note": null
+  },
+  "GetVideoComponents": {
+    "desc": "拆分视频为帧/音频组件",
+    "repo": "ComfyUI 核心 / 第三方",
+    "params": {},
+    "note": null
+  },
+  "LTXVSeparateAVLatent": {
+    "desc": "分离 AV latent 为视频/音频",
+    "repo": "LTX-Video 系（H3 复用）",
+    "params": {},
+    "note": null
+  },
+  "LTXVConcatAVLatent": {
+    "desc": "合并视频/音频 latent",
+    "repo": "LTX-Video 系（H3 复用）",
+    "params": {},
+    "note": null
+  },
+  "1e83e52d-c4d4-4071-be6f-2ad81c64b715": {
+    "desc": "UUID 占位节点（导出环境缺包）",
+    "repo": "见 third_party_nodes.md 第5节",
+    "params": {},
+    "note": "布尔任意开关（yolain/ComfyUI-Easy-Use 的 If else）；输入 boolean/on_true*/on_false* → 输出 *【已定位包】"
+  },
+  "7a522690-eadb-45bc-b4b8-4fbf5b09e1a0": {
+    "desc": "UUID 占位节点（导出环境缺包）",
+    "repo": "见 third_party_nodes.md 第5节",
+    "params": {},
+    "note": "布尔任意开关（yolain/ComfyUI-Easy-Use 的 If else）；输入 boolean/on_true*/on_false* → 输出 *【已定位包】"
+  },
+  "7c0dfa74-7583-4d61-98d6-cae724dc6517": {
+    "desc": "UUID 占位节点（导出环境缺包）",
+    "repo": "见 third_party_nodes.md 第5节",
+    "params": {},
+    "note": "【未解析·关键】无输入、输出 4 路 SIGMAS(SIGMAS/SIGMAS_1/SIGMAS_2/SIGMAS_3) 的调度生成器；本工作流仅 SIGMAS_2 经 Reroute#386 接入下游（二采采样 sigma 调度）。功能=为二采多阶段采样预生成 4 条 sigma 调度、择一使用。候选：二采/多阶段 H3 采样生态（yichengup/ComfyUI-YCNodes-MiniMax-H3、Songssx/ComfyUI-MiniMaxH3-TimelineDirector、facok/comfyui-SelfLift、rockerBOO/h3-latent-upscaler）或 sigma 调度工具包；Viggle/FastH3 均指向 4 点 sigma 约定。已排除 RES4LYF/Sigmas Split、sigmas_tools、内置 SplitSigmas、MiniMaxH3ShiftSigmas（均非「无输入+4路」）。需源环境确认真实 class_type。"
+  },
+  "b38cb4d8-b7ff-4df4-990e-876cf5cb5857": {
+    "desc": "UUID 占位节点（导出环境缺包）",
+    "repo": "见 third_party_nodes.md 第5节",
+    "params": {},
+    "note": "【未解析·关键】双 VAE(视频+音频)的 H3 二采采样+解码节点：输入 model/conditioning/latent_image(一采 latent)/steps/vae(视频)/vae_1(音频)/trim_frames(来自 MotionContextClipStream)/sampler_name(er_sde)/scheduler(simple)/denoise，输出 LATENT(output→3D放大+ClipBin)/IMAGE/images(视频帧)/audio(音频)。功能=二采采样并同时解码视频+音频。候选：二采 H3 生态（yichengup/ComfyUI-YCNodes-MiniMax-H3 已用于 H3SigmaRefiner、Songssx/ComfyUI-MiniMaxH3-TimelineDirector、facok/comfyui-SelfLift 已用于 SelfLiftH3Sampler、rockerBOO/h3-latent-upscaler）或作者私有群分享节点。已排除 ClipStream/IAMCCS/RunningHub/Motion-Context/Motion-Director/Easy-Use/LBH-123-AI/KJNodes/Viggle/LongTake/xiaolibai-sys/官方包（均不含此单一节点）。需源环境确认真实 class_type。"
+  },
+  "d9bc6b7f-16bd-40f7-8c53-729f89091fea": {
+    "desc": "UUID 占位节点（导出环境缺包）",
+    "repo": "见 third_party_nodes.md 第5节",
+    "params": {},
+    "note": "3D latent 放大+双 VAE 解码（LBH-123-AI/Comfyui_Minimax_h3_latent_Upscaler 的 MinimaxH3LatentUpscaler3D）【已定位包】"
+  }
+}

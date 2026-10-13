@@ -16,6 +16,12 @@ from collections import defaultdict, Counter
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from build_workflow_library import detect_model_family
 
+# 路径解析相对项目根，不依赖运行时 CWD：技能资产在 <repo>/skills/comfyui-controller/assets/
+_SCRIPTS_DIR = os.path.dirname(os.path.abspath(__file__))
+_CC_DIR = os.path.dirname(_SCRIPTS_DIR)
+_REPO_ROOT = os.path.dirname(_CC_DIR)
+_SKILL_ASSETS = os.path.join(_REPO_ROOT, "skills", "comfyui-controller", "assets")
+
 
 # 中立节点类型集合（与模型无关的节点，可跨 model_family 复用）
 _NEUTRAL_NODE_TYPES = {
@@ -325,13 +331,13 @@ def main():
     )
     parser.add_argument(
         '--library',
-        default='.trae/skills/comfyui-controller/assets/workflow_library.json',
-        help='工作流仓库路径（默认：.trae/skills/comfyui-controller/assets/workflow_library.json）',
+        default=os.path.join(_SKILL_ASSETS, 'workflow_library.json'),
+        help='工作流仓库路径（默认：<repo>/skills/comfyui-controller/assets/workflow_library.json）',
     )
     parser.add_argument(
         '--output',
-        default='.trae/skills/comfyui-controller/assets/workflow_patterns.json',
-        help='模式库输出路径（默认：.trae/skills/comfyui-controller/assets/workflow_patterns.json）',
+        default=os.path.join(_SKILL_ASSETS, 'workflow_patterns.json'),
+        help='模式库输出路径（默认：<repo>/skills/comfyui-controller/assets/workflow_patterns.json）',
     )
     args = parser.parse_args()
 

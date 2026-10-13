@@ -1,0 +1,317 @@
+{
+  "14": {
+    "class_type": "MarkdownNote",
+    "inputs": {}
+  },
+  "3": {
+    "class_type": "RHMiniMaxH3FL2VAVAELoader",
+    "inputs": {}
+  },
+  "7": {
+    "class_type": "RHMiniMaxH3FL2VATarget",
+    "inputs": {
+      "keyframes": [
+        "5",
+        0
+      ],
+      "width": [
+        "33",
+        1
+      ],
+      "height": [
+        "33",
+        2
+      ]
+    }
+  },
+  "8": {
+    "class_type": "RHMiniMaxH3FL2VAEncode",
+    "inputs": {
+      "keyframes": [
+        "5",
+        0
+      ],
+      "h3_text_encoder": [
+        "1",
+        0
+      ],
+      "h3_vae_bundle": [
+        "3",
+        0
+      ],
+      "target": [
+        "7",
+        0
+      ]
+    }
+  },
+  "9": {
+    "class_type": "RHMiniMaxH3EmptyAVLatent",
+    "inputs": {
+      "target": [
+        "7",
+        0
+      ]
+    }
+  },
+  "2": {
+    "class_type": "RHMiniMaxH3FL2VAModelLoader",
+    "inputs": {}
+  },
+  "1": {
+    "class_type": "RHMiniMaxH3FL2VATextEncoderLoader",
+    "inputs": {}
+  },
+  "11": {
+    "class_type": "RHMiniMaxH3DecodeAV",
+    "inputs": {
+      "sampled_av_latent": [
+        "10",
+        0
+      ],
+      "h3_vae_bundle": [
+        "3",
+        0
+      ]
+    }
+  },
+  "12": {
+    "class_type": "CreateVideo",
+    "inputs": {
+      "images": [
+        "11",
+        0
+      ],
+      "audio": [
+        "11",
+        1
+      ]
+    }
+  },
+  "15": {
+    "class_type": "Int",
+    "inputs": {}
+  },
+  "16": {
+    "class_type": "Int",
+    "inputs": {}
+  },
+  "17": {
+    "class_type": "Int",
+    "inputs": {}
+  },
+  "18": {
+    "class_type": "Int",
+    "inputs": {}
+  },
+  "19": {
+    "class_type": "Int",
+    "inputs": {}
+  },
+  "20": {
+    "class_type": "Int",
+    "inputs": {}
+  },
+  "21": {
+    "class_type": "Int",
+    "inputs": {}
+  },
+  "22": {
+    "class_type": "Int",
+    "inputs": {}
+  },
+  "25": {
+    "class_type": "Note",
+    "inputs": {}
+  },
+  "26": {
+    "class_type": "Int",
+    "inputs": {}
+  },
+  "27": {
+    "class_type": "Int",
+    "inputs": {}
+  },
+  "28": {
+    "class_type": "Int",
+    "inputs": {}
+  },
+  "29": {
+    "class_type": "Int",
+    "inputs": {}
+  },
+  "31": {
+    "class_type": "Reroute",
+    "inputs": {}
+  },
+  "34": {
+    "class_type": "PreviewImage",
+    "inputs": {
+      "images": [
+        "33",
+        0
+      ]
+    }
+  },
+  "6": {
+    "class_type": "LoadImage",
+    "inputs": {}
+  },
+  "4": {
+    "class_type": "LoadImage",
+    "inputs": {}
+  },
+  "24": {
+    "class_type": "ImpactSwitch",
+    "inputs": {
+      "input1": [
+        "15",
+        0
+      ],
+      "input2": [
+        "16",
+        0
+      ],
+      "input3": [
+        "18",
+        0
+      ],
+      "input4": [
+        "20",
+        0
+      ],
+      "input5": [
+        "27",
+        0
+      ],
+      "input6": [
+        "28",
+        0
+      ]
+    }
+  },
+  "23": {
+    "class_type": "ImpactSwitch",
+    "inputs": {
+      "input1": [
+        "22",
+        0
+      ],
+      "select": [
+        "24",
+        2
+      ],
+      "input2": [
+        "17",
+        0
+      ],
+      "input3": [
+        "19",
+        0
+      ],
+      "input4": [
+        "21",
+        0
+      ],
+      "input5": [
+        "26",
+        0
+      ],
+      "input6": [
+        "29",
+        0
+      ]
+    }
+  },
+  "5": {
+    "class_type": "RHMiniMaxH3FL2VAFirstFrameCondition",
+    "inputs": {
+      "first_frame": [
+        "33",
+        0
+      ],
+      "last_frame": [
+        "36",
+        0
+      ]
+    }
+  },
+  "13": {
+    "class_type": "SaveVideo",
+    "inputs": {
+      "video": [
+        "12",
+        0
+      ]
+    }
+  },
+  "30": {
+    "class_type": "ImageResize+",
+    "inputs": {
+      "image": [
+        "6",
+        0
+      ]
+    }
+  },
+  "35": {
+    "class_type": "ImageResize+",
+    "inputs": {
+      "image": [
+        "4",
+        0
+      ]
+    }
+  },
+  "33": {
+    "class_type": "ImageResize+",
+    "inputs": {
+      "image": [
+        "31",
+        0
+      ],
+      "width": [
+        "24",
+        0
+      ],
+      "height": [
+        "23",
+        0
+      ]
+    }
+  },
+  "36": {
+    "class_type": "ImageResize+",
+    "inputs": {
+      "image": [
+        "35",
+        0
+      ],
+      "width": [
+        "24",
+        0
+      ],
+      "height": [
+        "23",
+        0
+      ]
+    }
+  },
+  "10": {
+    "class_type": "RHMiniMaxH3DualSigmaSampler",
+    "inputs": {
+      "av_latent": [
+        "9",
+        0
+      ],
+      "h3_model": [
+        "2",
+        0
+      ],
+      "conditioning": [
+        "8",
+        0
+      ]
+    }
+  }
+}
