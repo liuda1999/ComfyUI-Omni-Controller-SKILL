@@ -1,15 +1,19 @@
 {
-  "14": {
-    "class_type": "MarkdownNote",
-    "inputs": {}
-  },
   "3": {
+    "inputs": {
+      "model_root": "MiniMax-H3",
+      "video_vae_path": "MiniMax-H3-video_vae.safetensors",
+      "audio_vae_path": "MiniMax-H3-audio_vae.safetensors"
+    },
     "class_type": "RHMiniMaxH3FL2VAVAELoader",
-    "inputs": {}
+    "_meta": {
+      "title": "FL2VA Dual VAE Loader"
+    }
   },
   "7": {
-    "class_type": "RHMiniMaxH3FL2VATarget",
     "inputs": {
+      "aspect_ratio": "4:3",
+      "duration_seconds": 5,
       "keyframes": [
         "5",
         0
@@ -22,15 +26,15 @@
         "33",
         2
       ]
+    },
+    "class_type": "RHMiniMaxH3FL2VATarget",
+    "_meta": {
+      "title": "RHMiniMaxH3FL2VATarget"
     }
   },
   "8": {
-    "class_type": "RHMiniMaxH3FL2VAEncode",
     "inputs": {
-      "keyframes": [
-        "5",
-        0
-      ],
+      "prompt": "0-2s: medium wide shot, the boy raises hand to adjust aviator cap, dusk wilderness background at high altitude\n2-5s: camera steadily pushes to facial close-up, arms lean forward gazing afar, clothes and hair sway softly, light slowly covers the face.",
       "h3_text_encoder": [
         "1",
         0
@@ -42,42 +46,70 @@
       "target": [
         "7",
         0
+      ],
+      "keyframes": [
+        "5",
+        0
       ]
+    },
+    "class_type": "RHMiniMaxH3FL2VAEncode",
+    "_meta": {
+      "title": "RHMiniMaxH3FL2VAEncode"
     }
   },
   "9": {
-    "class_type": "RHMiniMaxH3EmptyAVLatent",
     "inputs": {
       "target": [
         "7",
         0
       ]
+    },
+    "class_type": "RHMiniMaxH3EmptyAVLatent",
+    "_meta": {
+      "title": "Empty AV Latent"
     }
   },
   "2": {
+    "inputs": {
+      "model_root": "MiniMax-H3",
+      "dtype": "auto",
+      "transformer_path": "MiniMax-H3-FL2VA-int8_convrot.safetensors"
+    },
     "class_type": "RHMiniMaxH3FL2VAModelLoader",
-    "inputs": {}
+    "_meta": {
+      "title": "FL2VA DiT Loader"
+    }
   },
   "1": {
+    "inputs": {
+      "model_root": "MiniMax-H3",
+      "dtype": "auto",
+      "text_encoder_path": "qwen3-vl-32b-int8_convrot.safetensors"
+    },
     "class_type": "RHMiniMaxH3FL2VATextEncoderLoader",
-    "inputs": {}
+    "_meta": {
+      "title": "FL2VA Qwen3-VL Loader"
+    }
   },
   "11": {
-    "class_type": "RHMiniMaxH3DecodeAV",
     "inputs": {
-      "sampled_av_latent": [
-        "10",
-        0
-      ],
       "h3_vae_bundle": [
         "3",
         0
+      ],
+      "sampled_av_latent": [
+        "10",
+        0
       ]
+    },
+    "class_type": "RHMiniMaxH3DecodeAV",
+    "_meta": {
+      "title": "Decode Video + Audio"
     }
   },
   "12": {
-    "class_type": "CreateVideo",
     "inputs": {
+      "fps": 24,
       "images": [
         "11",
         0
@@ -86,84 +118,142 @@
         "11",
         1
       ]
+    },
+    "class_type": "CreateVideo",
+    "_meta": {
+      "title": "Create Video"
     }
   },
   "15": {
+    "inputs": {
+      "Number": 640
+    },
     "class_type": "Int",
-    "inputs": {}
+    "_meta": {
+      "title": "Int"
+    }
   },
   "16": {
+    "inputs": {
+      "Number": 576
+    },
     "class_type": "Int",
-    "inputs": {}
+    "_meta": {
+      "title": "Int"
+    }
   },
   "17": {
+    "inputs": {
+      "Number": 768
+    },
     "class_type": "Int",
-    "inputs": {}
+    "_meta": {
+      "title": "Int"
+    }
   },
   "18": {
+    "inputs": {
+      "Number": 768
+    },
     "class_type": "Int",
-    "inputs": {}
+    "_meta": {
+      "title": "Int"
+    }
   },
   "19": {
+    "inputs": {
+      "Number": 576
+    },
     "class_type": "Int",
-    "inputs": {}
+    "_meta": {
+      "title": "Int"
+    }
   },
   "20": {
+    "inputs": {
+      "Number": 432
+    },
     "class_type": "Int",
-    "inputs": {}
+    "_meta": {
+      "title": "Int"
+    }
   },
   "21": {
+    "inputs": {
+      "Number": 768
+    },
     "class_type": "Int",
-    "inputs": {}
+    "_meta": {
+      "title": "Int"
+    }
   },
   "22": {
+    "inputs": {
+      "Number": 640
+    },
     "class_type": "Int",
-    "inputs": {}
-  },
-  "25": {
-    "class_type": "Note",
-    "inputs": {}
+    "_meta": {
+      "title": "Int"
+    }
   },
   "26": {
+    "inputs": {
+      "Number": 432
+    },
     "class_type": "Int",
-    "inputs": {}
+    "_meta": {
+      "title": "Int"
+    }
   },
   "27": {
+    "inputs": {
+      "Number": 768
+    },
     "class_type": "Int",
-    "inputs": {}
+    "_meta": {
+      "title": "Int"
+    }
   },
   "28": {
+    "inputs": {
+      "Number": 768
+    },
     "class_type": "Int",
-    "inputs": {}
+    "_meta": {
+      "title": "Int"
+    }
   },
   "29": {
-    "class_type": "Int",
-    "inputs": {}
-  },
-  "31": {
-    "class_type": "Reroute",
-    "inputs": {}
-  },
-  "34": {
-    "class_type": "PreviewImage",
     "inputs": {
-      "images": [
-        "33",
-        0
-      ]
+      "Number": 432
+    },
+    "class_type": "Int",
+    "_meta": {
+      "title": "Int"
     }
   },
   "6": {
+    "inputs": {
+      "image": "0ef234cfae9a607e3b3f9e33ee518f952ad2eaac0fb7dc8e24e2a3ccb13fbfc2.png"
+    },
     "class_type": "LoadImage",
-    "inputs": {}
+    "_meta": {
+      "title": "Load Image"
+    }
   },
   "4": {
+    "inputs": {
+      "image": "a90b99d9fe38257cd05c1ccc05b6604e323e1bc48a9a1ad5bd548ae7f5bcc5b3.png"
+    },
     "class_type": "LoadImage",
-    "inputs": {}
+    "_meta": {
+      "title": "Load Image"
+    }
   },
   "24": {
-    "class_type": "ImpactSwitch",
     "inputs": {
+      "select": 3,
+      "sel_mode": false,
       "input1": [
         "15",
         0
@@ -188,18 +278,22 @@
         "28",
         0
       ]
+    },
+    "class_type": "ImpactSwitch",
+    "_meta": {
+      "title": "Switch (Any)"
     }
   },
   "23": {
-    "class_type": "ImpactSwitch",
     "inputs": {
-      "input1": [
-        "22",
-        0
-      ],
+      "sel_mode": false,
       "select": [
         "24",
         2
+      ],
+      "input1": [
+        "22",
+        0
       ],
       "input2": [
         "17",
@@ -221,10 +315,13 @@
         "29",
         0
       ]
+    },
+    "class_type": "ImpactSwitch",
+    "_meta": {
+      "title": "Switch (Any)"
     }
   },
   "5": {
-    "class_type": "RHMiniMaxH3FL2VAFirstFrameCondition",
     "inputs": {
       "first_frame": [
         "33",
@@ -234,40 +331,71 @@
         "36",
         0
       ]
+    },
+    "class_type": "RHMiniMaxH3FL2VAFirstFrameCondition",
+    "_meta": {
+      "title": "First / First+Last"
     }
   },
   "13": {
-    "class_type": "SaveVideo",
     "inputs": {
+      "filename_prefix": "minimax_h3/fl2va_first_last_frame",
+      "format": "mp4",
+      "codec": "h264",
       "video": [
         "12",
         0
       ]
+    },
+    "class_type": "SaveVideo",
+    "_meta": {
+      "title": "Save Video"
     }
   },
   "30": {
-    "class_type": "ImageResize+",
     "inputs": {
+      "width": 832,
+      "height": 832,
+      "interpolation": "nearest",
+      "method": "keep proportion",
+      "condition": "always",
+      "multiple_of": 32,
       "image": [
         "6",
         0
       ]
+    },
+    "class_type": "ImageResize+",
+    "_meta": {
+      "title": "🔧 Image Resize"
     }
   },
   "35": {
-    "class_type": "ImageResize+",
     "inputs": {
+      "width": 832,
+      "height": 832,
+      "interpolation": "nearest",
+      "method": "keep proportion",
+      "condition": "always",
+      "multiple_of": 32,
       "image": [
         "4",
         0
       ]
+    },
+    "class_type": "ImageResize+",
+    "_meta": {
+      "title": "🔧 Image Resize"
     }
   },
   "33": {
-    "class_type": "ImageResize+",
     "inputs": {
+      "interpolation": "nearest",
+      "method": "fill / crop",
+      "condition": "always",
+      "multiple_of": 32,
       "image": [
-        "31",
+        "30",
         0
       ],
       "width": [
@@ -278,11 +406,18 @@
         "23",
         0
       ]
+    },
+    "class_type": "ImageResize+",
+    "_meta": {
+      "title": "🔧 Image Resize"
     }
   },
   "36": {
-    "class_type": "ImageResize+",
     "inputs": {
+      "interpolation": "nearest",
+      "method": "fill / crop",
+      "condition": "always",
+      "multiple_of": 32,
       "image": [
         "35",
         0
@@ -295,15 +430,26 @@
         "23",
         0
       ]
+    },
+    "class_type": "ImageResize+",
+    "_meta": {
+      "title": "🔧 Image Resize"
     }
   },
   "10": {
-    "class_type": "RHMiniMaxH3DualSigmaSampler",
     "inputs": {
-      "av_latent": [
-        "9",
-        0
-      ],
+      "seed": 42,
+      "sigma_points": 50,
+      "video_shift": 12,
+      "audio_shift": 3,
+      "accel": "manual-velocity",
+      "denoise_video": true,
+      "cache_dit_rdt": 0.12,
+      "cache_dit_mc": 2,
+      "cache_dit_warmup": 4,
+      "velocity_stride": 4,
+      "sampler_mode": "euler",
+      "allow_accel_with_res_multistep": false,
       "h3_model": [
         "2",
         0
@@ -311,7 +457,15 @@
       "conditioning": [
         "8",
         0
+      ],
+      "av_latent": [
+        "9",
+        0
       ]
+    },
+    "class_type": "RHMiniMaxH3DualSigmaSampler",
+    "_meta": {
+      "title": "Dual Sigma Sampler"
     }
   }
 }

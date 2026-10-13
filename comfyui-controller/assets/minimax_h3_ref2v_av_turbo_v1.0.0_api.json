@@ -1,32 +1,45 @@
 {
   "121": {
-    "class_type": "VAEDecodeAudio",
     "inputs": {
-      "vae": [
-        "120",
-        0
-      ],
       "samples": [
         "125",
         0
+      ],
+      "vae": [
+        "120",
+        0
       ]
+    },
+    "class_type": "VAEDecodeAudio",
+    "_meta": {
+      "title": "VAE Decode Audio"
     }
   },
   "123": {
+    "inputs": {
+      "sampler_name": "ddim"
+    },
     "class_type": "KSamplerSelect",
-    "inputs": {}
+    "_meta": {
+      "title": "KSamplerSelect"
+    }
   },
   "124": {
-    "class_type": "BasicScheduler",
     "inputs": {
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1,
       "model": [
         "136",
         0
       ]
+    },
+    "class_type": "BasicScheduler",
+    "_meta": {
+      "title": "BasicScheduler"
     }
   },
   "126": {
-    "class_type": "BasicGuider",
     "inputs": {
       "model": [
         "136",
@@ -36,59 +49,123 @@
         "230",
         0
       ]
+    },
+    "class_type": "BasicGuider",
+    "_meta": {
+      "title": "Basic Guider"
     }
   },
   "129": {
+    "inputs": {
+      "noise_seed": 1010219011590650
+    },
     "class_type": "RandomNoise",
-    "inputs": {}
+    "_meta": {
+      "title": "RandomNoise"
+    }
   },
   "164": {
+    "inputs": {
+      "Value": 5
+    },
     "class_type": "DF_Int_to_Float",
-    "inputs": {}
+    "_meta": {
+      "title": "DF_Int_to_Float"
+    }
   },
   "191": {
+    "inputs": {
+      "Value": 6
+    },
     "class_type": "DF_Int_to_Float",
-    "inputs": {}
+    "_meta": {
+      "title": "DF_Int_to_Float"
+    }
   },
   "192": {
+    "inputs": {
+      "Value": 7
+    },
     "class_type": "DF_Int_to_Float",
-    "inputs": {}
+    "_meta": {
+      "title": "DF_Int_to_Float"
+    }
   },
   "193": {
+    "inputs": {
+      "Value": 8
+    },
     "class_type": "DF_Int_to_Float",
-    "inputs": {}
+    "_meta": {
+      "title": "DF_Int_to_Float"
+    }
   },
   "194": {
+    "inputs": {
+      "Value": 9
+    },
     "class_type": "DF_Int_to_Float",
-    "inputs": {}
+    "_meta": {
+      "title": "DF_Int_to_Float"
+    }
   },
   "195": {
+    "inputs": {
+      "Value": 10
+    },
     "class_type": "DF_Int_to_Float",
-    "inputs": {}
+    "_meta": {
+      "title": "DF_Int_to_Float"
+    }
   },
   "196": {
+    "inputs": {
+      "Value": 11
+    },
     "class_type": "DF_Int_to_Float",
-    "inputs": {}
+    "_meta": {
+      "title": "DF_Int_to_Float"
+    }
   },
   "197": {
+    "inputs": {
+      "Value": 12
+    },
     "class_type": "DF_Int_to_Float",
-    "inputs": {}
+    "_meta": {
+      "title": "DF_Int_to_Float"
+    }
   },
   "198": {
+    "inputs": {
+      "Value": 13
+    },
     "class_type": "DF_Int_to_Float",
-    "inputs": {}
+    "_meta": {
+      "title": "DF_Int_to_Float"
+    }
   },
   "199": {
+    "inputs": {
+      "Value": 14
+    },
     "class_type": "DF_Int_to_Float",
-    "inputs": {}
+    "_meta": {
+      "title": "DF_Int_to_Float"
+    }
   },
   "200": {
+    "inputs": {
+      "Value": 15
+    },
     "class_type": "DF_Int_to_Float",
-    "inputs": {}
+    "_meta": {
+      "title": "DF_Int_to_Float"
+    }
   },
   "130": {
-    "class_type": "CreateVideo",
     "inputs": {
+      "fps": 24,
       "images": [
         "122",
         0
@@ -97,83 +174,99 @@
         "121",
         0
       ]
+    },
+    "class_type": "CreateVideo",
+    "_meta": {
+      "title": "Create Video"
     }
   },
-  "139": {
-    "class_type": "LoadImage",
-    "inputs": {}
-  },
   "127": {
+    "inputs": {
+      "unet_name": "minimax_h3_ref2va_pruned_fp8_scaled.safetensors",
+      "weight_dtype": "default"
+    },
     "class_type": "UNETLoader",
-    "inputs": {}
+    "_meta": {
+      "title": "Load Diffusion Model"
+    }
   },
   "122": {
-    "class_type": "VAEDecode",
     "inputs": {
-      "vae": [
-        "119",
-        0
-      ],
       "samples": [
         "125",
         0
+      ],
+      "vae": [
+        "119",
+        0
       ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
     }
   },
-  "117": {
-    "class_type": "MarkdownNote",
-    "inputs": {}
-  },
-  "116": {
-    "class_type": "MarkdownNote",
-    "inputs": {}
-  },
   "222": {
+    "inputs": {
+      "value": 0.5
+    },
     "class_type": "PrimitiveFloat",
-    "inputs": {}
+    "_meta": {
+      "title": "Float"
+    }
   },
   "227": {
-    "class_type": "ShowAnything|Mie",
     "inputs": {
       "anything": [
         "115",
         1
       ]
+    },
+    "class_type": "ShowAnything|Mie",
+    "_meta": {
+      "title": "ShowAnything|Mie"
     }
   },
   "226": {
-    "class_type": "ShowAnything|Mie",
     "inputs": {
       "anything": [
         "115",
         0
       ]
+    },
+    "class_type": "ShowAnything|Mie",
+    "_meta": {
+      "title": "ShowAnything|Mie"
     }
   },
-  "206": {
-    "class_type": "LoadImage",
-    "inputs": {}
-  },
   "161": {
+    "inputs": {
+      "image": "rgthree.compare._temp_ocpsj_00048_.png"
+    },
     "class_type": "LoadImage",
-    "inputs": {}
+    "_meta": {
+      "title": "Load Image"
+    }
   },
   "92": {
-    "class_type": "SaveVideo",
     "inputs": {
+      "filename_prefix": "video/MiniMax_H3",
+      "format": "auto",
+      "codec": "auto",
       "video": [
         "130",
         0
       ]
+    },
+    "class_type": "SaveVideo",
+    "_meta": {
+      "title": "Save Video"
     }
   },
-  "210": {
-    "class_type": "Note",
-    "inputs": {}
-  },
   "205": {
-    "class_type": "ImpactSwitch",
     "inputs": {
+      "select": 11,
+      "sel_mode": false,
       "input1": [
         "164",
         0
@@ -218,85 +311,55 @@
         "200",
         0
       ]
+    },
+    "class_type": "ImpactSwitch",
+    "_meta": {
+      "title": "Switch (Any)"
     }
   },
   "136": {
-    "class_type": "EasyCache",
     "inputs": {
+      "reuse_threshold": 0.20000000000000004,
+      "start_percent": 0.15,
+      "end_percent": 0.9000000000000001,
+      "verbose": false,
       "model": [
         "257",
         0
       ]
+    },
+    "class_type": "EasyCache",
+    "_meta": {
+      "title": "EasyCache"
     }
   },
   "115": {
-    "class_type": "ResolutionSelector",
     "inputs": {
+      "aspect_ratio": "4:3 (Standard)",
       "megapixels": [
         "225",
         0
       ]
+    },
+    "class_type": "ResolutionSelector",
+    "_meta": {
+      "title": "Resolution Selector"
     }
   },
   "132": {
-    "class_type": "ComfyMathExpression",
     "inputs": {
+      "expression": "max(5, round(a * 24)) + (5 - (max(5, round(a * 24)) % 17)) % 17",
       "values.a": [
         "205",
         0
       ]
+    },
+    "class_type": "ComfyMathExpression",
+    "_meta": {
+      "title": "Math Expression"
     }
   },
-  "247": {
-    "class_type": "LoadAudio",
-    "inputs": {}
-  },
-  "248": {
-    "class_type": "LoadAudio",
-    "inputs": {}
-  },
-  "249": {
-    "class_type": "LoadAudio",
-    "inputs": {}
-  },
-  "231": {
-    "class_type": "LoadImage",
-    "inputs": {}
-  },
-  "234": {
-    "class_type": "LoadImage",
-    "inputs": {}
-  },
-  "237": {
-    "class_type": "LoadImage",
-    "inputs": {}
-  },
-  "232": {
-    "class_type": "LoadImage",
-    "inputs": {}
-  },
-  "235": {
-    "class_type": "LoadImage",
-    "inputs": {}
-  },
-  "238": {
-    "class_type": "LoadImage",
-    "inputs": {}
-  },
-  "233": {
-    "class_type": "LoadImage",
-    "inputs": {}
-  },
-  "236": {
-    "class_type": "LoadImage",
-    "inputs": {}
-  },
-  "239": {
-    "class_type": "LoadImage",
-    "inputs": {}
-  },
   "125": {
-    "class_type": "SamplerCustomAdvanced",
     "inputs": {
       "noise": [
         "129",
@@ -318,82 +381,81 @@
         "230",
         1
       ]
+    },
+    "class_type": "SamplerCustomAdvanced",
+    "_meta": {
+      "title": "⚡自定义采样器（高级）⚡"
     }
   },
   "135": {
-    "class_type": "PathchSageAttentionKJ",
     "inputs": {
+      "sage_attention": "auto",
+      "allow_compile": false,
       "model": [
         "127",
         0
       ]
+    },
+    "class_type": "PathchSageAttentionKJ",
+    "_meta": {
+      "title": "Patch Sage Attention KJ"
     }
   },
   "128": {
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    },
     "class_type": "CLIPLoader",
-    "inputs": {}
+    "_meta": {
+      "title": "Load CLIP"
+    }
   },
   "119": {
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+    },
     "class_type": "VAELoader",
-    "inputs": {}
+    "_meta": {
+      "title": "Load VAE"
+    }
   },
   "120": {
+    "inputs": {
+      "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+    },
     "class_type": "VAELoader",
-    "inputs": {}
+    "_meta": {
+      "title": "Load VAE"
+    }
   },
   "223": {
+    "inputs": {
+      "value": 1
+    },
     "class_type": "PrimitiveFloat",
-    "inputs": {}
-  },
-  "211": {
-    "class_type": "Note",
-    "inputs": {}
+    "_meta": {
+      "title": "Float"
+    }
   },
   "230": {
-    "class_type": "MiniMaxH3ReferenceToVideo",
     "inputs": {
-      "ref_images.ref_image_0": [
-        "231",
-        0
-      ],
-      "ref_images.ref_image_1": [
-        "232",
-        0
-      ],
-      "ref_images.ref_image_2": [
-        "233",
-        0
-      ],
-      "ref_images.ref_image_3": [
-        "234",
-        0
-      ],
-      "ref_images.ref_image_4": [
-        "235",
-        0
-      ],
-      "ref_images.ref_image_5": [
-        "236",
-        0
-      ],
-      "ref_images.ref_image_6": [
-        "237",
-        0
-      ],
-      "ref_images.ref_image_7": [
-        "238",
-        0
-      ],
-      "ref_images.ref_image_8": [
-        "239",
-        0
-      ],
+      "ref_image_size": "match",
       "clip": [
         "128",
         0
       ],
       "vae": [
         "119",
+        0
+      ],
+      "audio_vae": [
+        "120",
+        0
+      ],
+      "prompt": [
+        "250",
         0
       ],
       "width": [
@@ -407,95 +469,17 @@
       "length": [
         "132",
         1
-      ],
-      "ref_audios.ref_audio_0": [
-        "247",
-        0
-      ],
-      "ref_audios.ref_audio_1": [
-        "248",
-        0
-      ],
-      "ref_audios.ref_audio_2": [
-        "249",
-        0
-      ],
-      "prompt": [
-        "250",
-        0
-      ],
-      "audio_vae": [
-        "120",
-        0
-      ],
-      "ref_videos.ref_video_0": [
-        "252",
-        0
-      ],
-      "ref_video_audios.ref_video_audio_0": [
-        "252",
-        1
-      ],
-      "ref_videos.ref_video_1": [
-        "253",
-        0
-      ],
-      "ref_video_audios.ref_video_audio_1": [
-        "253",
-        1
-      ],
-      "ref_videos.ref_video_2": [
-        "255",
-        0
-      ],
-      "ref_video_audios.ref_video_audio_2": [
-        "255",
-        1
       ]
+    },
+    "class_type": "MiniMaxH3ReferenceToVideo",
+    "_meta": {
+      "title": "MiniMaxH3ReferenceToVideo"
     }
-  },
-  "252": {
-    "class_type": "GetVideoComponents",
-    "inputs": {
-      "video": [
-        "251",
-        0
-      ]
-    }
-  },
-  "253": {
-    "class_type": "GetVideoComponents",
-    "inputs": {
-      "video": [
-        "254",
-        0
-      ]
-    }
-  },
-  "255": {
-    "class_type": "GetVideoComponents",
-    "inputs": {
-      "video": [
-        "256",
-        0
-      ]
-    }
-  },
-  "251": {
-    "class_type": "LoadVideo",
-    "inputs": {}
-  },
-  "254": {
-    "class_type": "LoadVideo",
-    "inputs": {}
-  },
-  "256": {
-    "class_type": "LoadVideo",
-    "inputs": {}
   },
   "225": {
-    "class_type": "ImpactSwitch",
     "inputs": {
+      "select": 1,
+      "sel_mode": false,
       "input1": [
         "222",
         0
@@ -504,19 +488,33 @@
         "223",
         0
       ]
+    },
+    "class_type": "ImpactSwitch",
+    "_meta": {
+      "title": "Switch (Any)"
     }
   },
   "250": {
+    "inputs": {
+      "prompt": "一镜到底低空环绕滑行镜头，黏土二次元少女悬浮在蓬松黏土云海之上，长发、纱裙为蓬松黏土塑形，细碎星光黏土颗粒缓缓飘落，镜头环绕主体缓慢前移，由全景环绕拉近至人物特写，淡紫、浅蓝梦幻渐变配色，黏土云朵柔软蓬松，人物衣摆发丝轻柔飘动，立体柔光，空灵浪漫，定格画面丝滑流畅，人物样貌全程统一。"
+    },
     "class_type": "CR Prompt Text",
-    "inputs": {}
+    "_meta": {
+      "title": "⚙️ CR Prompt Text"
+    }
   },
   "257": {
-    "class_type": "LoraLoaderModelOnly",
     "inputs": {
+      "lora_name": "minimax_h3_ref2v_turbo_8step_v1.0_768p_comfyui_resized_avg_rank_20_bf16.safetensors",
+      "strength_model": 1,
       "model": [
         "135",
         0
       ]
+    },
+    "class_type": "LoraLoaderModelOnly",
+    "_meta": {
+      "title": "Load LoRA"
     }
   }
 }

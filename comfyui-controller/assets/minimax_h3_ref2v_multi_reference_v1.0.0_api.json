@@ -1,116 +1,41 @@
 {
-  "40": {
-    "class_type": "SetNode",
-    "inputs": {
-      "VAE": [
-        "37",
-        0
-      ]
-    }
-  },
   "19": {
+    "inputs": {
+      "image": "None"
+    },
     "class_type": "LoadImage",
-    "inputs": {}
+    "_meta": {
+      "title": "Load Image"
+    }
   },
   "23": {
+    "inputs": {
+      "image": "None"
+    },
     "class_type": "LoadImage",
-    "inputs": {}
+    "_meta": {
+      "title": "Load Image"
+    }
   },
   "36": {
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    },
     "class_type": "VAELoader",
-    "inputs": {}
+    "_meta": {
+      "title": "Load VAE"
+    }
   },
   "37": {
+    "inputs": {
+      "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+    },
     "class_type": "VAELoader",
-    "inputs": {}
-  },
-  "6": {
-    "class_type": "SetNode",
-    "inputs": {
-      "IMAGE": [
-        "49",
-        0
-      ]
-    }
-  },
-  "5": {
-    "class_type": "SetNode",
-    "inputs": {
-      "IMAGE": [
-        "51",
-        0
-      ]
-    }
-  },
-  "17": {
-    "class_type": "SetNode",
-    "inputs": {
-      "IMAGE": [
-        "43",
-        0
-      ]
-    }
-  },
-  "20": {
-    "class_type": "SetNode",
-    "inputs": {
-      "IMAGE": [
-        "19",
-        0
-      ]
-    }
-  },
-  "7": {
-    "class_type": "SetNode",
-    "inputs": {
-      "IMAGE": [
-        "50",
-        0
-      ]
-    }
-  },
-  "26": {
-    "class_type": "VHS_LoadVideo",
-    "inputs": {
-      "video": "",
-      "force_rate": 0,
-      "custom_width": 0,
-      "custom_height": 0,
-      "frame_load_cap": 0,
-      "skip_first_frames": 0,
-      "select_every_nth": 1,
-      "format": "AnimateDiff"
-    }
-  },
-  "13": {
-    "class_type": "SetNode",
-    "inputs": {
-      "IMAGE": [
-        "26",
-        0
-      ]
-    }
-  },
-  "12": {
-    "class_type": "SetNode",
-    "inputs": {
-      "IMAGE": [
-        "25",
-        0
-      ]
-    }
-  },
-  "11": {
-    "class_type": "SetNode",
-    "inputs": {
-      "IMAGE": [
-        "27",
-        0
-      ]
+    "_meta": {
+      "title": "Load VAE"
     }
   },
   "27": {
-    "class_type": "VHS_LoadVideo",
     "inputs": {
       "video": "",
       "force_rate": 0,
@@ -120,394 +45,187 @@
       "skip_first_frames": 0,
       "select_every_nth": 1,
       "format": "AnimateDiff"
-    }
-  },
-  "25": {
+    },
     "class_type": "VHS_LoadVideo",
-    "inputs": {
-      "video": "",
-      "force_rate": 0,
-      "custom_width": 0,
-      "custom_height": 0,
-      "frame_load_cap": 0,
-      "skip_first_frames": 0,
-      "select_every_nth": 1,
-      "format": "AnimateDiff"
+    "_meta": {
+      "title": "Load Video (Upload) 🎥🅥🅗🅢"
     }
-  },
-  "1": {
-    "class_type": "SetNode",
-    "inputs": {
-      "CLIP": [
-        "38",
-        0
-      ]
-    }
-  },
-  "22": {
-    "class_type": "SetNode",
-    "inputs": {
-      "IMAGE": [
-        "23",
-        0
-      ]
-    }
-  },
-  "199": {
-    "class_type": "LoadImage",
-    "inputs": {}
-  },
-  "200": {
-    "class_type": "LoadImage",
-    "inputs": {}
-  },
-  "201": {
-    "class_type": "LoadImage",
-    "inputs": {}
-  },
-  "202": {
-    "class_type": "SetNode",
-    "inputs": {
-      "IMAGE": [
-        "199",
-        0
-      ]
-    }
-  },
-  "203": {
-    "class_type": "SetNode",
-    "inputs": {
-      "IMAGE": [
-        "200",
-        0
-      ]
-    }
-  },
-  "204": {
-    "class_type": "SetNode",
-    "inputs": {
-      "IMAGE": [
-        "201",
-        0
-      ]
-    }
-  },
-  "59": {
-    "class_type": "Note",
-    "inputs": {}
-  },
-  "24": {
-    "class_type": "Note",
-    "inputs": {}
-  },
-  "114": {
-    "class_type": "GetNode",
-    "inputs": {}
   },
   "51": {
+    "inputs": {
+      "image": "c715baaee3fa989a7a8c94643fb7945e36f943b91a5a28182e44c895c565eec3.jpg"
+    },
     "class_type": "LoadImage",
-    "inputs": {}
+    "_meta": {
+      "title": "Load Image"
+    }
   },
   "49": {
+    "inputs": {
+      "image": "0fbb787fb39ffa24b5da3f3e6575b54b3d8a65320977dd2a07f2bc6123aeffd1.jpg"
+    },
     "class_type": "LoadImage",
-    "inputs": {}
+    "_meta": {
+      "title": "Load Image"
+    }
   },
   "50": {
-    "class_type": "LoadImage",
-    "inputs": {}
-  },
-  "35": {
-    "class_type": "SetNode",
     "inputs": {
-      "VAE": [
-        "36",
-        0
-      ]
+      "image": "5d71adebf3aaa447f8a50300f75ee521b8f63af71fc8a1d8deb352cb290d7750.jpg"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "Load Image"
     }
   },
   "53": {
-    "class_type": "LoraLoaderModelOnly",
     "inputs": {
+      "lora_name": "minimax_h3_turbo_v4_step600_ema_pruned_comfyui.safetensors",
+      "strength_model": 1.0000000000000002,
       "model": [
         "128",
         0
       ]
+    },
+    "class_type": "LoraLoaderModelOnly",
+    "_meta": {
+      "title": "Load LoRA"
     }
   },
   "38": {
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    },
     "class_type": "CLIPLoader",
-    "inputs": {}
-  },
-  "220": {
-    "class_type": "Reroute",
-    "inputs": {}
-  },
-  "221": {
-    "class_type": "Reroute",
-    "inputs": {}
-  },
-  "242": {
-    "class_type": "GetNode",
-    "inputs": {}
-  },
-  "243": {
-    "class_type": "GetNode",
-    "inputs": {}
-  },
-  "244": {
-    "class_type": "GetNode",
-    "inputs": {}
-  },
-  "246": {
-    "class_type": "GetNode",
-    "inputs": {}
-  },
-  "247": {
-    "class_type": "GetNode",
-    "inputs": {}
+    "_meta": {
+      "title": "Load CLIP"
+    }
   },
   "254": {
-    "class_type": "VAEDecodeAudio",
     "inputs": {
-      "vae": [
-        "247",
-        0
-      ],
       "samples": [
         "226",
         1
+      ],
+      "vae": [
+        "37",
+        0
       ]
+    },
+    "class_type": "VAEDecodeAudio",
+    "_meta": {
+      "title": "VAE Decode Audio"
     }
   },
   "253": {
-    "class_type": "VAEDecode",
     "inputs": {
-      "vae": [
-        "246",
-        0
-      ],
       "samples": [
         "226",
         1
-      ]
-    }
-  },
-  "241": {
-    "class_type": "GetNode",
-    "inputs": {}
-  },
-  "239": {
-    "class_type": "GetNode",
-    "inputs": {}
-  },
-  "240": {
-    "class_type": "GetNode",
-    "inputs": {}
-  },
-  "238": {
-    "class_type": "GetNode",
-    "inputs": {}
-  },
-  "237": {
-    "class_type": "GetNode",
-    "inputs": {}
-  },
-  "236": {
-    "class_type": "GetNode",
-    "inputs": {}
-  },
-  "235": {
-    "class_type": "GetNode",
-    "inputs": {}
-  },
-  "234": {
-    "class_type": "GetNode",
-    "inputs": {}
-  },
-  "233": {
-    "class_type": "GetNode",
-    "inputs": {}
-  },
-  "228": {
-    "class_type": "GetNode",
-    "inputs": {}
-  },
-  "227": {
-    "class_type": "GetNode",
-    "inputs": {}
-  },
-  "229": {
-    "class_type": "GetNode",
-    "inputs": {}
-  },
-  "230": {
-    "class_type": "GetNode",
-    "inputs": {}
-  },
-  "232": {
-    "class_type": "GetNode",
-    "inputs": {}
-  },
-  "267": {
-    "class_type": "GetNode",
-    "inputs": {}
-  },
-  "272": {
-    "class_type": "GetNode",
-    "inputs": {}
-  },
-  "273": {
-    "class_type": "GetNode",
-    "inputs": {}
-  },
-  "270": {
-    "class_type": "SetNode",
-    "inputs": {
-      "INT": [
-        "252",
+      ],
+      "vae": [
+        "36",
         0
       ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
     }
-  },
-  "271": {
-    "class_type": "SetNode",
-    "inputs": {
-      "INT": [
-        "252",
-        1
-      ]
-    }
-  },
-  "278": {
-    "class_type": "GetNode",
-    "inputs": {}
-  },
-  "231": {
-    "class_type": "GetNode",
-    "inputs": {}
   },
   "265": {
-    "class_type": "MiniMaxH3ReferenceToVideo",
     "inputs": {
+      "ref_image_size": "max",
       "clip": [
-        "244",
+        "38",
         0
       ],
       "vae": [
-        "243",
+        "36",
         0
       ],
       "audio_vae": [
-        "242",
+        "37",
         0
       ],
       "ref_images.ref_image_0": [
-        "241",
+        "51",
         0
       ],
       "ref_images.ref_image_1": [
-        "239",
+        "49",
         0
       ],
       "ref_images.ref_image_2": [
-        "240",
+        "50",
         0
       ],
       "ref_images.ref_image_3": [
-        "238",
+        "43",
         0
       ],
       "ref_images.ref_image_4": [
-        "237",
+        "19",
         0
       ],
       "ref_images.ref_image_5": [
-        "236",
-        0
-      ],
-      "ref_images.ref_image_6": [
-        "235",
-        0
-      ],
-      "ref_images.ref_image_7": [
-        "234",
-        0
-      ],
-      "ref_images.ref_image_8": [
-        "233",
+        "23",
         0
       ],
       "ref_videos.ref_video_0": [
-        "231",
-        0
-      ],
-      "ref_videos.ref_video_1": [
-        "228",
-        0
-      ],
-      "ref_videos.ref_video_2": [
-        "227",
+        "27",
         0
       ],
       "ref_audios.ref_audio_0": [
-        "229",
+        "48",
         0
       ],
       "ref_audios.ref_audio_1": [
-        "230",
+        "14",
         0
       ],
       "ref_audios.ref_audio_2": [
-        "232",
+        "15",
         0
       ],
       "prompt": [
-        "267",
+        "263",
         0
       ],
       "width": [
-        "272",
+        "252",
         0
       ],
       "height": [
-        "273",
-        0
+        "252",
+        1
       ],
       "length": [
-        "278",
-        0
+        "250",
+        1
       ]
-    }
-  },
-  "286": {
-    "class_type": "SetNode",
-    "inputs": {
-      "FLOAT": [
-        "283",
-        0
-      ]
+    },
+    "class_type": "MiniMaxH3ReferenceToVideo",
+    "_meta": {
+      "title": "MiniMaxH3ReferenceToVideo"
     }
   },
   "250": {
-    "class_type": "ComfyMathExpression",
     "inputs": {
+      "expression": "max(5, round(a * 24)) + (5 - (max(5, round(a * 24)) % 17)) % 17",
       "values.a": [
         "259",
         0
       ]
-    }
-  },
-  "277": {
-    "class_type": "SetNode",
-    "inputs": {
-      "INT": [
-        "250",
-        1
-      ]
+    },
+    "class_type": "ComfyMathExpression",
+    "_meta": {
+      "title": "Math Expression"
     }
   },
   "226": {
-    "class_type": "SamplerCustomAdvanced",
     "inputs": {
       "noise": [
         "256",
@@ -521,283 +239,218 @@
         "255",
         0
       ],
-      "latent_image": [
-        "221",
-        0
-      ],
       "sigmas": [
         "289",
         0
+      ],
+      "latent_image": [
+        "265",
+        1
       ]
-    }
-  },
-  "292": {
-    "class_type": "SetNode",
-    "inputs": {
-      "NOISE": [
-        "256",
-        0
-      ]
+    },
+    "class_type": "SamplerCustomAdvanced",
+    "_meta": {
+      "title": "SamplerCustomAdvanced"
     }
   },
   "223": {
-    "class_type": "BasicGuider",
     "inputs": {
       "model": [
-        "251",
+        "53",
         0
       ],
       "conditioning": [
         "265",
         0
       ]
-    }
-  },
-  "293": {
-    "class_type": "SetNode",
-    "inputs": {
-      "GUIDER": [
-        "223",
-        0
-      ]
-    }
-  },
-  "294": {
-    "class_type": "SetNode",
-    "inputs": {
-      "SAMPLER": [
-        "255",
-        0
-      ]
-    }
-  },
-  "291": {
-    "class_type": "SetNode",
-    "inputs": {
-      "LATENT": [
-        "226",
-        1
-      ]
+    },
+    "class_type": "BasicGuider",
+    "_meta": {
+      "title": "Basic Guider"
     }
   },
   "116": {
-    "class_type": "VAEDecode",
     "inputs": {
-      "vae": [
-        "121",
-        0
-      ],
       "samples": [
         "144",
         1
+      ],
+      "vae": [
+        "36",
+        0
       ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
     }
   },
   "115": {
-    "class_type": "VAEDecodeAudio",
     "inputs": {
-      "vae": [
-        "114",
-        0
-      ],
       "samples": [
         "144",
         1
+      ],
+      "vae": [
+        "37",
+        0
       ]
+    },
+    "class_type": "VAEDecodeAudio",
+    "_meta": {
+      "title": "VAE Decode Audio"
     }
   },
-  "121": {
-    "class_type": "GetNode",
-    "inputs": {}
-  },
   "142": {
-    "class_type": "LTXVConcatAVLatent",
     "inputs": {
-      "audio_latent": [
-        "139",
-        1
-      ],
       "video_latent": [
         "140",
         0
+      ],
+      "audio_latent": [
+        "139",
+        1
       ]
+    },
+    "class_type": "LTXVConcatAVLatent",
+    "_meta": {
+      "title": "LTXVConcatAVLatent"
     }
   },
-  "287": {
-    "class_type": "GetNode",
-    "inputs": {}
-  },
-  "248": {
-    "class_type": "MarkdownNote",
-    "inputs": {}
-  },
   "144": {
-    "class_type": "SamplerCustomAdvanced",
     "inputs": {
-      "latent_image": [
-        "142",
-        0
-      ],
       "noise": [
-        "296",
+        "256",
         0
       ],
       "guider": [
-        "297",
+        "223",
         0
       ],
       "sampler": [
-        "298",
+        "255",
         0
       ],
       "sigmas": [
-        "299",
+        "289",
+        1
+      ],
+      "latent_image": [
+        "142",
         0
       ]
+    },
+    "class_type": "SamplerCustomAdvanced",
+    "_meta": {
+      "title": "SamplerCustomAdvanced"
     }
   },
-  "297": {
-    "class_type": "GetNode",
-    "inputs": {}
-  },
-  "298": {
-    "class_type": "GetNode",
-    "inputs": {}
-  },
-  "296": {
-    "class_type": "GetNode",
-    "inputs": {}
-  },
-  "299": {
-    "class_type": "GetNode",
-    "inputs": {}
-  },
-  "295": {
-    "class_type": "GetNode",
-    "inputs": {}
-  },
   "139": {
-    "class_type": "LTXVSeparateAVLatent",
     "inputs": {
       "av_latent": [
-        "295",
-        0
+        "226",
+        1
       ]
+    },
+    "class_type": "LTXVSeparateAVLatent",
+    "_meta": {
+      "title": "LTXVSeparateAVLatent"
     }
   },
   "309": {
+    "inputs": {},
     "class_type": "忽略多组孤海",
-    "inputs": {}
+    "_meta": {
+      "title": "忽略多组孤海"
+    }
   },
   "308": {
+    "inputs": {},
     "class_type": "忽略多组孤海",
-    "inputs": {}
-  },
-  "46": {
-    "class_type": "Note",
-    "inputs": {}
+    "_meta": {
+      "title": "忽略多组孤海"
+    }
   },
   "48": {
-    "class_type": "LoadAudio",
-    "inputs": {}
-  },
-  "10": {
-    "class_type": "SetNode",
     "inputs": {
-      "AUDIO": [
-        "48",
-        0
-      ]
+      "audio": "None"
+    },
+    "class_type": "LoadAudio",
+    "_meta": {
+      "title": "Load Audio"
     }
   },
   "14": {
-    "class_type": "LoadAudio",
-    "inputs": {}
-  },
-  "9": {
-    "class_type": "SetNode",
     "inputs": {
-      "AUDIO": [
-        "14",
-        0
-      ]
+      "audio": "None"
+    },
+    "class_type": "LoadAudio",
+    "_meta": {
+      "title": "Load Audio"
     }
   },
   "15": {
-    "class_type": "LoadAudio",
-    "inputs": {}
-  },
-  "8": {
-    "class_type": "SetNode",
     "inputs": {
-      "AUDIO": [
-        "15",
-        0
-      ]
+      "audio": "None"
+    },
+    "class_type": "LoadAudio",
+    "_meta": {
+      "title": "Load Audio"
     }
-  },
-  "311": {
-    "class_type": "Note",
-    "inputs": {}
   },
   "256": {
-    "class_type": "RandomNoise",
-    "inputs": {}
-  },
-  "310": {
-    "class_type": "忽略多组孤海",
-    "inputs": {}
-  },
-  "255": {
-    "class_type": "KSamplerSelect",
-    "inputs": {}
-  },
-  "192": {
-    "class_type": "UNETLoader",
-    "inputs": {}
-  },
-  "290": {
-    "class_type": "SetNode",
     "inputs": {
-      "SIGMAS": [
-        "289",
-        1
-      ]
+      "noise_seed": 629900698231524
+    },
+    "class_type": "RandomNoise",
+    "_meta": {
+      "title": "RandomNoise"
     }
   },
-  "251": {
-    "class_type": "GetNode",
-    "inputs": {}
+  "310": {
+    "inputs": {},
+    "class_type": "忽略多组孤海",
+    "_meta": {
+      "title": "忽略多组孤海"
+    }
   },
-  "39": {
-    "class_type": "SetNode",
+  "255": {
     "inputs": {
-      "MODEL": [
-        "53",
-        0
-      ]
+      "sampler_name": "euler"
+    },
+    "class_type": "KSamplerSelect",
+    "_meta": {
+      "title": "KSamplerSelect"
+    }
+  },
+  "192": {
+    "inputs": {
+      "unet_name": "minimax_h3_hybrid_fl2va_ref2va_b25-49-int8.safetensors",
+      "weight_dtype": "default"
+    },
+    "class_type": "UNETLoader",
+    "_meta": {
+      "title": "Load Diffusion Model"
     }
   },
   "58": {
-    "class_type": "MiniMaxH3MemoryEfficientSageAttentionPatch",
     "inputs": {
       "model": [
         "192",
         0
       ]
+    },
+    "class_type": "MiniMaxH3MemoryEfficientSageAttentionPatch",
+    "_meta": {
+      "title": "MiniMaxH3MemoryEfficientSageAttentionPatch"
     }
   },
   "264": {
-    "class_type": "VHS_VideoCombine",
     "inputs": {
       "frame_rate": 24,
       "loop_count": 0,
       "filename_prefix": "YZ_H3_一采",
       "format": "video/h264-mp4",
-      "pix_fmt": "yuv420p",
-      "crf": 19,
-      "save_metadata": true,
-      "trim_to_audio": false,
       "pingpong": false,
       "save_output": false,
       "images": [
@@ -807,64 +460,84 @@
       "audio": [
         "254",
         0
-      ]
+      ],
+      "pix_fmt": "yuv420p",
+      "crf": 19,
+      "save_metadata": true,
+      "trim_to_audio": false
+    },
+    "class_type": "VHS_VideoCombine",
+    "_meta": {
+      "title": "Video Combine 🎥🅥🅗🅢"
     }
   },
-  "322": {
-    "class_type": "LoraLoaderModelOnly",
+  "128": {
     "inputs": {
+      "lora_name": "MysticXXX_MMH3-V1.safetensors",
+      "strength_model": 0.5000000000000001,
       "model": [
         "58",
         0
       ]
-    }
-  },
-  "128": {
+    },
     "class_type": "LoraLoaderModelOnly",
-    "inputs": {
-      "model": [
-        "322",
-        0
-      ]
+    "_meta": {
+      "title": "Load LoRA"
     }
   },
   "261": {
-    "class_type": "BasicScheduler",
     "inputs": {
+      "scheduler": "beta",
+      "steps": 12,
+      "denoise": 1,
       "model": [
-        "251",
+        "53",
         0
       ]
+    },
+    "class_type": "BasicScheduler",
+    "_meta": {
+      "title": "BasicScheduler"
     }
   },
   "289": {
-    "class_type": "SplitSigmas",
     "inputs": {
+      "step": 8,
       "sigmas": [
         "261",
         0
       ]
+    },
+    "class_type": "SplitSigmas",
+    "_meta": {
+      "title": "SplitSigmas"
     }
   },
   "259": {
+    "inputs": {
+      "value": 10
+    },
     "class_type": "PrimitiveFloat",
-    "inputs": {}
+    "_meta": {
+      "title": "视频时长（秒）"
+    }
   },
   "252": {
+    "inputs": {
+      "aspect_ratio": "16:9 (Widescreen)",
+      "megapixels": 0.5
+    },
     "class_type": "ResolutionSelector",
-    "inputs": {}
+    "_meta": {
+      "title": "Resolution Selector"
+    }
   },
   "214": {
-    "class_type": "VHS_VideoCombine",
     "inputs": {
       "frame_rate": 24,
       "loop_count": 0,
       "filename_prefix": "YZ_H3_二采",
       "format": "video/h264-mp4",
-      "pix_fmt": "yuv420p",
-      "crf": 19,
-      "save_metadata": true,
-      "trim_to_audio": false,
       "pingpong": false,
       "save_output": true,
       "images": [
@@ -874,49 +547,72 @@
       "audio": [
         "115",
         0
-      ]
+      ],
+      "pix_fmt": "yuv420p",
+      "crf": 19,
+      "save_metadata": true,
+      "trim_to_audio": false
+    },
+    "class_type": "VHS_VideoCombine",
+    "_meta": {
+      "title": "Video Combine 🎥🅥🅗🅢"
     }
   },
   "263": {
-    "class_type": "Text",
-    "inputs": {}
-  },
-  "266": {
-    "class_type": "SetNode",
     "inputs": {
-      "STRING": [
-        "263",
-        0
-      ]
+      "text": "subject_definitions:\n<Subject 1> is the female doctor from <Picture 1>.\n<Subject 2> is the male patient from <Picture 2>.\n<Subject 3> is the consultation-room environment from <Picture 3>.\n\nsummary:\nThe target video is a short Chinese sitcom-style comedic consultation fragment set in <Subject 3>, where <Subject 1> and <Subject 2> play out a dry, sharp-tongued humorous doctor-patient exchange.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1], [Shot 2], [Shot 3], [Shot 4]): fully_preserved - the female doctor from <Picture 1>, white coat with a stethoscope and neat low bun, retained as the consulting physician.\n<Subject 2> (appears in [Shot 1], [Shot 2], [Shot 3], [Shot 4]): fully_preserved - the male patient from <Picture 2>, grey sweater over a light blue shirt with navy trousers, retained as the visiting patient.\n<Subject 3> (appears in [Shot 1], [Shot 2], [Shot 3], [Shot 4]): fully_preserved - the bright consultation-room setting from <Picture 3> retained as the scene environment.\n\ndetailed_description:\nThe target video uses a clean, lightly comedic Chinese-sitcom style with bright clinical lighting and a steady, conversational pace.\n[Shot 1] A medium two-shot opens inside <Subject 3>, the consultation room. <Subject 1>, the female doctor from <Picture 1>, sits behind the desk in her white coat with a stethoscope around her neck, casually raises her head to look toward the male patient, and asks in a dry, offhand voice, <d>[Chinese] 哪里不好？</d>\n[Shot 2] At 00:02.000, the shot cuts to a medium close-up of <Subject 2> (S2). He leans forward, hands clasped and resting on the office desk, deadpan and a little weary, and replies in a flat drawl, <d>[Chinese] 都说我太油腻了，我这么年轻为什么会油腻啊？</d>\n[Shot 3] At 00:05.000, the shot cuts back to a medium close-up of <Subject 1> (S1). She sets down the pen and delivers the punchline in a calm, deadpan clinical tone, <d>[Chinese] 因为你太想要结果了，本来要跑40步，你8步就跑完了，能不油吗。</d>\n[Shot 4] At 00:10.000, the shot cuts to a full-bodied wide shot from the side of the room, the doctor looking back at him calmly, while <Subject 2> (S2) blinks in utter confusion and lets out a baffled, <d>[Chinese] 啊？</d> holding the befuddled comedic beat through the final frame.\n\noverall_soundscape:\nQuiet consultation-room tone with soft HVAC hum and faint paper-handling rustle, rising to a brief burst of canned sitcom laughter after the punchline.\n\nnon_diegetic_music:\nA light, bouncy comedic underscore with playful pizzicato strings and a plucky bassline at a moderate tempo, staying low under the dialogue and punctuated by a short laugh-track sting at the punchline."
+    },
+    "class_type": "Text",
+    "_meta": {
+      "title": "Text"
     }
   },
   "307": {
+    "inputs": {},
     "class_type": "忽略多组孤海",
-    "inputs": {}
+    "_meta": {
+      "title": "忽略多组孤海"
+    }
   },
   "43": {
+    "inputs": {
+      "image": "None"
+    },
     "class_type": "LoadImage",
-    "inputs": {}
+    "_meta": {
+      "title": "Load Image"
+    }
   },
   "140": {
-    "class_type": "MinimaxH3LatentUpscaler3D",
     "inputs": {
+      "model_name": "minimax_h3_latent_upscaler_3d_fp16.safetensors",
+      "mode": "scale by multiplier",
+      "align": 32,
+      "keep_proportion": "cuda",
+      "device": "fp16",
+      "precision": false,
+      "offload_after_upscale": false,
       "latent": [
         "139",
         0
       ],
       "mode.scale": [
-        "287",
+        "283",
         0
       ]
+    },
+    "class_type": "MinimaxH3LatentUpscaler3D",
+    "_meta": {
+      "title": "MinimaxH3LatentUpscaler3D"
     }
   },
-  "300": {
-    "class_type": "Note",
-    "inputs": {}
-  },
   "283": {
+    "inputs": {
+      "value": 1.5000000000000002
+    },
     "class_type": "easy float",
-    "inputs": {}
+    "_meta": {
+      "title": "Float"
+    }
   }
 }

@@ -999,6 +999,14 @@ $json.UNETLoader.input.required.unet_name[1].options
 | `LoadImage`（未连接的参考图） | 引用不存在的图片文件导致报错 | 删除所有未连接的 LoadImage |
 | `Note` | 同 MarkdownNote | 删除 |
 
+> **更新（2026-10-14）**：`workflow_converter.py` 的转换引擎已改为 `cli/workflow_to_api.py`
+> 的 `convert_ui_to_api`（与 `comfy run` 执行时同一个转换器）。新引擎自动剔除
+> Note/MarkdownNote/Reroute/GetNode/SetNode 等 UI 专有节点、自动过滤 seed 后的
+> control_after_generate 标记值、并展开子图（含把实例暴露的 widget 值注入内部节点），
+> 上表第一类手动清理已不再需要；**未连接的 LoadImage 仍须检查**（转换器按图论孤岛处理，
+> 但历史上它保留未连接节点，执行前建议核对）。另：无 object_info 时转换器直接报错退出，
+> 不再静默产出缺 widget 值的"结构骨架"文件。
+
 #### 经验清单
 
 1. **UI 转 API 后必须清理节点**：MarkdownNote、Note、未连接的 LoadImage 等节点在 API 格式中无作用

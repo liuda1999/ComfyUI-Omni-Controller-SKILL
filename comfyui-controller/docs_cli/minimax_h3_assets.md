@@ -33,11 +33,16 @@
 > **格式说明**：
 > - **UI 格式**（无 `_api` 后缀）：ComfyUI 界面可直接 `Load` 加载、可视化编辑与运行。
 > - **API 格式**（`_api` 后缀）：供 `scripts/run_workflow.py` 或 CLI `comfy run` 脚本化执行。
->   ⚠️ **重要**：API 副本由本机降级模式转换（本机缺 H3 与第三方节点 schema），
->   **节点间连接结构正确，但各节点的 widget 参数未完整映射**。
->   请在装齐节点包的测试环境中，用 `scripts/workflow_converter.py` 重新转换以获得完整参数：
+>   ✅ **2026-10-14 已补齐**：API 副本早期由降级模式转换（缺 H3 与第三方节点 schema），
+>   widget 参数未映射、loader 的模型名/LoRA 名全丢。现已用库内缓存
+>   `assets/object_info.json` 离线重转换，并与 UI 原件逐节点核对一致
+>   （模型清单完整、muted/bypass 节点按可执行语义剔除、子图实例暴露的 widget 值注入内部节点）。
+>   转换器同时修复为"无 object_info 即显式失败"，不会再静默产出缺值文件。
+>   后续如需重新转换（推荐在装齐节点包的环境，schema 最全）：
 >   ```bash
 >   python scripts/workflow_converter.py --input minimax_h3_xxx_v1.0.0.json --output xxx_api.json --host 127.0.0.1 --port 8188
+>   # 离线转换（无服务器时用缓存的 object_info）：
+>   python scripts/workflow_converter.py --input minimax_h3_xxx_v1.0.0.json --output xxx_api.json --object-info-file assets/object_info.json
 >   ```
 
 ***

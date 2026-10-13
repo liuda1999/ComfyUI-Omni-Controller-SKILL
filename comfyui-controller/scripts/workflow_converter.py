@@ -1,6 +1,19 @@
 #!/usr/bin/env python3
-"""Convert ComfyUI web format workflow to API format."""
+"""Convert ComfyUI web format workflow to API format.
+
+CLI 入口。转换引擎为 ``cli/workflow_to_api.py`` 的 ``convert_ui_to_api``
+（与 ``comfy run`` 执行工作流时使用的同一个转换器）：
+- UI 辅助节点（Note/MarkdownNote/Reroute 等）自动剔除，产出即可执行的 API prompt；
+- seed 类 widget 后的 control_after_generate 标记值自动过滤；
+- object_info 缺失某节点类型时，从 UI 节点自身 inputs 的 widget 标记恢复
+  widget 名（MiniMax H3 等自定义节点即使不在 object_info 中也不丢值）。
+
+本文件下方的 ``convert_web_to_api`` 等为旧版转换实现（v0.2.0 前由 main 直接调用），
+因无法从 UI 节点自身恢复 widget 名、且保留 UI 辅助节点，已不再使用；
+保留作行为参考（EXPERIENCE.md §13.7/§24 引用了 ``_filter_control_values`` 等实测证据）。
+"""
 import os
+import sys
 import argparse
 import json
 import urllib.request
@@ -329,19 +342,37 @@ def main():
     ap = argparse.ArgumentParser(description="Convert ComfyUI workflow format")
     ap.add_argument("--input", required=True, help="Input workflow JSON")
     ap.add_argument("--output", required=True, help="Output workflow JSON")
-    ap.add_argument("--host", default="127.0.0.1", help="ComfyUI server host")
-    ap.add_argument("--port", default=DEFAULT_PORT, help="ComfyUI server port")  
+    ap.add_argument("--host", default=DEFAULT_HOST, help="ComfyUI server host")
+    ap.add_argument("--port", default=DEFAULT_PORT, help="ComfyUI server port")
+    ap.add_argument("--object-info-file",
+                    help="object_info JSON 文件路径（离线转换用，优先于服务器）")
     args = ap.parse_args()
 
     with open(args.input, "r", encoding="utf-8") as f:
         workflow = json.load(f)
 
-    # 从服务器获取 object_info 用于 widget 映射
-    object_info = get_object_info(args.host, args.port)
-    if not object_info:
-        print("Warning: 无法获取 object_info，widget 值可能无法正确映射")
+    # 从服务器获取 object_info 用于 widget 映射；离线场景可用 --object-info-file 提供缓存
+    if args.object_info_file:
+        with open(args.object_info_file, "r", encoding="utf-8") as f:
+            object_info = json.load(f)
+        print(f"已从文件加载 object_info: {args.object_info_file}（{len(object_info)} 个节点类型）")
+    else:
+        object_info = get_object_info(args.host, args.port)
+        if not object_info:
+            print("Warning: 无法获取 object_info，widget 值可能无法正确映射")
 
-    api_workflow = convert_web_to_api(workflow, object_info)
+    # 没有 object_info 时 widget 值无法映射，产出的 API 文件只含链接、不含任何标量输入
+    # （loader 的模型名/步数等全丢），既不可执行也无法用于依赖核对——必须显式失败，
+    # 不允许静默产出这种"结构骨架"文件（历史事故：库内 6 个 H3 API 文件即如此产生）。
+    if not object_info:
+        print("Error: 无 object_info 无法完成 UI→API 转换（widget 值会全部丢失）。"
+              "请确保 ComfyUI 服务器可达，或用 --object-info-file 提供缓存的 object_info。")
+        raise SystemExit(1)
+
+    # 权威转换引擎：与 `comfy run` 同一个转换器（cli/workflow_to_api.py）
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
+    from cli.workflow_to_api import convert_ui_to_api
+    api_workflow = convert_ui_to_api(workflow, object_info)
 
     with open(args.output, "w", encoding="utf-8") as f:
         json.dump(api_workflow, f, indent=2, ensure_ascii=False)

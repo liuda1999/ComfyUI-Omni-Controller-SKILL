@@ -80,7 +80,7 @@
 | `start_server.py` | 服务器启动脚本（含首次安装，官方标准方式） | `--port`, `--install`, `--cpu` | 稳定 |
 | `run_workflow.py` | WebSocket 工作流执行器 | `--workflow`, `--wait`, `--timeout`, `--output-dir` | 需测试 |
 | `check_status.py` | 环境检查（Python/PyTorch/CUDA/GPU/节点/模型） | 无参数，全量输出 | 稳定 |
-| `workflow_converter.py` | UI 格式(nodes/links) -> API 格式(class_type/inputs) | `--input`, `--output` | 稳定 |
+| `workflow_converter.py` | UI 格式(nodes/links) -> API 格式(class_type/inputs) | `--input`, `--output`, `--object-info-file` | 稳定 |
 | `edit_workflow.py` | 工作流参数编辑 | `--positive-prompt`, `--seed`, `--width`, `--height`, `--steps`, `--cfg` | 可用 |
 | `dependency_manager.py` | 依赖分析+自动修复 | `--workflow`, `--fix` | 需测试 |
 | `download_models.py` | 多源模型下载（HF/CivitAI/URL） | URL列表, `--overwrite`, `--no-pget` | 可用 |

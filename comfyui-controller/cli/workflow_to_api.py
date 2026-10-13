@@ -116,6 +116,10 @@ def convert_ui_to_api(workflow: dict, object_info: dict) -> dict:
     link_map = _build_link_map(links)
 
     node_by_id = {str(n.get("id")): n for n in nodes}
+    # 子图实例暴露的 widget 值注入内部节点（必须在 node_by_id 建好后、
+    # 逐节点构建 api_prompt 前完成）
+    if subgraph_ctx.input_targets:
+        _inject_subgraph_widget_values(subgraph_ctx, subgraph_defs, node_by_id)
     primitive_values = _collect_primitive_values(nodes)
     bypassed = _collect_bypassed(nodes)
     nodes_to_exclude = _collect_excluded(nodes)
@@ -218,6 +222,9 @@ class _SubgraphCtx:
         self.output_sources: dict[str, dict[tuple[Any, int], int]] = {}
         # subgraph_node_id_str -> {outer_slot: subgraph_input_idx} (when names differ in order)
         self.outer_to_input_idx: dict[str, dict[int, int]] = {}
+        # subgraph_node_id_str -> 原始实例节点（展开后实例本身不再出现在 nodes 中，
+        # 但其 widgets_values 需要注入内部节点，故在此保留引用）
+        self.instance_nodes: dict[str, dict] = {}
 
 
 def _collect_subgraph_defs(workflow: dict) -> dict[str, dict]:
@@ -270,6 +277,7 @@ def _expand_subgraphs(
                 ctx.input_targets[str(node.get("id"))] = input_map
                 ctx.output_sources[str(node.get("id"))] = output_map
                 ctx.outer_to_input_idx[str(node.get("id"))] = _outer_slot_to_input_idx(node, subgraph_defs[node_type])
+                ctx.instance_nodes[str(node.get("id"))] = node
             else:
                 expanded.append(node)
         nodes = expanded
@@ -464,6 +472,109 @@ def _resolve_subgraph_output(node_id_str: str, slot: Any, ctx: _SubgraphCtx, dep
             new_id = f"{node_id_str}:{internal_node}"
             return _resolve_subgraph_output(new_id, internal_slot, ctx, depth + 1)
     return node_id_str, slot
+
+
+_WIDGET_TYPE_NAMES = {"INT", "FLOAT", "STRING", "BOOLEAN", "COMBO"}
+
+
+def _is_widget_type_name(type_name: Any) -> bool:
+    """判断子图定义输入的 type 字符串是否为 widget 类（占 widgets_values 位）。
+
+    与 ``_is_widget_input`` 同一套判定，但作用于定义输入的 type 字符串：
+    INT/FLOAT/STRING/BOOLEAN/COMBO 与 COMFY_*COMBO* 是 widget；
+    ``*``/``""`` 是连接类型的通配符；其余大写名（MODEL/LATENT/VAE/
+    H3_TEMPORAL_PARAM 等）是连接类型，不占 widget 位。
+    """
+    if not isinstance(type_name, str) or not type_name:
+        return False
+    if type_name in _WIDGET_TYPE_NAMES:
+        return True
+    if type_name.startswith("COMFY_") and "COMBO" in type_name:
+        return True
+    if type_name in ("", "*"):
+        return False
+    return not type_name.isupper()  # 小写自定义 widget 类型
+
+
+def _widget_slot_index(node: dict, input_name: Any) -> int | None:
+    """input_name 在节点 widgets_values 中的位置（按 inputs 列表中 widget 标记的顺序）。"""
+    pos = 0
+    for inp in node.get("inputs") or []:
+        if not isinstance(inp, dict) or not inp.get("widget"):
+            continue
+        if inp.get("name") == input_name:
+            return pos
+        pos += 1
+    return None
+
+
+def _inject_subgraph_widget_values(
+    ctx: _SubgraphCtx, subgraph_defs: dict[str, dict], node_by_id: dict[str, dict]
+) -> None:
+    """把子图实例暴露的 widget 值注入展开后的内部节点。
+
+    前端语义：实例节点的 widgets_values 按**定义中 widget 类输入的顺序**逐位
+    对应（链接类输入不占位）。子图展开只改写了链接，内部节点仍保留自己的
+    widgets_values 默认值——若不注入，暴露的 COMBO（如 LoRA 模型名
+    minimax_h3_latent_upscaler_3d_fp16）会静默回退成子图内部默认值（bf16），
+    产出的 API prompt 与 UI 工作流实际行为不一致。
+
+    实例侧已连线的输入无需注入：外链已在 _rewrite_links_for_subgraphs 中改写到
+    内部目标，执行时链接优先于 widget 值（_collect_widget_inputs 会跳过
+    link_inputs 中的名字）。
+
+    安全闸：仅当注入位现有值为 None 或与注入值 JSON 类型一致时才写入，
+    避免在位置推断存疑的节点上破坏原有值。
+    """
+    for instance_id, input_map in (ctx.input_targets or {}).items():
+        outer = ctx.instance_nodes.get(instance_id)
+        sg_def = subgraph_defs.get(str(outer.get("type"))) if isinstance(outer, dict) else None
+        if not outer or not sg_def:
+            continue
+        values = outer.get("widgets_values")
+        if not isinstance(values, list) or not values:
+            continue
+        slot = 0
+        for idx, in_def in enumerate(sg_def.get("inputs") or []):
+            if not isinstance(in_def, dict):
+                continue
+            if not _is_widget_type_name(in_def.get("type")):
+                continue  # 链接类输入不占 widgets_values 位
+            if slot >= len(values):
+                break
+            value = values[slot]
+            slot += 1
+            if value is None:
+                continue
+            for internal_id, internal_slot in input_map.get(idx) or []:
+                inode = node_by_id.get(f"{instance_id}:{internal_id}")
+                if not isinstance(inode, dict):
+                    continue
+                ins = inode.get("inputs") or []
+                if not isinstance(internal_slot, int) or not (0 <= internal_slot < len(ins)):
+                    continue
+                inp = ins[internal_slot]
+                if not isinstance(inp, dict):
+                    continue
+                wpos = _widget_slot_index(inode, inp.get("name"))
+                if wpos is None:
+                    continue
+                wv = inode.get("widgets_values")
+                if not isinstance(wv, list):
+                    wv = []
+                    inode["widgets_values"] = wv
+                while len(wv) <= wpos:
+                    wv.append(None)
+                current = wv[wpos]
+                if current is not None and not isinstance(current, type(value)):
+                    # 位置推断与现有值类型不符——保守跳过，不破坏原值
+                    logger.warning(
+                        "Subgraph widget injection skipped (type mismatch): "
+                        "instance=%s input=%s value=%r existing=%r",
+                        instance_id, inp.get("name"), value, current,
+                    )
+                    continue
+                wv[wpos] = value
 
 
 def _resolve_subgraph_input_all(

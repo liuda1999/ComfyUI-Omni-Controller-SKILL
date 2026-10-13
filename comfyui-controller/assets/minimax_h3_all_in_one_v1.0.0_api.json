@@ -1,324 +1,37 @@
 {
-  "225": {
-    "class_type": "LoadAudio",
-    "inputs": {}
-  },
-  "224": {
-    "class_type": "LoadAudio",
-    "inputs": {}
-  },
   "231": {
+    "inputs": {},
     "class_type": "Fast Groups Bypasser (rgthree)",
-    "inputs": {}
-  },
-  "226": {
-    "class_type": "LoadAudio",
-    "inputs": {}
-  },
-  "233": {
-    "class_type": "VHS_LoadVideo",
-    "inputs": {
-      "video": "VID_20260907_130048.mp4",
-      "force_rate": 0,
-      "custom_width": 0,
-      "custom_height": 0,
-      "frame_load_cap": 0,
-      "skip_first_frames": 0,
-      "select_every_nth": 1,
-      "format": "AnimateDiff"
+    "_meta": {
+      "title": "音频"
     }
-  },
-  "234": {
-    "class_type": "VHS_LoadVideo",
-    "inputs": {
-      "video": "VID_20260907_130048.mp4",
-      "force_rate": 0,
-      "custom_width": 0,
-      "custom_height": 0,
-      "frame_load_cap": 0,
-      "skip_first_frames": 0,
-      "select_every_nth": 1,
-      "format": "AnimateDiff"
-    }
-  },
-  "221": {
-    "class_type": "LoadImage",
-    "inputs": {}
-  },
-  "215": {
-    "class_type": "LoadImage",
-    "inputs": {}
-  },
-  "223": {
-    "class_type": "LoadImage",
-    "inputs": {}
-  },
-  "222": {
-    "class_type": "LoadImage",
-    "inputs": {}
-  },
-  "249": {
-    "class_type": "SetNode",
-    "inputs": {
-      "INT": [
-        "115",
-        1
-      ]
-    }
-  },
-  "248": {
-    "class_type": "SetNode",
-    "inputs": {
-      "INT": [
-        "115",
-        0
-      ]
-    }
-  },
-  "238": {
-    "class_type": "SetNode",
-    "inputs": {
-      "IMAGE": [
-        "216",
-        0
-      ]
-    }
-  },
-  "239": {
-    "class_type": "SetNode",
-    "inputs": {
-      "IMAGE": [
-        "217",
-        0
-      ]
-    }
-  },
-  "240": {
-    "class_type": "SetNode",
-    "inputs": {
-      "IMAGE": [
-        "218",
-        0
-      ]
-    }
-  },
-  "241": {
-    "class_type": "SetNode",
-    "inputs": {
-      "IMAGE": [
-        "221",
-        0
-      ]
-    }
-  },
-  "242": {
-    "class_type": "SetNode",
-    "inputs": {
-      "IMAGE": [
-        "220",
-        0
-      ]
-    }
-  },
-  "243": {
-    "class_type": "SetNode",
-    "inputs": {
-      "IMAGE": [
-        "219",
-        0
-      ]
-    }
-  },
-  "246": {
-    "class_type": "SetNode",
-    "inputs": {
-      "IMAGE": [
-        "215",
-        0
-      ]
-    }
-  },
-  "245": {
-    "class_type": "SetNode",
-    "inputs": {
-      "IMAGE": [
-        "223",
-        0
-      ]
-    }
-  },
-  "244": {
-    "class_type": "SetNode",
-    "inputs": {
-      "IMAGE": [
-        "222",
-        0
-      ]
-    }
-  },
-  "229": {
-    "class_type": "SetNode",
-    "inputs": {
-      "AUDIO": [
-        "225",
-        0
-      ]
-    }
-  },
-  "230": {
-    "class_type": "SetNode",
-    "inputs": {
-      "AUDIO": [
-        "226",
-        0
-      ]
-    }
-  },
-  "228": {
-    "class_type": "SetNode",
-    "inputs": {
-      "AUDIO": [
-        "224",
-        0
-      ]
-    }
-  },
-  "235": {
-    "class_type": "SetNode",
-    "inputs": {
-      "IMAGE": [
-        "232",
-        0
-      ]
-    }
-  },
-  "236": {
-    "class_type": "SetNode",
-    "inputs": {
-      "IMAGE": [
-        "233",
-        0
-      ]
-    }
-  },
-  "237": {
-    "class_type": "SetNode",
-    "inputs": {
-      "IMAGE": [
-        "234",
-        0
-      ]
-    }
-  },
-  "262": {
-    "class_type": "GetNode",
-    "inputs": {}
-  },
-  "258": {
-    "class_type": "GetNode",
-    "inputs": {}
-  },
-  "257": {
-    "class_type": "GetNode",
-    "inputs": {}
-  },
-  "256": {
-    "class_type": "GetNode",
-    "inputs": {}
-  },
-  "261": {
-    "class_type": "GetNode",
-    "inputs": {}
-  },
-  "260": {
-    "class_type": "GetNode",
-    "inputs": {}
-  },
-  "259": {
-    "class_type": "GetNode",
-    "inputs": {}
-  },
-  "267": {
-    "class_type": "GetNode",
-    "inputs": {}
-  },
-  "266": {
-    "class_type": "GetNode",
-    "inputs": {}
-  },
-  "254": {
-    "class_type": "GetNode",
-    "inputs": {}
-  },
-  "255": {
-    "class_type": "GetNode",
-    "inputs": {}
-  },
-  "252": {
-    "class_type": "GetNode",
-    "inputs": {}
-  },
-  "265": {
-    "class_type": "GetNode",
-    "inputs": {}
-  },
-  "264": {
-    "class_type": "GetNode",
-    "inputs": {}
-  },
-  "263": {
-    "class_type": "GetNode",
-    "inputs": {}
-  },
-  "272": {
-    "class_type": "GetNode",
-    "inputs": {}
-  },
-  "273": {
-    "class_type": "GetNode",
-    "inputs": {}
   },
   "131": {
-    "class_type": "ComfyMathExpression",
     "inputs": {
+      "expression": "max(5, round(a * 24)) + (5 - (max(5, round(a * 24)) % 17)) % 17",
       "values.a": [
         "132",
         0
       ]
+    },
+    "class_type": "ComfyMathExpression",
+    "_meta": {
+      "title": "Math Expression"
     }
-  },
-  "250": {
-    "class_type": "SetNode",
-    "inputs": {
-      "INT": [
-        "131",
-        1
-      ]
-    }
-  },
-  "274": {
-    "class_type": "GetNode",
-    "inputs": {}
-  },
-  "275": {
-    "class_type": "GetNode",
-    "inputs": {}
-  },
-  "140": {
-    "class_type": "MarkdownNote",
-    "inputs": {}
   },
   "173": {
-    "class_type": "ConditioningZeroOut",
     "inputs": {
       "conditioning": [
         "247",
         0
       ]
+    },
+    "class_type": "ConditioningZeroOut",
+    "_meta": {
+      "title": "ConditioningZeroOut"
     }
   },
   "122": {
-    "class_type": "VAEDecode",
     "inputs": {
       "samples": [
         "171",
@@ -328,10 +41,13 @@
         "280",
         0
       ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
     }
   },
   "121": {
-    "class_type": "VAEDecodeAudio",
     "inputs": {
       "samples": [
         "171",
@@ -341,185 +57,152 @@
         "184",
         0
       ]
+    },
+    "class_type": "VAEDecodeAudio",
+    "_meta": {
+      "title": "VAE Decode Audio"
     }
   },
   "147": {
-    "class_type": "H3SigmaRefiner",
     "inputs": {
       "sigmas": [
         "124",
         0
       ]
+    },
+    "class_type": "H3SigmaRefiner",
+    "_meta": {
+      "title": "H3SigmaRefiner"
     }
   },
   "123": {
+    "inputs": {
+      "sampler_name": "euler"
+    },
     "class_type": "KSamplerSelect",
-    "inputs": {}
+    "_meta": {
+      "title": "KSamplerSelect"
+    }
   },
   "124": {
-    "class_type": "BasicScheduler",
     "inputs": {
+      "scheduler": "beta",
+      "steps": 12,
+      "denoise": 1,
       "model": [
         "153",
         0
       ]
+    },
+    "class_type": "BasicScheduler",
+    "_meta": {
+      "title": "BasicScheduler"
     }
   },
   "247": {
-    "class_type": "MiniMaxH3ReferenceToVideo",
     "inputs": {
+      "ref_image_size": "max",
       "clip": [
         "128",
         0
       ],
-      "ref_images.ref_image_0": [
-        "252",
-        0
-      ],
-      "ref_images.ref_image_1": [
-        "255",
-        0
-      ],
-      "ref_images.ref_image_2": [
-        "254",
-        0
-      ],
-      "ref_images.ref_image_3": [
-        "262",
-        0
-      ],
-      "ref_images.ref_image_4": [
-        "258",
-        0
-      ],
-      "ref_images.ref_image_5": [
-        "257",
-        0
-      ],
-      "ref_images.ref_image_6": [
-        "256",
-        0
-      ],
-      "ref_images.ref_image_7": [
-        "261",
-        0
-      ],
-      "ref_images.ref_image_8": [
-        "260",
-        0
-      ],
-      "ref_videos.ref_video_0": [
-        "259",
-        0
-      ],
-      "ref_videos.ref_video_1": [
-        "267",
-        0
-      ],
-      "ref_videos.ref_video_2": [
-        "266",
-        0
-      ],
-      "ref_audios.ref_audio_0": [
-        "265",
-        0
-      ],
-      "ref_audios.ref_audio_1": [
-        "264",
-        0
-      ],
-      "ref_audios.ref_audio_2": [
-        "263",
-        0
-      ],
-      "width": [
-        "272",
-        0
-      ],
-      "height": [
-        "273",
-        0
-      ],
-      "length": [
-        "274",
-        0
-      ],
-      "prompt": [
-        "275",
+      "vae": [
+        "280",
         0
       ],
       "audio_vae": [
         "184",
         0
       ],
-      "vae": [
-        "280",
+      "ref_images.ref_image_0": [
+        "216",
         0
+      ],
+      "ref_images.ref_image_1": [
+        "217",
+        0
+      ],
+      "prompt": [
+        "214",
+        0
+      ],
+      "width": [
+        "115",
+        0
+      ],
+      "height": [
+        "115",
+        1
+      ],
+      "length": [
+        "131",
+        1
       ]
+    },
+    "class_type": "MiniMaxH3ReferenceToVideo",
+    "_meta": {
+      "title": "MiniMaxH3ReferenceToVideo"
     }
   },
-  "218": {
-    "class_type": "LoadImage",
-    "inputs": {}
-  },
   "148": {
-    "class_type": "ModelAttentionBackend",
     "inputs": {
+      "attention": "comfy kitchen attention",
       "model": [
         "127",
         0
       ]
+    },
+    "class_type": "ModelAttentionBackend",
+    "_meta": {
+      "title": "ModelAttentionBackend"
     }
   },
   "285": {
+    "inputs": {
+      "input_text": "873594099337389"
+    },
     "class_type": "TE_text_display",
-    "inputs": {}
-  },
-  "220": {
-    "class_type": "LoadImage",
-    "inputs": {}
-  },
-  "219": {
-    "class_type": "LoadImage",
-    "inputs": {}
+    "_meta": {
+      "title": "TE_text_display"
+    }
   },
   "192": {
-    "class_type": "MiniMaxH3MemoryEfficientSageAttentionPatch",
     "inputs": {
       "model": [
         "279",
         0
       ]
+    },
+    "class_type": "MiniMaxH3MemoryEfficientSageAttentionPatch",
+    "_meta": {
+      "title": "MiniMaxH3MemoryEfficientSageAttentionPatch"
     }
   },
   "127": {
-    "class_type": "UNETLoader",
-    "inputs": {}
-  },
-  "253": {
-    "class_type": "SetNode",
     "inputs": {
-      "STRING": [
-        "214",
-        0
-      ]
+      "unet_name": "H3\\minimax_h3_ref2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    },
+    "class_type": "UNETLoader",
+    "_meta": {
+      "title": "Load Diffusion Model"
     }
   },
   "286": {
+    "inputs": {
+      "text": "subject_definitions\n\n<Picture 1>：参考图1中的女人，约30–40岁，浅棕齐肩波浪发，蓝灰色眼睛，穿米白色V领蕾丝中长裙，袖口与裙摆有蕾丝花边，浅米色平底鞋。保留她的面部、发型、服装材质、裙长与全身比例。\n\n海鸥：白身灰翼海鸥，翼尖黑色，飞行姿态自然，翅膀扇动清晰。\n\n海岛花海：海岛环境，地面与坡地覆盖密集的红色、粉色、白色单朵花。每朵花的花瓣、花心清晰可辨，一朵朵独立开放，不是团状花球或模糊色块。远处有海面、明亮天空与轻微海雾。除唯一一栋有人居住的房子外，花海与远景中不得出现任何其他房屋或建筑。\n\n有人居住的房子：温馨、完整的居住房屋，不是破烂小木屋。浅色墙面、完整门窗、屋檐、窗帘、门廊灯、盆栽与生活痕迹，门口和墙面有藤蔓与红粉白单朵花装饰。房子看起来有人长期居住，干净、稳固、有生活气息。整段视频中只有这一栋房子，且始终是同一栋；除它以外，不得出现任何其他房屋、木屋、别墅、村落、建筑群、亭子、塔楼、帐篷、远景房屋或人工建筑轮廓。\n\n藤蔓花朵门廊：属于这栋唯一房屋的门口花拱，藤蔓自然攀爬，红粉白单朵花点缀在门框与墙面，不遮挡女人全身。\n\nsummary\n\n12秒海岛花海场景：镜头从海鸥背后俯拍并跟随飞行，同时带旋转环绕运动。海鸥飞向整段视频中唯一一栋有人居住的房子门口，落在 <Picture 1> 女人手上，女人全身入镜。突然一阵大风刮来，带短暂时间延迟与微慢动作感，海鸥从女人手上飞走，风把一朵朵红粉白花卷起飞向天空。焦点转移到花朵，镜头环绕并仰拍花朵升空。全片只出现这一栋房子，升空后下方也只能看到同一栋房子逐渐变小，无其他建筑。\n\nretention_analysis\n\n<Picture 1> 在 4.0–8.0 秒门口段落中必须全身入镜，面部、浅棕齐肩波浪发、米白蕾丝中长裙、蕾丝袖口、裙摆和平底鞋保持一致。\n\n有人居住的房子：全片唯一建筑，0–12 秒只能出现这一栋。\n\n0–3.0 秒海鸥飞越花海时，远景不得出现任何房屋或建筑。\n\n3.0–7.0 秒门口段落只出现这一栋房子。\n\n7.0–12.0 秒镜头升空后，下方仍只能出现这一栋房子变小，不得出现第二栋房屋、村落、建筑群、远景房屋、废弃木屋、凉亭等。\n房子必须呈现为有人居住的温馨房屋，不是破旧小木屋；保留完整门窗、窗帘、门廊灯、盆栽与生活痕迹。\n\n花海必须是一朵朵清晰独立的花，不是花团；红、粉、白单朵花在风起时也能分辨花瓣与花心。\n\n参考标签 <Picture 1> 在所有段落中保持一致，不新增未定义标签。\n\n无对白、无歌词、无可见字幕或场景文字。\n\ndetailed_description\n\n0.0–1.5秒：镜头位于海鸥背后上方，约45度俯拍，焦点锁定飞行中的海鸥。镜头从一开始就带缓慢旋转环绕，海鸥翅膀扇动，从海岛花海上方掠过。下方是密集的红色、粉色、白色单朵花，一朵朵独立开放，花瓣和花心清晰可辨。远处海面反光，背景轻微虚化，焦点始终跟随海鸥。此段不出现任何房屋或建筑。\n\n1.5–3.0秒：海鸥向整段视频中唯一一栋有人居住的房子方向下降。镜头保持背后俯拍跟随，并围绕海鸥做半圈旋转环绕，让飞行路径更有动感。房子逐渐清晰：浅色墙面、完整门窗、窗帘、门廊灯、盆栽和藤蔓花朵装饰，门口形成花拱，呈现温馨生活气息。画面中只能出现这一栋房子，不得出现第二栋房屋或远景建筑。\n\n3.0–4.5秒：海鸥飞到唯一房子门口，镜头随海鸥下降，同时从背后俯拍转为环绕下降。<Picture 1> 女人站在门口，右手前伸、掌心向上，海鸥落在她的手掌或手腕附近。镜头环绕她半圈，确保女人全身入镜，从头顶到浅米色平底鞋完整可见，米白蕾丝中长裙被微风轻拂。画面只包含这一栋房子、门廊花拱、花海与海天，不出现其他建筑。\n\n4.5–6.2秒：海鸥停在女人手边，女人微微低头看向海鸥。镜头继续缓慢环绕，展示女人、门口花拱和唯一有人居住的房子细节：窗帘、门廊灯、盆栽、干净墙面。背景花海仍可见，红粉白单朵花在风中轻轻摇曳。全片仍然只有这一栋房子。\n\n6.2–7.0秒：突然刮来一阵大风。风声先到，画面出现短暂时间延迟感：约0.2–0.3秒的凝滞与微慢动作，随后女人的发丝、裙摆、门口藤蔓和单朵花才被吹动。海鸥受惊，从女人手上振翅飞走，向右上方离开。镜头带旋转和手持微震，女人仍站在唯一房子门口，裙摆和蕾丝袖口被强风吹起。不得出现第二栋房屋或建筑。\n\n7.0–9.0秒：风把地面、藤蔓和花拱上的红色、粉色、白色单朵花卷起。大量独立花朵与花瓣脱离枝头，沿上升气流飞向天空，每朵花在空中仍能分辨花瓣与花心。焦点从女人手部转移到被卷起的花朵，镜头开始旋转上升，海鸥在远处飞离画面。下方仍只出现同一栋唯一房子，不出现其他房屋、村落或建筑群。\n\n9.0–12.0秒：镜头仰拍，焦点跟随飞升的红粉白单朵花。镜头以环绕方式向上运动，花朵与花瓣穿过蓝天和阳光，向画面上方飞出。下方花海和唯一有人居住的房子逐渐变小，仍只有这一栋；海鸥成为远处小点。最后焦点仍锁在升空花朵上，画面结束于花朵飞向天空的高处，旋转动感逐渐稳定。全片无第二栋房子或任何其他建筑入画。"
+    },
     "class_type": "Text Multiline",
-    "inputs": {}
+    "_meta": {
+      "title": "Text Multiline"
+    }
   },
   "180": {
-    "class_type": "VHS_VideoCombine",
     "inputs": {
       "frame_rate": 24,
       "loop_count": 0,
       "filename_prefix": "minimaxh3",
       "format": "video/h264-mp4",
-      "pix_fmt": "yuv420p",
-      "crf": 12,
-      "save_metadata": true,
-      "trim_to_audio": false,
       "pingpong": false,
       "save_output": true,
       "images": [
@@ -529,82 +212,148 @@
       "audio": [
         "121",
         0
-      ]
+      ],
+      "pix_fmt": "yuv420p",
+      "crf": 12,
+      "save_metadata": true,
+      "trim_to_audio": false
+    },
+    "class_type": "VHS_VideoCombine",
+    "_meta": {
+      "title": "Video Combine 🎥🅥🅗🅢"
     }
   },
   "217": {
+    "inputs": {
+      "image": "Qwen_image_2.1_00010.png"
+    },
     "class_type": "LoadImage",
-    "inputs": {}
+    "_meta": {
+      "title": "Load Image"
+    }
   },
   "184": {
+    "inputs": {
+      "vae_name": "H3\\minimax_h3_audio_vae_fp32.safetensors"
+    },
     "class_type": "VAELoader",
-    "inputs": {}
+    "_meta": {
+      "title": "Load VAE"
+    }
   },
   "280": {
+    "inputs": {
+      "vae_name": "H3\\minimax_h3_video_vae_int8_convrot.safetensors"
+    },
     "class_type": "VAELoader",
-    "inputs": {}
+    "_meta": {
+      "title": "Load VAE"
+    }
   },
   "145": {
-    "class_type": "LoraLoaderModelOnly",
     "inputs": {
+      "lora_name": "H3\\minimax_h3_ref2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors",
+      "strength_model": 1,
       "model": [
         "148",
         0
       ]
+    },
+    "class_type": "LoraLoaderModelOnly",
+    "_meta": {
+      "title": "Load LoRA"
     }
   },
   "128": {
-    "class_type": "CLIPLoader",
-    "inputs": {}
-  },
-  "232": {
-    "class_type": "VHS_LoadVideo",
     "inputs": {
-      "video": "9月25日(2).mp4",
-      "force_rate": 0,
-      "custom_width": 0,
-      "custom_height": 0,
-      "frame_load_cap": 0,
-      "skip_first_frames": 0,
-      "select_every_nth": 1,
-      "format": "AnimateDiff"
+      "clip_name": "H3\\qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    },
+    "class_type": "CLIPLoader",
+    "_meta": {
+      "title": "Load CLIP"
     }
   },
   "153": {
-    "class_type": "ModelPreviewOverrideKJ",
     "inputs": {
-      "preview_frames": [
-        "131",
-        1
-      ],
+      "max_resolution": 1024,
+      "jpeg_quality": 80,
+      "suppress_default_preview": true,
+      "preview_fps": 12,
+      "tiny_vae": "taeh3.safetensors",
+      "vae": "",
       "model": [
         "192",
         0
+      ],
+      "preview_frames": [
+        "131",
+        1
       ]
+    },
+    "class_type": "ModelPreviewOverrideKJ",
+    "_meta": {
+      "title": "ModelPreviewOverrideKJ"
     }
   },
   "216": {
+    "inputs": {
+      "image": "Qwen_image_2.1_00009.png"
+    },
     "class_type": "LoadImage",
-    "inputs": {}
+    "_meta": {
+      "title": "Load Image"
+    }
   },
   "214": {
+    "inputs": {
+      "text": "subject_definitions:\n<Subject 1> 是 <Picture 1> 中的红色球形礼盒，圆胖红色盒身，盒身中部环绕一条深棕色皮带，皮带上有浅粉色小圆点，皮带右侧固定一枚棕色圆形四叶草徽章；盒盖为奶白色、带两只竖立的长兔耳和两个深棕色小圆点眼睛，整体为柔和卡通插画风格、暖色调。\n<Subject 2> 是 <Picture 2> 中的奶白色小铃铛，圆胖铃铛身体，头顶有两只猫耳形凸起和一张可爱小脸，顶部伸出一根米色细茎，细茎顶端连着一朵红色四叶草装饰，整体为柔和卡通插画风格、暖色调。\n\nsummary:\n[reference generation] 目标视频为一段5秒的卡通物体动画，单镜头固定机位，<Subject 1> 倒置悬浮在画面中央，白色盒盖沿铰链向后自然掀开，<Subject 2> 系着细长棉线从盒口掉出、悬空轻摆后被拉回盒内。两张参考图仅用于锁定物体造型与画风，不作为首帧或末帧。\n\nretention_analysis:\n<Subject 1>（出现在 [Shot 1]）: fully_preserved - 红色圆胖盒身、棕色皮带、浅粉圆点、四叶草圆形徽章、奶白兔耳盖与两个小圆点眼睛全部保留，仅整体旋转为倒置姿态（红身朝上、白盖朝下）。\n<Subject 2>（出现在 [Shot 1]）: fully_preserved - 圆胖白铃铛身体、猫耳、小脸、米色细茎、红色四叶草顶饰全部保留，视频中复制为6到8只重复出现。\n\ndetailed_description:\n目标视频为柔和可爱的二维卡通插画风格，暖色调，光线均匀平柔，背景为完全均匀、纯净的纯白色，无渐变、无投影、无地面、无任何多余物体或文字，主体四周留出干净白边，便于后期抠像。\n[Shot 1] 固定机位，正面平视，无镜头运动，主体居中。画面中央悬浮着倒置的 <Subject 1> 红色球形礼盒：红色圆胖盒身朝上，带兔耳的奶白色盒盖朝下，盒子静止悬停。约1秒处，朝下的白色兔耳盒盖像真实礼盒一样，沿盒口边缘的铰链整体向后、向斜上方连贯地翻开掀起，盖子始终与盒身铰链相连，绝不从中间断裂或切开；盖子完全打开后露出盒内。约2秒处，6到8只 <Subject 2> 奶白色小铃铛从朝下的盒口受重力依次掉出；每只铃铛的细茎顶端都系着一根细长的米色棉线，棉线上端拴在盒子内部，绳子较长，被拉直后铃铛悬停在盒子下方较远位置，像钟摆一样轻轻左右晃动。约4秒处，细长棉线缓缓回收缩短，铃铛被一只只拉回盒内，白色兔耳盒盖沿铰链向后翻回、自然合上。全程动作流畅，带轻微Q弹弹性，物体造型始终与参考图保持一致。\n\noverall_soundscape:\n安静的纯白空间，无环境噪音；盒盖掀开时一声轻微的木质卡扣轻响，铃铛掉出时伴有极轻的铃铛晃动叮当声。\n\nnon_diegetic_music:\nN/A\n"
+    },
     "class_type": "Text Multiline",
-    "inputs": {}
+    "_meta": {
+      "title": "Text Multiline"
+    }
   },
   "132": {
+    "inputs": {
+      "value": 5
+    },
     "class_type": "PrimitiveFloat",
-    "inputs": {}
+    "_meta": {
+      "title": "Float (Duration)"
+    }
   },
   "171": {
-    "class_type": "SelfLiftH3Sampler",
     "inputs": {
+      "seed": 993477651853231,
+      "cfg": 1,
+      "transition_step": 8,
+      "lowres_scale": 0.4,
+      "rho": 0,
+      "w_min": 0.2,
+      "w_max": 1,
+      "upscaler_model": "minimax_h3_latent_upscaler_3d_fp16.safetensors",
+      "highres_tiling": true,
       "model": [
         "153",
+        0
+      ],
+      "positive": [
+        "247",
         0
       ],
       "negative": [
         "173",
         0
+      ],
+      "vae": [
+        "280",
+        0
+      ],
+      "latent_image": [
+        "247",
+        1
       ],
       "sampler": [
         "123",
@@ -613,32 +362,35 @@
       "sigmas": [
         "147",
         0
-      ],
-      "positive": [
-        "247",
-        0
-      ],
-      "latent_image": [
-        "247",
-        1
-      ],
-      "vae": [
-        "280",
-        0
       ]
+    },
+    "class_type": "SelfLiftH3Sampler",
+    "_meta": {
+      "title": "SelfLiftH3Sampler"
     }
   },
   "279": {
-    "class_type": "LoraLoaderModelOnly",
     "inputs": {
+      "lora_name": "H3\\H3_Combat_V2.safetensors",
+      "strength_model": 0.9,
       "model": [
         "145",
         0
       ]
+    },
+    "class_type": "LoraLoaderModelOnly",
+    "_meta": {
+      "title": "Load LoRA"
     }
   },
   "115": {
+    "inputs": {
+      "aspect_ratio": "9:16 (Portrait Widescreen)",
+      "megapixels": 1
+    },
     "class_type": "ResolutionSelector",
-    "inputs": {}
+    "_meta": {
+      "title": "Resolution Selector (Size)"
+    }
   }
 }

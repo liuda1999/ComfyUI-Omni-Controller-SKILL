@@ -1,40 +1,55 @@
 {
   "119": {
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+    },
     "class_type": "VAELoader",
-    "inputs": {}
+    "_meta": {
+      "title": "Load VAE"
+    }
   },
   "120": {
+    "inputs": {
+      "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+    },
     "class_type": "VAELoader",
-    "inputs": {}
+    "_meta": {
+      "title": "Load VAE"
+    }
   },
   "121": {
-    "class_type": "VAEDecodeAudio",
     "inputs": {
+      "samples": [
+        "125",
+        0
+      ],
       "vae": [
         "120",
         0
-      ],
-      "samples": [
-        "125",
-        0
       ]
+    },
+    "class_type": "VAEDecodeAudio",
+    "_meta": {
+      "title": "VAE Decode Audio"
     }
   },
   "122": {
-    "class_type": "VAEDecode",
     "inputs": {
-      "vae": [
-        "119",
-        0
-      ],
       "samples": [
         "125",
         0
+      ],
+      "vae": [
+        "119",
+        0
       ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
     }
   },
   "125": {
-    "class_type": "SamplerCustomAdvanced",
     "inputs": {
       "noise": [
         "129",
@@ -44,6 +59,10 @@
         "126",
         0
       ],
+      "sampler": [
+        "135",
+        0
+      ],
       "sigmas": [
         "124",
         0
@@ -51,50 +70,77 @@
       "latent_image": [
         "131",
         1
-      ],
-      "sampler": [
-        "135",
-        0
       ]
+    },
+    "class_type": "SamplerCustomAdvanced",
+    "_meta": {
+      "title": "SamplerCustomAdvanced"
     }
   },
   "126": {
-    "class_type": "BasicGuider",
     "inputs": {
-      "conditioning": [
-        "131",
-        0
-      ],
       "model": [
         "134",
         0
+      ],
+      "conditioning": [
+        "131",
+        0
       ]
+    },
+    "class_type": "BasicGuider",
+    "_meta": {
+      "title": "Basic Guider"
     }
   },
   "129": {
+    "inputs": {
+      "noise_seed": 416835429951143
+    },
     "class_type": "RandomNoise",
-    "inputs": {}
+    "_meta": {
+      "title": "RandomNoise"
+    }
   },
   "128": {
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    },
     "class_type": "CLIPLoader",
-    "inputs": {}
+    "_meta": {
+      "title": "Load CLIP"
+    }
   },
   "127": {
+    "inputs": {
+      "unet_name": "minimax_h3_ref2va_pruned_fp8_scaled.safetensors",
+      "weight_dtype": "default"
+    },
     "class_type": "UNETLoader",
-    "inputs": {}
+    "_meta": {
+      "title": "Load Diffusion Model"
+    }
   },
   "134": {
-    "class_type": "MiniMaxH3TurboLoRA",
     "inputs": {
+      "lora_name": "minimax_h3_fl2v_turbo_4step_v1.2_768p_comfyui_resized_avg_rank_64_bf16.safetensors",
+      "strength": 1,
+      "low_vram": false,
       "model": [
         "127",
         0
       ]
+    },
+    "class_type": "MiniMaxH3TurboLoRA",
+    "_meta": {
+      "title": "MiniMaxH3TurboLoRA"
     }
   },
   "130": {
-    "class_type": "CreateVideo",
     "inputs": {
+      "fps": 24,
       "images": [
         "122",
         0
@@ -103,20 +149,30 @@
         "121",
         0
       ]
+    },
+    "class_type": "CreateVideo",
+    "_meta": {
+      "title": "Create Video"
     }
   },
   "92": {
-    "class_type": "SaveVideo",
     "inputs": {
+      "filename_prefix": "video/MiniMax_H3",
+      "format": "auto",
+      "codec": "auto",
       "video": [
         "130",
         0
       ]
+    },
+    "class_type": "SaveVideo",
+    "_meta": {
+      "title": "Save Video"
     }
   },
   "131": {
-    "class_type": "MiniMaxH3ImageToVideo",
     "inputs": {
+      "prompt": "写实摄影，恐怖电影场景，中长焦微距镜头，平视略带侧面视角，竖幅中景。器材为索尼A7 IV搭配FE 90mm f/2.8 Macro G OSS镜头，光圈f/2.8，快门1/60秒，感光度ISO 800，对焦点锁定于骷髅面骨与烛火之间，大光圈产生极浅景深，使背景墙壁完全处于散焦虚化状态，画面带有粗粝的暗黑胶片颗粒感。\n透视采用平视微仰的单点透视，镜头正对偏右前方，使骷髅骨架呈现约四分之三斜侧面的立体感。构图呈纵向居中的狭长布局，视觉重心集中于画面中央。画面左上角边缘，一根粗黑的锻铁支架从墙体中水平伸出，支架表面布满积尘与暗锈。支架上缠绕、盘绕着多股厚重的生铁锁链，铁链呈多圈堆叠状态，粗重且布满锈迹，向下垂落并连接至骷髅上方小小的金属顶盖。笼体下方垂落的细铁链与钥匙形成了一条延伸至画面底部的垂直视觉引导线。\n主体为一件被锻铁支架与锁链悬吊的骷髅头骨蜡烛灯。画面左上角伸出的铁架牢牢锚入斑驳石墙，缠满粗重铁链，一根主链条垂直向下，紧紧连接着骷髅上方小小的圆形金属顶盖。顶盖下方对称分布着四根细长的黑色雕花铁柱，构成包裹头骨的立体框架。头骨表面通体被一层厚重浓稠的陈年焦油、烟尘与油脂硬壳深深浸染，呈现黑褐色与炭黑色交织的厚重质感，油污填平骨缝并向外漫溢。眼眶与鼻腔融为深不见底的纯黑虚空，上下颌长长的尖锐獠牙被焦黑油泥紧密包裹。笼子底部边缘垂挂着数条长短不一的细铁链，链条杂乱悬坠，其中一根链身悬挂着一把锈迹斑斑的复古铁钥匙，金属表面泛着暗哑粗粝的冷光。\n主光源为下颌骨与牙齿缝隙间透出的一团橙黄色跳动烛火。火光自下而上照亮了颧骨底缘、上颌骨与金属框架的下端。受光面的焦油泛起锐利的橙黄高光，高光边缘如半凝固油脂般黏腻发亮；背光面与油污深处则迅速沉入纯黑的阴影。火光的焦暖色与头骨油污的深黑形成极端高对比，明暗落差极为强烈。整体画面以炭黑、暗褐与焦橙色为主调。\n环境为牢笼正后方一面老旧斑驳的阴暗石墙。墙体在极浅的景深下处于完全散焦状态，灰褐色与暗青色的墙面、石块的接缝、水渍与霉斑均化为朦胧的暗色色块，毫无锐利细节，仅作为压抑、潮湿、冷调的幽闭衬底存在，衬托出前景主体的阴森与惊悚感。\n下方烛火燃烧带动微小的热浪扰动，并在头骨下方的暗色空气中散逸出几缕极其微弱的淡灰色烟雾颗粒。画面的四周暗处散布着细微的灰尘，在火光边缘映射出零星的微弱焦外散景光斑。无任何超自然发光或魔法能量特效。\n写实摄影，恐怖电影，暗黑，哥特风，高对比，微距。",
       "clip": [
         "128",
         0
@@ -125,10 +181,6 @@
         "119",
         0
       ],
-      "length": [
-        "132",
-        1
-      ],
       "width": [
         "115",
         0
@@ -136,49 +188,69 @@
       "height": [
         "115",
         1
+      ],
+      "length": [
+        "132",
+        1
       ]
+    },
+    "class_type": "MiniMaxH3ImageToVideo",
+    "_meta": {
+      "title": "MiniMaxH3ImageToVideo"
     }
   },
   "124": {
-    "class_type": "BasicScheduler",
     "inputs": {
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1,
       "model": [
         "134",
         0
       ]
+    },
+    "class_type": "BasicScheduler",
+    "_meta": {
+      "title": "BasicScheduler"
     }
   },
-  "116": {
-    "class_type": "MarkdownNote",
-    "inputs": {}
-  },
-  "117": {
-    "class_type": "MarkdownNote",
-    "inputs": {}
-  },
   "133": {
+    "inputs": {
+      "value": 5
+    },
     "class_type": "PrimitiveFloat",
-    "inputs": {}
+    "_meta": {
+      "title": "Float (duration)"
+    }
   },
   "132": {
-    "class_type": "ComfyMathExpression",
     "inputs": {
+      "expression": "max(5, round(a * 24)) + (5 - (max(5, round(a * 24)) % 17)) % 17",
       "values.a": [
         "133",
         0
       ]
+    },
+    "class_type": "ComfyMathExpression",
+    "_meta": {
+      "title": "Math Expression"
     }
   },
-  "118": {
-    "class_type": "MarkdownNote",
-    "inputs": {}
-  },
   "115": {
+    "inputs": {
+      "aspect_ratio": "16:9 (Widescreen)",
+      "megapixels": 0.4
+    },
     "class_type": "ResolutionSelector",
-    "inputs": {}
+    "_meta": {
+      "title": "Resolution Selector"
+    }
   },
   "135": {
+    "inputs": {},
     "class_type": "MiniMaxH3TurboSampler",
-    "inputs": {}
+    "_meta": {
+      "title": "MiniMaxH3TurboSampler"
+    }
   }
 }

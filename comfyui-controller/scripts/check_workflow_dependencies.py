@@ -164,6 +164,7 @@ def extract_workflow_models(ui_wf):
         "DoubleCLIPLoader": ("clip_name1", "text_encoders"),
         "LoraLoader": ("lora_name", "loras"),
         "LoraLoaderModelOnly": ("lora_name", "loras"),
+        "MiniMaxH3TurboLoRA": ("lora_name", "loras"),
         "CLIPVisionLoader": ("clip_name", "clip_vision"),
         "ControlNetLoader": ("control_net_name", "controlnet"),
         "UpscaleModelLoader": ("model_name", "upscale_models"),

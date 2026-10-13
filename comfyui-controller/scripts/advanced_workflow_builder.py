@@ -744,6 +744,7 @@ class WorkflowAssembler:
             "UnetLoaderGGUF": "unet",
             "LoraLoader": "lora",
             "LoraLoaderModelOnly": "lora",
+            "MiniMaxH3TurboLoRA": "lora",
             "ControlNetLoader": "controlnet",
             "VAELoader": "vae",
             "CLIPLoader": "clip",

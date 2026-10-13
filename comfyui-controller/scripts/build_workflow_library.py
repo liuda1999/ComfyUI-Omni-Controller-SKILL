@@ -181,7 +181,7 @@ def detect_workflow_model_family(workflow, object_info=None):
             model_role = 'unet'
             if widgets_values and isinstance(widgets_values[0], str):
                 model_name = widgets_values[0]
-        elif node_type in ('LoraLoader', 'LoraLoaderModelOnly'):
+        elif node_type in ('LoraLoader', 'LoraLoaderModelOnly', 'MiniMaxH3TurboLoRA'):
             model_role = 'lora'
             if widgets_values and isinstance(widgets_values[0], str):
                 model_name = widgets_values[0]
@@ -507,7 +507,7 @@ def extract_models(workflow):
         elif node_type == 'CLIPLoader' and len(widgets_values) > 0:
             if isinstance(widgets_values[0], str):
                 models['clip'].append(widgets_values[0])
-        elif node_type in ['LoraLoader', 'LoraLoaderModelOnly'] and len(widgets_values) > 0:
+        elif node_type in ['LoraLoader', 'LoraLoaderModelOnly', 'MiniMaxH3TurboLoRA'] and len(widgets_values) > 0:
             if isinstance(widgets_values[0], str):
                 models['lora'].append(widgets_values[0])
         elif node_type == 'ControlNetLoader' and len(widgets_values) > 0:

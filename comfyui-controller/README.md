@@ -257,6 +257,9 @@ python scripts/run_workflow.py --workflow api_workflow.json --wait
 python scripts/workflow_converter.py --input ui_workflow.json --output api_workflow.json
 python scripts/run_workflow.py --workflow api_workflow.json --wait
 
+# 离线转换（ComfyUI 服务器不在线时，用缓存的 object_info）
+python scripts/workflow_converter.py --input ui_workflow.json --output api_workflow.json --object-info-file assets/object_info.json
+
 # 带超时和自定义输出目录
 python scripts/run_workflow.py --workflow workflow.json --wait --timeout 900 --output-dir ./my_output
 ```

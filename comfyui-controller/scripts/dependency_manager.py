@@ -42,7 +42,7 @@ MODEL_CATEGORIES = {
     "clip": ["CLIPLoader"],
     "text_encoders": ["CLIPLoader", "CLIPTextEncode"],
     "controlnet": ["ControlNetLoader"],
-    "loras": ["LoraLoader", "LoraLoaderModelOnly"],
+    "loras": ["LoraLoader", "LoraLoaderModelOnly", "MiniMaxH3TurboLoRA"],
     "upscale_models": ["UpscaleModelLoader", "LatentUpscaleModelLoader"],
 }
 
