@@ -120,4 +120,4 @@ skills/comfyui-controller/
 
 ---
 
-*技能版本：v0.2.0 | 许可证：Apache-2.0 | 配套工作流库见 [assets/workflow_library.json](assets/workflow_library.json)*
+*技能版本：v0.2.3 | 许可证：Apache-2.0 | 配套工作流库见 [assets/workflow_library.json](assets/workflow_library.json)*
